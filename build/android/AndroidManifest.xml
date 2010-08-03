@@ -6,7 +6,7 @@
 >
 	<uses-sdk android:minSdkVersion="4" />
 	
-	<supports-screens android:smallScreens="false"
+	<supports-screens android:smallScreens="true"
                 android:normalScreens="true"
                 android:largeScreens="true"
                 android:anyDensity="false"
