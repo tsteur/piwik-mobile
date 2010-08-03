@@ -67,7 +67,7 @@ function template () {
     
     top = top + 40;
     var labelAnonymous  = Titanium.UI.createLabel({
-        text: _('Mobile_Anonymous_Access'),
+        text: _('Mobile_AnonymousAccess'),
         height: 20,
         left: left,
         top: top,

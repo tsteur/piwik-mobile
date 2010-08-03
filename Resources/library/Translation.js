@@ -135,7 +135,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_Language:                                                   'Language',
     General_PleaseUpdatePiwik:                                          'Please update your Piwik',
     General_RequestTimedOut:                                            'A data request to %s timed out. Please try again.',
-    Mobile_Anonymous_Access:                                            'Anonymous access',
+    Mobile_AnonymousAccess:                                             'Anonymous access',
     Mobile_AccessUrlLabel:                                              'Piwik Access Url',
     Mobile_EnableGraphsLabel:                                           'Display graphs',
     Mobile_MultiChartLabel:                                             'Display sparklines',
