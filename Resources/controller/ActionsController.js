@@ -1,0 +1,229 @@
+/*
+ * Piwik - Web Analytics
+ *
+ * @link http://piwik.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
+ * @version $Id$
+ */
+ 
+/**
+ * @class    Displays 'actions' related statistics using the 'actions' module.
+ *              
+ * @augments ActionController
+ */
+function ActionsController () {
+
+    /**
+     * Displays page related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.pageAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                          date: 'today', 
+                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')), 
+                          filter_sort_order: 'desc'};
+        
+        if (this.getParam('date')) {
+            parameter.date = this.getParam('date');
+            
+            this.view.date = this.getParam('date');
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.getParam('period', 'day');
+        
+        parameter.period   = this.view.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('Actions.getPageUrls', parameter, function (response) { 
+            if(response) {
+                this.view.page = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('page');
+        });
+    };
+    
+    /**
+     * Displays page title related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.pagetitleAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                          date: 'today', 
+                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_order: 'desc'};
+        
+        if (this.getParam('date')) {
+            parameter.date = this.getParam('date');
+            
+            this.view.date = this.getParam('date');
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.getParam('period', 'day');
+        
+        parameter.period   = this.view.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('Actions.getPageTitles', parameter, function (response) { 
+            if(response) {
+                this.view.pagetitle = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('pagetitle');
+        });
+    };
+
+    /**
+     * Displays outlink related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.outlinkAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                          date: 'today', 
+                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_order: 'desc'};
+        
+        if (this.getParam('date')) {
+            parameter.date = this.getParam('date');
+            
+            this.view.date = this.getParam('date');
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.getParam('period', 'day');
+        
+        parameter.period   = this.view.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('Actions.getOutlinks', parameter, function (response) { 
+            if(response) {
+                this.view.outlink = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('outlink');
+        });
+    };
+    
+    /**
+     * Displays download related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.downloadAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                          date: 'today', 
+                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_order: 'desc'};
+        
+        if (this.getParam('date')) {
+            parameter.date = this.getParam('date');
+            
+            this.view.date = this.getParam('date');
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.getParam('period', 'day');
+        
+        parameter.period   = this.view.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('Actions.getDownloads', parameter, function (response) { 
+            if(response) {
+                this.view.download = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('download');
+        });
+    };
+}
+
+ActionsController.prototype = new ActionController();
