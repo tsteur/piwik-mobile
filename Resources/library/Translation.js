@@ -178,6 +178,7 @@ Translation.AVAILABLE_LANGUAGES = {
     lt:         'Lietuvių',
     nb:         'Norsk (bokmål)',
     nl:         'Nederlands',
+    nn:         'Nynorsk',
     pl:         'Polski',
     'pt-br':    'Português brasileiro',
     pt:         'Português',
@@ -188,6 +189,7 @@ Translation.AVAILABLE_LANGUAGES = {
     sr:         'Srpski',
     sv:         'Svenska',
     th:         'ไทย',
+    tr:         'Türkçe',
     uk:         'Українська',
     'zh-cn':    '简体中文',
     'zh-tw':    '台灣語'
