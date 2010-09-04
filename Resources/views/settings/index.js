@@ -131,6 +131,11 @@ function template () {
         font: {fontSize: config.theme.fontSizeNormal}
     });
     
+    if ('android' !== Titanium.Platform.osname) {
+        // it seems that Titanium ignores 'autocapitalization' paramater on textfield creation and iOS devices
+        piwikUser.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
+    }
+    
     top = top + 40;
     var labelPassword  = Titanium.UI.createLabel({
         text: _('Login_Password'),
