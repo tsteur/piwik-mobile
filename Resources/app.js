@@ -6,10 +6,13 @@
  * @version $Id$
  */
 Titanium.include('/config.js');
+Titanium.include('/library/Session.js');
 Titanium.include('/library/Window.js');
 
 // this sets the background color of the master UIView
 Titanium.UI.setBackgroundColor(config.theme.backgroundColor);
+
+var session = new Session(true);
 
 // create root window
 Window.createMvcWindow({jsController: 'index',

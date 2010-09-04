@@ -19,6 +19,14 @@ function ReferersController () {
      * @type null
      */
     this.init = function () {
+    
+        var mySession     = new Session();
+        
+        var periodSession = mySession.get('piwik_parameter_period', 'day');
+        var dateSession   = mySession.get('piwik_parameter_date');
+    
+        this.period   = this.getParam('period', periodSession);
+        this.date     = this.getParam('date', dateSession);
 
         this.graphsEnabled      = Settings.getGraphsEnabled();
         this.view.graphsEnabled = this.graphsEnabled;
@@ -49,17 +57,17 @@ function ReferersController () {
         var parameter  = {idSite: this.view.site.idsite, 
                           date: 'today'};
 
-        if (this.getParam('date')) {
-            parameter.date = this.getParam('date');
+        if (this.date) {
+            parameter.date = this.date;
 
-            this.view.date = this.getParam('date');
+            this.view.date = this.date;
         } else {
             this.view.date = null;
         }
         
-        this.view.period   = this.getParam('period', 'day');
+        this.view.period   = this.period;
         
-        parameter.period   = this.view.period;
+        parameter.period   = this.period;
 
         var piwik          = this.getModel('Piwik');
 
@@ -70,7 +78,11 @@ function ReferersController () {
         });
         
         if (this.graphsEnabled) {
-            var targetDate = this.getParam('date', new Date());
+            var targetDate = new Date();
+            
+            if (this.date) {
+                targetDate = this.date;
+            }
             
             if('string' === (typeof targetDate).toLowerCase()) {
                 
@@ -157,20 +169,20 @@ function ReferersController () {
         
         var parameter  = {idSite: this.view.site.idsite, 
                           date: 'today', 
-                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_column: config.getUsedRow(this.period),
                           filter_sort_order: 'desc'};
         
-        if (this.getParam('date')) {
-            parameter.date = this.getParam('date');
+        if (this.date) {
+            parameter.date = this.date;
             
-            this.view.date = this.getParam('date');
+            this.view.date = this.date;
         } else {
             this.view.date = null;
         }
         
-        this.view.period   = this.getParam('period', 'day');
+        this.view.period   = this.period;
         
-        parameter.period   = this.view.period;
+        parameter.period   = this.period;
         
         var piwik          = this.getModel('Piwik');
         
@@ -210,23 +222,23 @@ function ReferersController () {
         
         var parameter  = {idSite: this.view.site.idsite, 
                           date: 'today', 
-                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_column: config.getUsedRow(this.period),
                           filter_sort_order: 'desc'};
         
         // limit to 25
         parameter.filter_limit = 25;
         
-        if (this.getParam('date')) {
-            parameter.date = this.getParam('date');
+        if (this.date) {
+            parameter.date = this.date;
             
-            this.view.date = this.getParam('date');
+            this.view.date = this.date;
         } else {
             this.view.date = null;
         }
         
-        this.view.period   = this.getParam('period', 'day');
+        this.view.period   = this.period;
         
-        parameter.period   = this.view.period;
+        parameter.period   = this.period;
         
         var piwik          = this.getModel('Piwik');
         
@@ -266,23 +278,23 @@ function ReferersController () {
         
         var parameter  = {idSite: this.view.site.idsite, 
                           date: 'today', 
-                          filter_sort_column: config.getUsedRow(this.getParam('period', 'day')),
+                          filter_sort_column: config.getUsedRow(this.period),
                           filter_sort_order: 'desc'};
         
         // limit to 25
         parameter.filter_limit = 25;
         
-        if (this.getParam('date')) {
-            parameter.date = this.getParam('date');
+        if (this.date) {
+            parameter.date = this.date;
             
-            this.view.date = this.getParam('date');
+            this.view.date = this.date;
         } else {
             this.view.date = null;
         }
         
-        this.view.period   = this.getParam('period', 'day');
+        this.view.period   = this.period;
         
-        parameter.period   = this.view.period;
+        parameter.period   = this.period;
         
         var piwik          = this.getModel('Piwik');
         

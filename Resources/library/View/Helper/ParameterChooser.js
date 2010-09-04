@@ -59,7 +59,7 @@ function View_Helper_ParameterChooser () {
             borderRadius: config.theme.borderRadius,
             borderWidth: 1,
             borderColor: '#E3E4E3'
-         });
+        });
         
         this.addDayChooser(view);
         this.addSiteChooser(view);
@@ -161,8 +161,8 @@ function View_Helper_ParameterChooser () {
                                                 left: 4,
                                                 width: 130,
                                                 zIndex: 4});
-        
-        this.period = this.getOption('period', this.period);
+
+        this.period       = this.getOption('period', this.period);
         
         this.periodValue  = Titanium.UI.createLabel({
             text: Translation.getPeriod(this.period, false),
@@ -402,7 +402,7 @@ function View_Helper_ParameterChooser () {
      */
     this.initDate = function () {
 
-        var optionDate = this.getOption('date', new Date());
+        var optionDate  = this.getOption('date', new Date());
         
         if ('string' === (typeof optionDate).toLowerCase()) {
 
@@ -434,8 +434,10 @@ function View_Helper_ParameterChooser () {
         }
     
         this.period   = period;
-    
-        // @todo fire event only if period really changes
+        
+        var mySession = new Session();
+        
+        mySession.set('piwik_parameter_period', period);
         
         this.view.fireEvent('periodChanged', {period: period});
     };
@@ -455,6 +457,10 @@ function View_Helper_ParameterChooser () {
         this.date     = changedDate;
         
         var dateQuery = this.date.toPiwikQueryString();
+        
+        var mySession = new Session();
+        
+        mySession.set('piwik_parameter_date', dateQuery);
 
         this.view.fireEvent('dateChanged', {date: dateQuery});
     };

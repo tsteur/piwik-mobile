@@ -8,6 +8,7 @@
  * @fileOverview Includes all available library files in a suitable order.
  */
 Titanium.include('/library/Log.js');
+Titanium.include('/library/Session.js');
 Titanium.include('/library/Window.js');
 Titanium.include('/library/View.js');
 Titanium.include('/library/View/Helper.js');
