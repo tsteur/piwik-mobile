@@ -62,8 +62,11 @@ function template () {
         font: {fontSize: config.theme.fontSizeNormal}
     });
     
-    // @todo set autocapitalization to Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE will work in post 1.4
-    // There's a bug in Titanium 1.4 and previous versions when using autocapitalizations UrlKeyboard will not work
+    // There's a bug in Titanium 1.4 and previous versions when using autocapitalizations UrlKeyboard will not work. But
+    // autocapitalization is deactivated on url keyboards on android by default.
+    if ('android' !== Titanium.Platform.osname) {
+        piwikUrl.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE
+    }
     
     top = top + 40;
     var labelAnonymous  = Titanium.UI.createLabel({
