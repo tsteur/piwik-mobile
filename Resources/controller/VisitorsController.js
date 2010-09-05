@@ -337,6 +337,112 @@ function VisitorsController () {
             this.render('screentype');
         });
     };
+    
+    /**
+     * Displays user country related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.countryAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                date: 'today', 
+                filter_sort_column: config.getUsedRow(this.period),
+                filter_sort_order: 'desc'};
+        
+        if (this.date) {
+            parameter.date = this.date;
+            
+            this.view.date = this.date;
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.period;
+        
+        parameter.period   = this.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('UserCountry.getCountry', parameter, function (response) { 
+            if(response) {
+                this.view.countries = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('country');
+        });
+    };
+    
+    /**
+     * Displays user continent related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.continentAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                date: 'today', 
+                filter_sort_column: config.getUsedRow(this.period),
+                filter_sort_order: 'desc'};
+        
+        if (this.date) {
+            parameter.date = this.date;
+            
+            this.view.date = this.date;
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.period;
+        
+        parameter.period   = this.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        piwik.registerCall('UserCountry.getContinent', parameter, function (response) { 
+            if(response) {
+                this.view.continents = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('continent');
+        });
+    };
 }
 
 VisitorsController.prototype = new ActionController();

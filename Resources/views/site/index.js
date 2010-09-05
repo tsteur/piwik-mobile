@@ -42,6 +42,13 @@ function template () {
                                jsController: 'visitors',
                                jsAction:     'screentype'}];
     
+    var visitorLocationsRows = [{title:        _('UserCountry_WidgetCountries'),
+                                jsController: 'visitors',
+                                jsAction:     'country'},
+                                {title:        _('UserCountry_WidgetContinents'),
+                                jsController: 'visitors',
+                                jsAction:     'continent'}];
+    
     var actionsRows = [{title:        _('Actions_SubmenuPages'),
                         jsController: 'actions',
                         jsAction:     'page'},
@@ -72,6 +79,8 @@ function template () {
                         rows:  visitorRows},
                        {title: _('General_Visitors') + ' - ' + _('UserSettings_SubmenuSettings'),
                         rows:  visitorSettingRows},
+                       {title: _('General_Visitors') + ' - ' + _('UserCountry_SubmenuLocations'),
+                        rows:  visitorLocationsRows},
                        {title: _('Actions_Actions'),
                         rows:  actionsRows},
                        {title: _('Referers_Referers'),
