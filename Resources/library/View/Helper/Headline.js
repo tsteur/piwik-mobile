@@ -139,14 +139,17 @@ function View_Helper_Headline () {
     
         var rightPos         = 8;
         
-        var backButtonhidden = this.getOption('backButtonHidden', false);
+        var backButtonhHidden    = this.getOption('backButtonHidden', false);
+        var settingsButtonhidden = this.getOption('settingsButtonHidden', false);
         
-        // not enabled on android devices because of an existing hardware back button.
         if ('android' === Titanium.Platform.osname) {
-            backButtonhidden = true;
+            // not enabled on android devices because of an existing hardware back button.
+            backButtonhHidden    = true;
+            // not enabled on android devices because of the android option menu.
+            settingsButtonHidden = true;
         }
         
-        if (!backButtonhidden) {
+        if (!backButtonhHidden) {
             
             this.backIcon = Titanium.UI.createImageView({
                 image: 'images/icon/back.png',
@@ -168,11 +171,9 @@ function View_Helper_Headline () {
             
             rightPos += 38;
         }
+
+        if (!settingsButtonHidden) {
         
-        var settingsButtonhidden = this.getOption('settingsButtonHidden', false);
-        
-        if (!settingsButtonhidden) {
-            
             this.settingsIcon = Titanium.UI.createImageView({
                 image: 'images/icon/settings.png',
                 width: 33,
