@@ -133,15 +133,9 @@ function template () {
         for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
             
             rows[rowIndex].site           = this.site;
-            rows[rowIndex].color          = config.theme.textColor;
             rows[rowIndex].className      = 'siterow';
             
-            // @todo create a factory or something similar for this, eg Ui.tableViewRow.create();
-            if ('android' !== Titanium.Platform.osname) {
-                rows[rowIndex].selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.GRAY;
-            }
-            
-            tableData.push(rows[rowIndex]);
+            tableData.push(Ui_TableViewRow(rows[rowIndex]));
         }    
     }
    
@@ -156,11 +150,9 @@ function template () {
             return;
         }
     
-        Window.createMvcWindow({
-            jsController: event.rowData.jsController,
-            jsAction: event.rowData.jsAction,
-            site: event.rowData.site
-        });
+        Window.createMvcWindow({jsController: event.rowData.jsController,
+                                jsAction: event.rowData.jsAction,
+                                site: event.rowData.site});
     });
     
     tableview.top      = headline.subView.top + headline.subView.height;

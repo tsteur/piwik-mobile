@@ -15,17 +15,9 @@
  */
 function template () {
 
-    var rows = [{title:     _('General_Settings'),
-                 id:        'settings',
-                 leftImage: 'images/icon/settings.png',
-                 color:     config.theme.textColor}];
-    
-    // @todo create a factory or something similar for this case
-    if ('android' !== Titanium.Platform.osname) {
-        rows[0].selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.GRAY;
-    }
-    
-    var row;
+    var rows = [Ui_TableViewRow({title:     _('General_Settings'),
+                                 id:        'settings',
+                                 leftImage: {url: 'images/icon/settings.png', height: 25, width: 33}})];
     
     if (this.sites && 0 < this.sites.length) {
         for (var siteIndex = 0; siteIndex < this.sites.length; siteIndex++) {
@@ -35,37 +27,17 @@ function template () {
                 continue;
             }
             
-            row = Titanium.UI.createTableViewRow({title: site.name,
-                                                  id:    site.idsite,
-                                                  name:  'site' + site.idsite,
-                                                  site:  site,
-                                                  className: 'siteIndex' + siteIndex,
-                                                  color: config.theme.textColor});
-                                                  
-            // @todo create a factory or something similar for this case
-            if ('android' !== Titanium.Platform.osname) {
-                row.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.GRAY;
-            }
-                            
-            if (site.sparklineUrl && 'android' === Titanium.Platform.osname) {
-                
-                row.rightImage = site.sparklineUrl;
-                
-            } else if (site.sparklineUrl) {
-
-                var sparklineImage = Titanium.UI.createImageView({width: 100,
-                                                                  height: 25,
-                                                                  image: site.sparklineUrl,
-                                                                  right: 5});
-                row.add(sparklineImage);
-            }
-            
-            rows.push(row);
+            rows.push(Ui_TableViewRow({title: site.name,
+                                       id:    site.idsite,
+                                       name:  'site' + site.idsite,
+                                       site:  site,
+                                       rightImage: {url: site.sparklineUrl, width: 100, height: 25},
+                                       className: 'siteIndex' + siteIndex}));
         }
     }
     
     var tableview = Titanium.UI.createTableView({data: rows, 
-                                                  separatorColor: '#eeedeb'});
+                                                 separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
     
