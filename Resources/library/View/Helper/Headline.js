@@ -139,17 +139,17 @@ function View_Helper_Headline () {
     
         var rightPos         = 8;
         
-        var backButtonhHidden    = this.getOption('backButtonHidden', false);
-        var settingsButtonhidden = this.getOption('settingsButtonHidden', false);
+        var backButtonHidden     = this.getOption('backButtonHidden', false);
+        var settingsButtonHidden = this.getOption('settingsButtonHidden', false);
         
         if ('android' === Titanium.Platform.osname) {
             // not enabled on android devices because of an existing hardware back button.
-            backButtonhHidden    = true;
+            backButtonHidden     = true;
             // not enabled on android devices because of the android option menu.
             settingsButtonHidden = true;
         }
         
-        if (!backButtonhHidden) {
+        if (!backButtonHidden) {
             
             this.backIcon = Titanium.UI.createImageView({
                 image: 'images/icon/back.png',
