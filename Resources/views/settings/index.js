@@ -114,11 +114,11 @@ function template () {
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_MultiChartLabel'),
                                       onClick: onChangeSparkline,
-                                      hasCheck: this.piwikMultiCharts}),
+                                      hasCheck: Boolean(this.piwikMultiCharts)}),
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_EnableGraphsLabel'),
                                       onClick: onChangeGraphs,
-                                      hasCheck: this.graphsEnabled})];
+                                      hasCheck: Boolean(this.graphsEnabled)})];
     
     var top       = headline.subView.height;
     var height    = box.subView.height - headline.subView.height;
