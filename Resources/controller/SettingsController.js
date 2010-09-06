@@ -14,22 +14,33 @@
 function SettingsController () {
 
     /**
-     * Default action. Lets the user set up the domain, username, password and so on.
+     * Default action. Lets the user set up settings like language.
      * 
      * @type null
      */
     this.indexAction = function () {
         
-        this.view.piwikUrl            = Settings.getPiwikUrl();
-        this.view.piwikUser           = Settings.getPiwikUser();
-        this.view.piwikPassword       = Settings.getPiwikPassword();
         this.view.piwikMultiCharts    = Settings.getPiwikMultiChart();
         this.view.piwikLanguage       = Settings.getLanguage();
         this.view.graphsEnabled       = Settings.getGraphsEnabled();
+        this.view.availableLanguages  = Translation.getAvailableLanguages();
+        
+        this.render('index');
+    };
+
+    /**
+     * Access action. Lets the user manage access like the domain, username and password.
+     * 
+     * @type null
+     */
+    this.accessAction = function () {
+        
+        this.view.piwikUrl            = Settings.getPiwikUrl();
+        this.view.piwikUser           = Settings.getPiwikUser();
+        this.view.piwikPassword       = Settings.getPiwikPassword();
         this.view.piwik               = this.getModel('Piwik');
         // create another piwikModel instance cause we want to disable sendErrors
         this.view.piwikApiCheck       = this.getModel('Piwik');
-        this.view.availableLanguages  = Translation.getAvailableLanguages();
         this.view.comparePiwikVersion = this.requestVersion;
 
         /**
@@ -39,7 +50,7 @@ function SettingsController () {
          */
         this.requestLatestVersion();
         
-        this.render('index');
+        this.render('access');
     };
     
     /**

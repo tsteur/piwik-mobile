@@ -110,6 +110,7 @@ Translation.DEFAULT_TRANSLATION = {
     Referers_Websites:                                                  'Websites',
     SitesManager_Cancel_js:                                             'Cancel',
     SitesManager_ExceptionInvalidUrl:                                   "The url '%s' is not a valid URL.",
+    UsersManager_ManageAccess:                                          'Manage access',
     UsersManager_PrivView:                                              'View',
     UserCountry_Country:                                                'Country',
     UserCountry_Continent:                                              'Continent',
