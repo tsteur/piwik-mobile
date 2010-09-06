@@ -21,4 +21,5 @@ Titanium.include('/library/Graph.js');
 Titanium.include('/library/Date.js');
 Titanium.include('/library/String.js');
 Titanium.include('/library/Ui/Picker.js');
+Titanium.include('/library/Ui/TableViewRow.js');
 Titanium.include('/library/Ui/Menu.js');
