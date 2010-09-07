@@ -22,7 +22,7 @@ function ReferersController () {
     
         var mySession     = new Session();
         
-        var periodSession = mySession.get('piwik_parameter_period', 'day');
+        var periodSession = mySession.get('piwik_parameter_period');
         var dateSession   = mySession.get('piwik_parameter_date');
     
         this.period   = this.getParam('period', periodSession);

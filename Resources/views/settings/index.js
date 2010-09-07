@@ -97,6 +97,79 @@ function template () {
         langDialog.show();
     };
     
+    var defaultReportDateLabel = '';
+    switch (Settings.getPiwikDefaultPeriod() + Settings.getPiwikDefaultDate()) {
+        case 'daytoday':
+            defaultReportDateLabel = _('General_Today');
+            break;
+        case 'dayyesterday':
+            defaultReportDateLabel = _('General_Yesterday');
+            break;
+        case 'weektoday':
+            defaultReportDateLabel = _('General_CurrentWeek');
+            break;
+        case 'monthtoday':
+            defaultReportDateLabel = _('General_CurrentMonth');
+            break;
+        case 'yeartoday':
+            defaultReportDateLabel = _('General_CurrentYear');
+            break;
+    }
+    
+    var onChangeDefaultReportDate = function () {
+                                
+        var periodOptions    = [_('General_Today'), 
+                                _('General_Yesterday'), 
+                                _('General_CurrentWeek'), 
+                                _('General_CurrentMonth'), 
+                                _('General_CurrentYear')];
+
+        var periodDialog = Titanium.UI.createOptionDialog({
+            title: _('Mobile_DefaultReportDate'),
+            options: periodOptions
+        });
+        
+        var row = this;
+        
+        periodDialog.addEventListener('click', function (event) {
+            
+            if (event.cancel && -1 !== event.cancel) {
+                return;
+            }
+            
+            row.changeValue(periodOptions[event.index]);
+            
+            switch (event.index) {
+                case 0:
+                    Settings.setPiwikDefaultPeriod('day');
+                    Settings.setPiwikDefaultDate('today');
+                    break;
+                case 1:
+                    Settings.setPiwikDefaultPeriod('day');
+                    Settings.setPiwikDefaultDate('yesterday');
+                    break;
+                case 2:
+                    Settings.setPiwikDefaultPeriod('week');
+                    Settings.setPiwikDefaultDate('today');
+                    break;
+                case 3:
+                    Settings.setPiwikDefaultPeriod('month');
+                    Settings.setPiwikDefaultDate('today');
+                    break;
+                case 4:
+                    Settings.setPiwikDefaultPeriod('year');
+                    Settings.setPiwikDefaultDate('today');
+                    break;
+            }
+            
+            var mySession = new Session();
+            mySession.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
+            mySession.set('piwik_parameter_date', Settings.getPiwikDefaultDate());
+        });
+        
+        periodDialog.show();
+    };
+    
     var onManageAccess = function () {
         Window.createMvcWindow({jsController: 'settings',
                                 jsAction:     'access'});
@@ -111,6 +184,11 @@ function template () {
                                        onClick: onChangeLanguage,
                                        value: currentLanguage,
                                        hasChild: true}),
+                     Ui_TableViewRow({className: 'settingsSection1',
+                                      title: _('Mobile_DefaultReportDate'),
+                                      onClick: onChangeDefaultReportDate,
+                                      value: defaultReportDateLabel, 
+                                      hasChild: true}),
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_MultiChartLabel'),
                                       onClick: onChangeSparkline,

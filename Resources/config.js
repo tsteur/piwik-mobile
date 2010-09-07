@@ -25,7 +25,9 @@ config.piwik = {
     /**
      * default row to be used in all statistics
      */
-    usedRow: 'nb_visits'
+    usedRow: 'nb_visits',
+    defaultPeriod: 'day', 
+    defaultDate: 'yesterday'
 };
 
 /**

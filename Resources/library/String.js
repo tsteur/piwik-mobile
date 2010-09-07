@@ -29,6 +29,19 @@
  */
 String.prototype.toPiwikDate = function () {
 
+    if ('today' == this) {
+    
+        return new Date();
+    };
+
+    if ('yesterday' == this) {
+        var now = new Date();
+        
+        now.setDate(now.getDate() - 1);
+        
+        return now;
+    };
+
     var changedDate = this.split('-');
     
     var formatDate  = null;

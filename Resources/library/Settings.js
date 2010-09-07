@@ -177,6 +177,54 @@ Settings.getPiwikUserAuthToken = function () {
 };
 
 /**
+ * Sets (overwrites) the default piwik report date.
+ *
+ * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters">Standard parameters</a>
+ * 
+ * @param {string}  value   The default report date.
+ * 
+ * @type null
+ */
+Settings.setPiwikDefaultDate = function (value) {
+    return Settings._set('piwikDefaultDate', 'String', value);
+};
+
+/**
+ * Retrieve the stored default piwik report date.
+ *
+ * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters">Standard parameters</a>
+ * 
+ * @returns {string}  The default piwik report date. It returns a default value if value was not set before. 
+ */
+Settings.getPiwikDefaultDate = function () {
+    return Settings._get('piwikDefaultDate', 'String', config.piwik.defaultDate);
+};
+
+/**
+ * Sets (overwrites) the default piwik report period.
+ *
+ * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters">Standard parameters</a>
+ * 
+ * @param {string}  value   The default report period.
+ * 
+ * @type null
+ */
+Settings.setPiwikDefaultPeriod = function (value) {
+    return Settings._set('piwikDefaultPeriod', 'String', value);
+};
+
+/**
+ * Retrieve the stored default piwik report period.
+ *
+ * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters">Standard parameters</a>
+ * 
+ * @returns {string}  The default piwik report period. It returns a default value if value was not set before. 
+ */
+Settings.getPiwikDefaultPeriod = function () {
+    return Settings._get('piwikDefaultPeriod', 'String', config.piwik.defaultPeriod);
+};
+
+/**
  * Retrieve a setting which was previously stored under the given key.
  * 
  * @param   {string}          key               A unique key which identifies a specific setting.

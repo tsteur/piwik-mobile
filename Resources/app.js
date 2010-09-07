@@ -6,13 +6,20 @@
  * @version $Id$
  */
 Titanium.include('/config.js');
+Titanium.include('/library/Log.js');
 Titanium.include('/library/Session.js');
+Titanium.include('/library/Settings.js');
 Titanium.include('/library/Window.js');
 
 // this sets the background color of the master UIView
 Titanium.UI.setBackgroundColor(config.theme.backgroundColor);
 
-var session = new Session(true);
+var mySession = new Session(true);
+
+// save default period and date in session on app start. so we only have to work with session when we want to access 
+// chosen period/date.
+mySession.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
+mySession.set('piwik_parameter_date', Settings.getPiwikDefaultDate());
 
 // create root window
 Window.createMvcWindow({jsController: 'index',
