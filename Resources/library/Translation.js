@@ -143,6 +143,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_ChooseLanguage:                                             'Choose language',
     General_ChoosePeriod:                                               'Choose period',
     General_ChooseWebsite:                                              'Choose website',
+    General_ChooseDate:                                                 'Choose date',
     General_Language:                                                   'Language',
     General_PleaseUpdatePiwik:                                          'Please update your Piwik',
     General_RequestTimedOut:                                            'A data request to %s timed out. Please try again.',
