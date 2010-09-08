@@ -36,8 +36,7 @@ function template () {
     availableLanguageOptions.sort();
     
     var box             = this.helper('borderedContainer', {});
-    var headline        = this.helper('headline', {headline: _('General_Settings'),
-                                                  settingsButtonHidden: true});
+    var headline        = this.helper('headline', {headline: _('General_Settings')});
     
     box.subView.add(headline.subView);
     box.subView.top     = 5;

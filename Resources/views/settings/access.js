@@ -29,8 +29,7 @@ function template () {
     
     var box             = this.helper('borderedContainer', {});
     
-    var headline        = this.helper('headline', {headline: _('UsersManager_ManageAccess'),
-                                                  settingsButtonHidden: true});
+    var headline        = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
     
     box.subView.add(headline.subView);
     
