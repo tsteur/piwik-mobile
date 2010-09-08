@@ -142,7 +142,7 @@ function View_Helper_StatisticList () {
             top: this.topValue,
             left: 1,
             right: 121,
-            backgroundColor: '#D5D3C8'
+            backgroundColor: '#E4E2D7'
         });
 
         var rightView = Titanium.UI.createView({
@@ -150,7 +150,7 @@ function View_Helper_StatisticList () {
             top: this.topValue,
             right: 1,
             width: 120,
-            backgroundColor: '#E4E2D7'
+            backgroundColor: '#D5D3C8'
         });
         
         var titleLabel = Titanium.UI.createLabel({
