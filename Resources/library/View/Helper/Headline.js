@@ -14,7 +14,6 @@
  * @param  {boolean}  [options.backButtonHidden=false]       Optional - true if back button should be hidden from view.
  *                                                           This option is not recognized on Android as there exists
  *                                                           a hardware back button.
- * @param  {boolean}  [options.settingsButtonHidden=false]   Optional - true if settings button should be hide from view
  * @param  {string}   [options.headline=""]                  Optional - The headline.
  * 
  * @augments View_Helper
@@ -37,7 +36,7 @@ function View_Helper_Headline () {
          */
 
         var view = Titanium.UI.createView({
-            height: 29,
+            height: 36,
             top: 1,
             left: 1,
             right: 1,
@@ -67,19 +66,21 @@ function View_Helper_Headline () {
     this.addHeadline = function (view) {
     
         var labelWidth = 'auto';
+        var top        = 4;
         
         if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space
             // left. setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth = parseInt(this.view.size.width, 10) - 30 - 100;
+            labelWidth = parseInt(this.view.size.width, 10) - 30 - 65;
+            top        = 1;
         }
 
         this.headline = Titanium.UI.createLabel({
             text: this.getOption('headline', ''),
             height: 'auto',
             left: 10,
-            top: 1,
+            top: top,
             width: labelWidth,
             shadowColor: config.theme.borderColor,
             shadowOffset: {x: 0, y: 1},
@@ -136,60 +137,35 @@ function View_Helper_Headline () {
      * @type null
      */
     this.addTools = function (view) {
-    
-        var rightPos         = 8;
         
         var backButtonHidden     = this.getOption('backButtonHidden', false);
-        var settingsButtonHidden = this.getOption('settingsButtonHidden', false);
         
         if ('android' === Titanium.Platform.osname) {
             // not enabled on android devices because of an existing hardware back button.
             backButtonHidden     = true;
-            // not enabled on android devices because of the android option menu.
-            settingsButtonHidden = true;
         }
         
         if (!backButtonHidden) {
             
-            this.backIcon = Titanium.UI.createImageView({
+            this.backIcon = Titanium.UI.createButton({
                 image: 'images/icon/back.png',
-                width: 33,
-                height: 25,
-                top: 1,
-                right: rightPos
+                width: 43,
+                height: 30,
+                top: 2,
+                right: 8,
+                zIndex: 10,
+                style: 0
             });
             
             view.add(this.backIcon);
             
-            this.backIcon.addEventListener('singletap', function () {
+            this.backIcon.addEventListener('click', function () {
 
                 Window.close(Titanium.UI.currentWindow);
 
             });
             
             view.add(this.backIcon);
-            
-            rightPos += 38;
-        }
-
-        if (!settingsButtonHidden) {
-        
-            this.settingsIcon = Titanium.UI.createImageView({
-                image: 'images/icon/settings.png',
-                width: 33,
-                height: 25,
-                top: 1,
-                right: rightPos
-            });
-            
-            view.add(this.settingsIcon);
-            
-            this.settingsIcon.addEventListener('singletap', function () {
-
-                Window.createMvcWindow({jsController: 'settings',
-                                        jsAction:     'index'});
-                
-            });
         }
     };
 }

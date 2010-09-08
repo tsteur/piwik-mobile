@@ -46,7 +46,7 @@ config.theme = {
     logoColor4: '#8d693f',
     logoColor5: '#684222',
     fontSizeNormal: 12,
-    fontSizeHeadline: 18,
+    fontSizeHeadline: 21,
     fontSizeSmall: 9,
     fontSizeLarge: 18,
     fontFamily: 'Arial',
