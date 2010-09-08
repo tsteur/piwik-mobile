@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
 <id>org.piwik.mobile</id>
-<name>PiwikMobile</name>
-<version>1.0.0</version>
+<name>Piwik Mobile</name>
+<version>1.0.2</version>
 <publisher>Piwik.org</publisher>
 <url>http://piwik.org</url>
 <description>Piwik is a downloadable, open source (GPL licensed) real time web analytics software program. It provides you with detailed reports on your website visitors: the search engines and keywords they used, the language they speak, your popular pages... and so much more. Piwik aims to be an open source alternative to Google Analytics. You can access these reports by using this mobile client.</description>
