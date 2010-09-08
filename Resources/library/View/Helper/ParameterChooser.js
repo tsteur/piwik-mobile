@@ -50,7 +50,7 @@ function View_Helper_ParameterChooser () {
 
         var view = Titanium.UI.createView({
             width: this.view.size.width - 10,
-            height: 54,
+            height: 74,
             top: 5,
             left: 5,
             right: 5,
@@ -127,6 +127,7 @@ function View_Helper_ParameterChooser () {
     this.addDayChooser = function (view) {
         
         var labelWidth = 'auto';
+        
         if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space left.
             // setting a width is a workaround to fix this bug.
@@ -135,31 +136,34 @@ function View_Helper_ParameterChooser () {
             labelWidth = parseInt(this.view.size.width, 10) - 120 - 10;
         }
 
-        this.chooseDateIcon = Titanium.UI.createImageView({
+        this.chooseDateIcon = Titanium.UI.createButton({
             image: 'images/icon/choosedate.png',
             width: 13,
             height:15,
-            top: 8,
+            top: 12,
             left: 10,
             zIndex: 5
-        });   
+        });
+        
+        if ('android' !== Titanium.Platform.osname) {
+            this.chooseDateIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
+        }
 
         this.dateValue =  Titanium.UI.createLabel({
             text: ' - ',
             height: 'auto',
-            width: labelWidth,
-            left: 30,
-            top: 6,
+            width: labelWidth - 26,
+            left: 26,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
             zIndex: 6
         });
         
         // we do not need this view, but it allows the user to easier hit the date picker
-        this.dateView = Titanium.UI.createView({height: 24,
+        this.dateView = Titanium.UI.createView({height: 34,
                                                 top: 2,
                                                 left: 4,
-                                                width: 130,
+                                                width: labelWidth,
                                                 zIndex: 4});
 
         this.period       = this.getOption('period', this.period);
@@ -167,26 +171,29 @@ function View_Helper_ParameterChooser () {
         this.periodValue  = Titanium.UI.createLabel({
             text: Translation.getPeriod(this.period, false),
             height: 'auto',
-            right: 30,
+            right: 26,
             width: 90,
             textAlign: 'right',
-            top: 6,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
             zIndex: 3
         });
         
-        this.choosePeriodIcon = Titanium.UI.createImageView({
+        this.choosePeriodIcon = Titanium.UI.createButton({
             image: 'images/icon/chooseDown.png',
             width: 13,
             height: 15,
-            top: 8,
+            top: 12,
             right: 10,
             zIndex: 2
         });
         
+        if ('android' !== Titanium.Platform.osname) {
+            this.choosePeriodIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
+        }
+        
         // we do not need this view, but it allows the user to easier hit the period picker
-        this.periodView = Titanium.UI.createView({height: 24,
+        this.periodView = Titanium.UI.createView({height: 34,
                                                   top: 2,
                                                   right: 4,
                                                   width: 80,
@@ -212,7 +219,7 @@ function View_Helper_ParameterChooser () {
         };
 
         this.dateValue.addEventListener('singletap', onShowDatePicker);
-        this.chooseDateIcon.addEventListener('singletap', onShowDatePicker);
+        this.chooseDateIcon.addEventListener('click', onShowDatePicker);
         this.dateView.addEventListener('singletap', onShowDatePicker);
         Ui_Menu.addItem({title: _('General_ChooseDate')}, onShowDatePicker);
         
@@ -229,7 +236,7 @@ function View_Helper_ParameterChooser () {
         };
         
         this.periodValue.addEventListener('singletap', onShowPeriodChooser);
-        this.choosePeriodIcon.addEventListener('singletap', onShowPeriodChooser);
+        this.choosePeriodIcon.addEventListener('click', onShowPeriodChooser);
         this.periodView.addEventListener('singletap', onShowPeriodChooser);
         Ui_Menu.addItem({title: _('General_ChoosePeriod')}, onShowPeriodChooser);
         
@@ -261,9 +268,9 @@ function View_Helper_ParameterChooser () {
         });
 
         view.add(this.chooseDateIcon);
-        view.add(this.dateValue);
+        this.dateView.add(this.dateValue);
         view.add(this.dateView);
-        view.add(this.periodValue);
+        this.periodView.add(this.periodValue);
         view.add(this.choosePeriodIcon);
         view.add(this.periodView);
         this.dateView.show();
@@ -285,7 +292,7 @@ function View_Helper_ParameterChooser () {
             // space left. Setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.size.width, 10) - 80;
+            labelWidth = parseInt(this.view.size.width, 10) - 50;
         }
     
         var currentSite  = this.getOption('currentSite', {name: ''});
@@ -293,9 +300,8 @@ function View_Helper_ParameterChooser () {
         this.siteChooser =  Titanium.UI.createLabel({
             text: currentSite.name,
             height: 'auto',
-            left: 10,
-            top: 32,
-            color: '#333333',
+            left: 7,
+            color: '#996600',
             width: labelWidth,
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
             zIndex: 10
@@ -305,23 +311,27 @@ function View_Helper_ParameterChooser () {
             height: 1,
             left: 10,
             right: 10,
-            top: 27,
+            top: 37,
             borderWidth: 0,
             backgroundColor: '#333333',
             zIndex: 7
         });
         
-        this.chooseSiteIcon = Titanium.UI.createImageView({
+        this.chooseSiteIcon = Titanium.UI.createButton({
             image:'images/icon/chooseDown.png',
             width: 13,
             height: 15,
-            top: 34,
+            top: 48,
             right: 9
         });
         
+        if ('android' !== Titanium.Platform.osname) {
+            this.chooseSiteIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
+        }
+        
         // we do not need this view, but it allows the user to easier hit the site picker
-        this.siteView = Titanium.UI.createView({height: 24,
-                                                top: 28,
+        this.siteView = Titanium.UI.createView({height: 34,
+                                                top: 38,
                                                 left: 4,
                                                 width: 200,
                                                 zIndex: 8});
@@ -350,7 +360,7 @@ function View_Helper_ParameterChooser () {
         };
         
         this.siteChooser.addEventListener('singletap', onShowSiteChooser);
-        this.chooseSiteIcon.addEventListener('singletap', onShowSiteChooser);
+        this.chooseSiteIcon.addEventListener('click', onShowSiteChooser);
         this.siteView.addEventListener('singletap', onShowSiteChooser);
         Ui_Menu.addItem({title : _('General_ChooseWebsite')}, onShowSiteChooser);
         
@@ -391,7 +401,7 @@ function View_Helper_ParameterChooser () {
             }
         });
         
-        view.add(this.siteChooser);
+        this.siteView.add(this.siteChooser);
         view.add(this.chooseSiteIcon);
         view.add(this.siteView);
         view.add(separator);

@@ -153,9 +153,12 @@ function View_Helper_Headline () {
                 height: 30,
                 top: 2,
                 right: 8,
-                zIndex: 10,
-                style: 0
+                zIndex: 10
             });
+            
+            if ('android' !== Titanium.Platform.osname) {
+                this.backIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
+            }
             
             view.add(this.backIcon);
             
