@@ -218,7 +218,6 @@ function View_Helper_ParameterChooser () {
             });
         };
 
-        this.dateValue.addEventListener('singletap', onShowDatePicker);
         this.chooseDateIcon.addEventListener('click', onShowDatePicker);
         this.dateView.addEventListener('singletap', onShowDatePicker);
         Ui_Menu.addItem({title: _('General_ChooseDate')}, onShowDatePicker);
@@ -235,7 +234,6 @@ function View_Helper_ParameterChooser () {
             dialog.show();
         };
         
-        this.periodValue.addEventListener('singletap', onShowPeriodChooser);
         this.choosePeriodIcon.addEventListener('click', onShowPeriodChooser);
         this.periodView.addEventListener('singletap', onShowPeriodChooser);
         Ui_Menu.addItem({title: _('General_ChoosePeriod')}, onShowPeriodChooser);
@@ -359,7 +357,6 @@ function View_Helper_ParameterChooser () {
             dialog.show();
         };
         
-        this.siteChooser.addEventListener('singletap', onShowSiteChooser);
         this.chooseSiteIcon.addEventListener('click', onShowSiteChooser);
         this.siteView.addEventListener('singletap', onShowSiteChooser);
         Ui_Menu.addItem({title : _('General_ChooseWebsite')}, onShowSiteChooser);
