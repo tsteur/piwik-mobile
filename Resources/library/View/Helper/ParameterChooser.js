@@ -220,7 +220,7 @@ function View_Helper_ParameterChooser () {
 
         this.chooseDateIcon.addEventListener('click', onShowDatePicker);
         this.dateView.addEventListener('singletap', onShowDatePicker);
-        Ui_Menu.addItem({title: _('General_ChooseDate')}, onShowDatePicker);
+        Ui_Menu.addItem({title: _('General_ChooseDate'), icon: 'images/icon/menu_choosedate.png'}, onShowDatePicker);
         
         var dialog = Titanium.UI.createOptionDialog({
             title: _('General_ChoosePeriod'),
@@ -236,7 +236,7 @@ function View_Helper_ParameterChooser () {
         
         this.choosePeriodIcon.addEventListener('click', onShowPeriodChooser);
         this.periodView.addEventListener('singletap', onShowPeriodChooser);
-        Ui_Menu.addItem({title: _('General_ChoosePeriod')}, onShowPeriodChooser);
+        Ui_Menu.addItem({title: _('General_ChoosePeriod'), icon: 'images/icon/menu_chooseDown.png'}, onShowPeriodChooser);
         
         dialog.addEventListener('click', function (event) {
             
@@ -359,7 +359,7 @@ function View_Helper_ParameterChooser () {
         
         this.chooseSiteIcon.addEventListener('click', onShowSiteChooser);
         this.siteView.addEventListener('singletap', onShowSiteChooser);
-        Ui_Menu.addItem({title : _('General_ChooseWebsite')}, onShowSiteChooser);
+        Ui_Menu.addItem({title : _('General_ChooseWebsite'), icon: 'images/icon/menu_chooseDown.png'}, onShowSiteChooser);
         
         var win = this.view;
         
