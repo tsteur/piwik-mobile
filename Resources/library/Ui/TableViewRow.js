@@ -13,6 +13,7 @@
  *
  * @param  {Object}   [params]                    See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
  * @param  {string}   [params.value]              Optional, displays a value within the row.
+ * @param  {string}   [params.description]        Optional, displays a description within the row.
  * @param  {Object}   [params.rightImage]         Optional, an image to render in the right image area of the row cell.
  * @param  {string}   [params.rightImage.url]     The url (local or remote) to the right image.
  * @param  {number}   [params.rightImage.width]   The width of the right image.
@@ -28,13 +29,12 @@
  *                            value: 'English'}); // creates an instance of the row
  * row.changeValue('German');                     // changes the value of the row afterwards
  * row.changeTitle('Foobar');                     // changes the title of the row afterwards
+ * row.changeDescription('Foobar');               // changes the description of the row afterwards
  *
  * @returns {Titanium.UI.TableViewRow} A table view row instance extended by the methods 'changeTitle' and 
  *                                     'changeValue'. ChangeValue lets you change the value whereas changeTitle lets you
  *                                     change the title. Please, do not set row.title directly as we use a custom title
  *                                     label to display the title.
- *
- * @todo provide the possiblity to set descriptions which is placed below the title
  */
 function Ui_TableViewRow (params) {
 
@@ -54,13 +54,15 @@ function Ui_TableViewRow (params) {
     params.color = config.theme.textColor;
     params.font  = {fontFamily: config.theme.fontFamily, fontSize: fontSize, fontWeight: fontWeight};
     
-    var title      = params.title || null;
-    var value      = params.value || null;
-    var rightImage = params.rightImage || null;
-    var leftImage  = params.leftImage || null;
+    var title       = params.title || null;
+    var value       = params.value || null;
+    var description = params.description || null;
+    var rightImage  = params.rightImage || null;
+    var leftImage   = params.leftImage || null;
         
     delete params.title;
     delete params.value;
+    delete params.description;
     delete params.rightImage;
     delete params.leftImage;
 
@@ -91,14 +93,64 @@ function Ui_TableViewRow (params) {
             
             this.add(this.titleLabel);
             
-        } else if (this.titleLabel && (title || '' === title)) {
+        } 
+        
+        if (this.titleLabel && (title || '' === title)) {
         
             this.titleLabel.text = title;
+            
+            if (this.descriptionLabel) {
+                this.titleLabel.top = 6;
+            }
             
         } else if (this.titleLabel && !title) {
         
             this.remove(this.titleLabel);
             this.titleLabel = null;
+        }
+    };
+    
+    /** @memberOf Titanium.UI.TableViewRow */
+    row.changeDescription = function (description) {
+    
+        if (!this.descriptionLabel && (description || '' === description)) {
+
+            this.descriptionLabel = Titanium.UI.createLabel({
+                font: {fontFamily: config.theme.fontFamily, fontSize: (fontSize - 2)},
+                text: description,
+                textAlign: 'left',
+                width: 'auto',
+                height: 'auto',
+                left: 0,
+                bottom: 6,
+                color: '#888888',
+            });
+            
+            if ('android' !== Titanium.Platform.osname) {
+                this.descriptionLabel.left   = 10;
+                this.descriptionLabel.bottom = 1;
+            }
+            
+            if (('undefined' !== (typeof leftImage)) && leftImage && leftImage.width) {
+                 this.descriptionLabel.left = this.descriptionLabel.left + 10 + leftImage.width;
+            }
+            
+            this.add(this.descriptionLabel);
+            
+        } 
+        
+        if (this.descriptionLabel && (description || '' === description)) {
+        
+            this.descriptionLabel.text = description;
+            
+            if (this.titleLabel) {
+                this.titleLabel.top = 6;
+            }
+            
+        } else if (this.descriptionLabel && !description) {
+        
+            this.remove(this.descriptionLabel);
+            this.descriptionLabel = null;
         }
     };
     
@@ -136,6 +188,7 @@ function Ui_TableViewRow (params) {
     
     row.changeTitle(title);
     row.changeValue(value);
+    row.changeDescription(description);
     
     if (rightImage && 'android' === Titanium.Platform.osname) {
         
