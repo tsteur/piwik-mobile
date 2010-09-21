@@ -149,12 +149,15 @@ Translation.DEFAULT_TRANSLATION = {
     General_RequestTimedOut:                                            'A data request to %s timed out. Please try again.',
     Mobile_AnonymousAccess:                                             'Anonymous access',
     Mobile_AccessUrlLabel:                                              'Piwik Access Url',
+    Mobile_ChooseHttpTimeout:                                           'Choose HTTP timeout value',
     Mobile_DefaultReportDate:                                           'Report date',
     Mobile_EnableGraphsLabel:                                           'Display graphs',
     Mobile_MultiChartLabel:                                             'Display sparklines',
     Mobile_MultiChartInfo:                                              'next to each website on the welcome screen',
     Mobile_NetworkNotReachable:                                         'Network not reachable',
     Mobile_SaveSuccessError:                                            'Please verify settings',
+    Mobile_HttpTimeout:                                                 'HTTP Timeout',
+    Mobile_HttpTimeoutInfo:                                             'increase if you receive timeout errors',
     Mobile_YouAreOffline:                                               'Sorry, you are currently offline'
 };
 

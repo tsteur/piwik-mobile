@@ -21,7 +21,7 @@ var config = {};
  * @type Object
  */
 config.piwik = {
-    timeout: 180000,
+    timeout: 120000,
     /**
      * default row to be used in all statistics
      */

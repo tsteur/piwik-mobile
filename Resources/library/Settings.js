@@ -177,6 +177,30 @@ Settings.getPiwikUserAuthToken = function () {
 };
 
 /**
+ * Sets (overwrites) the http timeout value.
+ * 
+ * @param {int}  value   The timeout value in ms.
+ * 
+ * @type null
+ */
+Settings.setHttpTimeout = function (value) {
+    return Settings._set('httpTimeout', 'Int', value);
+};
+
+/**
+ * Retrieve the stored http timeout value in ms.
+ * 
+ * @returns {int}  The timeout value.
+ */
+Settings.getHttpTimeout = function () {
+
+    var timeoutValue = Settings._get('httpTimeout', 'Int', config.piwik.timeout);
+    timeoutValue     = parseInt(timeoutValue, 10);
+    
+    return timeoutValue;
+};
+
+/**
  * Sets (overwrites) the default piwik report date.
  *
  * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters">Standard parameters</a>
@@ -227,12 +251,12 @@ Settings.getPiwikDefaultPeriod = function () {
 /**
  * Retrieve a setting which was previously stored under the given key.
  * 
- * @param   {string}          key               A unique key which identifies a specific setting.
- * @param   {string}          type              The expected type of data.
- * @param   {string|boolean}  [defaultValue]    Optional default value if no value is stored unter this key.
+ * @param   {string}              key               A unique key which identifies a specific setting.
+ * @param   {string}              type              The expected type of data.
+ * @param   {string|boolean|int}  [defaultValue]    Optional default value if no value is stored unter this key.
  * 
- * @returns {string|boolean|null} Tries to retrieve the stored value. If the key is not found and a defaultValue is
-                                  given, it returns the defaultValue. Returns null in all other cases.
+ * @returns {string|boolean|int|null} Tries to retrieve the stored value. If the key is not found and a defaultValue is
+                                      given, it returns the defaultValue. Returns null in all other cases.
  * 
  * @private
  */
@@ -252,6 +276,14 @@ Settings._get = function (key, type, defaultValue) {
             }
 
             value = Titanium.App.Properties.getBool(key, defaultValue);
+            
+        } else if (type && 'Int' === type) {
+
+            if (!defaultValue) {
+                defaultValue = 0;
+            }
+            
+            value = Titanium.App.Properties.getInt(key, parseInt(defaultValue, 10));
             
         } else {
             
@@ -273,9 +305,9 @@ Settings._get = function (key, type, defaultValue) {
 /**
  * Stores a setting in the application store.
  * 
- * @param   {string}          key     A unique key which identifies a specific setting.
- * @param   {string}          type    Identifies what type of data the value is.
- * @param   {string|boolean}  value   The value which should be stored.
+ * @param   {string}              key     A unique key which identifies a specific setting.
+ * @param   {string}              type    Identifies what type of data the value is.
+ * @param   {string|boolean|int}  value   The value which should be stored.
  * 
  * @type null
  * 
@@ -289,6 +321,12 @@ Settings._set = function (key, type, value) {
     if (type && 'Bool' === type) {
 
         return Titanium.App.Properties.setBool(key, value);
+
+    }
+
+    if (type && 'Int' === type) {
+
+        return Titanium.App.Properties.setInt(key, parseInt(value, 10));
 
     }
 

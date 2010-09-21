@@ -100,7 +100,7 @@ function View (params) {
             _this.hideWaitIndicator(true);
         }
         
-        this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (parseInt(config.piwik.timeout, 10) * 1.6));
+        this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (Settings.getHttpTimeout() * 1.6));
 
         this.waitIndicatorImage.show();
 

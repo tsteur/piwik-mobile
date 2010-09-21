@@ -188,6 +188,7 @@ function template () {
         color: '#D17D2A',
         backgroundColor: '#F6F6F6',
         borderRadius: config.theme.borderRadius,
+        selectedColor: config.theme.titleColor,
         borderColor: '#ECEDEC',
         borderWidth: 1,
         font: {fontSize:config.theme.fontSizeNormal, fontWeight: 'bold'}

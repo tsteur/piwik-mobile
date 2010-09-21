@@ -22,8 +22,6 @@ function IndexController () {
     this.indexAction = function () {
 
         this.view.showMultiChart = Settings.getPiwikMultiChart();
-
-        var sites = [];
         
         var piwik = this.getModel('Piwik');
 

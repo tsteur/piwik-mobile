@@ -173,23 +173,59 @@ function template () {
         Window.createMvcWindow({jsController: 'settings',
                                 jsAction:     'access'});
     };
+    
+    var onChangeHttpTimeout = function () {
+    
+        var timeoutValues = ['15s', '30s', '45s', '60s', '90s', '120s', '150s', '180s', '300s', '450s', '600s', '1000s'];
+        
+        var timeoutDialog = Titanium.UI.createOptionDialog({
+            title: _('Mobile_ChooseHttpTimeout'),
+            options: timeoutValues
+        });
+        
+        var row = this;
+        
+        timeoutDialog.addEventListener('click', function (event) {
+            
+            if (event.cancel && -1 !== event.cancel) {
+                return;
+            }
+            
+            var timeoutValue = timeoutValues[event.index];
+            
+            row.changeValue(timeoutValue);
+            
+            timeoutValue = parseInt(timeoutValue.replace('s', '')) * 1000;
+            
+            Settings.setHttpTimeout(timeoutValue);
+        });
+        
+        timeoutDialog.show();
+    };
 
     var tableData = [Ui_TableViewRow({className: 'settingsSection1',
                                       title: _('UsersManager_ManageAccess'),
                                       onClick: onManageAccess,
                                       hasChild: true}),
                      Ui_TableViewRow({className: 'settingsSection1',
-                                       title: _('General_Language'),
-                                       onClick: onChangeLanguage,
-                                       value: currentLanguage,
-                                       hasChild: true}),
+                                      title: _('General_Language'),
+                                      onClick: onChangeLanguage,
+                                      value: currentLanguage,
+                                      hasChild: true}),
                      Ui_TableViewRow({className: 'settingsSection1',
                                       title: _('Mobile_DefaultReportDate'),
                                       onClick: onChangeDefaultReportDate,
                                       value: defaultReportDateLabel, 
                                       hasChild: true}),
+                     Ui_TableViewRow({className: 'settingsSection1',
+                                      title: _('Mobile_HttpTimeout'),
+                                      description: _('Mobile_HttpTimeoutInfo'),
+                                      onClick: onChangeHttpTimeout,
+                                      value: Math.round(Settings.getHttpTimeout() / 1000) + 's',
+                                      hasChild: true}),
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_MultiChartLabel'),
+                                      description: _('Mobile_MultiChartInfo'),
                                       onClick: onChangeSparkline,
                                       hasCheck: Boolean(this.piwikMultiCharts)}),
                      Ui_TableViewRow({className: 'settingsSection2',
@@ -216,6 +252,7 @@ function template () {
     });
     
     box.subView.add(tableview);
+    
     tableview.show();
     
     if (tableview.scrollToTop) {

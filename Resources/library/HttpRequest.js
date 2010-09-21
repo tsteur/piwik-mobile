@@ -230,6 +230,7 @@ function HttpRequest () {
                         break;
                     
                     case 'Request aborted':
+                    case 'Chunked stream ended unexpectedly':
 
                         _this.errorMessageSent = true;
 
@@ -330,8 +331,10 @@ function HttpRequest () {
             if (isValidResponse) {
             
                 _this.numReceivedCalls++;
-
-                callback.apply(_this.context, [response, parameter]);
+                
+                if (callback) {
+                    callback.apply(_this.context, [response, parameter]);
+                }
                 
                 _this.verifyAllResultsReceived();
                 
@@ -379,8 +382,9 @@ function HttpRequest () {
         
         // override the iPhone default timeout -> this timeout should never occur since we have implemented our own
         // timeout which is lower than this timeout.
-        xhr.timeout = parseInt(config.piwik.timeout, 10) + 20000;
-        xhr.setTimeout(parseInt(config.piwik.timeout, 10) + 20000);
+        var timeoutValue = parseInt(Settings.getHttpTimeout(), 10);
+        xhr.timeout      = timeoutValue + 20000;
+        xhr.setTimeout(timeoutValue + 20000);
 
         function cancelXhr () {
             // cancel xhr only if request is not already done
@@ -390,7 +394,7 @@ function HttpRequest () {
         }
         
         // Titanium supports xhr.setTimeout() only for iPhone. Therefore, we create our own timeout.
-        var xhrTimeout = setTimeout(cancelXhr, config.piwik.timeout);
+        var xhrTimeout = setTimeout(cancelXhr, timeoutValue);
 
         xhr.open("GET", requestUrl);
         
