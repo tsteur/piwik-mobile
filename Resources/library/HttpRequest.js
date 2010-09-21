@@ -374,11 +374,10 @@ function HttpRequest () {
         
         Log.debug('RequestUrl is ' + requestUrl, 'HttpRequest');
         
-        var xhr     = Titanium.Network.createHTTPClient();
+        var xhr     = Titanium.Network.createHTTPClient({validatesSecureCertificate: false});
         
         xhr.onload  = successHandler;
         xhr.onerror = errorHandler;
-        xhr.validatesSecureCertificate = false;
         
         // override the iPhone default timeout -> this timeout should never occur since we have implemented our own
         // timeout which is lower than this timeout.
