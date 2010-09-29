@@ -171,7 +171,7 @@ function template () {
     
     var onManageAccess = function () {
         Window.createMvcWindow({jsController: 'settings',
-                                jsAction:     'access'});
+                                jsAction:     'manageaccounts'});
     };
     
     var onChangeHttpTimeout = function () {
