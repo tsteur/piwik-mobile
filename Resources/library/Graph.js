@@ -559,11 +559,13 @@ Graph.getBarChartUrl = function (values) {
  * Exceptionally, the piwik api can be used to display sparklines. It automatically displays sparklines of the 
  * last30 days from now on.
  * 
- * @param {Int}   siteId   The id of a piwik site.
+ * @param {Int}      siteId      The id of a piwik site.
+ * @param {string}   accessUrl   The access URL of a piwik site.
+ * @param {string}   tokenAuth   The regarding auth_token of a piwik site.
  * 
  * @returns String    The generated url to display a sparkline url.
  */
-Graph.getSparklineUrl = function (siteId) {
+Graph.getSparklineUrl = function (siteId, accessUrl, tokenAuth) {
 
-    return Settings.getPiwikUrl() + '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + Settings.getPiwikUserAuthToken();
+    return accessUrl + '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + tokenAuth;
 };

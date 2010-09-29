@@ -8,7 +8,7 @@
  
 /**
  * @class  Provides the ability to make an authenticated call using the piwik rest api. The data are requested
- *         via HTTP GET method.
+ *         via HTTP GET method. 
  * 
  * @augments HttpRequest
  */
@@ -70,7 +70,9 @@ function PiwikModel () {
 
         // override default token only if token is a string and has at least 5 chacters.
         if (token && 'string' === (typeof token).toLowerCase() && 4 < token.length) {
-            this.userAuthToken  = token;
+            this.userAuthToken = token;
+        } else {
+            this.userAuthToken = 'anonymous';
         }
 
     };
@@ -79,6 +81,7 @@ function PiwikModel () {
      * Registers a call to send it simultaneously with other calls afterwards.
      * 
      * @param {string}     method     See {@link HttpRequest#send}
+     * @param {Object}     account    See {@link AccountModel#getAccountById}
      * @param {Object}     parameter  See {@link HttpRequest#send}
      * @param {Function}   callback   See {@link HttpRequest#send}
      * 
@@ -86,10 +89,11 @@ function PiwikModel () {
      *
      * @override
      */
-    this.registerCall = function (method, parameter, callback) {
+    this.registerCall = function (method, parameter, account, callback) {
 
         this.registeredCalls.push({method: method,
                                    parameter: parameter,
+                                   account: account,
                                    callback: callback});
         
     };
@@ -113,21 +117,18 @@ function PiwikModel () {
         
         var call = null;
         
-        for (var index = 0; index < this.registeredCalls.length; index++) {
-            call = this.registeredCalls[index];
+        if (!this.registeredCalls || 0 === this.registeredCalls.length) {
+        
+            this.verifyAllResultsReceived();
+            
+        } else {
+            
+            for (var index = 0; index < this.registeredCalls.length; index++) {
+                call = this.registeredCalls[index];
 
-            this.send(call.method, call.parameter, call.callback);
+                this.send(call.method, call.parameter, call.account, call.callback);
+            }
         }
-    };
-    
-    /**
-     * Does some initial stuff.
-     * 
-     * @type null
-     */
-    this.init = function () {
-        this.setBaseUrl(Settings.getPiwikUrl());
-        this.setUserAuthToken(Settings.getPiwikUserAuthToken());
     };
     
     /**
@@ -214,6 +215,7 @@ function PiwikModel () {
      * Sends a request to the piwik api.
      *
      * @param {string}   method      The method you want to call. See {@link http://dev.piwik.org/trac/wiki/API/Reference#Methods}
+     * @param {Object}   account     See {@link AccountModel#getAccountById}
      * @param {Object}   parameter   The given parameters in this style: Object ( [key] => <value> )
      * @param {Function} callback    A callback function which is called upon a successful or error response. In case of
      *                               a error response the callback receives no arguments, otherwise the arguments are 
@@ -221,10 +223,18 @@ function PiwikModel () {
      *
      * @type null
      */
-    this.send = function (method, parameter, callback) {
+    this.send = function (method, parameter, account, callback) {
 
         if (!parameter) {
             parameter = {};
+        }
+        
+        if (account && account.tokenAuth) {
+            this.setUserAuthToken(account.tokenAuth);
+        }
+        
+        if (account && account.accessUrl) {
+            this.setBaseUrl(account.accessUrl);
         }
 
         parameter        = this._mixinParameter(parameter);
@@ -234,8 +244,6 @@ function PiwikModel () {
         
         return;
     };
-    
-    this.init();
 }
 
 /**

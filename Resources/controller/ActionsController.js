@@ -70,7 +70,10 @@ function ActionsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Actions.getPageUrls', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Actions.getPageUrls', parameter, account, function (response) { 
             if(response) {
                 this.view.page = response;
             }
@@ -123,7 +126,10 @@ function ActionsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Actions.getPageTitles', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Actions.getPageTitles', parameter, account, function (response) { 
             if(response) {
                 this.view.pagetitle = response;
             }
@@ -176,7 +182,10 @@ function ActionsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Actions.getOutlinks', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Actions.getOutlinks', parameter, account, function (response) { 
             if(response) {
                 this.view.outlink = response;
             }
@@ -229,7 +238,10 @@ function ActionsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Actions.getDownloads', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Actions.getDownloads', parameter, account, function (response) { 
             if(response) {
                 this.view.download = response;
             }

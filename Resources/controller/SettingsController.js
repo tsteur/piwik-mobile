@@ -33,14 +33,33 @@ function SettingsController () {
      * 
      * @type null
      */
-    this.accessAction = function () {
+    this.manageaccountsAction = function () {
         
-        this.view.piwikUrl            = Settings.getPiwikUrl();
-        this.view.piwikUser           = Settings.getPiwikUser();
-        this.view.piwikPassword       = Settings.getPiwikPassword();
+        var accountManager       = this.getModel('Account');
+        
+        this.view.accounts       = accountManager.getAccounts();
+        this.view.accountManager = accountManager;
+        
+        this.render('manageaccounts');
+    };
+
+    /**
+     * Create a new account.
+     * 
+     * @type null
+     */
+    this.createaccountAction = function () {
+
+        this.view.piwikUrl          = '';
+        this.view.piwikUser         = '';
+        this.view.piwikPassword     = '';
+        this.view.piwikAuthToken    = '';
+        this.view.accountId         = null;
+
         this.view.piwik               = this.getModel('Piwik');
         // create another piwikModel instance cause we want to disable sendErrors
         this.view.piwikApiCheck       = this.getModel('Piwik');
+        this.view.accountManager      = this.getModel('Account');
         this.view.comparePiwikVersion = this.requestVersion;
 
         /**
@@ -50,7 +69,54 @@ function SettingsController () {
          */
         this.requestLatestVersion();
         
-        this.render('access');
+        this.render('editaccount');
+    };
+
+    /**
+     * Update an existing account.
+     * 
+     * @type null
+     */
+    this.updateaccountAction = function () {
+        
+        var accountId = this.getParam('accountId');
+        
+        if (!accountId) {
+
+            var alertDialog = Titanium.UI.createAlertDialog({
+                title: _('General_Error'),
+                message: _('General_ErrorRequest'),
+                buttonNames: [_('General_Ok')]
+            });
+
+            alertDialog.show();
+            
+            this.view.close();
+            
+            return;
+        } 
+
+        var accountManager       = this.getModel('Account');
+        var account              = accountManager.getAccountById(accountId);
+        this.view.piwikUrl       = account.accessUrl;
+        this.view.piwikUser      = account.username;
+        this.view.piwikAuthToken = account.tokenAuth;
+        this.view.accountId      = accountId;
+        
+        this.view.piwik               = this.getModel('Piwik');
+        // create another piwikModel instance cause we want to disable sendErrors
+        this.view.piwikApiCheck       = this.getModel('Piwik');
+        this.view.accountManager      = this.getModel('Account');
+        this.view.comparePiwikVersion = this.requestVersion;
+
+        /**
+         * prefetching latest version number. execute request in background and do not wait. we need this value later 
+         * as soon as the user fires the  save button. we are fetching this already here to have a better performance 
+         * while requesting the users piwik version.
+         */
+        this.requestLatestVersion();
+        
+        this.render('editaccount');
     };
     
     /**
@@ -65,17 +131,16 @@ function SettingsController () {
      */
     this.requestVersion = function () {
 
-        this.piwikApiCheck.init();
-
         /**
          * disable the display of error messages in this case. the worst case will be the user does not get informed 
          * if the latest version of piwik is not installed
          */
         this.piwikApiCheck.sendErrors = false;
         
-        var _this = this;
+        var _this          = this;
+        var account        = this.accountManager.getAccountById(this.accountId);
         
-        this.piwikApiCheck.send('ExampleAPI.getPiwikVersion', {}, function (response) {
+        this.piwikApiCheck.send('ExampleAPI.getPiwikVersion', {}, account, function (response) {
 
             if (!response) {
             

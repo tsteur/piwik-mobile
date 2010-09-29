@@ -14,6 +14,13 @@
 function IndexController () {
 
     /**
+     * Holds each available site.
+     * 
+     * @type Array
+     */
+    this.sites = [];
+
+    /**
      * Default action. This action is displayed by default. Displays a list of all available sites. If no site is 
      * available it is only possible to set up the app. The user needs at least view access to see a site in this list.
      *
@@ -23,22 +30,27 @@ function IndexController () {
 
         this.view.showMultiChart = Settings.getPiwikMultiChart();
         
-        var piwik = this.getModel('Piwik');
+        var piwik          = this.getModel('Piwik');
+        var accountManager = this.getModel('Account');
+        var accounts       = accountManager.getAccounts();
 
-        var onReceiveSitesWithAtLeastViewAccess = function (response) {
+        var onReceiveSitesWithAtLeastViewAccess = function (response, parameter) {
 
             var allowedSites    = response;
 
             if (!allowedSites || !(allowedSites instanceof Array) || 0 == allowedSites.length) {
 
-                this.view.sites = sites;
-
-                this.render('index');
-
                 return;
             }
             
-            var sites = [];
+            var account = {};
+            if (this.view.showMultiChart) {
+                for (var index = 0; index < accounts.length; index++) {
+                    if (accounts[index] && accounts[index].id == parameter.accountId) {
+                        account = accounts[index];
+                    }
+                }
+            }
 
             for (var index = 0; index < allowedSites.length; index++) {
 
@@ -51,22 +63,37 @@ function IndexController () {
                 site.sparklineUrl     = '';
                 if (this.view.showMultiChart) {
 
-                    site.sparklineUrl = Graph.getSparklineUrl(site.idsite);
+                    site.sparklineUrl = Graph.getSparklineUrl(site.idsite, account.accessUrl, account.tokenAuth);
                 }
+                
+                site.accountId = parameter.accountId;
 
-                sites.push(site);
+                this.sites.push(site);
             }
-
-            this.view.sites   = sites;
-            
-            Cache.set('piwik_sites_allowed', this.view.sites, null);
-
-            this.render('index');
 
             return;
         };
         
-        piwik.send('SitesManager.getSitesWithAtLeastViewAccess', {}, onReceiveSitesWithAtLeastViewAccess);
+        for (var index = 0; index < accounts.length; index++) {
+        
+            if (!accounts[index] || !Boolean(accounts[index].active)) {
+                continue;
+            }
+        
+            piwik.registerCall('SitesManager.getSitesWithAtLeastViewAccess', 
+                               {accountId: accounts[index].id}, 
+                               accounts[index], 
+                               onReceiveSitesWithAtLeastViewAccess);
+        }
+
+        piwik.sendRegisteredCalls(function () {
+
+            this.view.sites = this.sites;
+            
+            Cache.set('piwik_sites_allowed', this.sites, null);
+
+            this.render('index');
+        });
     };
 }
 

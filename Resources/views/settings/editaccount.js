@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  * 
- * @fileOverview View template settings/access.
+ * @fileOverview View template settings/editaccount.
  */
 
 /**
@@ -86,25 +86,6 @@ function template () {
         value: false
     });
     
-    piwikAnonymous.addEventListener('change', function (event) {
-    
-        if (event.value) {
-            // anonymous is activated
-        
-            piwikUser.value       = '';
-            piwikUser.enabled     = false;
-            piwikPassword.value   = '';
-            piwikPassword.enabled = false;
-        
-        } else {
-            // anonymous is deactivated
-            
-            piwikUser.enabled     = true;
-            piwikPassword.enabled = true;
-        
-        }
-    });
-    
     top = top + 32;
     var labelUser  = Titanium.UI.createLabel({
         text: _('Login_Login'),
@@ -163,7 +144,26 @@ function template () {
         font: {fontSize: config.theme.fontSizeNormal}
     });
     
-    // @todo set keyboard: Titanium.UI.KEYBOARD_PASSWORD should be supported in Titanium Mobile 1.4.0
+    piwikAnonymous.addEventListener('change', function (event) {
+
+        if (event.value) {
+            // anonymous is activated
+        
+            piwikUser.value       = '';
+            piwikUser.enabled     = false;
+            piwikPassword.value   = '';
+            piwikPassword.enabled = false;
+        
+        } else {
+            // anonymous is deactivated
+            
+            piwikUser.enabled     = true;
+            piwikPassword.enabled = true;
+        
+        }
+    });
+    
+    // @todo set keyboard: Titanium.UI.KEYBOARD_PASSWORD should be supported in Titanium Mobile 1.5.0
 
     var win = this.view;
 
@@ -195,7 +195,7 @@ function template () {
     });
     
     // restore values
-    if ('anonymous' === Settings.getPiwikUserAuthToken()) {
+    if (this.piwikAuthToken && 'anonymous' == this.piwikAuthToken) {
         piwikAnonymous.fireEvent('change', {value: true});
         piwikAnonymous.value = true;
     }
@@ -206,10 +206,6 @@ function template () {
     
     if (this.piwikUser) {
         piwikUser.value = this.piwikUser;
-    }
-    
-    if (this.piwikPassword) {
-        piwikPassword.value = this.piwikPassword;
     }
     
     var _this = this;
@@ -270,19 +266,25 @@ function template () {
         
         _this.showWaitIndicator();
     
-        Settings.setPiwikUrl(piwikUrl.value);
-        Settings.setPiwikUser(piwikUser.value);
-        Settings.setPiwikPassword(piwikPassword.value);
-    
         // is called when auth token is successfully received. -> we do receive an auth_token even if user credentials
         // are not valid. we have to verify the token with another request therefore.
         var onReceiveAuthTokenSuccess = function (token) {
             
-            // this is allowed and we save the default token in such a case.
-            Settings.setPiwikUserAuthToken(token);
+            var account = {accessUrl: piwikUrl.value,
+                           username:  piwikUser.value,
+                           tokenAuth: token,
+                           name:      piwikUser.value};
+
+            if (token && 'anonymous' == token) {
+                account.name = _('Mobile_AnonymousAccess');
+            }
             
-            // we have to init piwimodel again after setting token auth
-            _this.piwik.init();
+            if (_this.accountId) {
+                _this.accountManager.updateAccount(_this.accountId, account);
+            } else {
+                account.active  = 1;
+                _this.accountId = _this.accountManager.createAccount(account);
+            }
             
             /**
              * trigger piwik version compare only if save auth token was successful. it is possible that the window is 
@@ -291,7 +293,7 @@ function template () {
             _this.comparePiwikVersion();
             
             // verify token_auth, user should have at least view access
-            _this.piwik.send('SitesManager.getSitesIdWithAtLeastViewAccess', {}, function (response) {
+            _this.piwik.send('SitesManager.getSitesIdWithAtLeastViewAccess', {}, account, function (response) {
 
                 _this.hideWaitIndicator();
             
@@ -357,10 +359,8 @@ function template () {
         
         var parameter = {userLogin:   piwikUser.value,
                          md5Password: Titanium.Utils.md5HexDigest(piwikPassword.value)};
-    
-        _this.piwik.init();
         
-        _this.piwik.send('UsersManager.getTokenAuth', parameter, function (response) {
+        _this.piwik.send('UsersManager.getTokenAuth', parameter, {accessUrl: piwikUrl.value}, function (response) {
         
             if (!response || !(response instanceof Object) || !response.value) {
     

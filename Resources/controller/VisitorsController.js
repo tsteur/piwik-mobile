@@ -70,8 +70,11 @@ function VisitorsController () {
         parameter.period   = this.period;
 
         var piwik          = this.getModel('Piwik');
+        
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
 
-        piwik.registerCall('VisitsSummary.get', parameter, function (response) { 
+        piwik.registerCall('VisitsSummary.get', parameter, account, function (response) { 
             if(response && (response instanceof Object)) {
                 this.view.visits           = response.nb_visits;
                 this.view.uniqueVisitors   = response.nb_uniq_visitors;
@@ -81,7 +84,7 @@ function VisitorsController () {
             }
         });
         
-        piwik.registerCall('VisitFrequency.get', parameter, function (response) { 
+        piwik.registerCall('VisitFrequency.get', parameter, account, function (response) { 
             if(response && (response instanceof Object)) {
                 this.view.visitsReturning            = response.nb_visits_returning;
                 this.view.actionsReturning           = response.nb_actions_returning;
@@ -158,16 +161,19 @@ function VisitorsController () {
         parameter.period   = this.period;
         
         var piwik          = this.getModel('Piwik');
+        
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
 
         if (this.graphsEnabled) {
-            piwik.registerCall('UserSettings.getBrowserType', parameter, function (response) { 
+            piwik.registerCall('UserSettings.getBrowserType', parameter, account, function (response) { 
                 if(response) {
                     this.view.browserTypes = response;
                 }
             });
         }
         
-        piwik.registerCall('UserSettings.getBrowser', parameter, function (response) { 
+        piwik.registerCall('UserSettings.getBrowser', parameter, account, function (response) { 
             if(response) {
                 this.view.browsers = response;
             }
@@ -218,9 +224,12 @@ function VisitorsController () {
         
         parameter.period   = this.period;
         
-        var piwik = this.getModel('Piwik');
+        var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('UserSettings.getOS', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserSettings.getOS', parameter, account, function (response) { 
             if(response) {
                 this.view.os = response;
             }
@@ -273,7 +282,10 @@ function VisitorsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('UserSettings.getResolution', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserSettings.getResolution', parameter, account, function (response) { 
             if(response) {
                 this.view.resolution = response;
             }
@@ -326,7 +338,10 @@ function VisitorsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('UserSettings.getWideScreen', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserSettings.getWideScreen', parameter, account, function (response) { 
             if(response) {
                 this.view.screentype = response;
             }
@@ -379,7 +394,10 @@ function VisitorsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('UserCountry.getCountry', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserCountry.getCountry', parameter, account, function (response) { 
             if(response) {
                 this.view.countries = response;
             }
@@ -432,7 +450,10 @@ function VisitorsController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('UserCountry.getContinent', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserCountry.getContinent', parameter, accountId, function (response) { 
             if(response) {
                 this.view.continents = response;
             }

@@ -70,8 +70,11 @@ function ReferersController () {
         parameter.period   = this.period;
 
         var piwik          = this.getModel('Piwik');
+        
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
 
-        piwik.registerCall('Referers.getRefererType', parameter, function (response) { 
+        piwik.registerCall('Referers.getRefererType', parameter, account, function (response) { 
             if(response) {
                 this.view.referer = response;
             }
@@ -186,7 +189,10 @@ function ReferersController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Referers.getSearchEngines', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Referers.getSearchEngines', parameter, account, function (response) { 
             if(response) {
                 this.view.searchengine = response;
             }
@@ -242,7 +248,10 @@ function ReferersController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Referers.getKeywords', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Referers.getKeywords', parameter, account, function (response) { 
             if(response) {
                 this.view.keyword = response;
             }
@@ -298,7 +307,10 @@ function ReferersController () {
         
         var piwik          = this.getModel('Piwik');
         
-        piwik.registerCall('Referers.getWebsites', parameter, function (response) { 
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('Referers.getWebsites', parameter, account, function (response) { 
             if(response) {
                 this.view.website = response;
             }

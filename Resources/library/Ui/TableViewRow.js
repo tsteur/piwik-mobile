@@ -116,7 +116,7 @@ function Ui_TableViewRow (params) {
         if (!this.descriptionLabel && (description || '' === description)) {
 
             this.descriptionLabel = Titanium.UI.createLabel({
-                font: {fontFamily: config.theme.fontFamily, fontSize: (fontSize - 2)},
+                font: {fontFamily: config.theme.fontFamily, fontSize: 12},
                 text: description,
                 textAlign: 'left',
                 width: 'auto',
@@ -190,11 +190,38 @@ function Ui_TableViewRow (params) {
     row.changeValue(value);
     row.changeDescription(description);
     
-    if (rightImage && 'android' === Titanium.Platform.osname) {
+    if (params.onShowOptionMenu && 'android' === Titanium.Platform.osname) {
+        row.addEventListener('touchstart', function (event) {
+    
+            if (row.accountId) {
+                row.optionTimeout = setTimeout(function () {
+                    params.onShowOptionMenu.apply(row, [event]);
+                }, 1000);
+            }
+        });
         
-        row.rightImage = rightImage.url;
+        row.addEventListener('touchend', function (event) {
+            if (row.optionTimeout) {
+                clearTimeout(row.optionTimeout);
+                delete row.optionTimeout;
+            }
+        });
         
-    } else if (rightImage) {
+        row.addEventListener('touchcancel', function (event) {
+            if (row.optionTimeout) {
+                clearTimeout(row.optionTimeout);
+                delete row.optionTimeout;
+            }
+        });
+        
+    } else if (params.onShowOptionMenu && 'android' !== Titanium.Platform.osname) {
+    
+        row.addEventListener('swipe', function (event) {
+            params.onShowOptionMenu.apply(row, [event]);
+        });
+    }
+    
+    if (rightImage) {
 
         var rowRightImage = Titanium.UI.createImageView({width: rightImage.width,
                                                          height: rightImage.height,
