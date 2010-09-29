@@ -22,6 +22,8 @@ var Settings = {};
  * @param {string}  value   The userLogin 
  * 
  * @type null
+ *
+ * @deprecated
  */
 Settings.setPiwikUser = function (value) {
     Settings._set('piwikUser', 'String', value);
@@ -33,6 +35,8 @@ Settings.setPiwikUser = function (value) {
  * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#UsersManager">UsersManager#userLogin</a>
  * 
  * @returns {string|null}  The previously stored userLogin. Value is null if value was not set before.
+ *
+ * @deprecated
  */
 Settings.getPiwikUser = function () {
     return Settings._get('piwikUser', 'String');
@@ -45,7 +49,7 @@ Settings.getPiwikUser = function () {
  * 
  * @type null
  *
- * @todo shall we really store the password on the device? or shall we just store the md5Password or nothing?
+ * @deprecated
  */
 Settings.setPiwikPassword = function (value) {
     Settings._set('piwikPassword', 'String', value);
@@ -55,6 +59,8 @@ Settings.setPiwikPassword = function (value) {
  * Retrieve the stored piwik password.
  * 
  * @returns {string|null}  The previously stored password. Value is null if value was not set before.
+ *
+ * @deprecated
  */
 Settings.getPiwikPassword = function () {
     return Settings._get('piwikPassword', 'String');
@@ -138,6 +144,8 @@ Settings.getGraphsEnabled = function () {
  * @param {string}  value   The domain/base url which should be considered in further REST requests. 
  * 
  * @type null
+ *
+ * @deprecated
  */
 Settings.setPiwikUrl = function (value) {
     Settings._set('piwikUrl', 'String', value);
@@ -147,6 +155,8 @@ Settings.setPiwikUrl = function (value) {
  * Retrieve the stored piwik domain/base url. 
  * 
  * @returns {string|null}  The previously stored domain. Value is null if value was not set before.
+ *
+ * @deprecated
  */
 Settings.getPiwikUrl = function () {
     return Settings._get('piwikUrl', 'String');
@@ -160,6 +170,8 @@ Settings.getPiwikUrl = function () {
  * @param {string}  value   The token_auth value.
  * 
  * @type null
+ *
+ * @deprecated
  */
 Settings.setPiwikUserAuthToken = function (value) {
     return Settings._set('piwikUserAuthToken', 'String', value);
@@ -171,6 +183,8 @@ Settings.setPiwikUserAuthToken = function (value) {
  * @see <a href="http://dev.piwik.org/trac/wiki/API/Reference#Makeanauthenticatedcall">token_auth</a>
  * 
  * @returns {string|null}  The previously stored token_auth value. Value is null if value was not set before.
+ *
+ * @deprecated
  */
 Settings.getPiwikUserAuthToken = function () {
     return Settings._get('piwikUserAuthToken', 'String');
