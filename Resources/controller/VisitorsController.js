@@ -108,7 +108,7 @@ function VisitorsController () {
                          period: this.view.period,
                          date: targetDate.toPiwikQueryStringLastDays(this.view.period)};
                          
-            piwik.registerCall('VisitsSummary.getVisits', parameter, function (response) { 
+            piwik.registerCall('VisitsSummary.getVisits', parameter, account, function (response) { 
                 if(response) {
                     this.view.vistsPrevious30 = response;
                 }
@@ -453,7 +453,7 @@ function VisitorsController () {
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
         
-        piwik.registerCall('UserCountry.getContinent', parameter, accountId, function (response) { 
+        piwik.registerCall('UserCountry.getContinent', parameter, account, function (response) { 
             if(response) {
                 this.view.continents = response;
             }

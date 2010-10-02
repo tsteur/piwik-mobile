@@ -96,7 +96,7 @@ function ReferersController () {
                          period: this.view.period,
                          date: targetDate.toPiwikQueryStringLastDays(this.view.period)};
     
-            piwik.registerCall('Referers.getRefererType', parameter, function (response, parameter) { 
+            piwik.registerCall('Referers.getRefererType', parameter, account, function (response, parameter) { 
                 if(response && (response instanceof Object)) {
                     var referersByType = {};
                     var labels         = {};

@@ -48,6 +48,8 @@ function IndexController () {
                 for (var index = 0; index < accounts.length; index++) {
                     if (accounts[index] && accounts[index].id == parameter.accountId) {
                         account = accounts[index];
+                        
+                        break;
                     }
                 }
             }
