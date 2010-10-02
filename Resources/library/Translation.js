@@ -311,10 +311,29 @@ Translation.fetchTranslations = function () {
                       format:       'json',
                       token_auth:   Settings.getPiwikUserAuthToken(),
                       languageCode: locale};
+                      
+    Titanium.include('/model/AccountModel.js');
+    
+    var accountManager = new AccountModel();
+    var accounts       = accountManager.getAccounts();
+    
+    var piwikUrl       = 'http://demo.piwik.org/';
+    
+    // try to use a configured accessUrl 
+    if (accounts && 0 < accounts.length) {
+        for (var index = 0; index < accounts.length; index++) {
+            if (!accounts[index] || !Boolean(accounts[index].active) || !accounts[index].accessUrl) {
+                continue;
+            }
+            
+            piwikUrl = accounts[index].accessUrl;
+            break;
+        }
+    }
     
     var request    = new HttpRequest();
     
-    request.setBaseUrl(Settings.getPiwikUrl());
+    request.setBaseUrl(piwikUrl);
     request.handleAs = 'json';
     
     request.handle(parameters, function (response, parameter) {
@@ -338,7 +357,12 @@ Translation.areCached = function () {
     
     Translation.translations = Cache.get('translations_' + language);
     
-    if (Translation.translations == Cache.KEY_NOT_FOUND) {
+    if (!Translation.translations) {
+    
+        return false;
+    }
+    
+    if (Cache.KEY_NOT_FOUND == Translation.translations) {
         
         return false;
     }
@@ -367,7 +391,7 @@ Translation.saveTranslation = function (translations, locale) {
     
     Translation.translations = translations;
     
-    if (locale) {
+    if (locale && translations) {
         Cache.set('translations_' + locale, translations, null);
     }
     
@@ -401,6 +425,10 @@ Translation.filterTranslations = function (translations) {
     var key;
     
     for(var index = 0; index < translations.length; index++) {
+        if (!translations[index] || !translations[index].label || !translations[index].value) {
+            continue;
+        }
+    
         key = translations[index].label;
     
         if(Translation.DEFAULT_TRANSLATION[key]) {
