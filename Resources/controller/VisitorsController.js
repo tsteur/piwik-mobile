@@ -354,6 +354,62 @@ function VisitorsController () {
     };
     
     /**
+     * Displays browser plugin related statistics.
+     *
+     * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}
+     * @param {string|Date}   [date]     Optional - The current selected date. {@link View_Helper_ParameterChooser}
+     * @param {string}        [period]   Optional - The current selected period. {@link View_Helper_ParameterChooser}
+     * 
+     * @type null
+     */
+    this.pluginAction = function () {
+        
+        var site         = this.getParam('site');
+        var allowedSites = Cache.get('piwik_sites_allowed');
+        
+        if (Cache.KEY_NOT_FOUND === allowedSites) {
+            allowedSites = [site];
+        }
+        
+        this.view.allowedSites = allowedSites;
+        
+        this.view.site = site;
+        
+        var parameter  = {idSite: this.view.site.idsite, 
+                          date: 'today', 
+                          filter_sort_column: 'nb_visits_percentage',
+                          filter_sort_order: 'desc'};
+        
+        if (this.date) {
+            parameter.date = this.date;
+            
+            this.view.date = this.date;
+        } else {
+            this.view.date = null;
+        }
+        
+        this.view.period   = this.period;
+        
+        parameter.period   = this.period;
+        
+        var piwik          = this.getModel('Piwik');
+        
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+        
+        piwik.registerCall('UserSettings.getPlugin', parameter, account, function (response) { 
+            if(response) {
+                this.view.plugin = response;
+            }
+        });
+        
+        piwik.sendRegisteredCalls(function () {
+            
+            this.render('plugin');
+        });
+    };
+
+    /**
      * Displays user country related statistics.
      *
      * @param {Object}        site       A site object, see {@link http://piwik.org/demo/?module=API&method=SitesManager.getSiteFromId&idSite=1&format=JSON&token_auth=anonymous}

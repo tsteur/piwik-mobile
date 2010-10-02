@@ -38,6 +38,9 @@ function template () {
                               {title:        _('UserSettings_Resolutions'),
                                jsController: 'visitors',
                                jsAction:     'resolution'},
+                              {title:        _('UserSettings_Plugins'),
+                               jsController: 'visitors',
+                               jsAction:     'plugin'},
                               {title:        _('UserSettings_WideScreen'),
                                jsController: 'visitors',
                                jsAction:     'screentype'}];
