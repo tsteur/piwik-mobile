@@ -69,7 +69,8 @@ function template () {
     if (this.os && (this.os instanceof Array) && 0 < this.os.length) {
         for(var index = 0; index < this.os.length; index++) {
             os.push({title: this.os[index].label,
-                     value: this.os[index][config.getUsedRow(this.period)]});
+                     value: this.os[index][config.getUsedRow(this.period)],
+                     logo:  this.accountUrl+'/'+this.os[index].logo});
         }
     }
     

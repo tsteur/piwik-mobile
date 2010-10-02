@@ -70,7 +70,8 @@ function template () {
         for(var index = 0; index < this.browsers.length; index++) {
             browsers.push({
                 title: this.browsers[index].label,
-                value: this.browsers[index][config.getUsedRow(this.period)]
+                value: this.browsers[index][config.getUsedRow(this.period)],
+                logo:  this.accountUrl+'/'+this.browsers[index].logo
             });
         }
     }

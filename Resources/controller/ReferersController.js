@@ -192,6 +192,8 @@ function ReferersController () {
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
         
+        this.view.accountUrl = account.accessUrl;
+        
         piwik.registerCall('Referers.getSearchEngines', parameter, account, function (response) { 
             if(response) {
                 this.view.searchengine = response;

@@ -68,8 +68,11 @@ function template () {
     
     if (this.plugin && (this.plugin instanceof Array) && 0 < this.plugin.length) {
         for(var index = 0; index < this.plugin.length; index++) {
-            plugin.push({title: this.plugin[index].label,
-                     value: this.plugin[index]['nb_visits_percentage']});
+            plugin.push({
+                title: this.plugin[index].label,
+                value: this.plugin[index]['nb_visits_percentage'],
+                logo: this.accountUrl+'/'+this.plugin[index].logo
+            });
         }
     }
     

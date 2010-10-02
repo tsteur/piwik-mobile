@@ -164,7 +164,9 @@ function VisitorsController () {
         
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
-
+        
+        this.view.accountUrl = account.accessUrl;
+        
         if (this.graphsEnabled) {
             piwik.registerCall('UserSettings.getBrowserType', parameter, account, function (response) { 
                 if(response) {
@@ -228,6 +230,8 @@ function VisitorsController () {
         
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
+        
+        this.view.accountUrl = account.accessUrl;
         
         piwik.registerCall('UserSettings.getOS', parameter, account, function (response) { 
             if(response) {
@@ -396,6 +400,8 @@ function VisitorsController () {
         
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
+        
+        this.view.accountUrl = account.accessUrl;
         
         piwik.registerCall('UserSettings.getPlugin', parameter, account, function (response) { 
             if(response) {

@@ -67,8 +67,11 @@ function template () {
 
     if (this.searchengine && (this.searchengine instanceof Array) && 0 < this.searchengine.length) {
         for(var index = 0; index < this.searchengine.length; index++) {
-            searchengine.push({title: this.searchengine[index].label,
-                               value: this.searchengine[index][config.getUsedRow(this.period)]});
+            searchengine.push({
+                title: this.searchengine[index].label,
+                value: this.searchengine[index][config.getUsedRow(this.period)],
+                logo:  this.accountUrl+'/'+this.searchengine[index].logo
+            });
         }
     }
     
