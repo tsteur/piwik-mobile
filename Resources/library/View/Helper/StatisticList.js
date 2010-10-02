@@ -237,6 +237,7 @@ function View_Helper_StatisticList () {
             
             var title     = statistic.title;
             var value     = statistic.value;
+            var logo      = statistic.logo;
          
             // @todo define config theme vars
             leftBgcolor  = '#f5f5f5';
@@ -283,6 +284,18 @@ function View_Helper_StatisticList () {
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
 
+            if(logo) {
+                var imageView = Titanium.UI.createImageView({
+                    height: 'auto',
+                    image: logo,
+                    left: 10,
+                    top: 5
+                });
+                titleLabel.left = 35;
+                titleLabel.width = this.leftLabelWidth - 25;
+                leftView.add(imageView);
+            }
+            
             if (('undefined' !== typeof value) && null !== typeof value) {
                 valueLabel.text = "" + value;
             }
