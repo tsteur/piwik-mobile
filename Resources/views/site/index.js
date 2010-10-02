@@ -160,7 +160,7 @@ function template () {
     
     box.subView.add(tableview);
     tableview.show();
-    box.subView.focus();
+
     if (tableview.scrollToTop) {
         tableview.scrollToTop(1);
     }

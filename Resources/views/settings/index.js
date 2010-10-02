@@ -34,6 +34,7 @@ function template () {
     }
     
     availableLanguageOptions.sort();
+    availableLanguageOptions.push(_('SitesManager_Cancel_js'));
     
     var box             = this.helper('borderedContainer', {});
     var headline        = this.helper('headline', {headline: _('General_Settings')});
@@ -70,14 +71,17 @@ function template () {
         
         var langDialog = Titanium.UI.createOptionDialog({
             title: _('General_ChooseLanguage'),
-            options: availableLanguageOptions
+            options: availableLanguageOptions,
+            cancel: (availableLanguageOptions.length - 1)
         });
         
         var row = this;
         
         langDialog.addEventListener('click', function (event) {
-            
-            if (event.cancel && -1 !== event.cancel) {
+
+            // android reports cancel = true whereas iOS returns the previous defined cancel index
+            if (!event || event.cancel === event.index || true === event.cancel) {
+
                 return;
             }
             
@@ -121,18 +125,21 @@ function template () {
                                 _('General_Yesterday'), 
                                 _('General_CurrentWeek'), 
                                 _('General_CurrentMonth'), 
-                                _('General_CurrentYear')];
+                                _('General_CurrentYear'),
+                                _('SitesManager_Cancel_js')];
 
         var periodDialog = Titanium.UI.createOptionDialog({
             title: _('Mobile_DefaultReportDate'),
-            options: periodOptions
+            options: periodOptions,
+            cancel: 5
         });
         
         var row = this;
         
         periodDialog.addEventListener('click', function (event) {
             
-            if (event.cancel && -1 !== event.cancel) {
+            // android reports cancel = true whereas iOS returns the previous defined cancel index
+            if (!event || event.cancel === event.index || true === event.cancel) {
                 return;
             }
             
@@ -176,18 +183,20 @@ function template () {
     
     var onChangeHttpTimeout = function () {
     
-        var timeoutValues = ['15s', '30s', '45s', '60s', '90s', '120s', '150s', '180s', '300s', '450s', '600s', '1000s'];
+        var timeoutValues = ['15s', '30s', '45s', '60s', '90s', '120s', '150s', '180s', '300s', '450s', '600s', '1000s', _('SitesManager_Cancel_js')];
         
         var timeoutDialog = Titanium.UI.createOptionDialog({
             title: _('Mobile_ChooseHttpTimeout'),
-            options: timeoutValues
+            options: timeoutValues,
+            cancel: (timeoutValues.length - 1)
         });
         
         var row = this;
         
         timeoutDialog.addEventListener('click', function (event) {
             
-            if (event.cancel && -1 !== event.cancel) {
+            // android reports cancel = true whereas iOS returns the previous defined cancel index
+            if (!event || event.cancel === event.index || true === event.cancel) {
                 return;
             }
             

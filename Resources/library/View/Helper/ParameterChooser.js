@@ -128,7 +128,7 @@ function View_Helper_ParameterChooser () {
         
         var labelWidth = 'auto';
         
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
+        if (100 < parseInt(this.view.size.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space left.
             // setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
@@ -152,7 +152,7 @@ function View_Helper_ParameterChooser () {
         this.dateValue =  Titanium.UI.createLabel({
             text: ' - ',
             height: 'auto',
-            width: labelWidth - 26,
+            width: parseInt(labelWidth, 10) - 26,
             left: 26,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
@@ -219,7 +219,7 @@ function View_Helper_ParameterChooser () {
         };
 
         this.chooseDateIcon.addEventListener('click', onShowDatePicker);
-        this.dateView.addEventListener('singletap', onShowDatePicker);
+        this.dateView.addEventListener('click', onShowDatePicker);
         Ui_Menu.addItem({title: _('General_ChooseDate'), icon: 'images/icon/menu_choosedate.png'}, onShowDatePicker);
         
         var dialog = Titanium.UI.createOptionDialog({
@@ -227,7 +227,9 @@ function View_Helper_ParameterChooser () {
             options: [Translation.getPeriod('day', false), 
                       Translation.getPeriod('week', false), 
                       Translation.getPeriod('month', false), 
-                      Translation.getPeriod('year', false)]
+                      Translation.getPeriod('year', false),
+                      _('SitesManager_Cancel_js')],
+            cancel: 4
         });
         
         var onShowPeriodChooser = function () {
@@ -235,13 +237,13 @@ function View_Helper_ParameterChooser () {
         };
         
         this.choosePeriodIcon.addEventListener('click', onShowPeriodChooser);
-        this.periodView.addEventListener('singletap', onShowPeriodChooser);
+        this.periodView.addEventListener('click', onShowPeriodChooser);
         Ui_Menu.addItem({title: _('General_ChoosePeriod'), icon: 'images/icon/menu_chooseDown.png'}, onShowPeriodChooser);
         
         dialog.addEventListener('click', function (event) {
             
-            // android sets cancel = true whereas iOS sets it to -1 if cancel was pressed
-            if (event.cancel && -1 !== event.cancel) {
+            // android reports cancel = true whereas iOS returns the previous defined cancel index
+            if (!event || event.cancel === event.index || true === event.cancel) {
                 
                 return;
             }
@@ -348,9 +350,12 @@ function View_Helper_ParameterChooser () {
             
         }
         
+        allowedSiteNames.push(_('SitesManager_Cancel_js'));
+        
         var dialog = Titanium.UI.createOptionDialog({
             title: _('General_ChooseWebsite'),
-            options: allowedSiteNames
+            options: allowedSiteNames,
+            cancel: (allowedSiteNames.length - 1)
         });
         
         var onShowSiteChooser = function () {
@@ -358,15 +363,15 @@ function View_Helper_ParameterChooser () {
         };
         
         this.chooseSiteIcon.addEventListener('click', onShowSiteChooser);
-        this.siteView.addEventListener('singletap', onShowSiteChooser);
+        this.siteView.addEventListener('click', onShowSiteChooser);
         Ui_Menu.addItem({title : _('General_ChooseWebsite'), icon: 'images/icon/menu_chooseDown.png'}, onShowSiteChooser);
         
         var win = this.view;
         
         dialog.addEventListener('click', function (event) {
             
-            // android sets cancel = true whereas iPhone sets it to -1 if cancel was pressed
-            if (event.cancel && -1 !== event.cancel) {
+            // android reports cancel = true whereas iOS returns the previous defined cancel index
+            if (!event || event.cancel === event.index || true === event.cancel) {
                 
                 return;
             }
@@ -390,7 +395,9 @@ function View_Helper_ParameterChooser () {
             // fire event only if site changes
             if (selectedSite.idsite !== currentSite.idsite) {
             
-                win.fireEvent('siteChanged', {site: selectedSite});
+                if (win) {
+                    win.fireEvent('siteChanged', {site: selectedSite});
+                }
                 
                 // fire further event so other windows are able to listen to this event, too
                 Titanium.App.fireEvent('siteChanged', {site: selectedSite});
@@ -449,7 +456,9 @@ function View_Helper_ParameterChooser () {
         
         mySession.set('piwik_parameter_period', period);
         
-        this.view.fireEvent('periodChanged', {period: period});
+        if (this.view) {
+            this.view.fireEvent('periodChanged', {period: period});
+        }
     };
 
     /**
@@ -472,7 +481,9 @@ function View_Helper_ParameterChooser () {
         
         mySession.set('piwik_parameter_date', dateQuery);
 
-        this.view.fireEvent('dateChanged', {date: dateQuery});
+        if (this.view) {
+            this.view.fireEvent('dateChanged', {date: dateQuery});
+        }
     };
 }
 

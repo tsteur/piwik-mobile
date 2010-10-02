@@ -44,8 +44,7 @@ function template () {
         }
         
         this.optionMenuOpened = true;
-        
-        var menuItems = [_('General_Delete')];
+        var menuItems         = [];
         
         if (this.hasCheck) {
             menuItems.push(_('CorePluginsAdmin_Deactivate'));
@@ -54,11 +53,14 @@ function template () {
         }
         
         menuItems.push(_('General_Edit'));
+        menuItems.push(_('General_Delete'));
+        menuItems.push(_('SitesManager_Cancel_js'));
         
         var dialog = Titanium.UI.createOptionDialog({
             title: '' + this.accountName,
             options: menuItems,
-            cancel:-1
+            destructive: 2,
+            cancel: 3
         });
         
         var row = this;
@@ -67,7 +69,7 @@ function template () {
             row.optionMenuOpened = false;
 
             // android sets cancel = true whereas iPhone sets it to -1 if cancel was pressed
-            if (event.cancel && -1 !== event.cancel) {
+            if (!event || event.cancel === event.index || true === event.cancel) {
                 
                 return;
             }
@@ -79,15 +81,6 @@ function template () {
             
             switch (event.index) {
                 case 0:
-                    _this.accountManager.deleteAccount(row.accountId);
-                    
-                    Window.createMvcWindow({jsController:       'settings',
-                                            jsAction:           'manageaccounts',
-                                            closeCurrentWindow: true});
-                                            
-                    return;
-                    
-                case 1:
                     var success = false;
                     
                     if (row.hasCheck) {
@@ -107,10 +100,19 @@ function template () {
 
                     break;
                     
-                case 2:
+                case 1:
                     onUpdateAccount.apply(row, []);
                 
                     break;
+                    
+                case 2:
+                    _this.accountManager.deleteAccount(row.accountId);
+                    
+                    Window.createMvcWindow({jsController:       'settings',
+                                            jsAction:           'manageaccounts',
+                                            closeCurrentWindow: true});
+                                            
+                    return;
             }
             
             // @todo throw a notification as soon as supported by titanium
