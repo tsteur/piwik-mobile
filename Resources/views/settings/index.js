@@ -18,7 +18,7 @@ function template () {
     var _this = this;
     
     var availableLanguageOptions = [];
-    var currentLanguage          = '';
+    var currentLanguage          = 'English';
     var name;
     for(var langCode in this.availableLanguages) {
         
@@ -26,8 +26,7 @@ function template () {
         
         availableLanguageOptions.push(name);
         
-        if((this.piwikLanguage && this.piwikLanguage == langCode) || 
-          (!this.piwikLanguage && Translation.getPlatformLocale() == langCode)) {
+        if(this.piwikLanguage && this.piwikLanguage == langCode) {
             currentLanguage = name;
         }
         
