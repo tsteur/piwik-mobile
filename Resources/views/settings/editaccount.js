@@ -138,7 +138,7 @@ function template () {
         right: left,
         passwordMask: true,
         clearOnEdit: true,
-        returnKeyType: Titanium.UI.RETURNKEY_NEXT,
+        returnKeyType: Titanium.UI.RETURNKEY_DONE,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
         font: {fontSize: config.theme.fontSizeNormal}
@@ -385,6 +385,27 @@ function template () {
     box.subView.add(save);
     
     box.subView.height = save.top + save.height + 10;
+    
+    piwikUrl.addEventListener('return', function(event){
+        if (piwikAnonymous.value) {
+        
+            var event = {};
+            save.fireEvent('click', event);
+            
+            return;
+        }
+        
+        piwikUser.focus();
+    });
+    
+    piwikUser.addEventListener('return', function(event){
+        piwikPassword.focus();
+    });
+    
+    piwikPassword.addEventListener('return', function(event){
+        var event = {};
+        save.fireEvent('click', event);
+    });
     
     var scrollView = Titanium.UI.createScrollView({
         contentWidth: 'auto',
