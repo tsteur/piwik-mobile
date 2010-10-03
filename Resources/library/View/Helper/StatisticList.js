@@ -14,10 +14,13 @@
  * @property {Array}        options.values       An array containing multiple values. Each value is represented by an 
  *                                               object which has to provide a property named 'title' and 'value'.
  *                                               The values are displayed in the same order as the array contains them. 
+ *                                               Logo is optional and has to be an absolut path to an image (including)
+ *                                               domain.
  *                                               Array (
  *                                                  [int] => Object (
  *                                                              [title] => []
  *                                                              [value] => []
+ *                                                              [logo]  => []
  *                                                           )
  *                                               )
  * @property {Object}       [options.headline]         Optional - It is possible to set a headline for each column. 
@@ -235,9 +238,13 @@ function View_Helper_StatisticList () {
                 continue;
             }
             
-            var title     = statistic.title;
-            var value     = statistic.value;
-            var logo      = statistic.logo;
+            var title    = statistic.title;
+            var value    = statistic.value;
+            var logo     = null;
+            
+            if ('undefined' !== (typeof statistic.logo)) {
+                logo     = statistic.logo;
+            }
          
             // @todo define config theme vars
             leftBgcolor  = '#f5f5f5';
@@ -289,10 +296,15 @@ function View_Helper_StatisticList () {
                     height: 'auto',
                     image: logo,
                     left: 10,
-                    top: 5
+                    top: 5,
+                    width: 'auto'
                 });
-                titleLabel.left = 35;
-                titleLabel.width = this.leftLabelWidth - 25;
+                
+                titleLabel.left      = 35;
+                if ('android' === Titanium.Platform.osname) {
+                    titleLabel.width = this.leftLabelWidth - 25;
+                }
+                
                 leftView.add(imageView);
             }
             
