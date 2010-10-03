@@ -301,8 +301,7 @@ Settings._get = function (key, type, defaultValue) {
             
         } else {
             
-            // eval is not evil here because all type/key values are specified by us. Is not vulnerable
-            value = eval('Titanium.App.Properties.get' + type + '("' + key + '")');
+            value = Titanium.App.Properties.getString(key);
         }
 
         return value;
@@ -344,7 +343,7 @@ Settings._set = function (key, type, value) {
 
     }
 
-    return eval('Titanium.App.Properties.set' + type + '("' + key + '", "' + value + '")');
+    return Titanium.App.Properties.setString(key, value);
 };
 
 /**
