@@ -204,7 +204,9 @@ Window.cleanup = function (view, depth) {
 
             var childView = view.children[index];
 
-            if ('object' === (typeof childView).toLowerCase() && -1 === ('' + childView).search('TiUIImageView')) {
+            if ('object' === (typeof childView).toLowerCase() && 
+                (-1 !== ('' + childView).search('TiUIScrollView') || 
+                -1 !== ('' + childView).search('TiUIView'))) {
 
                 Window.cleanup(childView, depth);
 

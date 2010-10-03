@@ -152,11 +152,7 @@ function View (params) {
         if (this.waitIndicatorImage && this.waitIndicatorImage.hide) {
             
             this.waitIndicatorImage.hide();
-            
-            if (this.remove) {
-                this.remove(this.waitIndicatorImage);
-            }
-            
+
             this.waitIndicatorImage       = null;
             delete this.waitIndicatorImage;
             this.numWaitIndicatorRequests = 0;
