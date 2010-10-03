@@ -138,11 +138,27 @@ function View_Helper_Headline () {
      */
     this.addTools = function (view) {
         
-        var backButtonHidden     = this.getOption('backButtonHidden', false);
+        var backButtonHidden = this.getOption('backButtonHidden', false);
         
         if ('android' === Titanium.Platform.osname) {
             // not enabled on android devices because of an existing hardware back button.
-            backButtonHidden     = true;
+            backButtonHidden = true;
+        } else {
+            var zIndex = 1;
+            
+            if (this.view && this.view.zIndex) {
+                zIndex = this.view.zIndex
+            } else if (Titanium.UI.currentWindow.zIndex) {
+                zIndex = Titanium.UI.currentWindow.zIndex;
+            } else {
+                Log.warn('no zIndex for the current window is set. Please set one.', 'Missing zIndex');
+            }
+            
+            if (1 === zIndex) {
+                // never ever display the back button when it is the first window on iOS. Otherwise the user is able to 
+                // close the first window. This will result in a blank (white) window.
+                backButtonHidden = true;
+            }
         }
         
         if (!backButtonHidden) {
