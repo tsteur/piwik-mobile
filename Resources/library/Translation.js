@@ -234,6 +234,10 @@ Translation.get = function (key) {
     // verify translation is loaded each time
     if(!Translation.translations && Settings.getLanguage()) {
         Translation.translations = Cache.get('translations_'+Settings.getLanguage());
+        
+        if (!Translation.translations || Cache.KEY_NOT_FOUND == Translation.translations) {
+            Translation.fetchTranslations();
+        }
     }
     
     if (Translation.translations && Translation.translations[key]) {
