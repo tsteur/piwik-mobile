@@ -15,8 +15,8 @@
  */
 function template () {
     
-    var width  = this.size.width - 30;
-    var height = this.size.height - 30;
+    var width  = this.size.width - 45;
+    var height = this.size.height - 45;
     
     var currentOrientation = Titanium.UI.orientation;
 

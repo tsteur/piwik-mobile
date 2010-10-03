@@ -143,7 +143,6 @@ function View_Helper_Graph () {
                 jsController: 'chart',
                 jsAction: 'fulldetail',
                 doNotCloseWindow: true,
-                fullscreen: true,
                 graphUrl: _this.getOption('graphUrl')
             });
         });
