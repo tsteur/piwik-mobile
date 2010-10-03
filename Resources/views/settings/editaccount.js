@@ -57,6 +57,7 @@ function template () {
         hintText: _('General_ForExampleShort') + ' http(s)://demo.piwik.org/',
         keyboardType: Titanium.UI.KEYBOARD_URL,
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
+        autocorrect: false,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         font: {fontSize: config.theme.fontSizeNormal}
     });
@@ -107,6 +108,7 @@ function template () {
         right: left,
         keyboardType: Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
+        autocorrect: false,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
         font: {fontSize: config.theme.fontSizeNormal}
