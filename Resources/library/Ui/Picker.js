@@ -200,22 +200,25 @@ function create_Ui_Picker(params) {
     params.bottom = 0;
     
     if ('android' !== Titanium.Platform.osname) {
-        
+
         try {
             picker = Titanium.UI.createPicker(params);
         } catch (e) {
-            picker = null;
+        
+            try {
+                picker = new Ui_Picker(params);
+                
+                return picker;
+            } catch (e) {}
+        
+            return;
         }
-    } 
-    
-    if (picker && picker.addEventListener) {
-        // iphone
         
         Titanium.UI.currentWindow.add(picker);
-
+        
         var update = Titanium.UI.createButton({
             title:_('CoreUpdater_UpdateTitle'),
-            style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+            systemButton:Titanium.UI.iPhone.SystemButton.DONE
         });
 
         var cancel = Titanium.UI.createButton({
@@ -228,12 +231,12 @@ function create_Ui_Picker(params) {
         });
 
         var toolbar = Titanium.UI.createToolbar({
-            items:[flexSpace,update, cancel,flexSpace],
-            bottom:0,
-            borderTop:true,
-            borderBottom:false,
-            translucent:true,
-            barColor:'#999'
+            items: [cancel, flexSpace, update],
+            bottom: picker.height,
+            borderTop: true,
+            borderBottom: false,
+            translucent: true,
+            barColor: '#999'
         });
         
         Titanium.UI.currentWindow.add(toolbar);
