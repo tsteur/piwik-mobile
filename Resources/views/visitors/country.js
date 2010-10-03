@@ -68,8 +68,11 @@ function template () {
     
     if (this.countries && (this.countries instanceof Array) && 0 < this.countries.length) {
         for (var index = 0; index < this.countries.length; index++) {
-            countries.push({title: this.countries[index].label,
-                            value: this.countries[index][config.getUsedRow(this.period)]});
+            countries.push({
+                title: this.countries[index].label,
+                value: this.countries[index][config.getUsedRow(this.period)],
+                logo:  this.accountUrl+'/'+this.countries[index].logo
+            });
         }
     }
     

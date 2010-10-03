@@ -459,6 +459,8 @@ function VisitorsController () {
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
         
+        this.view.accountUrl = account.accessUrl;
+        
         piwik.registerCall('UserCountry.getCountry', parameter, account, function (response) { 
             if(response) {
                 this.view.countries = response;
