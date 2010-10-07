@@ -68,8 +68,11 @@ function template () {
     
     if (this.screentype && (this.screentype instanceof Array) && 0 < this.screentype.length) {
         for (var index = 0; index < this.screentype.length; index++) {
-            screentype.push({title: this.screentype[index].label,
-                             value: this.screentype[index][config.getUsedRow(this.period)]});
+            screentype.push({
+                title: this.screentype[index].label,
+                value: this.screentype[index][config.getUsedRow(this.period)],
+                logo: this.accountUrl+'/'+this.screentype[index].logo
+            });
         }
     }
     

@@ -345,6 +345,8 @@ function VisitorsController () {
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
         
+        this.view.accountUrl = account.accessUrl;
+        
         piwik.registerCall('UserSettings.getWideScreen', parameter, account, function (response) { 
             if(response) {
                 this.view.screentype = response;
