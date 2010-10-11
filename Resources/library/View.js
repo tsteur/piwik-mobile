@@ -247,14 +247,12 @@ function View (params) {
 
         // allow only portrait mode -> only supported by iPhone at Titanium Mobile SDK 1.4.0
         Titanium.UI.currentWindow.orientationModes = [Titanium.UI.PORTRAIT, Titanium.UI.UPSIDE_PORTRAIT]; 
-        
-        if ('android' === Titanium.Platform.osname) {
-            // set orientation to portrait -> currently the app does not render properly if the user changes the
-            // orientation of an already rendered window. all new opened window (even in landscape mode) are rendered 
-            // good
-            // @todo support landscape mode.
-            Titanium.UI.orientation = Titanium.UI.PORTRAIT;
-        }
+    
+        // set orientation to portrait -> currently the app does not render properly if the user changes the
+        // orientation of an already rendered window. all new opened window (even in landscape mode) are rendered 
+        // good
+        // @todo support landscape mode.
+        Titanium.UI.orientation = Titanium.UI.PORTRAIT;
         
         this.show();
     
