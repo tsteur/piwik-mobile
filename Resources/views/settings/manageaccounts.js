@@ -143,7 +143,7 @@ function template () {
     }
     
     var top       = headline.subView.height;
-    var height    = box.subView.height - headline.subView.height;
+    var height    = box.subView.height - headline.subView.height - headline.subView.top;
     var tableview = Titanium.UI.createTableView({data: tableData,
                                                  left: 1,
                                                  right: 1,
