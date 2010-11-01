@@ -51,7 +51,7 @@ Log.debug = function (message, title) {
     logMessage     += Log.stringify(message);
 
     Titanium.API.debug(logMessage);
-    
+    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
     logMessage      = null;
 };
     
@@ -115,7 +115,8 @@ Log.error = function (message, title) {
     logMessage     += Log.stringify(message);
 
     Titanium.API.error(logMessage);
-    
+    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
+
     logMessage      = null;
 };
 
@@ -144,6 +145,7 @@ Log.warn = function (message, title) {
     logMessage     += Log.stringify(message);
 
     Titanium.API.warn(logMessage);
-    
+    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
+
     logMessage      = null;
 };
