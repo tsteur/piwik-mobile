@@ -123,7 +123,7 @@ function Ui_TableViewRow (params) {
                 height: 'auto',
                 left: 0,
                 bottom: 6,
-                color: '#888888',
+                color: '#888888'
             });
             
             if ('android' !== Titanium.Platform.osname) {
