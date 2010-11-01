@@ -21,7 +21,25 @@ var Log = {};
  * c
  * @type boolean
  */
-Log.ENABLED = true;
+Log.ENABLED         = true;
+
+/**
+ * Enables/disables profiling. If enabled it logs the elapsed time in ms between two logging calls and the current
+ * available memory.
+ *
+ * @define {boolean}
+ * c
+ * @type boolean
+ */
+Log.PROFLINGENABLED = false;
+
+/**
+ * Holds the number of milliseconds since 1/1/1970. Will be updated on each logging call if profiling and logging
+ * is enabled.
+ * 
+ * @type null|int
+ */
+Log.time            = null;
         
 /**
  * Logs debug messages.
@@ -50,8 +68,9 @@ Log.debug = function (message, title) {
     
     logMessage     += Log.stringify(message);
 
+    Log.profile();
     Titanium.API.debug(logMessage);
-    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
+    
     logMessage      = null;
 };
     
@@ -105,6 +124,8 @@ Log.error = function (message, title) {
     if (!Log.ENABLED) { 
         return;
     }
+    
+    Log.timer();
 
     var logMessage  = '';
 
@@ -114,8 +135,8 @@ Log.error = function (message, title) {
     
     logMessage     += Log.stringify(message);
 
+    Log.profile();
     Titanium.API.error(logMessage);
-    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
 
     logMessage      = null;
 };
@@ -144,8 +165,32 @@ Log.warn = function (message, title) {
     
     logMessage     += Log.stringify(message);
 
+    Log.profile();
     Titanium.API.warn(logMessage);
-    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
 
     logMessage      = null;
 };
+
+/**
+ * Logs the elapsed time since the last logging call if profiling is enabled.
+ * 
+ * @type null
+ */
+Log.profile = function () {
+    if (!Log.PROFLINGENABLED) {
+        return;
+    }
+    
+    if (!Log.time) {
+        Log.time = new Date().getTime();
+        
+        return;
+    }
+    
+    var now = new Date().getTime();
+    
+    Titanium.API.debug("Time: " + (now - Log.time) + 'ms');
+    Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
+    
+    Log.time = now;
+}
