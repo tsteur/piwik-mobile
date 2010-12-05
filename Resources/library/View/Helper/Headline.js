@@ -37,7 +37,7 @@ function View_Helper_Headline () {
 
         var view = Titanium.UI.createView({
             height: 36,
-            top: 1,
+            top: this.getOption('top', 1),
             left: 1,
             right: 1,
             backgroundImage: 'images/bgheadline.png'

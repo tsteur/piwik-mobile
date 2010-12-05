@@ -38,7 +38,7 @@ function View_Helper_StatisticList () {
      *
      * @type int
      */
-    this.topValue    = 1;
+    this.topValue    = 0;
 
     /**
      * The font size each label has to use. This shall ensure each label uses the same font size.
@@ -106,13 +106,10 @@ function View_Helper_StatisticList () {
         var view = Titanium.UI.createView({
             width:  this.view.size.width - 10,
             height: 'auto',
-            top: 1,
-            left: 1,
-            right: 1,
-            zIndex: 2,
-            borderColor: config.theme.backgroundColor,
-            borderRadius: config.theme.borderRadius,
-            backgroundColor: config.theme.backgroundColor
+            top: this.getOption('top', 1),
+            left: 0,
+            right: 0,
+            zIndex: 2
         });
         
         this.renderHeadline(view);
@@ -293,11 +290,11 @@ function View_Helper_StatisticList () {
 
             if(logo) {
                 var imageView = Titanium.UI.createImageView({
-                    height: 'auto',
+                    height: statistic.logoHeight ? statistic.logoHeight : 16,
                     image: logo,
                     left: 10,
                     top: 5,
-                    width: 'auto'
+                    width: statistic.logoWidth ? statistic.logoWidth : 16
                 });
                 
                 titleLabel.left      = 35;

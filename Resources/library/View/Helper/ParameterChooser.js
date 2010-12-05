@@ -10,14 +10,17 @@
  * @class   View helper which offers the possiblity to change standard parameters as described at 
  *          {@link http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters}
  * 
- * @property {Object}       [options]               See {@link View_Helper#setOptions}
- * @property {string}       [options.period="day"]  Optional - The current active period.
- * @property {Object}       [options.currentSite]   Optional - The current active site as an object.
- * @property {Array}        [options.allowedSites]  Optional - An array of sites where the user has at least view access.
- *                                                             The format has to be similar to {@link http://piwik.org/demo/?module=API&method=SitesManager.getSitesWithAtLeastViewAccess&format=JSON&token_auth=anonymous}
- * @property {Date|string}  [options.date]          Optional - The current selected date. Can be either a Date object
- *                                                             or string in the following Format "YYYY-MM-DD". 
- *                                                             Defaults to the current date (now).
+ * @property {Object}       [options]                 See {@link View_Helper#setOptions}
+ * @property {string}       [options.period="day"]    Optional - The current active period.
+ * @property {Object}       [options.currentSite]     Optional - The current active site as an object.
+ * @property {Array}        [options.allowedSites]    Optional - An array of sites where the user has at least view access.
+ *                                                               The format has to be similar to {@link http://piwik.org/demo/?module=API&method=SitesManager.getSitesWithAtLeastViewAccess&format=JSON&token_auth=anonymous}
+ * @property {Date|string}  [options.date]            Optional - The current selected date. Can be either a Date object
+ *                                                               or string in the following Format "YYYY-MM-DD". 
+ *                                                               Defaults to the current date (now).
+ * @property {string}       [options.dateDescription] Optional - A localized string of the current selected date. If
+ *                                                               description is not given a localized string will be 
+ *                                                               generated.
  * 
  * @augments View_Helper
  */
@@ -51,14 +54,13 @@ function View_Helper_ParameterChooser () {
         var view = Titanium.UI.createView({
             width: this.view.size.width - 10,
             height: 74,
-            top: 5,
-            left: 5,
-            right: 5,
+            top: this.getOption('top', 5),
+            left: 0,
+            right: 0,
             zIndex: 2,
             backgroundColor: '#f6f6f6',
-            borderRadius: config.theme.borderRadius,
             borderWidth: 1,
-            borderColor: '#E3E4E3'
+            borderColor: '#B8B4AB'
         });
         
         this.addDayChooser(view);
@@ -300,7 +302,7 @@ function View_Helper_ParameterChooser () {
         this.siteChooser =  Titanium.UI.createLabel({
             text: currentSite.name,
             height: 'auto',
-            left: 7,
+            left: 26,
             color: '#996600',
             width: labelWidth,
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
@@ -322,7 +324,7 @@ function View_Helper_ParameterChooser () {
             width: 13,
             height: 15,
             top: 48,
-            right: 9
+            left: 10
         });
         
         if ('android' !== Titanium.Platform.osname) {
@@ -419,7 +421,7 @@ function View_Helper_ParameterChooser () {
      */
     this.initDate = function () {
 
-        var optionDate  = this.getOption('date', new Date());
+        var optionDate = this.getOption('date', new Date());
         
         if ('string' === (typeof optionDate).toLowerCase()) {
 
@@ -429,8 +431,8 @@ function View_Helper_ParameterChooser () {
             
             this.date  = optionDate;
         }
-
-        this.dateValue.text = this.date.toPiwikDateRangeString(this.period);
+        
+        this.dateValue.text = this.getOption('dateDescription', this.date.toPiwikDateRangeString(this.period));
     };
 
     /**

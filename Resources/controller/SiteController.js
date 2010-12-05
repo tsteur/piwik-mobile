@@ -21,10 +21,37 @@ function SiteController () {
      * @type null
      */
     this.indexAction = function () {
+    
+        var site       = this.getParam('site');
+        this.view.site = site;
+        
+        var cachedReportData = Cache.get('piwik_report_metadata_' + site.accountId);
+        
+        if (cachedReportData && Cache.KEY_NOT_FOUND != cachedReportData) {
+            
+            this.view.availableReports = cachedReportData;
+            
+            this.render('index');
+            return;
+        }
+        
+        var piwik          = this.getModel('Piwik');
+        
+        var accountManager = this.getModel('Account');
+        var account        = accountManager.getAccountById(site.accountId);
+               
+        piwik.registerCall('API.getReportMetadata', {}, account, function (reportMetaData) {
 
-        this.view.site = this.getParam('site');
+            this.view.availableReports = reportMetaData;
+            
+            Cache.set('piwik_report_metadata_' + site.accountId, reportMetaData, null);
+        });
 
-        this.render('index');
+        piwik.sendRegisteredCalls(function () {
+
+            this.render('index');
+        });
+        
     };
 }
 

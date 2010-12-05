@@ -30,6 +30,12 @@ config.piwik = {
     defaultDate: 'yesterday'
 };
 
+config.graph = {Actions: {getDownloads: {chartType: 'pie'},
+						  getOutlinks:  {chartType: 'pie'},
+						  getPageTitles: {chartType: 'pie'}}
+
+};
+
 /**
  * The theme defines the colors, fonts and other styles used within the app.
  *

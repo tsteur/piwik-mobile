@@ -31,7 +31,7 @@ function View_Helper_Graph () {
             Log.debug('No graphUrl given', 'graphHelper');
             
             this.subView = Titanium.UI.createView({
-                height: 30,
+                height: 40,
                 top: this.getOption('top', 1),
                 left: 1,
                 right: 1,
@@ -55,23 +55,41 @@ function View_Helper_Graph () {
                 color: config.theme.textColor,
                 font: {fontSize: config.theme.fontSizeNormal, fontFamily: config.theme.fontFamily}
             });
+       
+            var bottomBorderView = Titanium.UI.createView({
+                height: 1,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: '#B8B4AB'
+            });
             
-            this.subView.add(noDataInfoLabel);
+            this.subView.add(noDataInfoLabel);            
+            this.subView.add(bottomBorderView);
             
             return this;
         }
         
         var view = Titanium.UI.createView({
-            height: 170,
+            height: 180,
             top: this.getOption('top', 1),
             left: 1,
             right: 1,
-            paddingBottom: 10,
             backgroundColor: config.theme.backgroundColor
         });
     
         this.addTitle(view);
         this.addGraph(view);
+        
+        var bottomBorderView = Titanium.UI.createView({
+            height: 1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#B8B4AB'
+        });
+        
+        view.add(bottomBorderView);
 
         this.subView = view;
         

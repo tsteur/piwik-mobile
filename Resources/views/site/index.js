@@ -24,137 +24,81 @@ function template () {
     this.add(box.subView);
     
     box.subView.height = parseInt(this.size.height, 10) - 10;
-    
-    var visitorRows = [{title:        _('VisitsSummary_SubmenuOverview'),
-                        jsController: 'visitors',
-                        jsAction:     'overview'}];
-    
-    var visitorSettingRows = [{title:        _('UserSettings_Browsers'),
-                               jsController: 'visitors',
-                               jsAction:     'browser'},
-                              {title:        _('UserSettings_OperatingSystems'),
-                               jsController: 'visitors',
-                               jsAction:     'os'},
-                              {title:        _('UserSettings_Resolutions'),
-                               jsController: 'visitors',
-                               jsAction:     'resolution'},
-                              {title:        _('UserSettings_Plugins'),
-                               jsController: 'visitors',
-                               jsAction:     'plugin'},
-                              {title:        _('UserSettings_WideScreen'),
-                               jsController: 'visitors',
-                               jsAction:     'screentype'}];
-    
-    var visitorLocationsRows = [{title:        _('UserCountry_WidgetCountries'),
-                                jsController: 'visitors',
-                                jsAction:     'country'},
-                                {title:        _('UserCountry_WidgetContinents'),
-                                jsController: 'visitors',
-                                jsAction:     'continent'}];
-    
-    var actionsRows = [{title:        _('Actions_SubmenuPages'),
-                        jsController: 'actions',
-                        jsAction:     'page'},
-                       {title:        _('Actions_SubmenuPageTitles'),
-                        jsController: 'actions',
-                        jsAction:     'pagetitle'},
-                       {title:        _('Actions_SubmenuOutlinks'),
-                        jsController: 'actions',
-                        jsAction:     'outlink'},
-                       {title:         _('Actions_SubmenuDownloads'),
-                        jsController: 'actions',
-                        jsAction:     'download'}];
-    
-    var refererRows = [{title:        _('VisitsSummary_SubmenuOverview'),
-                        jsController: 'referers',
-                        jsAction:     'overview'},
-                       {title:        _('Referers_SearchEngines'),
-                        jsController: 'referers',
-                        jsAction:     'searchengine'},
-                       {title:        _('Referers_Keywords'),
-                        jsController: 'referers',
-                        jsAction:     'keyword'},
-                       {title:        _('Referers_Websites'),
-                        jsController: 'referers',
-                        jsAction:     'website'}];
-                        
-    var sections    = [{title: _('General_Visitors'),
-                        rows:  visitorRows},
-                       {title: _('General_Visitors') + ' - ' + _('UserSettings_SubmenuSettings'),
-                        rows:  visitorSettingRows},
-                       {title: _('General_Visitors') + ' - ' + _('UserCountry_SubmenuLocations'),
-                        rows:  visitorLocationsRows},
-                       {title: _('Actions_Actions'),
-                        rows:  actionsRows},
-                       {title: _('Referers_Referers'),
-                        rows:  refererRows}];
 
-    var tableData   = [];
-    var section     = null;   
-    var header      = null;
-    var headerLabel = null;            
-    var rows        = [];
+    var tableData      = [];
+    var section        = null;   
+    var header         = null;
+    var headerLabel    = null;            
+    var rows           = [];
     
-    for (var sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+    var latestSection  = '';
+    var currentSection = '';
+    var report         = null;
+    
+    for (var index = 0; index < this.availableReports.length; index++) {
+        report         = this.availableReports[index];
+    
+        currentSection = report.category;
+        
+        if (currentSection && currentSection !== latestSection) {
+            section = Titanium.UI.createTableViewRow({height: 20,
+                                                      className: 'siteSection' + index,
+                                                      selectedBackgroundColor: '#B2AEA5',
+                                                      backgroundColor: '#B2AEA5'});
 
-        section = Titanium.UI.createTableViewRow({height: 20,
-                                                  className: 'siteSection' + sectionIndex,
-                                                  selectedBackgroundColor: '#B2AEA5',
-                                                  backgroundColor: '#B2AEA5'});
-
+            // @todo create a factory or something similar for this, eg Ui.tableViewRow.create();
+            if ('android' !== Titanium.Platform.osname) {
+                section.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE;
+            }
             
-        // @todo create a factory or something similar for this, eg Ui.tableViewRow.create();
-        if ('android' !== Titanium.Platform.osname) {
-            section.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE;
+            var labelWidth  = 'auto';
+            var left        = 10;
+            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.size.width, 10)) {
+                // @todo set this to auto as soon as this bug is completely fixed #wrapbug
+                labelWidth  = parseInt(this.size.width, 10) - 50;
+                
+                // android does the positioning relative within the tableview row, not absolute
+                left        = 0;
+            }
+
+            var headerLabel = Titanium.UI.createLabel({
+                text: String(report.category),
+                height: 20,
+                width: labelWidth,
+                textAlign: 'left',
+                color: '#ffffff',
+                left: left,
+                font: {fontSize: 12, fontFamily: config.theme.fontFamily}
+            });
+
+            section.add(headerLabel);
+            tableData.push(section);
         }
+        
+        latestSection = currentSection;
 
-        var labelWidth  = 'auto';
-        var left        = 10;
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.size.width, 10)) {
-            // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth  = parseInt(this.size.width, 10) - 50;
-            
-            // android does the positioning relative within the tableview row, not absolute
-            left        = 0;
-        }
-
-        var headerLabel = Titanium.UI.createLabel({
-            text: String(sections[sectionIndex].title),
-            height: 20,
-            width: labelWidth,
-            textAlign: 'left',
-            color: '#ffffff',
-            left: left,
-            font: {fontSize: 12, fontFamily: config.theme.fontFamily}
-        });
-
-        section.add(headerLabel);
-        tableData.push(section);
-
-        rows = sections[sectionIndex].rows;
-
-        for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-            
-            rows[rowIndex].site           = this.site;
-            rows[rowIndex].className      = 'siterow';
-            
-            tableData.push(Ui_TableViewRow(rows[rowIndex]));
-        }    
+        var row       = {title:     report.name,
+                         site:      this.site,
+                         report:    report,
+                         className: 'siterow'};
+     
+        tableData.push(Ui_TableViewRow(row));
     }
    
-    var tableview   = Titanium.UI.createTableView({data: tableData,
-                                                   left: 1,
-                                                   right: 1,
-                                                   separatorColor: '#eeedeb'});
+    var tableview = Titanium.UI.createTableView({data: tableData,
+                                                 left: 1,
+                                                 right: 1,
+                                                 separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
-    
-        if (!event.rowData.site || !event.rowData.jsController || !event.rowData.jsAction) {
+
+        if (!event.rowData.site) {
             return;
         }
     
-        Window.createMvcWindow({jsController: event.rowData.jsController,
-                                jsAction: event.rowData.jsAction,
+        Window.createMvcWindow({jsController: 'statistics',
+                                jsAction: 'show',
+                                report: event.rowData.report,
                                 site: event.rowData.site});
     });
     
@@ -173,15 +117,14 @@ function template () {
         if (!event || !event.site) {
             return;
         }
-    
-        var row = null;
         
+        var row = null;
+  
         for (var rowIndex = 0; rowIndex < tableData.length; rowIndex++) {
             row = tableData[rowIndex];
-            
+ 
             if (row && row.site) {
                 row.site = event.site;
-                tableview.updateRow(rowIndex, row);
             }
         }
         
