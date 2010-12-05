@@ -386,7 +386,12 @@ function View_Helper_ParameterChooser () {
             
                 var verifySite = allowedSites[index];
             
-                if (verifySite && verifySite.name && selectedSiteName === verifySite.name) {
+                // mark as found only if site changes
+                if (verifySite 
+                    && currentSite
+                    && verifySite.name 
+                    && selectedSiteName === verifySite.name
+                    && currentSite.name !== verifySite.name) {
                     selectedSite = verifySite;
                     
                     break Found;
@@ -394,8 +399,7 @@ function View_Helper_ParameterChooser () {
                 
             }
             
-            // fire event only if site changes
-            if (selectedSite.idsite !== currentSite.idsite) {
+            if (selectedSite) {
             
                 if (win) {
                     win.fireEvent('siteChanged', {site: selectedSite});
