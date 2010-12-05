@@ -16,11 +16,11 @@
 	<application
     	android:icon="@drawable/appicon"
       	android:label="PiwikMobile"
-      	android:name="PiwikmobileApplication"
+      	android:name="PiwikMobileApplication"
       	android:debuggable="false"
 	>
     	<activity
-        	android:name=".PiwikmobileActivity"
+        	android:name=".PiwikMobileActivity"
             android:label="PiwikMobile"
 			android:theme="@style/Theme.Titanium"
             android:configChanges="keyboardHidden|orientation"
