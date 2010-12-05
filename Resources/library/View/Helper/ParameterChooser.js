@@ -53,7 +53,7 @@ function View_Helper_ParameterChooser () {
 
         var view = Titanium.UI.createView({
             width: this.view.size.width - 10,
-            height: 74,
+            height: 82,
             top: this.getOption('top', 5),
             left: 0,
             right: 0,
@@ -142,7 +142,7 @@ function View_Helper_ParameterChooser () {
             image: 'images/icon/choosedate.png',
             width: 13,
             height:15,
-            top: 12,
+            top: 14,
             left: 10,
             zIndex: 5
         });
@@ -162,7 +162,7 @@ function View_Helper_ParameterChooser () {
         });
         
         // we do not need this view, but it allows the user to easier hit the date picker
-        this.dateView = Titanium.UI.createView({height: 34,
+        this.dateView = Titanium.UI.createView({height: 39,
                                                 top: 2,
                                                 left: 4,
                                                 width: labelWidth,
@@ -185,7 +185,7 @@ function View_Helper_ParameterChooser () {
             image: 'images/icon/chooseDown.png',
             width: 13,
             height: 15,
-            top: 12,
+            top: 14,
             right: 10,
             zIndex: 2
         });
@@ -195,7 +195,7 @@ function View_Helper_ParameterChooser () {
         }
         
         // we do not need this view, but it allows the user to easier hit the period picker
-        this.periodView = Titanium.UI.createView({height: 34,
+        this.periodView = Titanium.UI.createView({height: 39,
                                                   top: 2,
                                                   right: 4,
                                                   width: 80,
@@ -313,7 +313,7 @@ function View_Helper_ParameterChooser () {
             height: 1,
             left: 10,
             right: 10,
-            top: 37,
+            top: 41,
             borderWidth: 0,
             backgroundColor: '#333333',
             zIndex: 7
@@ -323,7 +323,7 @@ function View_Helper_ParameterChooser () {
             image:'images/icon/chooseDown.png',
             width: 13,
             height: 15,
-            top: 48,
+            top: 54,
             left: 10
         });
         
@@ -332,10 +332,10 @@ function View_Helper_ParameterChooser () {
         }
         
         // we do not need this view, but it allows the user to easier hit the site picker
-        this.siteView = Titanium.UI.createView({height: 34,
-                                                top: 38,
+        this.siteView = Titanium.UI.createView({height: 37,
+                                                top: 43,
                                                 left: 4,
-                                                width: 200,
+                                                width: 220,
                                                 zIndex: 8});
         
         var allowedSiteNames = [];
