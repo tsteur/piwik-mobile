@@ -37,6 +37,10 @@ function template () {
     
     for (var index = 0; index < this.availableReports.length; index++) {
         report         = this.availableReports[index];
+        
+        if (!report) {
+            continue;
+        }
     
         currentSection = report.category;
         

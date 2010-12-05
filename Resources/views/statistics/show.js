@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  * 
- * @fileOverview View template visitors/country.
+ * @fileOverview View template statistics/show.
  */
 
 /**
@@ -56,7 +56,7 @@ function template () {
     this.add(scrollView);
     
     var box            = this.helper('borderedContainer', {top: top});
-    var headline       = this.helper('headline', {headline: this.metadata.name});
+    var headline       = this.helper('headline', {headline: this.report ? this.report.name : ''});
     
     box.subView.add(headline.subView);
     top                = headline.subView.height;
@@ -84,7 +84,7 @@ function template () {
                  graphUrl   = Graph.getPieChartUrl(this.graphData);
          }
 
-        var graph      = this.helper('graph', {title: this.metadata.name,
+        var graph      = this.helper('graph', {title: this.report ? this.report.name : '',
                                                graphUrl: graphUrl,
                                                top: top});
         
@@ -94,8 +94,22 @@ function template () {
 
     box.subView.height = top;
 
-    var headlineStats  = {title: this.columns.label ? this.columns.label : this.dimension, 
-                          value: this.columns[this.sortOrderColumn] ? this.columns[this.sortOrderColumn] : this.columns.value};
+    var statsticTitleLabel = this.dimension;
+    if (this.columns && this.columns.label) {
+        statsticTitleLabel = this.columns.label
+    }
+
+    var statsticValueLabel = '';
+    if (this.columns && this.columns[this.sortOrderColumn]) {
+        statsticValueLabel = this.columns[this.sortOrderColumn];
+    } else if (this.columns && this.columns.value) {
+        statsticValueLabel = this.columns.value;
+    } else {
+        statsticValueLabel = _('General_Value');
+    }
+    
+    var headlineStats  = {title: statsticTitleLabel, 
+                          value: statsticValueLabel};
                          
     var visitorStats   = this.helper('statisticList', {values: this.reportData, 
                                                        top: top,

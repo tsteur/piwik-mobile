@@ -64,6 +64,7 @@ function StatisticsController () {
         this.view.site            = site;
         this.view.dimension       = null;
         this.view.sortOrderColumn = sortOrder;
+        this.view.report          = report;
         
         if (report.dimension) {
             this.view.dimension   = report.dimension;

@@ -29,7 +29,10 @@ function SiteController () {
         
         var cachedReportData = Cache.get('piwik_report_metadata_' + site.accountId + '_' + language);
         
-        if (cachedReportData && Cache.KEY_NOT_FOUND != cachedReportData) {
+        if (cachedReportData 
+            && Cache.KEY_NOT_FOUND != cachedReportData 
+            && (cachedReportData instanceof Array) 
+            && 0 < cachedReportData.length) {
             
             this.view.availableReports = cachedReportData;
             
@@ -45,12 +48,15 @@ function SiteController () {
         piwik.registerCall('API.getReportMetadata', {}, account, function (reportMetaData) {
         
             if (!reportMetaData) {
-                reportMetaData = {};
+                reportMetaData = [];
             }
 
             this.view.availableReports = reportMetaData;
             
-            Cache.set('piwik_report_metadata_' + site.accountId + '_' + language, reportMetaData, null);
+            // do not cache an empty result
+            if (reportMetaData && (reportMetaData instanceof Array) && 0 < reportMetaData.length) {
+                Cache.set('piwik_report_metadata_' + site.accountId + '_' + language, reportMetaData, null);
+            }
         });
 
         piwik.sendRegisteredCalls(function () {

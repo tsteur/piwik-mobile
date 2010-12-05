@@ -88,6 +88,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_Required:                                                   '%s required',
     General_Today:                                                      'Today',
     General_Unknown:                                                    'Unknown',
+    General_Value:                                                      'Value',
     General_Yesterday:                                                  'Yesterday',
     General_YourChangesHaveBeenSaved:                                   'Your changes have been saved.',
     Login_Login:                                                        'Username',

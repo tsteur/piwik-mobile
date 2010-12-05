@@ -72,7 +72,7 @@ function View_Helper_Headline () {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space
             // left. setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth = parseInt(this.view.size.width, 10) - 30 - 65;
+            labelWidth = parseInt(this.view.size.width, 10) - 30 - 10;
             top        = 1;
         }
 
