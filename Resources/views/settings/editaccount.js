@@ -282,11 +282,9 @@ function template () {
                 account.name = _('Mobile_AnonymousAccess');
             }
             
-            if (_this.accountId) {
-                _this.accountManager.updateAccount(_this.accountId, account);
-            } else {
+            if (!_this.accountId) {
+                // account doesn't already exist. we have to create the account and activate the account by default
                 account.active  = 1;
-                _this.accountId = _this.accountManager.createAccount(account);
             }
             
             /**
@@ -294,6 +292,10 @@ function template () {
              * already closed or in background till the possible information - alert - is displayed.
              */
             _this.comparePiwikVersion();
+            
+            // this ensures an error message will be displayed everytime the user presses save.
+            // otherwise a possible error message will appear only once.
+            _this.piwik.errorMessageSent = false;
             
             // verify token_auth, user should have at least view access
             _this.piwik.send('SitesManager.getSitesIdWithAtLeastViewAccess', {}, account, function (response) {
@@ -315,6 +317,12 @@ function template () {
                     return;
                     
                 } 
+                
+                if (_this.accountId) {
+                    _this.accountManager.updateAccount(_this.accountId, account);
+                } else {
+                    _this.accountId = _this.accountManager.createAccount(account);
+                }
             
                 var alertDialog = Titanium.UI.createAlertDialog({
                     title: _('General_Done'),
