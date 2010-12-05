@@ -163,8 +163,9 @@ function PiwikModel () {
             parameter.format     = this.format;
         }
         
-        if(Settings.getLanguage()) {
-            parameter.language = Settings.getLanguage();
+        var language = Settings.getLanguage();
+        if(language) {
+            parameter.language   = language;
         }
         
         return parameter;

@@ -67,6 +67,13 @@ Settings.getPiwikPassword = function () {
 };
 
 /**
+ * Cached language value. We cache this value cause it is requested very often.
+ * 
+ * @type string|null
+ */
+Settings.language = null;
+
+/**
  * Sets (overwrites) the adjusted language key (2 language letters code like en, de, ...). The app translates all
  * output / text to this language if possible.
  * 
@@ -74,7 +81,11 @@ Settings.getPiwikPassword = function () {
  * 
  * @type null
  */
-Settings.setLanguage = function (value) {
+Settings.setLanguage  = function (value) {
+
+    // cause the language is requested very often it is better to cache this value.
+    Settings.language = value;
+    
     Settings._set('piwikLanguage', 'String', value);
 };
     
@@ -86,6 +97,12 @@ Settings.setLanguage = function (value) {
  * @returns {string|null}  The previously stored language code. Value is null if value was not set before.
  */
 Settings.getLanguage = function () {
+
+    if (Settings.language) {
+    
+        return Settings.language;
+    }
+    
     return Settings._get('piwikLanguage', 'String');
 };
 
