@@ -151,7 +151,14 @@ function StatisticsController () {
             this.render('show');
         });
     };
-    
+
+    /**
+     * Finds the best possible sort order column.
+     *
+     * @param   {Object}    report    The current selected report containing metrics information.
+     * 
+     * @returns {string}   The name of the default sort order column depending on the given report.
+     */
     this._getSortOrder = function (report) {
     
         var sortOrder  = config.getUsedRow(this.period);
@@ -167,7 +174,17 @@ function StatisticsController () {
         
         return sortOrder;
     };
-    
+
+    /**
+     * Formats the response of the getProcessedReport as required by the Graph API.
+     *
+     * @param   {Object}   response    Response of the getProcessedReport request.
+     * 
+     * @returns {Object}   Graph data which can be used to display pie or bar charts in the following style:
+     *                     Object (
+     *                         [label] => [value]
+     *                     )
+     */
     this._formatGraphData = function (response) {
     
         var graphRows = {};
@@ -199,7 +216,25 @@ function StatisticsController () {
         
         return graphRows;
     };
-    
+
+    /**
+     * Formats the response of the getProcessedReport as required by the StatisticsList API.
+     *
+     * @param   {Object}   response    Response of the getProcessedReport request.
+     * @param   {Object}   account     The current used piwik account.
+     * 
+     * @returns {Array}    All existing statistics data returned by getProcessedReport. The array contains an object for
+     *                     each single statistics row/entry.
+     *                     Array (
+     *                         [int] => Object (
+     *                                      [title]      => [The title of this entry]
+     *                                      [value]      => [The value of this entry]
+     *                                      [logo]       => [An absolute path to the logo if one is defined in reportMetadata]
+     *                                      [logoWidth]  => [Width of the logo if one is defined in reportMetadata]
+     *                                      [logoHeight] => [Height of the logo if one is defined in reportMetadata]
+     *                                  )
+     *                     )
+     */
     this._formatReportData = function (response, account) {
             
         var reportRow = [];
@@ -247,7 +282,12 @@ function StatisticsController () {
     
     /**
      * We need an url like http://demo.piwik.org/ or http://demo.piwik.org/foo/bar/
-     * Therefore we have to add a trailing / if it doesn't exist already or remove for example index.php if url is http://demo.piwik.org/index.php 
+     * Therefore we have to add a trailing / if it doesn't exist already or remove for example index.php if url is 
+     * http://demo.piwik.org/index.php 
+     *
+     * @param   {string}   accessUrl    A piwik access url.
+     *
+     * @returns {string}   The formatted access url.
      */
     this._formatAccessUrl = function (accessUrl) {
     
