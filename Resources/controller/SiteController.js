@@ -26,11 +26,13 @@ function SiteController () {
         this.view.site = site;
         
         var language   = Settings.getLanguage();
+    
+        var mySession  = new Session();
         
-        var cachedReportData = Cache.get('piwik_report_metadata_' + site.accountId + '_' + language);
+        var reportDataSessionKey = 'piwik_report_metadata_' + site.accountId + '_' + language;
+        var cachedReportData     = mySession.get(reportDataSessionKey);
         
         if (cachedReportData 
-            && Cache.KEY_NOT_FOUND != cachedReportData 
             && (cachedReportData instanceof Array) 
             && 0 < cachedReportData.length) {
             
@@ -55,7 +57,7 @@ function SiteController () {
             
             // do not cache an empty result
             if (reportMetaData && (reportMetaData instanceof Array) && 0 < reportMetaData.length) {
-                Cache.set('piwik_report_metadata_' + site.accountId + '_' + language, reportMetaData, null);
+                mySession.set(reportDataSessionKey, reportMetaData);
             }
         });
 
