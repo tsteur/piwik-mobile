@@ -65,7 +65,7 @@ function template () {
                 left        = 0;
             }
 
-            var headerLabel = Titanium.UI.createLabel({
+            headerLabel = Titanium.UI.createLabel({
                 text: String(report.category),
                 height: 20,
                 width: labelWidth,

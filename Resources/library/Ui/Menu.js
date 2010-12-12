@@ -49,7 +49,7 @@ var Ui_Menu = {
         
         Titanium.UI.Android.OptionMenu.setMenu(Ui_Menu.menu);
     }
-}
+};
 
 if ('android' === Titanium.Platform.osname) {
 

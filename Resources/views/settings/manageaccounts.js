@@ -117,7 +117,7 @@ function template () {
             
             // @todo throw a notification as soon as supported by titanium
             
-            delete row;
+            row = null;
         });
         
         dialog.show();

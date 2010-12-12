@@ -203,7 +203,7 @@ function template () {
             
             row.changeValue(timeoutValue);
             
-            timeoutValue = parseInt(timeoutValue.replace('s', '')) * 1000;
+            timeoutValue = parseInt(timeoutValue.replace('s', ''), 10) * 1000;
             
             Settings.setHttpTimeout(timeoutValue);
         });

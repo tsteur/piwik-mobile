@@ -14,7 +14,6 @@
  *          soon as the app version changes. Currently following keys are in use:
  *          piwik_sites_allowed                        All allowed sites a user has at least view access
  *          translations_{locale}                      All available translations
- *          piwik_report_metadata_{accountId}_{lang}   Report metadata for a specific account
  *
  * @static
  */

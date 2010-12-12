@@ -193,4 +193,4 @@ Log.profile = function () {
     Titanium.API.debug("Free mem: " + (Titanium.Platform.availableMemory / 1000) + 'kb');
     
     Log.time = now;
-}
+};

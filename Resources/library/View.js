@@ -220,8 +220,8 @@ function View (params) {
         
             return helperInstance.direct();
             
-        } catch (e) {
-            Log.warn('An error occurred while rendering view helper ' + helper + ':' + e.message, 'View');
+        } catch (exception) {
+            Log.warn('An error occurred while rendering view helper ' + helper + ':' + exception.message, 'View');
             
             return helperInstance;
         }

@@ -200,7 +200,7 @@ function HttpRequest () {
             if ('undefined' !== (typeof xhrTimeout) && xhrTimeout) {
                 try {
                     clearTimeout(xhrTimeout);
-                } catch (e) {} 
+                } catch (exception) {} 
             }
             
             if (e && e.error && '' !== e.error && !_this.errorMessageSent && _this.sendErrors) {

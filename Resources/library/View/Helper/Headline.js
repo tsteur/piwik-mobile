@@ -125,7 +125,7 @@ function View_Helper_Headline () {
     this.refresh = function () {
     
         if (this.headline && 'undefined' !== (typeof this.headline.text)) {
-            this.headline.text = this.getOption('headline', '')
+            this.headline.text = this.getOption('headline', '');
         }
     };
 
@@ -147,7 +147,7 @@ function View_Helper_Headline () {
             var zIndex = 1;
             
             if (this.view && this.view.zIndex) {
-                zIndex = this.view.zIndex
+                zIndex = this.view.zIndex;
             } else if (Titanium.UI.currentWindow.zIndex) {
                 zIndex = Titanium.UI.currentWindow.zIndex;
             } else {

@@ -66,7 +66,7 @@ function template () {
     // There's a bug in Titanium 1.4 and previous versions when using autocapitalizations UrlKeyboard will not work. But
     // autocapitalization is deactivated on url keyboards on android by default.
     if ('android' !== Titanium.Platform.osname) {
-        piwikUrl.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE
+        piwikUrl.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
     }
     
     top = top + 40;
@@ -400,8 +400,8 @@ function template () {
     piwikUrl.addEventListener('return', function(event){
         if (piwikAnonymous.value) {
         
-            var event = {};
-            save.fireEvent('click', event);
+            var myEvent = {};
+            save.fireEvent('click', myEvent);
             
             return;
         }
@@ -414,8 +414,8 @@ function template () {
     });
     
     piwikPassword.addEventListener('return', function(event){
-        var event = {};
-        save.fireEvent('click', event);
+        var myEvent = {};
+        save.fireEvent('click', myEvent);
     });
     
     var scrollView = Titanium.UI.createScrollView({

@@ -209,7 +209,7 @@ function create_Ui_Picker(params) {
                 picker = new Ui_Picker(params);
                 
                 return picker;
-            } catch (e) {}
+            } catch (exception) {}
         
             return;
         }
@@ -254,10 +254,10 @@ function create_Ui_Picker(params) {
         });
         
         update.addEventListener('click', function (event) {
-            var event = {value: update.pickerValue};
+            var myEvent = {value: update.pickerValue};
                            
             toolbar.hide();
-            picker.fireEvent('set', event); 
+            picker.fireEvent('set', myEvent); 
             Titanium.UI.currentWindow.remove(picker);
             Titanium.UI.currentWindow.remove(toolbar);
         });

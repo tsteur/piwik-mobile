@@ -221,7 +221,6 @@ Window.cleanup = function (view, depth) {
             childView            = null;
             view.children[index] = null;
             
-            delete childView; 
             delete view.children[index];
         }
         

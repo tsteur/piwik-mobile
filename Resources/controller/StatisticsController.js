@@ -211,11 +211,9 @@ function StatisticsController () {
                     continue;    
                 }
                 
-                var label = response.reportData[index].label
+                var label = response.reportData[index].label;
                 
-                if (response.reportMetadata
-                    && response.reportMetadata[index]
-                    && response.reportMetadata[index].shortLabel) {
+                if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].shortLabel) {
                     // always prefer the sortLabel
                     label = response.reportMetadata[index].shortLabel;
                 }

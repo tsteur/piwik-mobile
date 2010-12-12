@@ -13,7 +13,10 @@
  *          session persists. You have to initialize the session on application start. Each session key/value pair is
  *          stored in the application store. This means that session data persists beyond application sessions.
  *          Therefore a session have to be initialized on app start where a new session id will be generated and all
- *          previous sessions will be deleted.
+ *          previous sessions will be deleted.Currently following keys are in use:
+ *          piwik_parameter_period'                    The current selected period
+ *          piwik_parameter_date'                      The current selected date
+ *          piwik_report_metadata_{accountId}_{lang}   Report metadata for a specific account
  *
  * @param   {boolean}  [start=false]    true to start a session, otherwise an existing session will be used.
  *
@@ -155,7 +158,7 @@ function Session (start) {
             if (!sessionEntry || !sessionEntry.sid || sessionEntry.sid !== this.sid) {
 
                 // invalid/outdated entry
-                Titanium.App.Properties.removeProperty(key)
+                Titanium.App.Properties.removeProperty(key);
         
                 valueEntry   = false;
             }

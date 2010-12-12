@@ -118,6 +118,7 @@ function ActionController () {
         // Ensure upper case first for modelName
         var firstUpperChar   = modelName.charAt(0).toUpperCase();
         var modelNameUcFirst = firstUpperChar + modelName.substr(1);
+        var model            = null;
         
         try {
        
@@ -125,11 +126,9 @@ function ActionController () {
             Titanium.include('/model/' + modelNameUcFirst + 'Model.js');
         
             // eval is not evil in this case because the model names are specified by us
-            var model = eval('new ' + modelNameUcFirst + 'Model()');
+            model = eval('new ' + modelNameUcFirst + 'Model()');
             
         } catch (e) {
-        
-            var model = null;
             
             Log.warn('Failed to load model ' + modelName + ':' + e.message, 'ActionController');
         }

@@ -96,7 +96,7 @@ function template () {
 
     var statsticTitleLabel = this.dimension;
     if (this.columns && this.columns.label) {
-        statsticTitleLabel = this.columns.label
+        statsticTitleLabel = this.columns.label;
     }
 
     var statsticValueLabel = '';
