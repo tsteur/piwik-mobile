@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.piwik.mobile"
       android:versionCode="3"
-      android:versionName="1.0.2"
+      android:versionName="1.1.0"
       android:installLocation="preferExternal" 
 >
 	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8" />
