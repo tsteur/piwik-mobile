@@ -16,4 +16,13 @@
     <navbar-hidden>true</navbar-hidden>
     <analytics>false</analytics>
 <guid>e0134140-a395-46b8-8f20-31172990b391</guid>
+<android xmlns:android="http://schemas.android.com/apk/res/android">
+    <tool-api-level>8</tool-api-level>
+    <manifest android:versionCode="3" android:versionName="1.1.0">    
+        <supports-screens android:smallScreens="true" android:normalScreens="true" 
+                          android:largeScreens="true" android:anyDensity="false" />
+        <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8" 
+                  android:installLocation="preferExternal"/>
+    </manifest>
+</android>
 </ti:app>
