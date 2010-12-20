@@ -31,9 +31,8 @@ config.piwik = {
 };
 
 config.graph = {Actions: {getDownloads: {chartType: 'pie'},
-						  getOutlinks:  {chartType: 'pie'},
-						  getPageTitles: {chartType: 'pie'}}
-
+                          getOutlinks:  {chartType: 'pie'},
+                          getPageTitles: {chartType: 'pie'}}
 };
 
 /**
