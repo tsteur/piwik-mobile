@@ -67,13 +67,6 @@ Settings.getPiwikPassword = function () {
 };
 
 /**
- * Cached language value. We cache this value cause it is requested very often.
- * 
- * @type string|null
- */
-Settings.language = null;
-
-/**
  * Sets (overwrites) the adjusted language key (2 language letters code like en, de, ...). The app translates all
  * output / text to this language if possible.
  * 
@@ -82,9 +75,6 @@ Settings.language = null;
  * @type null
  */
 Settings.setLanguage  = function (value) {
-
-    // cause the language is requested very often it is better to cache this value.
-    Settings.language = value;
     
     Settings._set('piwikLanguage', 'String', value);
 };
@@ -97,12 +87,6 @@ Settings.setLanguage  = function (value) {
  * @returns {string|null}  The previously stored language code. Value is null if value was not set before.
  */
 Settings.getLanguage = function () {
-
-    if (Settings.language) {
-    
-        return Settings.language;
-    }
-    
     return Settings._get('piwikLanguage', 'String');
 };
 
@@ -295,6 +279,10 @@ Settings._get = function (key, type, defaultValue) {
     Log.debug(type + ' ' + key, 'setting._get');
     
     key = Settings._addSettingsKeyPrefix(key);
+    
+    if (Settings[key]) {
+        return Settings[key];
+    }
 
     if (Titanium.App.Properties.hasProperty(key)) {
     
@@ -320,11 +308,16 @@ Settings._get = function (key, type, defaultValue) {
             
             value = Titanium.App.Properties.getString(key);
         }
+        
+        // cache value
+        Settings[key] = value;
 
         return value;
     }
 
     if (defaultValue) {
+        // cache value
+        Settings[key] = value;
         
         return defaultValue;
     }
@@ -347,6 +340,8 @@ Settings._set = function (key, type, value) {
     Log.debug('' + type + key + value, 'setting._set');
     
     key = Settings._addSettingsKeyPrefix(key);
+    
+    Settings[key] = value;
 
     if (type && 'Bool' === type) {
 
@@ -355,6 +350,7 @@ Settings._set = function (key, type, value) {
     }
 
     if (type && 'Int' === type) {
+        Settings[key] = parseInt(value, 10);
 
         return Titanium.App.Properties.setInt(key, parseInt(value, 10));
 
