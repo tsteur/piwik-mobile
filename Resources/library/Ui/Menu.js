@@ -17,14 +17,60 @@
 var Ui_Menu = {
 
     /**
-     * Is null if current os is not Android. Otherwise it holds the current instance of the menu as described at 
-     * {@link http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Android.OptionMenu.Menu-object.html}
+     * Defines whether the current system supports option menus. False if it is not supported, true otherwise.
      * 
-     * @defaults null
-     * 
-     * @type null|Titanium.UI.Android.OptionMenu.Menu
+     * @default false
+     *
+     * @type boolean
      */
-    menu: null,
+    hasMenu: false,
+
+    /**
+     * Builds the menu depending on the current displayed window. Call this method everytime a window will be closed
+     * or opened to ensure the correct menu will be displayed.
+     *
+     * @type null
+     */
+    build: function () {
+        if (!Ui_Menu.hasMenu) {
+            return;
+        }
+        
+        var menu = Titanium.UI.Android.OptionMenu.createMenu();
+        var item = Titanium.UI.Android.OptionMenu.createMenuItem({title: _('General_Settings'), 
+                                                                  icon:  'images/icon/settings.png'});
+        item.addEventListener('click', function () {
+            Window.createMvcWindow({jsController: 'settings',
+                                    jsAction:     'index'});
+        });
+        
+        menu.add(item);
+        
+        var view = Window.getCurrentWindow();
+        
+        if (!view || !view.zIndex) {
+            Titanium.UI.Android.OptionMenu.setMenu(menu);
+        
+            return;
+        }
+        
+        var menuItems = Session.get('menuItems' + view.zIndex, []);
+        
+        if (!menuItems || !menuItems.length) {
+            Titanium.UI.Android.OptionMenu.setMenu(menu);
+        
+            return;
+        }
+        
+        for (var index = 0; index < menuItems.length; index++) {
+            item = Titanium.UI.Android.OptionMenu.createMenuItem(menuItems[index].options);
+            item.addEventListener('click', menuItems[index].onClick);
+        
+            menu.add(item);
+        }
+        
+        Titanium.UI.Android.OptionMenu.setMenu(menu);
+    },
 
     /**
      * Adds an item to the current menu. Adds the item only if the current OS is Android.
@@ -37,28 +83,46 @@ var Ui_Menu = {
      * @type null
      */
     addItem: function (options, onClick) {
-        if (!Ui_Menu.menu) {
+        if (!Ui_Menu.hasMenu) {
             return;
         }
         
-        var item = Titanium.UI.Android.OptionMenu.createMenuItem(options);
-         
-        item.addEventListener('click', onClick);
-
-        Ui_Menu.menu.add(item);
+        var view = Window.getCurrentWindow();
         
-        Titanium.UI.Android.OptionMenu.setMenu(Ui_Menu.menu);
+        if (!view || !view.zIndex) {
+            Log.warn('Can not add menu item cause there is no view', 'Ui_Menu');
+            
+            return;
+        }
+        
+        var menuItems = Session.get('menuItems' + view.zIndex, []);
+        
+        menuItems.push({options: options, onClick: onClick});
+        
+        Session.set('menuItems' + view.zIndex, menuItems);
+    },
+
+    /**
+     * Cleanup a previous stored menu as soon as the view will be closed.
+     *
+     * @param   {View}    view  An instance of the window which will be currently closed.
+     *
+     * @type null
+     */
+    cleanupMenu: function (view) {
+        if (!Ui_Menu.hasMenu) {
+            return;
+        }
+        
+        if (!view || !view.zIndex) {
+            return;
+        }
+        
+        Session.remove('menuItems' + view.zIndex);
     }
 };
 
 if ('android' === Titanium.Platform.osname) {
-
-    // create initial menu
-    Ui_Menu.menu = Titanium.UI.Android.OptionMenu.createMenu();
-    
-    // display a settings item on every screen
-    Ui_Menu.addItem({title: _('General_Settings'), icon: 'images/icon/settings.png'}, function () {
-        Window.createMvcWindow({jsController: 'settings',
-                                jsAction: 'index'});
-    });
+    // enable menu for android
+    Ui_Menu.hasMenu = true;
 }
