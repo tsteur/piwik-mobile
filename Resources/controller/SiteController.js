@@ -26,11 +26,9 @@ function SiteController () {
         this.view.site = site;
         
         var language   = Settings.getLanguage();
-    
-        var mySession  = new Session();
         
         var reportDataSessionKey = 'piwik_report_metadata_' + site.accountId + '_' + language;
-        var cachedReportData     = mySession.get(reportDataSessionKey);
+        var cachedReportData     = Session.get(reportDataSessionKey);
         
         if (cachedReportData 
             && (cachedReportData instanceof Array) 
@@ -57,7 +55,7 @@ function SiteController () {
             
             // do not cache an empty result
             if (reportMetaData && (reportMetaData instanceof Array) && 0 < reportMetaData.length) {
-                mySession.set(reportDataSessionKey, reportMetaData);
+                Session.set(reportDataSessionKey, reportMetaData);
             }
         });
 

@@ -20,10 +20,8 @@ function StatisticsController () {
      */
     this.init = function () {
     
-        var mySession     = new Session();
-        
-        var periodSession = mySession.get('piwik_parameter_period');
-        var dateSession   = mySession.get('piwik_parameter_date');
+        var periodSession = Session.get('piwik_parameter_period');
+        var dateSession   = Session.get('piwik_parameter_date');
     
         this.period       = this.getParam('period', periodSession);
         this.date         = this.getParam('date', dateSession);
