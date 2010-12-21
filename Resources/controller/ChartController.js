@@ -21,9 +21,8 @@ function ChartController () {
      */
     this.fulldetailAction = function () {
     
-        this.view.fullscreen = true;
-        this.view.graphUrl   = this.getParam('graphUrl');
-
+        this.view.graphUrl = this.getParam('graphUrl', '');
+        
         this.render('fulldetail');
     };
 }
