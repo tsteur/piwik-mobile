@@ -30,7 +30,7 @@ function View_Helper_BorderedContainer () {
             right: 5,
             borderWidth: 1,
             borderColor: '#B8B4AB',
-            width: this.view.size.width - 10,
+            width: this.view.width - 10,
             borderRadius: config.theme.borderRadius,
             backgroundColor: config.theme.backgroundColor
         });

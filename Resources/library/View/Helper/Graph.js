@@ -40,10 +40,10 @@ function View_Helper_Graph () {
             });
 
             var labelWidth = 'auto';
-            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
+            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
                 // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
                 
-                labelWidth = parseInt(this.view.size.width, 10) - 40;
+                labelWidth = parseInt(this.view.width, 10) - 40;
             }
             
             var noDataInfoLabel = Titanium.UI.createLabel({
@@ -107,10 +107,10 @@ function View_Helper_Graph () {
 
 
         var labelWidth = 'auto';
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
+        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.size.width, 10) - 40;
+            labelWidth = parseInt(this.view.width, 10) - 40;
         }
         
         var title = Titanium.UI.createLabel({
@@ -137,7 +137,7 @@ function View_Helper_Graph () {
     this.addGraph  = function (view) {
     
         // @todo can we calculate the width depending on the outer view? width is only correct under circumstances.
-        var width    = parseInt(this.view.size.width, 10) - 10 - 2 - 20;
+        var width    = parseInt(this.view.width, 10) - 10 - 2 - 20;
         var height   = 150;
         
         var graphUrl = this.getOption('graphUrl');

@@ -92,26 +92,22 @@ function View_Helper_StatisticList () {
          *       characters and screen size. The widest charcter should be a 'w'. Depending on this width we are  
          *       - perhaps - able to calculate a better label height. A problem is not calculateable word wraps.
          */
-        if (330 > this.view.size.width) {
+        if (330 > this.view.width) {
             this.labelHeight = 38;
         }
         
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
-            // there is a bug since Titanium Mobile SDK 1.3.2 which forces labels to wrap even if there is enough 
-            // space left. Setting a width is a workaround to fix this bug.
-            // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
-            this.leftLabelWidth  = parseInt(this.view.size.width, 10) - 120 - 30;
+        if (100 < parseInt(this.view.width, 10)) {  
+            this.leftLabelWidth  = parseInt(this.view.width, 10) - 120 - 30;
         }
 
         var view = Titanium.UI.createView({
-            width:  this.view.size.width - 10,
+            width:  this.view.width - 10,
             height: 'auto',
             top: this.getOption('top', 1),
             left: 0,
-            right: 0,
             zIndex: 2
         });
-        
+
         this.renderHeadline(view);
         this.renderList(view);
         
@@ -228,6 +224,16 @@ function View_Helper_StatisticList () {
         // needed for odd/even detection
         var counter      = 0;
         
+        var mainView = Ti.UI.createView({
+            top: this.topValue,
+            left: 1,
+            bottom: 1,
+            right: 1,
+            backgroundColor: '#f5f5f5',
+            zIndex: 1
+        });
+        view.add(mainView);
+
         for (var index = 0; index < values.length; index++) {
             var statistic = values[index];
             
@@ -249,51 +255,64 @@ function View_Helper_StatisticList () {
             
             if (counter % 2 == 1) {
                 leftBgcolor  = config.theme.backgroundColor;
-                rightBgcolor = '#f5f4f2';
+                rightBgcolor = '#f5f5f5';
             }
 
-            var leftView = Ti.UI.createView({
-                height: this.labelHeight,
-                top: this.topValue,
-                left: 1,
-                right: 121,
-                backgroundColor: leftBgcolor
-            });
+            if ('#f5f5f5' != leftBgcolor) {
+                var leftView = Ti.UI.createView({
+                    height: this.labelHeight,
+                    top: this.topValue,
+                    left: 1,
+                    right: 121,
+                    backgroundColor: leftBgcolor,
+                    zIndex: 2
+                });
+                view.add(leftView);
+            }
             
-            var rightView = Ti.UI.createView({
-                height: this.labelHeight,
-                top: this.topValue,
-                right: 1,
-                width: 120,
-                backgroundColor: rightBgcolor
-            });
+            if ('#f5f5f5' != rightBgcolor) {
+                var rightView = Ti.UI.createView({
+                    height: this.labelHeight,
+                    top: this.topValue,
+                    right: 1,
+                    width: 120,
+                    backgroundColor: rightBgcolor,
+                    zIndex: 3
+                });
+                view.add(rightView);
+            }
 
             var titleLabel = Titanium.UI.createLabel({
                 text: String(title),
                 height: 'auto',
                 left: 10,
-                top: 5,
+                top: this.topValue + 5,
                 width: this.leftLabelWidth,
                 color: color,
+                zIndex: 4,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
+            view.add(titleLabel);
 
             var valueLabel = Titanium.UI.createLabel({
                 text: ' - ',
                 height: 'auto',
-                left: 10,
-                top: 5,
+                right: 3,
+                top: this.topValue + 5,
                 width: this.rightLabelWidth,
                 color: color,
+                zIndex: 5,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
+            view.add(valueLabel);
 
             if(logo) {
                 var imageView = Titanium.UI.createImageView({
                     height: statistic.logoHeight ? statistic.logoHeight : 16,
                     image: logo,
                     left: 10,
-                    top: 5,
+                    top: this.topValue + 5,
+                    zIndex: 6,
                     width: statistic.logoWidth ? statistic.logoWidth : 16
                 });
                 
@@ -302,7 +321,7 @@ function View_Helper_StatisticList () {
                     titleLabel.width = this.leftLabelWidth - 25;
                 }
                 
-                leftView.add(imageView);
+                view.add(imageView);
             }
             
             if (('undefined' !== typeof value) && null !== typeof value) {
@@ -311,18 +330,13 @@ function View_Helper_StatisticList () {
             
             this.topValue += this.labelHeight;
             counter++;
-            
-            leftView.add(titleLabel);
-            rightView.add(valueLabel);
-            view.add(leftView);
-            view.add(rightView);
-            
-            /**
-             * this is important because the view template otherwise can't access the height. the height is needed
-             * for further positioning within the view template.
-             */
-            view.height = this.topValue + 1;
         }
+        
+        /**
+         * this is important because the view template otherwise can't access the height. the height is needed
+         * for further positioning within the view template.
+         */
+        view.height = this.topValue + 1;
     };
 }
 

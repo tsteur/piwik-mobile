@@ -52,7 +52,7 @@ function View_Helper_ParameterChooser () {
     this.direct  = function () {
 
         var view = Titanium.UI.createView({
-            width: this.view.size.width - 10,
+            width: this.view.width - 10,
             height: 82,
             top: this.getOption('top', 5),
             left: 0,
@@ -69,54 +69,8 @@ function View_Helper_ParameterChooser () {
         this.subView = view;
 
         this.initDate();
-        
-        var _this = this;
-        this.view.addEventListener('close', function () {
-            _this.cleanup();
-        });
 
         return this;
-    };
-    
-    /**
-     * Does some cleanup stuff to be sure that the memory of these objects will be freed.
-     *
-     * @type null
-     */
-    this.cleanup = function () {
-
-        if (this.chooseDateIcon && this.subView) {
-            this.subView.remove(this.chooseDateIcon);
-            this.chooseDateIcon = null;
-        }
-        
-        if (this.choosePeriodIcon && this.subView) {
-            this.subView.remove(this.choosePeriodIcon);
-            this.choosePeriodIcon = null;
-        }
-        
-        if (this.chooseSiteIcon && this.subView) {
-            this.subView.remove(this.chooseSiteIcon);
-            this.chooseSiteIcon = null;
-        }
-        
-        if (this.dateView && this.subView) {
-            this.subView.remove(this.dateView);
-            this.dateView = null;
-        }
-        
-        if (this.periodView && this.subView) {
-            this.subView.remove(this.periodView);
-            this.periodView = null;
-        }
-        
-        if (this.siteView && this.subView) {
-            this.subView.remove(this.siteView);
-            this.siteView = null;
-        }
-
-        this.view    = null;
-        this.subView = null;
     };
 
     /**
@@ -130,12 +84,12 @@ function View_Helper_ParameterChooser () {
         
         var labelWidth = 'auto';
         
-        if (100 < parseInt(this.view.size.width, 10)) {
+        if (100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space left.
             // setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.size.width, 10) - 120 - 10;
+            labelWidth = parseInt(this.view.width, 10) - 120 - 10;
         }
 
         this.chooseDateIcon = Titanium.UI.createButton({
@@ -212,7 +166,8 @@ function View_Helper_ParameterChooser () {
                                            maxDate: max,
                                            period: _this.period,
                                            selectionIndicator: true,
-                                           minDate: min});
+                                           minDate: min,
+                                           view: _this.view});
             
             picker.addEventListener('set', function (event) {
 
@@ -289,12 +244,12 @@ function View_Helper_ParameterChooser () {
     this.addSiteChooser = function (view) {
 
         var labelWidth = 'auto';
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
+        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.3.2 which forces labels to wrap even if there is enough
             // space left. Setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.size.width, 10) - 50;
+            labelWidth = parseInt(this.view.width, 10) - 50;
         }
     
         var currentSite  = this.getOption('currentSite', {name: ''});
@@ -458,10 +413,8 @@ function View_Helper_ParameterChooser () {
     
         this.period   = period;
         
-        var mySession = new Session();
-        
-        mySession.set('piwik_parameter_period', period);
-        
+        Session.set('piwik_parameter_period', period);
+
         if (this.view) {
             this.view.fireEvent('periodChanged', {period: period});
         }
@@ -483,9 +436,7 @@ function View_Helper_ParameterChooser () {
         
         var dateQuery = this.date.toPiwikQueryString();
         
-        var mySession = new Session();
-        
-        mySession.set('piwik_parameter_date', dateQuery);
+        Session.set('piwik_parameter_date', dateQuery);
 
         if (this.view) {
             this.view.fireEvent('dateChanged', {date: dateQuery});

@@ -48,11 +48,6 @@ function View_Helper_Headline () {
 
         this.subView = view;
         
-        var _this = this;
-        this.view.addEventListener('close', function () {
-            _this.cleanup();
-        });
-        
         return this;
     };
 
@@ -68,11 +63,11 @@ function View_Helper_Headline () {
         var labelWidth = 'auto';
         var top        = 4;
         
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.size.width, 10)) {
+        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space
             // left. setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth = parseInt(this.view.size.width, 10) - 30 - 10;
+            labelWidth = parseInt(this.view.width, 10) - 30 - 10;
             top        = 1;
         }
 
@@ -89,32 +84,6 @@ function View_Helper_Headline () {
         });
         
         view.add(this.headline);
-    };
-    
-    /**
-     * Does some cleanup stuff to be sure that the memory of these objects will be freed.
-     *
-     * @type null
-     */
-    this.cleanup = function () {
-
-        if (this.backIcon && this.subView) {
-            this.subView.remove(this.backIcon);
-            this.backIcon = null;
-        }
-
-        if (this.settingsIcon && this.subView) {
-            this.subView.remove(this.settingsIcon);
-            this.settingsIcon = null;
-        }
-
-        if (this.headline && this.subView) {
-            this.subView.remove(this.headline);
-            this.headline = null;
-        }
-
-        this.view    = null;
-        this.subView = null;
     };
     
     /**
@@ -163,6 +132,8 @@ function View_Helper_Headline () {
         
         if (!backButtonHidden) {
             
+            var win = this.view;
+            
             this.backIcon = Titanium.UI.createButton({
                 image: 'images/icon/back.png',
                 width: 43,
@@ -180,7 +151,7 @@ function View_Helper_Headline () {
             
             this.backIcon.addEventListener('click', function () {
 
-                Window.close(Titanium.UI.currentWindow);
+                Window.close();
 
             });
             
