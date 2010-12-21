@@ -16,7 +16,7 @@
  * 
  * @see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Picker-object">Titanium.UI.Picker</a>
  */
-function Ui_Picker (params) {
+function Ui_Picker (params, win) {
     
     this.selectionIndicator = false;
     
@@ -36,7 +36,7 @@ function Ui_Picker (params) {
         
         this.setValue(this.value);
         
-        Titanium.UI.currentWindow.add(view);
+        win.add(view);
          
         view.show();
         
@@ -153,7 +153,7 @@ function Ui_Picker (params) {
             
             view.hide();
             
-            Titanium.UI.currentWindow.remove(view);
+            win.remove(view);
             
             view = null;
         });
@@ -196,10 +196,13 @@ function create_Ui_Picker(params) {
     
     var picker;
     
+    var view      = params.view;
+    delete params.view;
     params.type   = Ti.UI.PICKER_TYPE_DATE;
     params.bottom = 0;
     
     if ('android' !== Titanium.Platform.osname) {
+        params.zIndex = 102;
 
         try {
             picker = Titanium.UI.createPicker(params);
@@ -214,7 +217,7 @@ function create_Ui_Picker(params) {
             return;
         }
         
-        Titanium.UI.currentWindow.add(picker);
+        view.add(picker);
         
         var update = Titanium.UI.createButton({
             title:_('CoreUpdater_UpdateTitle'),
@@ -233,13 +236,14 @@ function create_Ui_Picker(params) {
         var toolbar = Titanium.UI.createToolbar({
             items: [cancel, flexSpace, update],
             bottom: picker.height,
+            zIndex: 101,
             borderTop: true,
             borderBottom: false,
             translucent: true,
             barColor: '#999'
         });
         
-        Titanium.UI.currentWindow.add(toolbar);
+        view.add(toolbar);
 
         update.pickerValue = params.value;
         
@@ -249,8 +253,8 @@ function create_Ui_Picker(params) {
         
         cancel.addEventListener('click', function (event) {
             toolbar.hide();
-            Titanium.UI.currentWindow.remove(picker);
-            Titanium.UI.currentWindow.remove(toolbar);
+            view.remove(picker);
+            view.remove(toolbar);
         });
         
         update.addEventListener('click', function (event) {
@@ -258,15 +262,15 @@ function create_Ui_Picker(params) {
                            
             toolbar.hide();
             picker.fireEvent('set', myEvent); 
-            Titanium.UI.currentWindow.remove(picker);
-            Titanium.UI.currentWindow.remove(toolbar);
+            view.remove(picker);
+            view.remove(toolbar);
         });
             
         return picker;
     }
     
     // android
-    picker = new Ui_Picker(params);
+    picker = new Ui_Picker(params, view);
     
     return picker;
     
