@@ -333,7 +333,11 @@ function HttpRequest () {
                 _this.numReceivedCalls++;
                 
                 if (callback) {
-                    callback.apply(_this.context, [response, parameter]);
+                    try {
+                        callback.apply(_this.context, [response, parameter]);
+                    } catch (e) {
+                        Log.warn('Failed to call callback method: ' + e.message, 'HttpRequest');
+                    }
                 }
                 
                 _this.verifyAllResultsReceived();
@@ -420,11 +424,21 @@ function HttpRequest () {
      * @type null
      */
     this.verifyAllResultsReceived = function () {
-    
-        if (this.numReceivedCalls === this.registeredCalls.length) {
-                    
+
+        if (this.numReceivedCalls == this.registeredCalls.length) {
+
             if (this.onAllResultsReceivedCallback) {
-                this.onAllResultsReceivedCallback.apply(this.context, []);
+                try {
+                    this.onAllResultsReceivedCallback.apply(this.context, []);
+                } catch (e) {
+                    Log.debug('Failed to call allResultsReceivedCallback: ' + e.message, 'HttpRequest');
+                }
+            }
+            
+            // we have to remove each registered call from the stack. otherwise each already sent request will be fired
+            // multiple times - on each sendRegisteredCalls()
+            while (this.registeredCalls && this.registeredCalls.length) {
+                this.registeredCalls.pop();
             }
             
             this.numReceivedCalls             = 0;
