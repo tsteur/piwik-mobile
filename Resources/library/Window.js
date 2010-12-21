@@ -7,21 +7,36 @@
  */
  
 /**
- * @class   Provides utilities to handle windows. Actually it does only provide a method to create a new
- *          window.
+ * @class   Provides utilities to handle windows.
  *
  * @static
  */
 var Window = {};
 
 /**
+ * zIndex counter. Will be increased by one for each new created window. This ensures a new created window will be 
+ * displayed in front of another window.
+ *  
+ * @default "0"
+ * 
+ * @type Number
+ */
+Window.zIndex = 0;
+
+/**
+ * An array holding all currently opened views. Each new created window will be pushed to this array. We have to pop
+ * a window from this array as soon as we close it.
+ * 
+ * @type Array
+ */
+Window.views = [];
+
+/**
  * Creates a new window and displays it in front of the currently displayed window. Therefore it creates a new
- * Titanium.UI.Window. The specified controller and action defines which content is displayed within the 
+ * Titanium.UI.View. The specified controller and action defines which content is displayed within the 
  * window {@link Dispatcher}.
- * Titanium differences between lightweight and heavyweight windows. We always use heavyweight windows. Heavyweight
- * windows has there own JavaScript subcontext. That means a heavyweight window has its own thread and by closing a 
- * heavyweight window, the complete subcontext will be freed by the garbage collector. A window is heavyweight as 
- * soon as you pass a parameter 'modal', 'fullscreen' or 'navBarHidden' upon window creation.
+ * Titanium differences between lightweight and heavyweight windows. We don't use heavyweight windows cause heavyweight
+ * windows has there own JavaScript subcontext. It is much faster to just work with one context. 
  * 
  * @param {Object}    params                             All needed params to display the window and process the request.
  * @param {string}    [params.jsController="index"]      Controller name.
@@ -45,9 +60,7 @@ Window.createMvcWindow = function (params) {
     if (!params) {
         params = {};
     }
-
-    var zIndexWindow = 1;
-
+    
     /** 
      * make sure no view is set. Otherwise the dispatcher uses this view and everything is rendered into this view
      * instead of a new, clean window. The dispatcher sets this property automatically if the param view is not set.
@@ -57,107 +70,112 @@ Window.createMvcWindow = function (params) {
     if (params.view) {
         delete params.view;
     }
-    
-    // there are some issues in titanium 1.3.* / iphone if title is set -> app crashes 
-    // @todo verify whether it works since 1.4
-    if (params.title) {
-        delete params.title;
-    }
-
-    // There are some issues if modal is set to true. In some cases the window will freeze in iPhone or end in a 
-    // blank window. Never pass a modal parameter, therefore.
-    if (params.modal) {
-        delete params.modal;
-    }
-    
-    var currentWindow = null;
-    
-    if (Titanium.UI.currentWindow) {
-        currentWindow = Titanium.UI.currentWindow;
         
-        zIndexWindow  = parseInt(currentWindow.zIndex, 10) + 1;
-    }
+    // increase the zIndex, ensures the next window will be displayed in front of the current window
+    Window.zIndex = Window.zIndex + 1;
     
-    // zIndex is needed cause otherwise new opened window is not displayed in front of other windows in iOS 3 &4
-    params.zIndex          = zIndexWindow;
-    params.url             = 'Dispatcher.js';
+    params.zIndex          = Window.zIndex;
+    // .width is defined in iOS .size.width is defined in Android
+    params.width           = globalWin.width ? globalWin.width : globalWin.size.width;
+    params.height          = globalWin.height ? globalWin.height : globalWin.size.height;
+    params.top             = 0;
+    params.left            = 0;
+    // we change the visibility of the view to true when the view starts to render
+    params.visible         = false;
     params.backgroundColor = config.theme.backgroundColor;
-    params.navBarHidden    = true;
 
-    var newWin             = Titanium.UI.createWindow(params);
-    
-    newWin.addEventListener('close', function (event) {
-
-        this.isWindowClosed = true;
-    });
+    var newWin             = Titanium.UI.createView(params);
     
     newWin.params = params;
-
-    newWin.open();
     
     if (params.closeAllPreviousOpenedWindows) {
-        Titanium.App.fireEvent('close_window', {});
+        while (Window.views && Window.views.length) {
+            Window.close(Window.views.pop(), true);
+        }
     }
-    
-    if (currentWindow && params.closeCurrentWindow) {
-    
-        currentWindow.closedByApp = true;
         
-        jsController     = null;
-        view             = null;
-        View             = null;
-        View_Helper      = null;
-        Cache            = null;
-        Settings         = null;
-        Translation      = null;
-        Ui_Picker        = null;
-        HttpRequest      = null;
-        ActionController = null;
-        
-        Window.close(currentWindow);
-        
-        currentWindow    = null;
-        win              = null;
-        config           = null;
+    if (params.closeCurrentWindow && Window.views && Window.views.length) {
+        Window.close(Window.views.pop(), true);
     } 
     
-    Titanium.App.addEventListener('close_window', function () {
-    
-        if (newWin && Window && Window.close) {
-            Window.close(newWin);
-        }
-    });
+    globalWin.add(newWin);
+    Window.views.push(newWin);
+    Dispatcher.dispatch(newWin);
 };
 
 /**
  * Closes a window in a safe way.
  *
- * @param {Titanium.UI.Window}  win    The window you want to close.
+ * @param {View}        [win]                  The window you want to close. If parameter is not given or empty the
+ *                                             current displayed window will be closed. If you specify the view you
+ *                                             want to close ensure that you remove the view from the stack Window.views
+ * @param {boolean}     newWindowWillFollow    True if a new window will be opened afterwards. We do not close
+ *                                             the app in such a case if no other views/windows are available.
  *
  * @type null
  */
-Window.close = function (win) {
-
-    if ('android' === Titanium.Platform.osname) {
-
-        win.close();
-
-    } else {
+Window.close = function (win, newWindowWillFollow) {
+    /* TODO in case of iOS do not remove view if it is the last one!
+    if (Window.views && Window.views.length && 1 == Window.views.length && 'android' !== Titanium.Platform.osname) {
+        // If only 1 view is available
+        return;
+    } */
     
-        // if we call .close() in iOS we end up in a blank (white) screen. We already reported this bug
-        // @todo replace this by .close() as in android as soon as the bug is fixed
-        // {@link https://appcelerator.lighthouseapp.com/projects/32238/tickets/1336-closing-window-1-also-closes-window-2#ticket-1336-2}
-        win.hide();
-        
-        // this should free some memory. maybe we should do this in android too. Sadly, this does not work
-        // in androd because the property '.children' is not available currently. But in android the garbage
-        // collector should free memory automatically (more or less?!?). Bug (missing children property) is 
-        // reported
-        // @todo use this in android too.
-        Window.cleanup(win, 0);
+    if ('undefined' == (typeof newWindowWillFollow) || !newWindowWillFollow) {
+        newWindowWillFollow = false;
+    }
+
+    if (('undefined' == (typeof win) || !win) && Window.views && Window.views.length) {
+        win = Window.views.pop();
     }
     
-    win = null;
+    if (win) {
+        win.hide();
+        Window.removedItems = 0;
+        
+        try {
+            // free some memory
+            Ui_Menu.cleanupMenu(win);
+            Window.cleanup(win, 0);
+            
+            if (globalWin && globalWin.remove) {
+                globalWin.remove(win);
+            } else {
+                Log.debug('can not remove view cause of missing globalWin', 'Window');
+            }
+            
+        } catch (e){
+            Log.warn('failed to remove view from window: ' + e.message, 'Window');    
+        }
+        
+        win = null;
+    }
+    
+    if ((!Window.views || !Window.views.length) 
+        && !newWindowWillFollow 
+        && globalWin && globalWin.close 
+        && 'android' === Titanium.Platform.osname){
+        // close window only in android to close the app, close the app is not allowed in iOS and we end in a
+        // blank window if we close the only opened window
+        globalWin.close();
+        
+    } else {
+
+        // restore the menu of the previous displayed window
+        Ui_Menu.build();
+    }
+};
+
+/**
+ * Retrieve the current displayed window.
+ * 
+ * @returns {View|null}  The current displayed window or null if no window is opened.
+ */
+Window.getCurrentWindow = function () {
+    if (Window.views && Window.views.length) {
+    
+        return Window.views[Window.views.length - 1];
+    }
 };
 
 /**
@@ -180,14 +198,12 @@ Window.removedItems = 0;
 Window.maxDepth = 6;
 
 /**
- * Cause the win.close() method ends up in a blank window on iOS we want to clean up the window at least. This
- * shall free some memory. The children property is not supported by Android / Titanium therefore this just works
- * on iOS.
+ * We want to clean up the window at least. This shall free some memory. 
  * 
  * @type null
  */
 Window.cleanup = function (view, depth) {
-
+    
     depth++;
 
     if (depth > Window.maxDepth) {
@@ -209,13 +225,11 @@ Window.cleanup = function (view, depth) {
 
                 Window.cleanup(childView, depth);
 
-                if (view && view.remove) { 
+                if (view && view.remove && childView) { 
                     
                     Window.removedItems++;
                     view.remove(childView);
-                    
                 }
-
             }
             
             childView            = null;
@@ -223,8 +237,6 @@ Window.cleanup = function (view, depth) {
             
             delete view.children[index];
         }
-        
-        Window.depth++;
         
         if (1 === depth && Log) {
             

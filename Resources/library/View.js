@@ -68,16 +68,6 @@ function View (params) {
      */
     this.showWaitIndicator        = function () {
         
-        /**
-         * this is really important. if window is already closed (in android by pressing the back button) and this code
-         * will be executed the app crashes. The app crashes cause the window is already closed while this code will be 
-         * nevertheless executed. Creating an activityIndicator and add it to a closed window will crash the app.
-         */
-        if (this.isWindowClosed) { 
-        
-            return;
-        } 
-        
         Log.debug('showWaitIndicator', 'View');
 
         this.numWaitIndicatorRequests++;
@@ -86,13 +76,15 @@ function View (params) {
 
             return;
         }
-
-        this.waitIndicatorImage = Titanium.UI.createActivityIndicator({
-            height: 40,
-            width: 40,
-            message: '',
-            style: Titanium.UI.iPhone.ActivityIndicatorStyle.BIG
-        });
+        
+        if (!globalWin || !globalWin.waitIndicatorImage || !globalWin.waitIndicatorImage.show) {
+            globalWin.waitIndicatorImage = Titanium.UI.createActivityIndicator({
+                height: 40,
+                width: 40,
+                message: '',
+                style: Titanium.UI.iPhone.ActivityIndicatorStyle.BIG
+            });
+        }
         
         var _this = this;
         
@@ -102,11 +94,7 @@ function View (params) {
         
         this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (Settings.getHttpTimeout() * 1.6));
 
-        this.waitIndicatorImage.show();
-
-        if (this.add) {
-            this.add(this.waitIndicatorImage);
-        }
+        globalWin.waitIndicatorImage.show();
     };    
 
     /**
@@ -136,11 +124,6 @@ function View (params) {
             
             this.waitIndicatorTimeout = null;
         }
-        
-        if (this.isWindowClosed) { 
-        
-            return;
-        } 
 
         this.numWaitIndicatorRequests--;
 
@@ -149,15 +132,18 @@ function View (params) {
             return;
         }
 
-        if (this.waitIndicatorImage && this.waitIndicatorImage.hide) {
+        if (globalWin && globalWin.waitIndicatorImage && globalWin.waitIndicatorImage.hide) {
+        
+            globalWin.waitIndicatorImage.hide();
             
-            this.waitIndicatorImage.hide();
+            // we have to wait just a few ms to be sure there was enough time to execute the waitindicator.show method
+            // hide() works only if the waitIndicator was completely displayed before.
+            setTimeout(function () {
+                globalWin.waitIndicatorImage.hide();
+            }, 200);
 
-            this.waitIndicatorImage       = null;
-            delete this.waitIndicatorImage;
             this.numWaitIndicatorRequests = 0;
         }
-
     };
 
     /**
@@ -186,7 +172,7 @@ function View (params) {
         
         Log.debug('helper file is ' + path, 'View');
         
-        Titanium.include(path);
+        loadFile(path);
 
         try {
             // this eval is not evil as the helper name is defined by us...
@@ -253,7 +239,7 @@ function View (params) {
         // good
         // @todo support landscape mode.
         Titanium.UI.orientation = Titanium.UI.PORTRAIT;
-        
+
         this.show();
     
         if (!viewName) {
@@ -265,28 +251,27 @@ function View (params) {
         var firstLowerChar       = this.params.jsController.charAt(0).toLowerCase();
         var controllerLowerFirst = firstLowerChar + this.params.jsController.substr(1);
 
-        if ('undefined' !== (typeof template)) {
-            
-            template = null;
-        }
+        template = null;
         
         try {
-            var viewPath       = '/views/' + controllerLowerFirst + '/' + viewName + '.js';
+            var viewPath = '/views/' + controllerLowerFirst + '/' + viewName + '.js';
             
             Log.debug('template file is ' + viewPath, 'View');
             
-            Titanium.include(viewPath);
+            template = loadView(viewPath);
+
+            this.hideWaitIndicator();
             
             // execute the view template in 'this' context.
-            if ('undefined' !== typeof template && template) {
+            if (template) {
                 template.apply(this, []);
             }
+            
+            Ui_Menu.build();
             
         } catch (e) {
             Log.warn('An error occurred while trying to render view ' + e.message, 'View');
         }
-
-        this.hideWaitIndicator();
     };
     
     this.init();
