@@ -282,7 +282,7 @@ Translation.fetchTranslations = function () {
                       token_auth:   Settings.getPiwikUserAuthToken(),
                       languageCode: locale};
                       
-    Titanium.include('/model/AccountModel.js');
+    loadFile('/model/AccountModel.js');
     
     var accountManager = new AccountModel();
     var accounts       = accountManager.getAccounts();
