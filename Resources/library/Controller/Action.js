@@ -122,8 +122,7 @@ function ActionController () {
         
         try {
        
-            // @todo verify to include only once?
-            Titanium.include('/model/' + modelNameUcFirst + 'Model.js');
+            loadFile('/model/' + modelNameUcFirst + 'Model.js');
         
             // eval is not evil in this case because the model names are specified by us
             model = eval('new ' + modelNameUcFirst + 'Model()');
