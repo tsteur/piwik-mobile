@@ -221,7 +221,7 @@ function Ui_TableViewRow (params) {
         });
     }
     
-    if (rightImage) {
+    if (rightImage && rightImage.url) {
 
         var rowRightImage = Titanium.UI.createImageView({width: rightImage.width,
                                                          height: rightImage.height,
