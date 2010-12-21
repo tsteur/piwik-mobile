@@ -62,6 +62,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_Settings:                                                   'Settings',
     General_Save:                                                       'Save',
     General_ExceptionPrivilegeAtLeastOneWebsite:                        "You can't access this resource as it requires an %s access for at least one website.",
+    General_Close:                                                      'Close',
     General_CurrentWeek:                                                'Current Week',
     General_CurrentMonth:                                               'Current Month',
     General_CurrentYear:                                                'Current Year',
@@ -183,22 +184,30 @@ Translation.AVAILABLE_LANGUAGES = {
  *                      it returns the key and logs an error. In such a case you have to define a default translation
  *                      for the given key, see {@link Translation.DEFAULT_TRANSLATION}.
  */
-Translation.get = function (key) {
-    
+Translation.get  = function (key) {
+
     // verify translation is loaded each time
-    if(!Translation.translations && Settings.getLanguage()) {
-        Translation.translations = Cache.get('translations_'+Settings.getLanguage());
+    if(!Translation.translations && Translation.getLocale()) {
+        var language = Translation.getLocale();
+    
+        if ('en' == language) {
+            // never fetch english translations
+            Translation.translations = Translation.DEFAULT_TRANSLATION;
+        } else {
+            Translation.translations  = Cache.get('translations_' + language);
+        }
         
         if (!Translation.translations || Cache.KEY_NOT_FOUND == Translation.translations) {
             Translation.fetchTranslations();
         }
-    }
+    } 
     
     if (Translation.translations && Translation.translations[key]) {
         
         return Translation.translations[key];
-    }
-    
+        
+    } 
+   
     if (Translation.DEFAULT_TRANSLATION[key]) {
         
         return Translation.DEFAULT_TRANSLATION[key];
@@ -428,7 +437,12 @@ Translation.getLocale = function () {
         return locale;
     }
     
-    return Translation.getPlatformLocale();
+    locale = Translation.getPlatformLocale();
+    locale = locale.toLowerCase();
+    
+    Settings.setLanguage(locale);
+    
+    return locale;
 };
 
 /**
