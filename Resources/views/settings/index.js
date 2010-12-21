@@ -31,7 +31,7 @@ function template () {
         }
         
     }
-    
+
     availableLanguageOptions.sort();
     availableLanguageOptions.push(_('SitesManager_Cancel_js'));
     
@@ -40,7 +40,7 @@ function template () {
     
     box.subView.add(headline.subView);
     box.subView.top     = 5;
-    box.subView.height  = parseInt(this.size.height, 10) - 10;
+    box.subView.height  = parseInt(this.height, 10) - 10;
     
     this.add(box.subView);
 
@@ -120,15 +120,15 @@ function template () {
     
     var onChangeDefaultReportDate = function () {
                                 
-        var periodOptions    = [_('General_Today'), 
-                                _('General_Yesterday'), 
-                                _('General_CurrentWeek'), 
-                                _('General_CurrentMonth'), 
-                                _('General_CurrentYear'),
-                                _('SitesManager_Cancel_js')];
+        var periodOptions = [_('General_Today'), 
+                             _('General_Yesterday'), 
+                             _('General_CurrentWeek'), 
+                             _('General_CurrentMonth'), 
+                             _('General_CurrentYear'),
+                             _('SitesManager_Cancel_js')];
 
-        var periodDialog = Titanium.UI.createOptionDialog({
-            title: _('Mobile_DefaultReportDate'),
+        var periodDialog  = Titanium.UI.createOptionDialog({
+            title:  _('Mobile_DefaultReportDate'),
             options: periodOptions,
             cancel: 5
         });
@@ -167,9 +167,8 @@ function template () {
                     break;
             }
             
-            var mySession = new Session();
-            mySession.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
-            mySession.set('piwik_parameter_date', Settings.getPiwikDefaultDate());
+            Session.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
+            Session.set('piwik_parameter_date', Settings.getPiwikDefaultDate());
         });
         
         periodDialog.show();
@@ -252,7 +251,7 @@ function template () {
     
     tableview.addEventListener('click', function (event) {
 
-        if (!event || !event.rowData.onClick) {
+        if (!event || !event.rowData || !event.rowData.onClick) {
             return;
         }
         

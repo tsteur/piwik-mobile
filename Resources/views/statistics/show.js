@@ -14,13 +14,12 @@
  * @this {View}
  */
 function template () {
-    
+    var params     = this.params;
     var site       = this.site;
     var top        = 0;
     
     this.addEventListener('dateChanged', function (event) {
-    
-        var params                = this.params;
+
         params.date               = event.date;
         params.closeCurrentWindow = true;
     
@@ -28,8 +27,7 @@ function template () {
     });
     
     this.addEventListener('periodChanged', function (event) {
-    
-        var params                = this.params;
+
         params.period             = event.period;
         params.closeCurrentWindow = true;
     
@@ -38,7 +36,6 @@ function template () {
     
     this.addEventListener('siteChanged', function (event) {
     
-        var params                = this.params;
         params.site               = event.site;
         params.closeCurrentWindow = true;
     
@@ -56,9 +53,11 @@ function template () {
     this.add(scrollView);
     
     var box            = this.helper('borderedContainer', {top: top});
-    var headline       = this.helper('headline', {headline: this.report ? this.report.name : ''});
+    scrollView.add(box.subView);
     
+    var headline       = this.helper('headline', {headline: this.report ? this.report.name : ''});
     box.subView.add(headline.subView);
+    
     top                = headline.subView.height;
     
     var dateChooser    = this.helper('parameterChooser', {date: this.date, 
@@ -74,7 +73,7 @@ function template () {
 
     if (this.graphsEnabled && this.graphReport && this.graphData) {
      
-        var graphUrl = null;
+        var graphUrl   = null;
          switch (this.graphReport.chartType) {
              case 'bar': 
                  graphUrl   = Graph.getBarChartUrl(this.graphData);
@@ -84,12 +83,12 @@ function template () {
                  graphUrl   = Graph.getPieChartUrl(this.graphData);
          }
 
-        var graph      = this.helper('graph', {title: this.report ? this.report.name : '',
-                                               graphUrl: graphUrl,
-                                               top: top});
+        var graph = this.helper('graph', {title: this.report ? this.report.name : '',
+                                          graphUrl: graphUrl,
+                                          top: top});
         
         box.subView.add(graph.subView);
-        top            = graph.subView.top + graph.subView.height;
+        top       = graph.subView.top + graph.subView.height;
     }
 
     box.subView.height = top;
@@ -119,6 +118,5 @@ function template () {
     
     box.subView.add(visitorStats.subView);
     
-    scrollView.add(box.subView);
     scrollView.contentHeight = box.subView.height + box.subView.top + 5;
 }

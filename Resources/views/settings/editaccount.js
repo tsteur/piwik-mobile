@@ -16,7 +16,7 @@
 function template () {
     
     var left            = 20;
-    var windowWidthHalf = Math.round(parseInt(this.size.width, 10) / 2);
+    var windowWidthHalf = Math.round(parseInt(this.width, 10) / 2);
     var labelWidth      = 'auto';
     
     if ('android' === Titanium.Platform.osname) {
@@ -24,7 +24,7 @@ function template () {
         // setting a width is a workaround to fix this bug.
         // @see http://appcelerator.lighthouseapp.com/projects/32238/tickets/1304-android-strange-wrapping-in-tableview-on-higher-res-screens
         // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-        labelWidth  = parseInt(this.size.width, 10) - left - left - 30;
+        labelWidth  = parseInt(this.width, 10) - left - left - 30;
     }
     
     var box         = this.helper('borderedContainer', {});
@@ -34,7 +34,7 @@ function template () {
     box.subView.add(headline.subView);
     box.subView.top = 5;
     
-    var top         = headline.subView.height;;
+    var top         = headline.subView.height;
     
     top = top + 10;
     var labelUrl    = Titanium.UI.createLabel({

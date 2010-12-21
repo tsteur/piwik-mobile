@@ -17,11 +17,11 @@ function template () {
 
     var box             = this.helper('borderedContainer', {});
     var headline        = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
-    
+ 
     box.subView.add(headline.subView);
     box.subView.top     = 5;
-    box.subView.height  = parseInt(this.size.height, 10) - 10;
-    
+    box.subView.height  = parseInt(this.height, 10) - 10;
+
     this.add(box.subView);
     
     var _this = this;
@@ -144,6 +144,7 @@ function template () {
     
     var top       = headline.subView.height;
     var height    = box.subView.height - headline.subView.height - headline.subView.top;
+    
     var tableview = Titanium.UI.createTableView({data: tableData,
                                                  left: 1,
                                                  right: 1,
@@ -162,7 +163,7 @@ function template () {
     });
     
     box.subView.add(tableview);
-    
+   
     tableview.show();
     
     if (tableview.scrollToTop) {

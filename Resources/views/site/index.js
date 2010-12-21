@@ -23,7 +23,7 @@ function template () {
     
     this.add(box.subView);
     
-    box.subView.height = parseInt(this.size.height, 10) - 10;
+    box.subView.height = parseInt(this.height, 10) - 10;
 
     var tableData      = [];
     var section        = null;   
@@ -57,9 +57,9 @@ function template () {
             
             var labelWidth  = 'auto';
             var left        = 10;
-            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.size.width, 10)) {
+            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.width, 10)) {
                 // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-                labelWidth  = parseInt(this.size.width, 10) - 50;
+                labelWidth  = parseInt(this.width, 10) - 50;
                 
                 // android does the positioning relative within the tableview row, not absolute
                 left        = 0;
