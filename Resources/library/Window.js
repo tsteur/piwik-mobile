@@ -80,8 +80,6 @@ Window.createMvcWindow = function (params) {
     params.height          = globalWin.height ? globalWin.height : globalWin.size.height;
     params.top             = 0;
     params.left            = 0;
-    // we change the visibility of the view to true when the view starts to render
-    params.visible         = false;
     params.backgroundColor = config.theme.backgroundColor;
 
     var newWin             = Titanium.UI.createView(params);
@@ -97,8 +95,29 @@ Window.createMvcWindow = function (params) {
     if (params.closeCurrentWindow && Window.views && Window.views.length) {
         Window.close(Window.views.pop(), true);
     } 
+
+    if ('android' === Titanium.Platform.osname) {
+        globalWin.add(newWin);
+        // swipe event is not supported on an android view, therefore we implement it ourselves
+        newWin.addEventListener('touchstart', function (event) {
+            this.touchStartx = event.x;
+            this.touchStarty = event.y;
+        });
+        newWin.addEventListener('touchend', function (event) {
+            var x = this.touchStartx;
+            var y = this.touchStarty - 40;
+            this.touchStartx = null;
+            this.touchStarty = null;
+            
+            if (130 < (event.x - x) && event.y > y && event.y < (y + 80)) {
+                Window.close(newWin);
+            }
+        });
+    } else {
+        globalScrollView.addView(newWin);
+        globalScrollView.scrollToView(newWin);
+    }
     
-    globalWin.add(newWin);
     Window.views.push(newWin);
     Dispatcher.dispatch(newWin);
 };
@@ -138,10 +157,14 @@ Window.close = function (win, newWindowWillFollow) {
             Ui_Menu.cleanupMenu(win);
             Window.cleanup(win, 0);
             
-            if (globalWin && globalWin.remove) {
+            if ('android' !== Titanium.Platform.osname && globalScrollView && globalScrollView.remove) {
+                globalScrollView.removeView(win);
+                // TODO do we have to remove the view afterwards manually?
+                // globalScrollView.remove(win);
+            } else if ('android' === Titanium.Platform.osname && globalWin && globalWin.remove) {
                 globalWin.remove(win);
             } else {
-                Log.debug('can not remove view cause of missing globalWin', 'Window');
+                Log.debug('can not remove view', 'Window');
             }
             
         } catch (e){
@@ -160,6 +183,9 @@ Window.close = function (win, newWindowWillFollow) {
         globalWin.close();
         
     } else {
+        if ('android' !== Titanium.Platform.osname) {
+            globalScrollView.scrollToView(Window.getCurrentWindow());
+        }
 
         // restore the menu of the previous displayed window
         Ui_Menu.build();

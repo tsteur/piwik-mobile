@@ -81,6 +81,28 @@ globalWin.addEventListener('android:back', function (event) {
     Window.close();
 });
 
+if ('android' !== Titanium.Platform.osname)  {
+    // we can not use the scrollableView on Android cause it is a bit buggy currently. As soon as one swipes to another
+    // view the tableview will loose all it's rows on Android
+    var globalScrollView = Titanium.UI.createScrollableView({
+        views: [],
+        showPagingControl: false,
+        left: 0,
+        top: 0,
+        width: globalWin.width ? globalWin.width : globalWin.size.width,
+        height: globalWin.height ? globalWin.height : globalWin.size.height
+    });
+    
+    globalWin.add(globalScrollView);
+
+    globalScrollView.addEventListener('scroll', function (event) {
+        Log.warn(event, 'scrollglobal');
+        if (event && event.view && event.view.zIndex < Window.zIndex) {
+            Window.close();
+        }
+    });
+}
+
 // save default period and date in session on app start. so we only have to work with session when we want to access 
 // chosen period/date.
 Session.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
