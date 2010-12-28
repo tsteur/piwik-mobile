@@ -70,6 +70,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_Edit:                                                       'Edit',
     General_ErrorRequest:                                               'Oops... problem during the request, please try again.',
     General_ForExampleShort:                                            'eg.',
+    General_LoadingData:                                                'Loading data...',
     General_LongMonth_1:                                                'January',
     General_LongMonth_2:                                                'February',
     General_LongMonth_3:                                                'March',

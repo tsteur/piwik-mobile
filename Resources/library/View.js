@@ -77,24 +77,25 @@ function View (params) {
             return;
         }
         
-        if (!globalWin || !globalWin.waitIndicatorImage || !globalWin.waitIndicatorImage.show) {
-            globalWin.waitIndicatorImage = Titanium.UI.createActivityIndicator({
-                height: 40,
-                width: 40,
-                message: '',
-                style: Titanium.UI.iPhone.ActivityIndicatorStyle.BIG
+        if (!this.waitMessage) {
+            this.waitMessage = Ti.UI.createLabel({
+                text: _('General_LoadingData'),
+                color: config.theme.textColor,
+                textAlign: 'center',
+                font: {fontSize: this.fontSize, fontWeight: 'bold', fontFamily: config.theme.fontFamily}
             });
         }
         
-        var _this = this;
+        if (this.add) {
+            this.add(this.waitMessage);
+        }
         
+        var _this = this;
         function waitIndicatorTimeout () {
             _this.hideWaitIndicator(true);
         }
         
         this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (Settings.getHttpTimeout() * 1.6));
-
-        globalWin.waitIndicatorImage.show();
     };    
 
     /**
@@ -132,18 +133,17 @@ function View (params) {
             return;
         }
 
-        if (globalWin && globalWin.waitIndicatorImage && globalWin.waitIndicatorImage.hide) {
-        
-            globalWin.waitIndicatorImage.hide();
-            
-            // we have to wait just a few ms to be sure there was enough time to execute the waitindicator.show method
-            // hide() works only if the waitIndicator was completely displayed before.
-            setTimeout(function () {
-                globalWin.waitIndicatorImage.hide();
-            }, 200);
+        this.numWaitIndicatorRequests = 0;
 
-            this.numWaitIndicatorRequests = 0;
+        if (this.waitMessage && this.waitMessage.hide) {
+            this.waitMessage.hide()
         }
+        
+        if (this.waitMessage && this.remove) {
+            this.remove(this.waitMessage);
+        }
+        
+        this.waitMessage = null;
     };
 
     /**
@@ -239,8 +239,6 @@ function View (params) {
         // good
         // @todo support landscape mode.
         Titanium.UI.orientation = Titanium.UI.PORTRAIT;
-
-        this.show();
     
         if (!viewName) {
             Log.error('Can not render view, missing view name', 'View');
@@ -275,5 +273,4 @@ function View (params) {
     };
     
     this.init();
-
 }
