@@ -34,12 +34,11 @@ function View_Helper_Headline () {
          *    colors:[{color:'#C8C5BC',position:0.0},{color:'#BEBAB1',position:0.50},{color:'#B2AEA6',position:1.0}]
          * } 
          */
-
         var view = Titanium.UI.createView({
-            height: 36,
-            top: this.getOption('top', 1),
-            left: 1,
-            right: 1,
+            height: 40,
+            top: this.getOption('top', 0),
+            left: 0,
+            right: 0,
             backgroundImage: 'images/bgheadline.png'
         });
 
@@ -61,14 +60,14 @@ function View_Helper_Headline () {
     this.addHeadline = function (view) {
     
         var labelWidth = 'auto';
-        var top        = 4;
+        var top        = 6;
         
         if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space
             // left. setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth = parseInt(this.view.width, 10) - 30 - 10;
-            top        = 1;
+            labelWidth = parseInt(this.view.width, 10) - 30;
+            top        = 5;
         }
 
         this.headline = Titanium.UI.createLabel({
@@ -138,7 +137,7 @@ function View_Helper_Headline () {
                 image: 'images/icon/back.png',
                 width: 43,
                 height: 30,
-                top: 2,
+                top: 4,
                 right: 8,
                 zIndex: 10
             });

@@ -15,16 +15,10 @@
  */
 function template () {
 
-    var box             = this.helper('borderedContainer', {});
-    var headline        = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
+    var _this        = this;
+    var headline     = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
  
-    box.subView.add(headline.subView);
-    box.subView.top     = 5;
-    box.subView.height  = parseInt(this.height, 10) - 10;
-
-    this.add(box.subView);
-    
-    var _this = this;
+    this.add(headline.subView);
 
     var onAddAccount = function () {
         Window.createMvcWindow({jsController: 'settings',
@@ -142,27 +136,28 @@ function template () {
                                         hasCheck: Boolean(account.active)}));
     }
     
-    var top       = headline.subView.height;
-    var height    = box.subView.height - headline.subView.height - headline.subView.top;
+    var top       = headline.subView.height + headline.subView.top;
+    var height    = this.height - top;
     
     var tableview = Titanium.UI.createTableView({data: tableData,
-                                                 left: 1,
-                                                 right: 1,
+                                                 left: 0,
                                                  top: top,
                                                  height: height,
+                                                 width: this.width,
+                                                 focusable: true,
                                                  touchEnabled: false,
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
 
-        if (!event || !event.rowData.onClick) {
+        if (!event || !event.rowData || !event.rowData.onClick) {
             return;
         }
         
         event.rowData.onClick.apply(event.row, [event]);
     });
     
-    box.subView.add(tableview);
+    this.add(tableview);
    
     tableview.show();
     

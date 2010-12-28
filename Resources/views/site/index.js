@@ -15,15 +15,9 @@
  */
 function template () {
      
-    var box            = this.helper('borderedContainer', {});
     var headline       = this.helper('headline', {headline: '' + this.site.name});
     
-    box.subView.add(headline.subView);
-    box.subView.top    = 5;
-    
-    this.add(box.subView);
-    
-    box.subView.height = parseInt(this.height, 10) - 10;
+    this.add(headline.subView);
 
     var tableData      = [];
     var section        = null;   
@@ -89,9 +83,17 @@ function template () {
         tableData.push(Ui_TableViewRow(row));
     }
    
+    var top       = headline.subView.height + headline.subView.top;
+    var height    = this.height - top;
     var tableview = Titanium.UI.createTableView({data: tableData,
-                                                 left: 1,
-                                                 right: 1,
+                                                 left: 0,
+                                                 right: 0,
+                                                 top: top,
+                                                 height: height,
+                                                 width: this.width,
+                                                 visible: true,
+                                                 zIndex: 2,
+                                                 focusable: true,
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
@@ -106,10 +108,7 @@ function template () {
                                 site: event.rowData.site});
     });
     
-    tableview.top      = headline.subView.top + headline.subView.height;
-    tableview.height   = box.subView.height - headline.subView.height;
-    
-    box.subView.add(tableview);
+    this.add(tableview);
     tableview.show();
 
     if (tableview.scrollToTop) {

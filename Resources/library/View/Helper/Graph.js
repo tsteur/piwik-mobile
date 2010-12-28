@@ -71,21 +71,20 @@ function View_Helper_Graph () {
         }
         
         var view = Titanium.UI.createView({
-            height: 180,
+            height: 165,
             top: this.getOption('top', 1),
-            left: 1,
-            right: 1,
+            width: this.view.width,
+            left: 0,
             backgroundColor: config.theme.backgroundColor
         });
     
-        this.addTitle(view);
         this.addGraph(view);
         
         var bottomBorderView = Titanium.UI.createView({
             height: 1,
             bottom: 0,
             left: 0,
-            right: 0,
+            width: this.view.width,
             backgroundColor: '#B8B4AB'
         });
         
@@ -97,37 +96,6 @@ function View_Helper_Graph () {
     };
 
     /**
-     * Adds the title of the graph.
-     *
-     * @param   {Titanium.UI.View}   See {@link View_Helper#subView}
-     *
-     * @type null
-     */
-    this.addTitle = function (view) {
-
-
-        var labelWidth = 'auto';
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
-            // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
-            
-            labelWidth = parseInt(this.view.width, 10) - 40;
-        }
-        
-        var title = Titanium.UI.createLabel({
-            text: String(this.getOption('title', '')),
-            height: 'auto',
-            left: 10,
-            top: 5,
-            width: labelWidth,
-            color: config.theme.titleColor,
-            font: {fontSize: config.theme.fontSizeSmall, fontFamily: config.theme.fontFamily},
-            zIndex: 2
-        });
-        
-        view.add(title);
-    };   
-
-    /**
      * Adds the graph part.
      *
      * @param   {Titanium.UI.View}   See {@link View_Helper#subView}
@@ -137,7 +105,7 @@ function View_Helper_Graph () {
     this.addGraph  = function (view) {
     
         // @todo can we calculate the width depending on the outer view? width is only correct under circumstances.
-        var width    = parseInt(this.view.width, 10) - 10 - 2 - 20;
+        var width    = parseInt(this.view.width, 10) - 2 - 20;
         var height   = 150;
         
         var graphUrl = this.getOption('graphUrl');
@@ -148,7 +116,7 @@ function View_Helper_Graph () {
         
         var graph = Titanium.UI.createImageView({width: width,
                                                  height: height,
-                                                 top: 20,
+                                                 top: 4,
                                                  image: graphUrl,
                                                  left: 10,
                                                  zIndex: 1});

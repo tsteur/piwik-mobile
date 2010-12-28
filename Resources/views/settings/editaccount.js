@@ -15,7 +15,7 @@
  */
 function template () {
     
-    var left            = 20;
+    var left            = 10;
     var windowWidthHalf = Math.round(parseInt(this.width, 10) / 2);
     var labelWidth      = 'auto';
     
@@ -27,16 +27,27 @@ function template () {
         labelWidth  = parseInt(this.width, 10) - left - left - 30;
     }
     
-    var box         = this.helper('borderedContainer', {});
-    
     var headline    = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
     
-    box.subView.add(headline.subView);
-    box.subView.top = 5;
+    this.add(headline.subView);
     
     var top         = headline.subView.height;
+
+    var scrollView = Titanium.UI.createScrollView({
+        width: this.width,
+        height: this.height - top,
+        contentWidth: 'auto',
+        contentHeight: 'auto',
+        top: top,
+        left: 0,
+        right: 0,
+        showVerticalScrollIndicator: false,
+        showHorizontalScrollIndicator: false
+    });
     
-    top = top + 10;
+    this.add(scrollView);
+    
+    top = 10;
     var labelUrl    = Titanium.UI.createLabel({
         text: _('Mobile_AccessUrlLabel'),
         height: 20,
@@ -173,8 +184,8 @@ function template () {
     top = top + 45;
     var separator = Titanium.UI.createView({
         height: 1,
-        left: 1,
-        right: 1,
+        left: 0,
+        right: 0,
         top: top,
         borderWidth: 0,
         backgroundColor: '#908A7C',
@@ -384,18 +395,16 @@ function template () {
         });
     });
     
-    box.subView.add(labelUrl);
-    box.subView.add(piwikUrl);
-    box.subView.add(labelAnonymous);
-    box.subView.add(piwikAnonymous);
-    box.subView.add(labelUser);
-    box.subView.add(piwikUser);
-    box.subView.add(labelPassword);
-    box.subView.add(piwikPassword);
-    box.subView.add(separator);
-    box.subView.add(save);
-    
-    box.subView.height = save.top + save.height + 10;
+    scrollView.add(labelUrl);
+    scrollView.add(piwikUrl);
+    scrollView.add(labelAnonymous);
+    scrollView.add(piwikAnonymous);
+    scrollView.add(labelUser);
+    scrollView.add(piwikUser);
+    scrollView.add(labelPassword);
+    scrollView.add(piwikPassword);
+    scrollView.add(separator);
+    scrollView.add(save);
     
     piwikUrl.addEventListener('return', function(event){
         if (piwikAnonymous.value) {
@@ -417,18 +426,4 @@ function template () {
         var myEvent = {};
         save.fireEvent('click', myEvent);
     });
-    
-    var scrollView = Titanium.UI.createScrollView({
-        contentWidth: 'auto',
-        contentHeight: 'auto',
-        top: 0,
-        left: 0,
-        right: 0,
-        showVerticalScrollIndicator: false,
-        showHorizontalScrollIndicator: false
-    });
-    
-    scrollView.add(box.subView);
-    
-    this.add(scrollView);
 }

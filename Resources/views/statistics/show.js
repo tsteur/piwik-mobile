@@ -41,24 +41,28 @@ function template () {
     
         Window.createMvcWindow(params);    
     });
-    
+
+    var headline   = this.helper('headline', {headline: this.report ? this.report.name : ''});
+
+    this.add(headline.subView);
+        
+    var top        = headline.subView.height;
+
     var scrollView = Titanium.UI.createScrollView({
+        width: this.width,
+        height: this.height - top,
         contentWidth: 'auto',
         contentHeight: 'auto',
-        top: 0,
+        top: top,
+        left: 0,
+        right: 0,
         showVerticalScrollIndicator: false,
         showHorizontalScrollIndicator: false
     });
     
     this.add(scrollView);
     
-    var box            = this.helper('borderedContainer', {top: top});
-    scrollView.add(box.subView);
-    
-    var headline       = this.helper('headline', {headline: this.report ? this.report.name : ''});
-    box.subView.add(headline.subView);
-    
-    top                = headline.subView.height;
+    top = 0;
     
     var dateChooser    = this.helper('parameterChooser', {date: this.date, 
                                                           dateDescription: this.reportDate,
@@ -67,7 +71,7 @@ function template () {
                                                           top: top,
                                                           allowedSites: this.allowedSites});
     
-    box.subView.add(dateChooser.subView);
+    scrollView.add(dateChooser.subView);
     
     top                = dateChooser.subView.top + dateChooser.subView.height;
 
@@ -87,11 +91,9 @@ function template () {
                                           graphUrl: graphUrl,
                                           top: top});
         
-        box.subView.add(graph.subView);
+        scrollView.add(graph.subView);
         top       = graph.subView.top + graph.subView.height;
     }
-
-    box.subView.height = top;
 
     var statsticTitleLabel = this.dimension;
     if (this.columns && this.columns.label) {
@@ -114,9 +116,5 @@ function template () {
                                                        top: top,
                                                        headline: headlineStats});
     
-    box.subView.height = visitorStats.subView.top + visitorStats.subView.height + 1;
-    
-    box.subView.add(visitorStats.subView);
-    
-    scrollView.contentHeight = box.subView.height + box.subView.top + 5;
+    scrollView.add(visitorStats.subView);
 }

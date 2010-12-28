@@ -15,6 +15,10 @@
  */
 function template () {
 
+    var headline = this.helper('headline', {headline: 'Piwik Mobile'});
+ 
+    this.add(headline.subView);
+
     var rows = [Ui_TableViewRow({title:     _('General_Settings'),
                                  id:        'settings',
                                  leftImage: {url: 'images/icon/settings.png', height: 25, width: 33}})];
@@ -36,7 +40,16 @@ function template () {
         }
     }
     
+    var top       = headline.subView.height + headline.subView.top;
+    var height    = this.height - top;
+    
     var tableview = Titanium.UI.createTableView({data: rows, 
+                                                 left: 0,
+                                                 right: 0,
+                                                 width: this.width,
+                                                 top: top,
+                                                 height: height,
+                                                 focusable: true,
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {

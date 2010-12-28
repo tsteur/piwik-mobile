@@ -35,14 +35,9 @@ function template () {
     availableLanguageOptions.sort();
     availableLanguageOptions.push(_('SitesManager_Cancel_js'));
     
-    var box             = this.helper('borderedContainer', {});
     var headline        = this.helper('headline', {headline: _('General_Settings')});
     
-    box.subView.add(headline.subView);
-    box.subView.top     = 5;
-    box.subView.height  = parseInt(this.height, 10) - 10;
-    
-    this.add(box.subView);
+    this.add(headline.subView);
 
     var onChangeSparkline = function (event) {
     
@@ -240,13 +235,14 @@ function template () {
                                       onClick: onChangeGraphs,
                                       hasCheck: Boolean(this.graphsEnabled)})];
     
-    var top       = headline.subView.height;
-    var height    = box.subView.height - headline.subView.height - headline.subView.top;
+    var top       = headline.subView.height + headline.subView.top;
+    var height    = this.height - top;
     var tableview = Titanium.UI.createTableView({data: tableData,
-                                                 left: 1,
-                                                 right: 1,
+                                                 left: 0,
+                                                 width: this.width,
                                                  top: top,
                                                  height: height,
+                                                 focusable: true,
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
@@ -258,7 +254,7 @@ function template () {
         event.rowData.onClick.apply(event.row, [event]);
     });
     
-    box.subView.add(tableview);
+    this.add(tableview);
     
     tableview.show();
     

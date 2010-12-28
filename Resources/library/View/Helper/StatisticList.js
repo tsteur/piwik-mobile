@@ -101,7 +101,7 @@ function View_Helper_StatisticList () {
         }
 
         var view = Titanium.UI.createView({
-            width:  this.view.width - 10,
+            width:  this.view.width,
             height: 'auto',
             top: this.getOption('top', 1),
             left: 0,
@@ -136,15 +136,15 @@ function View_Helper_StatisticList () {
         var leftView = Ti.UI.createView({
             height: this.labelHeight,
             top: this.topValue,
-            left: 1,
-            right: 121,
+            left: 0,
+            right: 120,
             backgroundColor: '#E4E2D7'
         });
 
         var rightView = Titanium.UI.createView({
             height: this.labelHeight,
             top: this.topValue,
-            right: 1,
+            right: 0,
             width: 120,
             backgroundColor: '#D5D3C8'
         });
@@ -226,9 +226,9 @@ function View_Helper_StatisticList () {
         
         var mainView = Ti.UI.createView({
             top: this.topValue,
-            left: 1,
+            left: 0,
             bottom: 1,
-            right: 1,
+            right: 0,
             backgroundColor: '#f5f5f5',
             zIndex: 1
         });
@@ -262,8 +262,8 @@ function View_Helper_StatisticList () {
                 var leftView = Ti.UI.createView({
                     height: this.labelHeight,
                     top: this.topValue,
-                    left: 1,
-                    right: 121,
+                    left: 0,
+                    right: 120,
                     backgroundColor: leftBgcolor,
                     zIndex: 2
                 });
@@ -274,7 +274,7 @@ function View_Helper_StatisticList () {
                 var rightView = Ti.UI.createView({
                     height: this.labelHeight,
                     top: this.topValue,
-                    right: 1,
+                    right: 0,
                     width: 120,
                     backgroundColor: rightBgcolor,
                     zIndex: 3

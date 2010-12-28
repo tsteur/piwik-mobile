@@ -52,16 +52,24 @@ function View_Helper_ParameterChooser () {
     this.direct  = function () {
 
         var view = Titanium.UI.createView({
-            width: this.view.width - 10,
-            height: 82,
-            top: this.getOption('top', 5),
+            width: this.view.width,
+            height: 83,
+            top: this.getOption('top', 0),
             left: 0,
             right: 0,
-            zIndex: 2,
             backgroundColor: '#f6f6f6',
-            borderWidth: 1,
-            borderColor: '#B8B4AB'
+            zIndex: 2
         });
+        
+        var bottomBorderView = Titanium.UI.createView({
+            height: 1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#B8B4AB'
+        });
+        
+        view.add(bottomBorderView);
         
         this.addDayChooser(view);
         this.addSiteChooser(view);
@@ -89,7 +97,7 @@ function View_Helper_ParameterChooser () {
             // setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.width, 10) - 120 - 10;
+            labelWidth = parseInt(this.view.width, 10) - 120 ;
         }
 
         this.chooseDateIcon = Titanium.UI.createButton({
