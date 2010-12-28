@@ -28,17 +28,25 @@ function Ui_Picker (params, win) {
             this.value = params.value;
         }
         
+        // TODO replace the manually styled popup by a modal window 
+        var modalView = Titanium.UI.createView({backgroundColor: '#000000',
+                                               left: 0,
+                                               right: 0,
+                                               width: win.width,
+                                               height: win.height,
+                                               opacity: 0.75,
+                                               zIndex: 101});
+        win.add(modalView);
+        
         var view = this.createView();
         
         this.addTitle(view);
         this.addDateSelector(view, params);
-        this.addButtons(view);
+        this.addButtons(view, modalView, win);
         
         this.setValue(this.value);
-        
+
         win.add(view);
-         
-        view.show();
         
         return this;
     };
@@ -48,12 +56,11 @@ function Ui_Picker (params, win) {
         var view    = Titanium.UI.createView({backgroundColor: '#535253',
                                               borderRadius: config.theme.borderRadius,
                                               borderWidth: 2,
-                                              borderColor: '#ffffff'});
-        
-        view.height = 230;
-        view.top    = 50;
-        view.width  = 275;
-        view.zIndex = 99;
+                                              borderColor: '#ffffff',
+                                              zIndex: 102,
+                                              height: 245,
+                                              top: 50,
+                                              width: 275});
         
         return view;
     };
@@ -72,7 +79,6 @@ function Ui_Picker (params, win) {
         
         view.add(this.titleLabel);
     };
-    
     
     this.updateDisplayedValues = function () {
     
@@ -103,13 +109,13 @@ function Ui_Picker (params, win) {
         view.add(picker);
     };
     
-    this.addButtons = function (view) {
+    this.addButtons = function (view, modalView, win) {
         
-        var buttonBarView = Titanium.UI.createView({backgroundColor: '#dddddd',
+        var buttonBarView = Titanium.UI.createView({backgroundColor: '#BDBABD',
                                                     left: 2,
                                                     right: 2,
                                                     bottom: 2,
-                                                    height: 40});
+                                                    height: 55});
         
         view.add(buttonBarView);
         
@@ -118,11 +124,6 @@ function Ui_Picker (params, win) {
             left: 10,
             top: 5,
             width: 120,
-            height: 30,
-            color: '#333333',
-            backgroundColor: '#f3f3f3',
-            borderColor: '#333333',
-            borderWidth: 1,
             font: {fontSize: 10, fontWeight: 'bold', fontFamily: config.theme.fontFamily}
         });
         
@@ -141,19 +142,16 @@ function Ui_Picker (params, win) {
             width: 120,
             top: 5,
             right: 10,
-            height: 30,
-            color: '#333333',
-            backgroundColor: '#f3f3f3',
-            borderColor: '#333333',
-            borderWidth: 1,
             font: {fontSize: 10, fontWeight: 'bold', fontFamily: config.theme.fontFamily}
         });
         
         this.cancelButton.addEventListener('click', function () {
             
             view.hide();
+            modalView.hide();
             
             win.remove(view);
+            win.remove(modalView);
             
             view = null;
         });
