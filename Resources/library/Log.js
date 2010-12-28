@@ -125,7 +125,7 @@ Log.error = function (message, title) {
         return;
     }
     
-    Log.timer();
+    Log.profile();
 
     var logMessage  = '';
 
