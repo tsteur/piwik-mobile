@@ -11,9 +11,6 @@
  *         setting tab and to close the current window (go back).
  *
  * @param  {Object}   [options]                              See {@link View_Helper#setOptions}
- * @param  {boolean}  [options.backButtonHidden=false]       Optional - true if back button should be hidden from view.
- *                                                           This option is not recognized on Android as there exists
- *                                                           a hardware back button.
  * @param  {string}   [options.headline=""]                  Optional - The headline.
  * 
  * @augments View_Helper
@@ -36,7 +33,7 @@ function View_Helper_Headline () {
          */
         var view = Titanium.UI.createView({
             height: 40,
-            top: this.getOption('top', 0),
+            top: 0,
             left: 0,
             right: 0,
             backgroundImage: 'images/bgheadline.png'
@@ -62,11 +59,14 @@ function View_Helper_Headline () {
         var labelWidth = 'auto';
         var top        = 6;
         
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
+        if (100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space
             // left. setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-            labelWidth = parseInt(this.view.width, 10) - 30;
+            labelWidth = parseInt(this.view.width, 10) - 20;
+        }
+        
+        if ('android' === Titanium.Platform.osname) {
             top        = 5;
         }
 
@@ -79,6 +79,7 @@ function View_Helper_Headline () {
             shadowColor: config.theme.borderColor,
             shadowOffset: {x: 0, y: 1},
             color: config.theme.backgroundColor,
+            minimumFontSize: config.theme.fontSizeNormal,
             font: {fontSize: config.theme.fontSizeHeadline, fontFamily: config.theme.fontFamily}
         });
         
@@ -105,57 +106,7 @@ function View_Helper_Headline () {
      * @type null
      */
     this.addTools = function (view) {
-        
-        var backButtonHidden = this.getOption('backButtonHidden', false);
-        
-        if ('android' === Titanium.Platform.osname) {
-            // not enabled on android devices because of an existing hardware back button.
-            backButtonHidden = true;
-        } else {
-            var zIndex = 1;
-            
-            if (this.view && this.view.zIndex) {
-                zIndex = this.view.zIndex;
-            } else if (Titanium.UI.currentWindow.zIndex) {
-                zIndex = Titanium.UI.currentWindow.zIndex;
-            } else {
-                Log.warn('no zIndex for the current window is set. Please set one.', 'Missing zIndex');
-            }
-            
-            if (1 === zIndex) {
-                // never ever display the back button when it is the first window on iOS. Otherwise the user is able to 
-                // close the first window. This will result in a blank (white) window.
-                backButtonHidden = true;
-            }
-        }
-        
-        if (!backButtonHidden) {
-            
-            var win = this.view;
-            
-            this.backIcon = Titanium.UI.createButton({
-                image: 'images/icon/back.png',
-                width: 43,
-                height: 30,
-                top: 4,
-                right: 8,
-                zIndex: 10
-            });
-            
-            if ('android' !== Titanium.Platform.osname) {
-                this.backIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
-            }
-            
-            view.add(this.backIcon);
-            
-            this.backIcon.addEventListener('click', function () {
-
-                Window.close();
-
-            });
-            
-            view.add(this.backIcon);
-        }
+        // TODO add icons here (change date, change site)
     };
 }
 
