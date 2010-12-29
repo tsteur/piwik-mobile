@@ -98,21 +98,6 @@ Window.createMvcWindow = function (params) {
 
     if ('android' === Titanium.Platform.osname) {
         globalWin.add(newWin);
-        // swipe event is not supported on an android view, therefore we implement it ourselves
-        newWin.addEventListener('touchstart', function (event) {
-            this.touchStartx = event.x;
-            this.touchStarty = event.y;
-        });
-        newWin.addEventListener('touchend', function (event) {
-            var x = this.touchStartx;
-            var y = this.touchStarty - 40;
-            this.touchStartx = null;
-            this.touchStarty = null;
-            
-            if (130 < (event.x - x) && event.y > y && event.y < (y + 80)) {
-                Window.close(newWin);
-            }
-        });
     } else {
         globalScrollView.addView(newWin);
         globalScrollView.scrollToView(newWin);
@@ -183,8 +168,13 @@ Window.close = function (win, newWindowWillFollow) {
         globalWin.close();
         
     } else {
-        if ('android' !== Titanium.Platform.osname) {
-            globalScrollView.scrollToView(Window.getCurrentWindow());
+        
+        if (Window.getCurrentWindow()) {
+            if ('android' !== Titanium.Platform.osname) {
+                globalScrollView.scrollToView(Window.getCurrentWindow());
+            }
+            
+            Window.getCurrentWindow().focus();
         }
 
         // restore the menu of the previous displayed window
