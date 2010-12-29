@@ -15,17 +15,8 @@
  */
 function template () {
     
-    var left            = 10;
-    var windowWidthHalf = Math.round(parseInt(this.width, 10) / 2);
-    var labelWidth      = 'auto';
-    
-    if ('android' === Titanium.Platform.osname) {
-        // there is a bug since Titanium Mobile SDK 1.4 which forces labels to wrap even if there is enough space left.
-        // setting a width is a workaround to fix this bug.
-        // @see http://appcelerator.lighthouseapp.com/projects/32238/tickets/1304-android-strange-wrapping-in-tableview-on-higher-res-screens
-        // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-        labelWidth  = parseInt(this.width, 10) - left - left - 30;
-    }
+    var left        = 10;
+    var labelWidth  = parseInt(this.width, 10) - left - left - 20;
     
     var headline    = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
     
@@ -33,7 +24,7 @@ function template () {
     
     var top         = headline.subView.height;
 
-    var scrollView = Titanium.UI.createScrollView({
+    var scrollView  = Titanium.UI.createScrollView({
         width: this.width,
         height: this.height - top,
         contentWidth: 'auto',
@@ -70,6 +61,7 @@ function template () {
         keyboardType: Titanium.UI.KEYBOARD_URL,
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
         autocorrect: false,
+        focusable: true,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         font: {fontSize: config.theme.fontSizeNormal}
     });
@@ -96,7 +88,8 @@ function template () {
         top:  top,
         height: 25,
         left: left,
-        value: false
+        value: false,
+        focusable: true
     });
     
     top = top + 32;
@@ -121,6 +114,7 @@ function template () {
         keyboardType: Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
         autocorrect: false,
+        focusable: true,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
         font: {fontSize: config.theme.fontSizeNormal}
@@ -152,6 +146,7 @@ function template () {
         right: left,
         passwordMask: true,
         clearOnEdit: true,
+        focusable: true,
         returnKeyType: Titanium.UI.RETURNKEY_DONE,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
@@ -203,6 +198,7 @@ function template () {
         backgroundColor: '#F6F6F6',
         borderRadius: config.theme.borderRadius,
         selectedColor: config.theme.titleColor,
+        focusable: true,
         borderColor: '#ECEDEC',
         borderWidth: 1,
         font: {fontSize:config.theme.fontSizeNormal, fontWeight: 'bold'}
