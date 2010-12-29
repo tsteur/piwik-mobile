@@ -84,6 +84,7 @@ globalWin.addEventListener('android:back', function (event) {
 if ('android' !== Titanium.Platform.osname)  {
     // we can not use the scrollableView on Android cause it is a bit buggy currently. As soon as one swipes to another
     // view the tableview will loose all it's rows on Android
+    // TODO it will be fixed in Titanium 1.6 -> use scrollableview for android too
     var globalScrollView = Titanium.UI.createScrollableView({
         views: [],
         showPagingControl: false,
