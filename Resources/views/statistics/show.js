@@ -20,15 +20,12 @@ function template () {
     
     this.addEventListener('dateChanged', function (event) {
 
-        params.date               = event.date;
-        params.closeCurrentWindow = true;
-    
-        Window.createMvcWindow(params);    
-    });
-    
-    this.addEventListener('periodChanged', function (event) {
-
-        params.period             = event.period;
+        if (event && event.date) {
+            params.date           = event.date;
+        }
+        if (event && event.period) {
+            params.period         = event.period;
+        }
         params.closeCurrentWindow = true;
     
         Window.createMvcWindow(params);    
@@ -46,7 +43,7 @@ function template () {
 
     this.add(headline.subView);
         
-    var top        = headline.subView.height;
+    top            = headline.subView.height;
 
     var scrollView = Titanium.UI.createScrollView({
         width: this.width,
@@ -65,7 +62,6 @@ function template () {
     top = 0;
     
     var dateChooser    = this.helper('parameterChooser', {date: this.date, 
-                                                          dateDescription: this.reportDate,
                                                           period: this.period,
                                                           currentSite: site,
                                                           top: top,

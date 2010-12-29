@@ -18,9 +18,6 @@
  * @property {Date|string}  [options.date]            Optional - The current selected date. Can be either a Date object
  *                                                               or string in the following Format "YYYY-MM-DD". 
  *                                                               Defaults to the current date (now).
- * @property {string}       [options.dateDescription] Optional - A localized string of the current selected date. If
- *                                                               description is not given a localized string will be 
- *                                                               generated.
  * 
  * @augments View_Helper
  */
@@ -53,7 +50,7 @@ function View_Helper_ParameterChooser () {
 
         var view = Titanium.UI.createView({
             width: this.view.width,
-            height: 83,
+            height: 40,
             top: this.getOption('top', 0),
             left: 0,
             right: 0,
@@ -97,72 +94,30 @@ function View_Helper_ParameterChooser () {
             // setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.width, 10) - 120 ;
-        }
-
-        this.chooseDateIcon = Titanium.UI.createButton({
-            image: 'images/icon/choosedate.png',
-            width: 13,
-            height:15,
-            top: 14,
-            left: 10,
-            zIndex: 5
-        });
-        
-        if ('android' !== Titanium.Platform.osname) {
-            this.chooseDateIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
+            labelWidth = parseInt(this.view.width, 10) / 2;
+            labelWidth = parseInt(labelWidth, 10);
         }
 
         this.dateValue =  Titanium.UI.createLabel({
             text: ' - ',
             height: 'auto',
-            width: parseInt(labelWidth, 10) - 26,
-            left: 26,
+            width: labelWidth - 6,
+            left: 6,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 6
+            zIndex: 6,
+            focusable: true
         });
         
         // we do not need this view, but it allows the user to easier hit the date picker
         this.dateView = Titanium.UI.createView({height: 39,
-                                                top: 2,
+                                                top: 0,
                                                 left: 4,
                                                 width: labelWidth,
                                                 zIndex: 4});
 
         this.period       = this.getOption('period', this.period);
         
-        this.periodValue  = Titanium.UI.createLabel({
-            text: Translation.getPeriod(this.period, false),
-            height: 'auto',
-            right: 26,
-            width: 90,
-            textAlign: 'right',
-            color: '#996600',
-            font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 3
-        });
-        
-        this.choosePeriodIcon = Titanium.UI.createButton({
-            image: 'images/icon/chooseDown.png',
-            width: 13,
-            height: 15,
-            top: 14,
-            right: 10,
-            zIndex: 2
-        });
-        
-        if ('android' !== Titanium.Platform.osname) {
-            this.choosePeriodIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
-        }
-        
-        // we do not need this view, but it allows the user to easier hit the period picker
-        this.periodView = Titanium.UI.createView({height: 39,
-                                                  top: 2,
-                                                  right: 4,
-                                                  width: 80,
-                                                  zIndex: 1});
-                
         var _this = this;
         
         // opens the date picker.
@@ -175,71 +130,20 @@ function View_Helper_ParameterChooser () {
                                            period: _this.period,
                                            selectionIndicator: true,
                                            minDate: min,
+                                           period: _this.period,
                                            view: _this.view});
             
             picker.addEventListener('set', function (event) {
 
-                _this.changeDate(event.value);
+                _this.changeDate(event.date, event.period);
             });
         };
-
-        this.chooseDateIcon.addEventListener('click', onShowDatePicker);
         this.dateView.addEventListener('click', onShowDatePicker);
         Ui_Menu.addItem({title: _('General_ChooseDate'), icon: 'images/icon/menu_choosedate.png'}, onShowDatePicker);
-        
-        var dialog = Titanium.UI.createOptionDialog({
-            title: _('General_ChoosePeriod'),
-            options: [Translation.getPeriod('day', false), 
-                      Translation.getPeriod('week', false), 
-                      Translation.getPeriod('month', false), 
-                      Translation.getPeriod('year', false),
-                      _('SitesManager_Cancel_js')],
-            cancel: 4
-        });
-        
-        var onShowPeriodChooser = function () {
-            dialog.show();
-        };
-        
-        this.choosePeriodIcon.addEventListener('click', onShowPeriodChooser);
-        this.periodView.addEventListener('click', onShowPeriodChooser);
-        Ui_Menu.addItem({title: _('General_ChoosePeriod'), icon: 'images/icon/menu_chooseDown.png'}, onShowPeriodChooser);
-        
-        dialog.addEventListener('click', function (event) {
-            
-            // android reports cancel = true whereas iOS returns the previous defined cancel index
-            if (!event || event.cancel === event.index || true === event.cancel) {
-                
-                return;
-            }
-            
-            switch (event.index) {
-            
-                case 1:
-                    _this.changePeriod('week');
-                    break;
-                    
-                case 2:
-                    _this.changePeriod('month');
-                    break;
-                    
-                case 3:
-                    _this.changePeriod('year');
-                    break;
-                    
-                default:
-                    _this.changePeriod('day');
-            }
-        });
 
-        view.add(this.chooseDateIcon);
         this.dateView.add(this.dateValue);
         view.add(this.dateView);
-        this.periodView.add(this.periodValue);
-        view.add(this.choosePeriodIcon);
-        view.add(this.periodView);
         this.dateView.show();
-        this.periodView.show();
     };
     
     /**
@@ -252,12 +156,13 @@ function View_Helper_ParameterChooser () {
     this.addSiteChooser = function (view) {
 
         var labelWidth = 'auto';
-        if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
+        if (100 < parseInt(this.view.width, 10)) {
             // there is a bug since Titanium Mobile SDK 1.3.2 which forces labels to wrap even if there is enough
             // space left. Setting a width is a workaround to fix this bug.
             // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
             
-            labelWidth = parseInt(this.view.width, 10) - 50;
+            labelWidth = parseInt(this.view.width, 10) / 2;
+            labelWidth = parseInt(labelWidth, 10);
         }
     
         var currentSite  = this.getOption('currentSite', {name: ''});
@@ -265,40 +170,20 @@ function View_Helper_ParameterChooser () {
         this.siteChooser =  Titanium.UI.createLabel({
             text: currentSite.name,
             height: 'auto',
-            left: 26,
+            right: 6,
             color: '#996600',
-            width: labelWidth,
+            textAlign: 'right',
+            width: labelWidth - 6,
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 10
+            zIndex: 10,
+            focusable: true
         });
 
-        var separator = Titanium.UI.createView({
-            height: 1,
-            left: 10,
-            right: 10,
-            top: 41,
-            borderWidth: 0,
-            backgroundColor: '#333333',
-            zIndex: 7
-        });
-        
-        this.chooseSiteIcon = Titanium.UI.createButton({
-            image:'images/icon/chooseDown.png',
-            width: 13,
-            height: 15,
-            top: 54,
-            left: 10
-        });
-        
-        if ('android' !== Titanium.Platform.osname) {
-            this.chooseSiteIcon.style = Titanium.UI.iPhone.SystemButtonStyle.PLAIN;
-        }
-        
         // we do not need this view, but it allows the user to easier hit the site picker
-        this.siteView = Titanium.UI.createView({height: 37,
-                                                top: 43,
-                                                left: 4,
-                                                width: 220,
+        this.siteView = Titanium.UI.createView({height: 39,
+                                                top: 0,
+                                                right: 4,
+                                                width: labelWidth,
                                                 zIndex: 8});
         
         var allowedSiteNames = [];
@@ -327,7 +212,6 @@ function View_Helper_ParameterChooser () {
             dialog.show();
         };
         
-        this.chooseSiteIcon.addEventListener('click', onShowSiteChooser);
         this.siteView.addEventListener('click', onShowSiteChooser);
         Ui_Menu.addItem({title : _('General_ChooseWebsite'), icon: 'images/icon/menu_chooseDown.png'}, onShowSiteChooser);
         
@@ -375,9 +259,7 @@ function View_Helper_ParameterChooser () {
         });
         
         this.siteView.add(this.siteChooser);
-        view.add(this.chooseSiteIcon);
         view.add(this.siteView);
-        view.add(separator);
         this.siteView.show();
     };
 
@@ -399,14 +281,11 @@ function View_Helper_ParameterChooser () {
             this.date  = optionDate;
         }
         
-        this.dateValue.text = this.getOption('dateDescription', this.date.toPiwikDateRangeString(this.period));
+        this.dateValue.text = this.date.toPiwikDateRangeString(this.period);
     };
 
     /**
-     * Changes the current selected period and fires an event named 'periodChanged' using the {@link View} object. 
-     * The passed event contains a property named 'period' which holds the changed value. You can add an event
-     * listener within the view template:
-     * this.addEventListener('periodChanged', function (event) { alert(event.period); });
+     * Changes the current selected period.
      *
      * @param {string} period   The selected period, for example 'week', 'year', ...
      *
@@ -422,15 +301,12 @@ function View_Helper_ParameterChooser () {
         this.period   = period;
         
         Session.set('piwik_parameter_period', period);
-
-        if (this.view) {
-            this.view.fireEvent('periodChanged', {period: period});
-        }
     };
 
     /**
      * Changes the current selected date and fires an event named 'dateChanged' using the {@link View} object. 
-     * The passed event contains a property named 'date' which holds the changed value in the format 'YYYY-MM-DD'. 
+     * The passed event contains a property named 'date' which holds the changed value in the format 'YYYY-MM-DD' and a 
+     * property named period which holds the selected period, for example 'week'. 
      * You can add an event listener within the view template:
      * this.addEventListener('dateChanged', function (event) { alert(event.date); });
      *
@@ -438,7 +314,8 @@ function View_Helper_ParameterChooser () {
      *
      * @type null
      */
-    this.changeDate   = function (changedDate) {
+    this.changeDate   = function (changedDate, period) {
+        this.changePeriod(period);
             
         this.date     = changedDate;
         
@@ -447,7 +324,7 @@ function View_Helper_ParameterChooser () {
         Session.set('piwik_parameter_date', dateQuery);
 
         if (this.view) {
-            this.view.fireEvent('dateChanged', {date: dateQuery});
+            this.view.fireEvent('dateChanged', {date: dateQuery, period: this.period});
         }
     };
 }

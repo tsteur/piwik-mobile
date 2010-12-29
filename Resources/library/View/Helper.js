@@ -80,7 +80,7 @@ function View_Helper () {
      */
     this.getOption = function (key, defaultValue) {
     
-        if (this.options && this.options[key]) {
+        if (this.options && 'undefined' != typeof this.options[key]) {
         
             return this.options[key];
         }

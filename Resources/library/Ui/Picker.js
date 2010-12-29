@@ -20,12 +20,16 @@ function Ui_Picker (params, win) {
     
     this.selectionIndicator = false;
     
-    this.period  = 'day';
+    this.period             = 'day';
 
     this.create = function (params) {
     
         if (params.value) {
-            this.value = params.value;
+            this.value  = params.value;
+        }
+        
+        if (params.period) {
+            this.period = params.period;
         }
         
         // TODO replace the manually styled popup by a modal window 
@@ -42,6 +46,7 @@ function Ui_Picker (params, win) {
         
         this.addTitle(view);
         this.addDateSelector(view, params);
+        this.addPeriodSelector(view, params);
         this.addButtons(view, modalView, win);
         
         this.setValue(this.value);
@@ -58,7 +63,7 @@ function Ui_Picker (params, win) {
                                               borderWidth: 2,
                                               borderColor: '#ffffff',
                                               zIndex: 102,
-                                              height: 245,
+                                              height: 285,
                                               top: 50,
                                               width: 275});
         
@@ -82,7 +87,8 @@ function Ui_Picker (params, win) {
     
     this.updateDisplayedValues = function () {
     
-        this.titleLabel.text = this.value.toPiwikDateRangeString(this.period);
+        this.titleLabel.text = Translation.getPeriod(this.period, false) + ', ';
+        this.titleLabel.text += this.value.toPiwikDateRangeString(this.period);
     };
     
     this.setValue = function (value) {
@@ -109,6 +115,57 @@ function Ui_Picker (params, win) {
         view.add(picker);
     };
     
+    this.addPeriodSelector = function (view, params) {
+
+        var periodPicker = Ti.UI.createPicker({left: 8,
+                                               bottom: 60,
+                                               selectionIndicator: true,
+                                               right: 8});
+
+        var periods      = [];
+        periods[0]       = Ti.UI.createPickerRow({title: Translation.getPeriod('day', false)});
+        periods[1]       = Ti.UI.createPickerRow({title: Translation.getPeriod('week', false)});
+        periods[2]       = Ti.UI.createPickerRow({title: Translation.getPeriod('month', false)});
+        periods[3]       = Ti.UI.createPickerRow({title: Translation.getPeriod('year', false)});
+        periodPicker.add(periods);
+        
+        if ('day' == this.period) {
+            periodPicker.setSelectedRow(0, 0, false);
+        } else if ('week' == this.period) {
+            periodPicker.setSelectedRow(0, 1, false);
+        } else if ('month' == this.period) {
+            periodPicker.setSelectedRow(0, 2, false);
+        } else if ('year' == this.period) {
+            periodPicker.setSelectedRow(0, 3, false);
+        }
+        
+        var _this = this;
+        
+        periodPicker.addEventListener('change', function (event) {
+            
+            switch (event.rowIndex) {
+                case 1:
+                    _this.period = 'week';
+                    break;
+                    
+                case 2:
+                    _this.period = 'month';
+                    break;
+                    
+                case 3:
+                    _this.period = 'year';
+                    break;
+                    
+                default:
+                    _this.period = 'day';
+            }
+            
+            _this.updateDisplayedValues();
+        });
+        
+        view.add(periodPicker);
+    };
+    
     this.addButtons = function (view, modalView, win) {
         
         var buttonBarView = Titanium.UI.createView({backgroundColor: '#BDBABD',
@@ -131,7 +188,7 @@ function Ui_Picker (params, win) {
         
         this.setValueButton.addEventListener('click', function () {
             
-            var event = {value: _this.value};
+            var event = {date: _this.value, period: _this.period};
             _this.fireEvent('set', event);
             
             _this.cancelButton.fireEvent('click', {});
@@ -217,22 +274,16 @@ function create_Ui_Picker(params) {
         
         view.add(picker);
         
-        var update = Titanium.UI.createButton({
-            title:_('CoreUpdater_UpdateTitle'),
-            systemButton:Titanium.UI.iPhone.SystemButton.DONE
-        });
-
-        var cancel = Titanium.UI.createButton({
-            title:_('SitesManager_Cancel_js'),
-            style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED                
-        });
-       
-        var flexSpace = Titanium.UI.createButton({
+        var updateDay   = Titanium.UI.createButton({title: Translation.getPeriod('day', false)});
+        var updateWeek  = Titanium.UI.createButton({title: Translation.getPeriod('week', false)});
+        var updateMonth = Titanium.UI.createButton({title: Translation.getPeriod('month', false)});
+        var updateYear  = Titanium.UI.createButton({title: Translation.getPeriod('year', false)});
+        var flexSpace   = Titanium.UI.createButton({
             systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
         });
 
-        var toolbar = Titanium.UI.createToolbar({
-            items: [cancel, flexSpace, update],
+        var toolbar     = Titanium.UI.createToolbar({
+            items: [updateDay, flexSpace, updateWeek, flexSpace, updateMonth, flexSpace, updateYear],
             bottom: picker.height,
             zIndex: 101,
             borderTop: true,
@@ -242,26 +293,33 @@ function create_Ui_Picker(params) {
         });
         
         view.add(toolbar);
-
-        update.pickerValue = params.value;
+        
+        picker.pickerValue = params.value;
         
         picker.addEventListener('change', function (event) {
-            update.pickerValue = event.value;
+            picker.pickerValue = event.value;
         });
         
-        cancel.addEventListener('click', function (event) {
-            toolbar.hide();
-            view.remove(picker);
-            view.remove(toolbar);
-        });
-        
-        update.addEventListener('click', function (event) {
-            var myEvent = {value: update.pickerValue};
+        var fireUpdateEvent = function (date, period) {
+            var myEvent = {date: date, period: period};
                            
             toolbar.hide();
             picker.fireEvent('set', myEvent); 
             view.remove(picker);
             view.remove(toolbar);
+        }
+        
+        updateDay.addEventListener('click', function (event) {
+            fireUpdateEvent(picker.pickerValue, 'day');
+        });
+        updateWeek.addEventListener('click', function (event) {
+            fireUpdateEvent(picker.pickerValue, 'week');
+        });
+        updateMonth.addEventListener('click', function (event) {
+            fireUpdateEvent(picker.pickerValue, 'month');
+        });
+        updateYear.addEventListener('click', function (event) {
+            fireUpdateEvent(picker.pickerValue, 'year');
         });
             
         return picker;
