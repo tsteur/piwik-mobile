@@ -128,7 +128,6 @@ function View_Helper_Graph () {
             Window.createMvcWindow({
                 jsController: 'chart',
                 jsAction: 'fulldetail',
-                doNotCloseWindow: true,
                 graphUrl: _this.getOption('graphUrl')
             });
         });
