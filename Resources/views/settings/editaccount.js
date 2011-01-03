@@ -405,6 +405,9 @@ function template () {
     piwikUrl.addEventListener('return', function(event){
         if (piwikAnonymous.value) {
         
+            // forces hide keyboard
+            piwikUrl.blur();
+            
             var myEvent = {};
             save.fireEvent('click', myEvent);
             
@@ -419,6 +422,9 @@ function template () {
     });
     
     piwikPassword.addEventListener('return', function(event){
+        // forces hide keyboard
+        piwikPassword.blur();
+        
         var myEvent = {};
         save.fireEvent('click', myEvent);
     });
