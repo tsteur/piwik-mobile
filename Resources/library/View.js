@@ -265,7 +265,10 @@ function View (params) {
                 template.apply(this, []);
             }
             
-            this.focus();
+            if (this.focus) {
+                this.focus();
+            }
+
             Ui_Menu.build();
             
         } catch (e) {

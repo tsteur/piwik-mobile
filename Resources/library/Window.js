@@ -174,7 +174,9 @@ Window.close = function (win, newWindowWillFollow) {
                 globalScrollView.scrollToView(Window.getCurrentWindow());
             }
             
-            Window.getCurrentWindow().focus();
+            if (Window.getCurrentWindow().focus) {
+                Window.getCurrentWindow().focus();
+            }
         }
 
         // restore the menu of the previous displayed window
