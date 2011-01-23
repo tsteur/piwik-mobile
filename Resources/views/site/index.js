@@ -15,7 +15,7 @@
  */
 function template () {
      
-    var headline       = this.helper('headline', {headline: '' + this.site.name});
+    var headline       = this.helper('headline', {headline: '' + (this.site ? this.site.name : '')});
     
     this.add(headline.subView);
 
