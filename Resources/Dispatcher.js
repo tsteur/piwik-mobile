@@ -55,9 +55,9 @@ Dispatcher.dispatch = function (win) {
         params.view = win;
     }
 
-    View.prototype  = params.view;
+    View.prototype   = params.view;
 
-    var view        = new View(params);
+    var dispatchView = new View(params);
 
     // Ensure upper case first for controller name
     var firstUpperChar       = params.jsController.charAt(0).toUpperCase();
@@ -79,7 +79,7 @@ Dispatcher.dispatch = function (win) {
 
     if (jsController) {
 
-        jsController.setView(view);
+        jsController.setView(dispatchView);
         jsController.setParams(params);
 
         Log.debug('dispatch', 'dispatcher');
