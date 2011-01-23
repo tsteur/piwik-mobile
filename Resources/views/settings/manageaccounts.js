@@ -18,7 +18,26 @@ function template () {
     var _this        = this;
     var headline     = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
  
-    this.add(headline.subView);
+    this.add(headline.subView);    
+    
+    if ('android' != Ti.Platform.osname) {
+        var editBtn = Ti.UI.createButtonBar({
+            right: 10, 
+            labels: [_('General_Edit')], 
+            backgroundColor:'#BEBAB1', 
+            style: Titanium.UI.iPhone.SystemButtonStyle.BAR, 
+            height: 30, 
+            top: 5, 
+            width: 'auto', 
+            zIndex: 10
+        });
+        
+        editBtn.addEventListener('click', function () {
+            tableview.editing = !tableview.editing;
+        });
+        
+        headline.subView.add(editBtn);
+    }
 
     var onAddAccount = function () {
         Window.createMvcWindow({jsController: 'settings',
@@ -31,8 +50,8 @@ function template () {
                                 accountId:    this.accountId});
     };
     
-    var onShowOptionMenu = function () {
-        
+    var onShowOptionMenu = function (event) {
+
         if (this.optionMenuOpened) {
             return;
         }
@@ -100,12 +119,8 @@ function template () {
                     break;
                     
                 case 2:
-                    _this.accountManager.deleteAccount(row.accountId);
-                    
-                    Window.createMvcWindow({jsController:       'settings',
-                                            jsAction:           'manageaccounts',
-                                            closeCurrentWindow: true});
-                                            
+                    tableview.fireEvent('delete', {detail: false, row: row});
+
                     return;
             }
             
@@ -120,6 +135,7 @@ function template () {
     var tableData = [Ui_TableViewRow({className: 'settingsSection1',
                                       title: _('Mobile_AddAccount'),
                                       onClick: onAddAccount,
+                                      rowIndex: 0,
                                       hasChild: true})];
                                       
     var account = null;
@@ -132,6 +148,7 @@ function template () {
                                         accountId: account.id,
                                         accountName: '' + account.name,
                                         onClick: onUpdateAccount,
+                                        rowIndex: index + 1,
                                         onShowOptionMenu: onShowOptionMenu,
                                         hasCheck: Boolean(account.active)}));
     }
@@ -155,6 +172,22 @@ function template () {
         }
         
         event.rowData.onClick.apply(event.row, [event]);
+    });
+    
+    tableview.addEventListener('delete', function (event) {
+
+        if (!event || !event.row || !event.row.accountId) {}
+
+        _this.accountManager.deleteAccount(event.row.accountId);
+        
+        if ('android' === Ti.Platform.osname) {
+            // row will be automatically removed from tableview on iOS
+            Window.createMvcWindow({jsController:       'settings',
+                                    jsAction:           'manageaccounts',
+                                    closeCurrentWindow: true});
+        }
+                                
+        return;
     });
     
     this.add(tableview);
