@@ -50,7 +50,7 @@ function View (params) {
      */
     this.init = function () {
         
-        this.showWaitIndicator();
+        this.showWaitingMessage();
     };
 
     /**
@@ -67,6 +67,99 @@ function View (params) {
      * @type null
      */
     this.showWaitIndicator        = function () {
+        
+        Log.debug('showWaitIndicator', 'View');
+
+        this.numWaitIndicatorRequests++;
+
+        if (this.numWaitIndicatorRequests > 1) {
+
+            return;
+        }
+        
+        if (!globalWin || !globalWin.waitIndicatorImage || !globalWin.waitIndicatorImage.show) {
+            globalWin.waitIndicatorImage = Titanium.UI.createActivityIndicator({
+                height: 40,
+                width: 40,
+                message: '',
+                style: Titanium.UI.iPhone.ActivityIndicatorStyle.BIG
+            });
+        }
+        
+        var _this = this;
+        
+        function waitIndicatorTimeout () {
+            _this.hideWaitIndicator(true);
+        }
+        
+        this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (Settings.getHttpTimeout() * 1.6));
+
+        globalWin.waitIndicatorImage.show();
+    };    
+
+    /**
+     * Hides the previously activated waitIndicator. Make sure to call the hide method in each possible case.
+     * Attend that the wait indicator is removed as soon as the number of showWaitIndicator calls is the same as the
+     * hideWaitIndicator calls.
+     *
+     * @param {boolean} [force=false]   if true it will definetly hide the wait indicator. Independently how often
+     *                                  showWaitIndicator was called before.
+     * 
+     * @type null
+     */
+    this.hideWaitIndicator = function (force) {
+        Log.debug('hideWaitIndicator' + this.numWaitIndicatorRequests, 'View');
+        
+        if (('undefined' !== (typeof force)) && force) {
+            this.numWaitIndicatorRequests = 1;
+        } 
+
+        if (0 === this.numWaitIndicatorRequests) {
+
+            return;
+        }
+        
+        if (this.waitIndicatorTimeout) {
+            clearTimeout(this.waitIndicatorTimeout);
+            
+            this.waitIndicatorTimeout = null;
+        }
+
+        this.numWaitIndicatorRequests--;
+
+        if (0 !== this.numWaitIndicatorRequests) {
+
+            return;
+        }
+
+        if (globalWin && globalWin.waitIndicatorImage && globalWin.waitIndicatorImage.hide) {
+        
+            globalWin.waitIndicatorImage.hide();
+            
+            // we have to wait just a few ms to be sure there was enough time to execute the waitindicator.show method
+            // hide() works only if the waitIndicator was completely displayed before.
+            setTimeout(function () {
+                globalWin.waitIndicatorImage.hide();
+            }, 200);
+
+            this.numWaitIndicatorRequests = 0;
+        }
+    };
+
+    /**
+     * Shows a waiting messages. It displays a label therefore.
+     * To remove the waiting message simply call hideWaitingMessage as soon as your script has finished. Its useful to 
+     * show the waiting message for example as long as you fetch some data. Make sure to call the hide method. 
+     * Otherwise the message is displayed for a long time.
+     * 
+     * @example
+     * this.showWaitingMessage();
+     * doSomething();
+     * this.hideWaitingMessage();
+     * 
+     * @type null
+     */
+    this.showWaitingMessage = function () {
         
         Log.debug('showWaitIndicator', 'View');
 
@@ -108,7 +201,7 @@ function View (params) {
      * 
      * @type null
      */
-    this.hideWaitIndicator = function (force) {
+    this.hideWaitingMessage = function (force) {
         Log.debug('hideWaitIndicator' + this.numWaitIndicatorRequests, 'View');
         
         if (('undefined' !== (typeof force)) && force) {
@@ -258,7 +351,7 @@ function View (params) {
             
             template = loadView(viewPath);
 
-            this.hideWaitIndicator();
+            this.hideWaitingMessage();
             
             // execute the view template in 'this' context.
             if (template) {

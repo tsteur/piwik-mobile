@@ -122,8 +122,26 @@ function View_Helper_Graph () {
                                                  zIndex: 1});
 
         var _this = this;
+
+        var showDetailImage = Ti.UI.createImageView({image: 'images/icon/chart_detail.png', 
+                                                     backgroundSelectedColor: '#E7E3D6',
+                                                     backgroundFocusedColor: '#E7E3D6',
+                                                     focusable: true,
+                                                     bottom: 8, 
+                                                     right: 8, 
+                                                     width: 29, 
+                                                     height: 29,
+                                                     zIndex: 2});
         
         // event to open graph in fullscreen
+        showDetailImage.addEventListener('click', function () {
+            Window.createMvcWindow({
+                jsController: 'chart',
+                jsAction: 'fulldetail',
+                graphUrl: _this.getOption('graphUrl')
+            });
+        });
+        
         graph.addEventListener('doubletap', function () {
             Window.createMvcWindow({
                 jsController: 'chart',
@@ -133,10 +151,7 @@ function View_Helper_Graph () {
         });
         
         view.add(graph);
-        
-        this.view.addEventListener('close', function () {
-            view.remove(graph);
-        });
+        view.add(showDetailImage);
     };
 }
 

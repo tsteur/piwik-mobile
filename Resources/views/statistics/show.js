@@ -39,7 +39,12 @@ function template () {
         Window.createMvcWindow(params);    
     });
 
-    var headline   = this.helper('headline', {headline: this.report ? this.report.name : ''});
+    var headline   = this.helper('headline', {headline: this.report ? this.report.name : '', 
+                                              showTools: true, 
+                                              date: this.date, 
+                                              period: this.period,
+                                              currentSite: site,
+                                              allowedSites: this.allowedSites});
 
     this.add(headline.subView);
         

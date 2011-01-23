@@ -38,7 +38,7 @@ var Ui_Menu = {
         
         var menu = Titanium.UI.Android.OptionMenu.createMenu();
         var item = Titanium.UI.Android.OptionMenu.createMenuItem({title: _('General_Settings'), 
-                                                                  icon:  'images/icon/settings.png'});
+                                                                  icon:  'images/icon/menu_settings.png'});
         item.addEventListener('click', function () {
             Window.createMvcWindow({jsController: 'settings',
                                     jsAction:     'index'});

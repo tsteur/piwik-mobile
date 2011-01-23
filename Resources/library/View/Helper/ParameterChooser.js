@@ -105,8 +105,7 @@ function View_Helper_ParameterChooser () {
             left: 6,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 6,
-            focusable: true
+            zIndex: 6
         });
         
         // we do not need this view, but it allows the user to easier hit the date picker
@@ -117,29 +116,6 @@ function View_Helper_ParameterChooser () {
                                                 zIndex: 4});
 
         this.period       = this.getOption('period', this.period);
-        
-        var _this = this;
-        
-        // opens the date picker.
-        var onShowDatePicker = function () {
-
-            var max    = new Date();
-            var min    = new Date(2008, 0, 1);
-            var picker = create_Ui_Picker({value: _this.date,
-                                           maxDate: max,
-                                           period: _this.period,
-                                           selectionIndicator: true,
-                                           minDate: min,
-                                           period: _this.period,
-                                           view: _this.view});
-            
-            picker.addEventListener('set', function (event) {
-
-                _this.changeDate(event.date, event.period);
-            });
-        };
-        this.dateView.addEventListener('click', onShowDatePicker);
-        Ui_Menu.addItem({title: _('General_ChooseDate'), icon: 'images/icon/menu_choosedate.png'}, onShowDatePicker);
 
         this.dateView.add(this.dateValue);
         view.add(this.dateView);
@@ -175,8 +151,7 @@ function View_Helper_ParameterChooser () {
             textAlign: 'right',
             width: labelWidth - 6,
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 10,
-            focusable: true
+            zIndex: 10
         });
 
         // we do not need this view, but it allows the user to easier hit the site picker
@@ -185,78 +160,6 @@ function View_Helper_ParameterChooser () {
                                                 right: 4,
                                                 width: labelWidth,
                                                 zIndex: 8});
-        
-        var allowedSiteNames = [];
-        var allowedSites     = this.getOption('allowedSites', []);
-        
-        // extract the names of each site to display them within an options dialog
-        for (var index = 0; index < allowedSites.length; index++) {
-        
-            var site = allowedSites[index];
-        
-            if (site && site.name) {
-                allowedSiteNames.push('' + site.name);
-            }
-            
-        }
-        
-        allowedSiteNames.push(_('SitesManager_Cancel_js'));
-        
-        var dialog = Titanium.UI.createOptionDialog({
-            title: _('General_ChooseWebsite'),
-            options: allowedSiteNames,
-            cancel: (allowedSiteNames.length - 1)
-        });
-        
-        var onShowSiteChooser = function () {
-            dialog.show();
-        };
-        
-        this.siteView.addEventListener('click', onShowSiteChooser);
-        Ui_Menu.addItem({title : _('General_ChooseWebsite'), icon: 'images/icon/menu_chooseDown.png'}, onShowSiteChooser);
-        
-        var win = this.view;
-        
-        dialog.addEventListener('click', function (event) {
-            
-            // android reports cancel = true whereas iOS returns the previous defined cancel index
-            if (!event || event.cancel === event.index || true === event.cancel) {
-                
-                return;
-            }
-            
-            var selectedSiteName = allowedSiteNames[event.index];
-            var selectedSite     = null;
-
-            // try to find the selected site object because we only get the name of the selected site.
-            Found: for (var index = 0; index < allowedSites.length; index++) {
-            
-                var verifySite = allowedSites[index];
-            
-                // mark as found only if site changes
-                if (verifySite 
-                    && currentSite
-                    && verifySite.name 
-                    && selectedSiteName === verifySite.name
-                    && currentSite.name !== verifySite.name) {
-                    selectedSite = verifySite;
-                    
-                    break Found;
-                }
-                
-            }
-            
-            if (selectedSite) {
-            
-                if (win) {
-                    win.fireEvent('siteChanged', {site: selectedSite});
-                }
-                
-                // fire further event so other windows are able to listen to this event, too
-                Titanium.App.fireEvent('siteChanged', {site: selectedSite});
-            
-            }
-        });
         
         this.siteView.add(this.siteChooser);
         view.add(this.siteView);
@@ -282,50 +185,6 @@ function View_Helper_ParameterChooser () {
         }
         
         this.dateValue.text = this.date.toPiwikDateRangeString(this.period);
-    };
-
-    /**
-     * Changes the current selected period.
-     *
-     * @param {string} period   The selected period, for example 'week', 'year', ...
-     *
-     * @type null
-     */
-    this.changePeriod = function (period) {
-    
-        if (!period || this.period == period) {
-        
-            return;
-        }
-    
-        this.period   = period;
-        
-        Session.set('piwik_parameter_period', period);
-    };
-
-    /**
-     * Changes the current selected date and fires an event named 'dateChanged' using the {@link View} object. 
-     * The passed event contains a property named 'date' which holds the changed value in the format 'YYYY-MM-DD' and a 
-     * property named period which holds the selected period, for example 'week'. 
-     * You can add an event listener within the view template:
-     * this.addEventListener('dateChanged', function (event) { alert(event.date); });
-     *
-     * @param {Date} changedDate    The selected/changed date.
-     *
-     * @type null
-     */
-    this.changeDate   = function (changedDate, period) {
-        this.changePeriod(period);
-            
-        this.date     = changedDate;
-        
-        var dateQuery = this.date.toPiwikQueryString();
-        
-        Session.set('piwik_parameter_date', dateQuery);
-
-        if (this.view) {
-            this.view.fireEvent('dateChanged', {date: dateQuery, period: this.period});
-        }
     };
 }
 
