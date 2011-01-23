@@ -222,6 +222,11 @@ function template () {
     
     save.addEventListener('click', function ()
     {
+        // forces hide keyboard
+        piwikUser.blur();
+        piwikUrl.blur();
+        piwikPassword.blur();
+        
         if (!piwikUrl.value || 'http' !== piwikUrl.value.substr(0, 4).toLowerCase()) {
             
             var url = piwikUrl.value;
@@ -401,6 +406,20 @@ function template () {
     scrollView.add(piwikPassword);
     scrollView.add(separator);
     scrollView.add(save);
+    
+    if ('android' == Ti.Platform.osname) {
+        // this ensures the user can scroll and the textfield is visilbe while entering something via keyboard
+        // otherwise the keyboard maybe hides the text field(s)
+        scrollView.contentHeight = (save.top + save.height) * 2;
+        
+        piwikPassword.addEventListener('focus', function (event) {
+            scrollView.scrollTo(0, labelPassword.top);
+        });
+        
+        piwikUser.addEventListener('focus', function (event) {
+            scrollView.scrollTo(0, labelUser.top);
+        });
+    }
     
     piwikUrl.addEventListener('return', function(event){
         if (piwikAnonymous.value) {
