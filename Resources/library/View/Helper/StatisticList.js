@@ -290,6 +290,8 @@ function View_Helper_StatisticList () {
                 width: this.leftLabelWidth,
                 color: color,
                 zIndex: 4,
+                ellipsize: true,
+                wordWrap: true,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
             view.add(titleLabel);
