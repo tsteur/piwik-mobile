@@ -20,24 +20,7 @@ function template () {
     
     headline.addManageAccountChooser();
  
-    this.add(headline.subView);    
-    
-    if ('android' != Ti.Platform.osname) {
-        var removeIcon = Ti.UI.createImageView({image: 'images/icon/header_remove.png', 
-                                                backgroundSelectedColor: '#FFC700',
-                                                backgroundFocusedColor: '#FFC700',
-                                                focusable: true,
-                                                top: 0, 
-                                                right: 47, 
-                                                width: 47, 
-                                                height: 40});
-        
-        removeIcon.addEventListener('click', function () {
-            tableview.editing = !tableview.editing;
-        });
-        
-        headline.subView.add(removeIcon);
-    }
+    this.add(headline.subView);
 
     var onUpdateAccount = function () {
         Window.createMvcWindow({jsController: 'settings',
@@ -154,6 +137,8 @@ function template () {
                                                  width: this.width,
                                                  focusable: true,
                                                  touchEnabled: false,
+                                                 allowsSelectionDuringEditing: true,
+                                                 editing: true,
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
