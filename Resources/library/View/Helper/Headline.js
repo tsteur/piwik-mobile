@@ -161,7 +161,7 @@ function View_Helper_Headline () {
      *
      * @type null
      */
-    this.addAddAccountChooser = function () {
+    this.addManageAccountChooser = function () {
 
         var onAddAccount = function () {
             Window.createMvcWindow({jsController: 'settings',

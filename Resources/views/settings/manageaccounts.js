@@ -18,27 +18,25 @@ function template () {
     var _this        = this;
     var headline     = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
     
-    headline.addAddAccountChooser();
+    headline.addManageAccountChooser();
  
     this.add(headline.subView);    
     
     if ('android' != Ti.Platform.osname) {
-        var editBtn = Ti.UI.createButtonBar({
-            right: 10, 
-            labels: [_('General_Edit')], 
-            backgroundColor:'#BEBAB1', 
-            style: Titanium.UI.iPhone.SystemButtonStyle.BAR, 
-            height: 30, 
-            top: 5, 
-            width: 'auto', 
-            zIndex: 10
-        });
+        var removeIcon = Ti.UI.createImageView({image: 'images/icon/header_remove.png', 
+                                                backgroundSelectedColor: '#FFC700',
+                                                backgroundFocusedColor: '#FFC700',
+                                                focusable: true,
+                                                top: 0, 
+                                                right: 47, 
+                                                width: 47, 
+                                                height: 40});
         
-        editBtn.addEventListener('click', function () {
+        removeIcon.addEventListener('click', function () {
             tableview.editing = !tableview.editing;
         });
         
-        headline.subView.add(editBtn);
+        headline.subView.add(removeIcon);
     }
 
     var onUpdateAccount = function () {
