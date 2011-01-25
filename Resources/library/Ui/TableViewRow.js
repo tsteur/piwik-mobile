@@ -42,7 +42,7 @@ function Ui_TableViewRow (params) {
         params = {};
     }
 
-    var fontSize    = 14;
+    var fontSize    = 15;
     var fontWeight  = 'normal';
     
     if ('android' !== Titanium.Platform.osname) {
@@ -80,7 +80,9 @@ function Ui_TableViewRow (params) {
                 width: 'auto',
                 height: 'auto',
                 left: 0,
-                color: params.color
+                color: params.color,
+                ellipsize: true,
+                wordWrap: false
             });
             
             if ('android' !== Titanium.Platform.osname) {
@@ -123,7 +125,9 @@ function Ui_TableViewRow (params) {
                 height: 'auto',
                 left: 0,
                 bottom: 6,
-                color: '#888888'
+                color: '#888888',
+                ellipsize: true,
+                wordWrap: false
             });
             
             if ('android' !== Titanium.Platform.osname) {

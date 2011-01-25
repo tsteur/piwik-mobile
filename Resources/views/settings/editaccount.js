@@ -41,18 +41,18 @@ function template () {
     top = 10;
     var labelUrl    = Titanium.UI.createLabel({
         text: _('Mobile_AccessUrlLabel'),
-        height: 20,
+        height: 22,
         left: left,
         top: top,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
-    top = top + 25;
+    top = top + 26;
     var piwikUrl    = Titanium.UI.createTextField({
         color: config.theme.textColor,
-        height: 35,
+        height: 37,
         top: top,
         left: left,
         right: left,
@@ -63,7 +63,7 @@ function template () {
         autocorrect: false,
         focusable: true,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
     // There's a bug in Titanium 1.4 and previous versions when using autocapitalizations UrlKeyboard will not work. But
@@ -72,21 +72,21 @@ function template () {
         piwikUrl.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
     }
     
-    top = top + 40;
+    top = top + 42;
     var labelAnonymous  = Titanium.UI.createLabel({
         text: _('Mobile_AnonymousAccess'),
-        height: 20,
+        height: 22,
         left: left,
         top: top,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize:config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
     top = top + 28;
     var piwikAnonymous = Titanium.UI.createSwitch({
         top:  top,
-        height: 25,
+        height: 27,
         left: left,
         value: false,
         focusable: true
@@ -95,18 +95,18 @@ function template () {
     top = top + 32;
     var labelUser  = Titanium.UI.createLabel({
         text: _('Login_Login'),
-        height: 20,
+        height: 22,
         left: left,
         top: top,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
-    top = top + 25;
+    top = top + 26;
     var piwikUser = Titanium.UI.createTextField({
         color: config.theme.textColor,
-        height: 35,
+        height: 37,
         value: '',
         top: top,
         left: left,
@@ -117,7 +117,7 @@ function template () {
         focusable: true,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
     if ('android' !== Titanium.Platform.osname) {
@@ -125,22 +125,22 @@ function template () {
         piwikUser.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
     }
     
-    top = top + 40;
+    top = top + 42;
     var labelPassword  = Titanium.UI.createLabel({
         text: _('Login_Password'),
-        height: 20,
+        height: 22,
         left: left,
         top: top,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
-    top = top + 25;
+    top = top + 26;
     var piwikPassword = Titanium.UI.createTextField({
         value: '',
         color: config.theme.textColor,
-        height: 35,
+        height: 37,
         top: top,
         left: left,
         right: left,
@@ -150,7 +150,7 @@ function template () {
         returnKeyType: Titanium.UI.RETURNKEY_DONE,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
-        font: {fontSize: config.theme.fontSizeNormal}
+        font: {fontSize: 14}
     });
     
     piwikAnonymous.addEventListener('change', function (event) {
@@ -176,7 +176,7 @@ function template () {
 
     var win = this.view;
 
-    top = top + 45;
+    top = top + 47;
     var separator = Titanium.UI.createView({
         height: 1,
         left: 0,
@@ -187,10 +187,10 @@ function template () {
         zIndex: 3
     });
     
-    top = top + 10;
+    top = top + 14;
     var save  = Titanium.UI.createButton({
         title:  _('General_Save'),
-        height: 35,
+        height: 37,
         width:  205,
         left:   left,
         top:    top,
@@ -199,9 +199,9 @@ function template () {
         borderRadius: config.theme.borderRadius,
         selectedColor: config.theme.titleColor,
         focusable: true,
-        borderColor: '#ECEDEC',
+        borderColor: '#CACACA',
         borderWidth: 1,
-        font: {fontSize:config.theme.fontSizeNormal, fontWeight: 'bold'}
+        font: {fontSize: 14, fontWeight: 'bold'}
     });
     
     // restore values

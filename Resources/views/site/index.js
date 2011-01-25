@@ -39,7 +39,7 @@ function template () {
         currentSection = report.category;
         
         if (currentSection && currentSection !== latestSection) {
-            section = Titanium.UI.createTableViewRow({height: 20,
+            section = Titanium.UI.createTableViewRow({height: 24,
                                                       className: 'siteSection' + index,
                                                       selectedBackgroundColor: '#B2AEA5',
                                                       backgroundColor: '#B2AEA5'});
@@ -61,12 +61,12 @@ function template () {
 
             headerLabel = Titanium.UI.createLabel({
                 text: String(report.category),
-                height: 20,
+                height: 24,
                 width: labelWidth,
                 textAlign: 'left',
                 color: '#ffffff',
                 left: left,
-                font: {fontSize: 12, fontFamily: config.theme.fontFamily}
+                font: {fontSize: 14, fontFamily: config.theme.fontFamily}
             });
 
             section.add(headerLabel);

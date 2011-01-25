@@ -154,6 +154,7 @@ function View_Helper_StatisticList () {
             height: 'auto',
             left: 10,
             top: 4,
+            ellipsize: true,
             width: this.leftLabelWidth,
             color: config.theme.titleColor,
             font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
@@ -164,6 +165,7 @@ function View_Helper_StatisticList () {
             height: 'auto',
             left: 10,
             top: 4,
+            ellipsize: true,
             width: this.rightLabelWidth,
             color: config.theme.titleColor,
             font: {fontSize: this.fontSize, fontWeight: 'bold', fontFamily: config.theme.fontFamily}

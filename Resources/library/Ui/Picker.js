@@ -79,7 +79,7 @@ function Ui_Picker (params, win) {
             top: 5,
             color: '#efefef',
             width: 240,
-            font: {fontSize: 14, fontFamily: config.theme.fontFamily}
+            font: {fontSize: 16, fontFamily: config.theme.fontFamily}
         });
         
         view.add(this.titleLabel);
