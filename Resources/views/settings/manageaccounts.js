@@ -17,6 +17,8 @@ function template () {
 
     var _this        = this;
     var headline     = this.helper('headline', {headline: _('UsersManager_ManageAccess')});
+    
+    headline.addAddAccountChooser();
  
     this.add(headline.subView);    
     
@@ -38,11 +40,6 @@ function template () {
         
         headline.subView.add(editBtn);
     }
-
-    var onAddAccount = function () {
-        Window.createMvcWindow({jsController: 'settings',
-                                jsAction:     'createaccount'});
-    };
 
     var onUpdateAccount = function () {
         Window.createMvcWindow({jsController: 'settings',
@@ -132,15 +129,11 @@ function template () {
         dialog.show();
     };
 
-    var tableData = [Ui_TableViewRow({className: 'settingsSection1',
-                                      title: _('Mobile_AddAccount'),
-                                      onClick: onAddAccount,
-                                      rowIndex: 0,
-                                      hasChild: true})];
-                                      
-    var account = null;
+    var tableData  = [];
+
+    var account    = null;
     for (var index = 0; index < this.accounts.length; index++) {
-        account = this.accounts[index];
+        account    = this.accounts[index];
         
         tableData.push(Ui_TableViewRow({className: 'settingsSection1',
                                         title: '' + account.name,
@@ -148,7 +141,7 @@ function template () {
                                         accountId: account.id,
                                         accountName: '' + account.name,
                                         onClick: onUpdateAccount,
-                                        rowIndex: index + 1,
+                                        rowIndex: index,
                                         onShowOptionMenu: onShowOptionMenu,
                                         hasCheck: Boolean(account.active)}));
     }

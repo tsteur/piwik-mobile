@@ -155,6 +155,68 @@ function View_Helper_Headline () {
         this.addDayChooser(view);
         this.addSiteChooser(view);
     };
+    
+    /**
+     * Adds an icon to the header and menu which allows the user to add an piwik account.
+     *
+     * @type null
+     */
+    this.addAddAccountChooser = function () {
+
+        var onAddAccount = function () {
+            Window.createMvcWindow({jsController: 'settings',
+                                    jsAction:     'createaccount'});
+        };
+    
+        var addAccountIcon  = Ti.UI.createImageView({image: 'images/icon/header_add.png', 
+                                                     backgroundSelectedColor: '#FFC700',
+                                                     backgroundFocusedColor: '#FFC700',
+                                                     focusable: true,
+                                                     top: 0, 
+                                                     right: 0, 
+                                                     width: 47, 
+                                                     height: 40});
+                                                   
+        addAccountIcon.addEventListener('click', onAddAccount);
+        Ui_Menu.addItem({title: _('Mobile_AddAccount'), icon: 'images/icon/menu_add.png'}, onAddAccount);
+        
+        if (this.subView) {
+            this.subView.add(addAccountIcon);
+        }
+    };
+
+    /**
+     * Adds an icon to the header and menu which allows the user to open the settings screen. Will be displayed only
+     * on iOS cause Android users are already able to go to settings view via option menu
+     *
+     * @type null
+     */
+    this.addSettingsChooser = function () {
+    
+        if ('android' == Ti.Platform.osname) {
+        
+            return;
+        }
+    
+        var settingsIcon  = Ti.UI.createImageView({image: 'images/icon/header_settings.png', 
+                                                   backgroundSelectedColor: '#FFC700',
+                                                   backgroundFocusedColor: '#FFC700',
+                                                   focusable: true,
+                                                   top: 0, 
+                                                   right: 0, 
+                                                   width: 47, 
+                                                   height: 40});
+                                                   
+        settingsIcon.addEventListener('click', function () {
+        
+            Window.createMvcWindow({jsController: 'settings',
+                                    jsAction: 'index'});
+        });
+        
+        if (this.subView) {
+            this.subView.add(settingsIcon);
+        }
+    };
 
     /**
      * Adds a date and period selector. This allows the user to change the date and period.

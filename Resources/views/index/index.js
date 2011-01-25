@@ -16,12 +16,11 @@
 function template () {
 
     var headline = this.helper('headline', {headline: 'Piwik Mobile'});
- 
+    
+    headline.addSettingsChooser();
     this.add(headline.subView);
 
-    var rows = [Ui_TableViewRow({title:     _('General_Settings'),
-                                 id:        'settings',
-                                 leftImage: {url: 'images/icon/settings.png', height: 25, width: 33}})];
+    var rows = [];
     
     if (this.sites && 0 < this.sites.length) {
         for (var siteIndex = 0; siteIndex < this.sites.length; siteIndex++) {
@@ -53,21 +52,14 @@ function template () {
                                                  separatorColor: '#eeedeb'});
     
     tableview.addEventListener('click', function (event) {
-    
-        if (0 == event.index) {
-    
-            Window.createMvcWindow({jsController: 'settings',
-                                    jsAction: 'index'});
-    
-        } else {
-    
-            var site        = event.rowData.site;
-    
-            Window.createMvcWindow({jsController: 'site',
-                                    jsAction: 'index',
-                                    site: site
-            });
+        if (!event || !event.rowData || !event.rowData.site) {
+        
+            return;
         }
+
+        Window.createMvcWindow({jsController: 'site',
+                                jsAction: 'index',
+                                site: event.rowData.site});
     
     });
     
