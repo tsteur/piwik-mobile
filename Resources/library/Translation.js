@@ -455,8 +455,16 @@ Translation.getLocale = function () {
 Translation.getPlatformLocale = function () {
     
     if (Titanium.Platform.locale) {
+    
+        var locale = Titanium.Platform.locale;
         
-        return Titanium.Platform.locale;
+        if (locale && locale.substr) {
+            
+            // some devices return for example "de-de". we just want the first two characters
+            return locale.substr(0, 2).toLowerCase();
+        }
+        
+        return locale;
     }
     
     return 'en';
