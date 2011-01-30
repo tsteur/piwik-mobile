@@ -17,30 +17,21 @@ function template () {
     
     var originalWidth  = this.width;
     var originalHeight = this.height;
+ 
     var pictureWidth   = originalWidth - 45;
     var pictureHeight  = originalHeight - 45;
-
-    var currentOrientation = Titanium.UI.orientation;
-
+    
     if (pictureWidth < pictureHeight) {
+        var tempWidth  = pictureWidth;
+        pictureWidth   = pictureHeight;
+        pictureHeight  = tempWidth;
+    }
 
-        // current width detected in portrait mode -> we have to switch width/height therefore
-        var tempWidth = pictureWidth;
-        pictureWidth  = pictureHeight;
-        pictureHeight = tempWidth;
-
-        Titanium.UI.currentWindow.orientationModes = [Titanium.UI.LANDSCAPE_LEFT,
-                                                      Titanium.UI.LANDSCAPE_RIGHT]; 
-
-        Titanium.UI.orientation                    = Titanium.UI.LANDSCAPE_LEFT;
-
-        this.width    = originalHeight;
-        this.height   = originalWidth;
-        
-    } else {
-
-        Titanium.UI.currentWindow.orientationModes = [Titanium.UI.LANDSCAPE_LEFT,
-                                                      Titanium.UI.LANDSCAPE_RIGHT];
+    var imageLeftPos   = -45;
+    var imageTopPos    = 90;
+    if ('ipad' == Ti.Platform.osname) {
+        imageLeftPos   = -90;
+        imageTopPos    = 140;
     }
 
     this.graphUrl = Graph.appendSize(this.graphUrl, pictureWidth, pictureHeight);
@@ -48,19 +39,21 @@ function template () {
     
     var imageView = Titanium.UI.createImageView({width:  pictureWidth,
                                                  height: pictureHeight,
-                                                 top:    15,
-                                                 left:   15,
-                                                 image:  this.graphUrl});
+                                                 top:    imageTopPos,
+                                                 left:   imageLeftPos,
+                                                 canScale: true,
+                                                 enableZoomControls: false, 
+                                                 anchorPoint: {x:0.5,y:0.5},
+                                                 image: this.graphUrl});
 
-    var closeChartView = function (event) {
+    // rotate the image
+    var imageTransform      = Ti.UI.create2DMatrix();
+    imageTransform          = imageTransform.rotate(90);
+    var spinAnimation       = Titanium.UI.createAnimation();
+    spinAnimation.transform = imageTransform;
+    spinAnimation.duration  = 10;
 
-        Titanium.UI.currentWindow.orientationModes = [Titanium.UI.PORTRAIT, Titanium.UI.UPSIDE_PORTRAIT]; 
-        if ('android' !== Titanium.Platform.osname && currentOrientation) {
-            Titanium.UI.orientation                = currentOrientation;
-        } else {
-            Titanium.UI.orientation                = Titanium.UI.PORTRAIT;
-        }
-        
+    var closeChartView      = function (event) {
         Window.close();
     };
 
@@ -68,4 +61,7 @@ function template () {
     this.addEventListener('click', closeChartView);
     
     this.add(imageView);
+    
+    imageView.animate(spinAnimation);
 }
+
