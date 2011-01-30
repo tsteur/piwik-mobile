@@ -13,6 +13,13 @@ Titanium.include('/library/all.js');
 Titanium.include('/Dispatcher.js');
 
 /**
+ * True if the current platform is Android, false otherwise. This variable is available everywhere / all contexts.
+ *
+ * @type boolean
+ */
+var isAndroid = ('android' === Ti.Platform.osname);
+
+/**
  * Includes a file by using Titanium.include. The difference is that this method works like an include_once.
  * 
  * @param {string}  file   The path and name of the file
@@ -97,10 +104,25 @@ if ('android' !== Titanium.Platform.osname)  {
     globalWin.add(globalScrollView);
 
     globalScrollView.addEventListener('scroll', function (event) {
-        Log.warn(event, 'scrollglobal');
-        if (event && event.view && event.view.zIndex < Window.zIndex) {
-            Window.close();
+        if (!event || !event.view) {
+            // not the scrollview is scrolled
+            
+            return;
         }
+        
+        if (!event.view.zIndex || parseInt(event.view.zIndex, 10) >= parseInt(Window.zIndex, 10)) {
+            // this is a scroll to a new opened view, not a close view
+            
+            return;
+        }
+        
+        if (!event.view.deleteOnScroll) {
+            // delete on scroll is disabled cause view will be currently created
+        
+            return;
+        }
+    
+        Window.close();
     });
 }
 
@@ -109,34 +131,9 @@ if ('android' !== Titanium.Platform.osname)  {
 Session.set('piwik_parameter_period', Settings.getPiwikDefaultPeriod());
 Session.set('piwik_parameter_date', Settings.getPiwikDefaultDate());
 
-var accountManager = new AccountModel();
-
-// migration of old settings to new accountmodel. @TODO Remove this in next version.
-if (Settings.getPiwikUrl() && Settings.getPiwikUserAuthToken()) {
-    var account = {accessUrl: '' + Settings.getPiwikUrl(),
-                   tokenAuth: '' + Settings.getPiwikUserAuthToken(),
-                   username: '',
-                   name: 'Anonymous access',
-                   active: 1};
-
-    Titanium.App.Properties.removeProperty('setting_piwikUrl');
-    Titanium.App.Properties.removeProperty('setting_piwikUserAuthToken');
-                   
-    if (Settings.getPiwikUser()) {
-        account.username = Settings.getPiwikUser();
-        account.name     = account.username;
-        Titanium.App.Properties.removeProperty('setting_piwikUser');
-    }
-    
-    if (Settings.getPiwikPassword()) {
-        Titanium.App.Properties.removeProperty('setting_piwikPassword');
-    }
-    
-    accountManager.createAccount(account);
-}
-
+var accountManager      = new AccountModel();
 var hasActivatedAccount = accountManager.hasActivedAccount();
-accountManager = null;
+accountManager          = null;
 
 if (hasActivatedAccount) {
     // create root window    
