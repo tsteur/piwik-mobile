@@ -80,6 +80,7 @@ Window.createMvcWindow = function (params) {
     params.height          = globalWin.height ? globalWin.height : globalWin.size.height;
     params.top             = 0;
     params.left            = 0;
+    params.deleteOnScroll  = false;
     params.backgroundColor = config.theme.backgroundColor;
 
     var newWin             = Titanium.UI.createView(params);
@@ -95,8 +96,12 @@ Window.createMvcWindow = function (params) {
     if (params.closeCurrentWindow && Window.views && Window.views.length) {
         Window.close(Window.views.pop(), true);
     } 
+    
+    if (Window.getCurrentWindow()) {
+        Window.getCurrentWindow().fireEvent('blur', {source: newWin, type:'blur'});
+    }
 
-    if ('android' === Titanium.Platform.osname) {
+    if ('undefined' == (typeof globalScrollView)) {
         globalWin.add(newWin);
     } else {
         globalScrollView.addView(newWin);
@@ -104,6 +109,9 @@ Window.createMvcWindow = function (params) {
     }
     
     Window.views.push(newWin);
+    
+    newWin.deleteOnScroll = true;
+    
     Dispatcher.dispatch(newWin);
 };
 
@@ -119,21 +127,28 @@ Window.createMvcWindow = function (params) {
  * @type null
  */
 Window.close = function (win, newWindowWillFollow) {
-    /* TODO in case of iOS do not remove view if it is the last one!
-    if (Window.views && Window.views.length && 1 == Window.views.length && 'android' !== Titanium.Platform.osname) {
+
+    if (!isAndroid && Window.views && Window.views.length && 1 == Window.views.length) {
         // If only 1 view is available
         return;
-    } */
-    
-    if ('undefined' == (typeof newWindowWillFollow) || !newWindowWillFollow) {
-        newWindowWillFollow = false;
     }
 
     if (('undefined' == (typeof win) || !win) && Window.views && Window.views.length) {
         win = Window.views.pop();
     }
     
+    if ('undefined' == (typeof newWindowWillFollow) || !newWindowWillFollow) {
+        newWindowWillFollow = false;
+    }
+        
+    if (!isAndroid && win && 1 === win.zIndex && !newWindowWillFollow) {
+        // do never close the first screen on iOS, otherwise a blank window will appear
+    
+        return;
+    }
+    
     if (win) {
+        win.fireEvent('close', {});
         win.hide();
         Window.removedItems = 0;
         
@@ -142,11 +157,11 @@ Window.close = function (win, newWindowWillFollow) {
             Ui_Menu.cleanupMenu(win);
             Window.cleanup(win, 0);
             
-            if ('android' !== Titanium.Platform.osname && globalScrollView && globalScrollView.remove) {
+            if (('undefined' != typeof globalScrollView) && globalScrollView && globalScrollView.remove) {
                 globalScrollView.removeView(win);
                 // TODO do we have to remove the view afterwards manually?
                 // globalScrollView.remove(win);
-            } else if ('android' === Titanium.Platform.osname && globalWin && globalWin.remove) {
+            } else if (globalWin && globalWin.remove) {
                 globalWin.remove(win);
             } else {
                 Log.debug('can not remove view', 'Window');
@@ -159,10 +174,10 @@ Window.close = function (win, newWindowWillFollow) {
         win = null;
     }
     
-    if ((!Window.views || !Window.views.length) 
+    if (isAndroid
+        && (!Window.views || !Window.views.length) 
         && !newWindowWillFollow 
-        && globalWin && globalWin.close 
-        && 'android' === Titanium.Platform.osname){
+        && globalWin && globalWin.close){
         // close window only in android to close the app, close the app is not allowed in iOS and we end in a
         // blank window if we close the only opened window
         globalWin.close();
@@ -170,17 +185,23 @@ Window.close = function (win, newWindowWillFollow) {
     } else {
         
         if (Window.getCurrentWindow()) {
-            if ('android' !== Titanium.Platform.osname) {
+            if (!isAndroid) {
                 globalScrollView.scrollToView(Window.getCurrentWindow());
             }
             
             if (Window.getCurrentWindow().focus) {
                 Window.getCurrentWindow().focus();
             }
+            
+            if (!newWindowWillFollow) {
+                /**
+                 * we have to update zIndex cause otherwise we can not detect a swipe (in globalScrollableView) to a 
+                 * previous view. we do not reset zIndex if a new window will follow cause zIndex is already correct
+                 * in such a case
+                 */
+                Window.zIndex = Window.getCurrentWindow().zIndex;
+            }
         }
-
-        // restore the menu of the previous displayed window
-        Ui_Menu.build();
     }
 };
 

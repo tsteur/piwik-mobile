@@ -272,7 +272,7 @@ function create_Ui_Picker(params) {
             return;
         }
         
-        view.add(picker);
+        globalWin.add(picker);
         
         var updateDay   = Titanium.UI.createButton({title: Translation.getPeriod('day', false)});
         var updateWeek  = Titanium.UI.createButton({title: Translation.getPeriod('week', false)});
@@ -292,21 +292,40 @@ function create_Ui_Picker(params) {
             barColor: '#999'
         });
         
-        view.add(toolbar);
+        globalWin.add(toolbar);
         
         picker.pickerValue = params.value;
         
         picker.addEventListener('change', function (event) {
             picker.pickerValue = event.value;
-        });
+        });        
+        
+        var closePicker = null;
+        closePicker = function () { 
+        	
+	    	if (view && view.removeEventListener && closePicker) {
+	    		view.removeEventListener('blur', closePicker);
+	    		view.removeEventListener('close', closePicker);
+	    	}
+	    	
+        	if (toolbar && toolbar.hide) {
+	            toolbar.hide();
+        	}                              
+           	if (globalWin && globalWin.remove && picker) {
+	        	globalWin.remove(picker);
+	    	}
+	    	if (globalWin && globalWin.remove && toolbar) {
+	        	globalWin.remove(toolbar);
+	    	}
+        }
+        
+    	view.addEventListener('close', closePicker);
+    	view.addEventListener('blur', closePicker);
         
         var fireUpdateEvent = function (date, period) {
             var myEvent = {date: date, period: period};
-                           
-            toolbar.hide();
+
             picker.fireEvent('set', myEvent); 
-            view.remove(picker);
-            view.remove(toolbar);
         }
         
         updateDay.addEventListener('click', function (event) {
