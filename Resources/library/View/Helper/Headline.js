@@ -177,7 +177,7 @@ function View_Helper_Headline () {
                                                      width: 47, 
                                                      height: 40});
                                                    
-        addAccountIcon.addEventListener('click', onAddAccount);
+        addAccountIcon.addEventListener(isAndroid ? 'click' : 'singletap', onAddAccount);
         Ui_Menu.addItem({title: _('Mobile_AddAccount'), icon: 'images/icon/menu_add.png'}, onAddAccount);
         
         if (this.subView) {
@@ -193,7 +193,7 @@ function View_Helper_Headline () {
      */
     this.addSettingsChooser = function () {
     
-        if ('android' == Ti.Platform.osname) {
+        if (isAndroid) {
         
             return;
         }
@@ -207,7 +207,7 @@ function View_Helper_Headline () {
                                                    width: 47, 
                                                    height: 40});
                                                    
-        settingsIcon.addEventListener('click', function () {
+        settingsIcon.addEventListener('singletap', function () {
         
             Window.createMvcWindow({jsController: 'settings',
                                     jsAction: 'index'});
