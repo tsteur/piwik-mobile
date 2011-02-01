@@ -272,7 +272,7 @@ function View_Helper_Headline () {
      */
     this.addSiteChooser  = function (view) {
 
-        var currentSite  = this.getOption('currentSite', {name: ''});
+        var currentSite  = this.getOption('currentSite', {name: '', accountId: null, idsite: null});
 
         this.siteChooser = Ti.UI.createImageView({image: 'images/icon/header_globe.png', 
                                                   backgroundSelectedColor: '#FFC700',
@@ -285,6 +285,7 @@ function View_Helper_Headline () {
         
         var allowedSiteNames = [];
         var allowedSites     = this.getOption('allowedSites', []);
+        var currentSiteIndex = null;
         
         // extract the names of each site to display them within an options dialog
         for (var index = 0; index < allowedSites.length; index++) {
@@ -293,6 +294,17 @@ function View_Helper_Headline () {
         
             if (site && site.name) {
                 allowedSiteNames.push('' + site.name);
+            } else {
+                allowedSiteNames.push('');
+            }
+
+            // detect current selected site index so we are able to preselect it later
+            if (site 
+                && currentSite
+                && currentSite.accountId == site.accountId 
+                && currentSite.idsite == site.idsite
+                && currentSite.name == site.name) {
+                currentSiteIndex = index;
             }
         }
         
@@ -305,6 +317,10 @@ function View_Helper_Headline () {
         });
         
         var onShowSiteChooser = function () {
+            if (null !== currentSiteIndex) {
+                dialog.selectedIndex = currentSiteIndex;
+            }
+            
             dialog.show();
         };
         
@@ -321,26 +337,15 @@ function View_Helper_Headline () {
                 return;
             }
             
-            var selectedSiteName = allowedSiteNames[event.index];
-            var selectedSite     = null;
-
-            // try to find the selected site object because we only get the name of the selected site.
-            Found: for (var index = 0; index < allowedSites.length; index++) {
-            
-                var verifySite = allowedSites[index];
-            
-                // mark as found only if site changes
-                if (verifySite 
-                    && currentSite
-                    && verifySite.name 
-                    && selectedSiteName === verifySite.name
-                    && currentSite.name !== verifySite.name) {
-                    selectedSite = verifySite;
-                    
-                    break Found;
-                }
+            if (event.index == currentSiteIndex) {
+                // user selected some value as already selected
                 
+                return;
             }
+            
+            var selectedSiteName = allowedSiteNames[event.index];
+            var selectedSite     = allowedSites[event.index];
+            currentSiteIndex     = event.index;
             
             if (selectedSite) {
             
@@ -350,7 +355,6 @@ function View_Helper_Headline () {
                 
                 // fire further event so other windows are able to listen to this event, too
                 Titanium.App.fireEvent('siteChanged', {site: selectedSite});
-            
             }
         });
         

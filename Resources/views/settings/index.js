@@ -27,13 +27,21 @@ function template () {
         availableLanguageOptions.push(name);
         
         if(this.piwikLanguage && this.piwikLanguage == langCode) {
-            currentLanguage = name;
+            currentLanguage  = name;
         }
-        
     }
 
     availableLanguageOptions.sort();
     availableLanguageOptions.push(_('SitesManager_Cancel_js'));
+    
+    // detect current selected language index so we are able to preselect it later
+    var currentLangIndex         = null;
+    for(var index in availableLanguageOptions) {
+        if(currentLanguage && availableLanguageOptions[index] == currentLanguage) {
+            currentLangIndex = index;
+            break;
+        }
+    }
     
     var headline        = this.helper('headline', {headline: _('General_Settings')});
     
@@ -69,6 +77,10 @@ function template () {
             cancel: (availableLanguageOptions.length - 1)
         });
         
+        if (null !== currentLangIndex) {
+            langDialog.selectedIndex = currentLangIndex;
+        }
+        
         var row = this;
         
         langDialog.addEventListener('click', function (event) {
@@ -79,7 +91,14 @@ function template () {
                 return;
             }
             
+            // user selected some value as already selected
+            if (event.index == currentLangIndex) {
+            
+                return;
+            }
+            
             row.changeValue(availableLanguageOptions[event.index]);
+            currentLangIndex = event.index;
 
             for(var langCode in _this.availableLanguages) {
                 if(availableLanguageOptions[event.index] == _this.availableLanguages[langCode]) {
@@ -95,21 +114,27 @@ function template () {
     };
     
     var defaultReportDateLabel = '';
+    var currentReportDateIndex = null;
     switch (Settings.getPiwikDefaultPeriod() + Settings.getPiwikDefaultDate()) {
         case 'daytoday':
             defaultReportDateLabel = _('General_Today');
+            currentReportDateIndex = 0;
             break;
         case 'dayyesterday':
             defaultReportDateLabel = _('General_Yesterday');
+            currentReportDateIndex = 1;
             break;
         case 'weektoday':
             defaultReportDateLabel = _('General_CurrentWeek');
+            currentReportDateIndex = 2;
             break;
         case 'monthtoday':
             defaultReportDateLabel = _('General_CurrentMonth');
+            currentReportDateIndex = 3;
             break;
         case 'yeartoday':
             defaultReportDateLabel = _('General_CurrentYear');
+            currentReportDateIndex = 4;
             break;
     }
     
@@ -128,6 +153,11 @@ function template () {
             cancel: 5
         });
         
+        if (null !== currentReportDateIndex) {
+            // preselect current selected value
+            periodDialog.selectedIndex = currentReportDateIndex;
+        }
+        
         var row = this;
         
         periodDialog.addEventListener('click', function (event) {
@@ -137,7 +167,13 @@ function template () {
                 return;
             }
             
+            // user selected some value as already selected
+            if (event.index == currentReportDateIndex) {
+                return;
+            }
+            
             row.changeValue(periodOptions[event.index]);
+            currentReportDateIndex = event.index;
             
             switch (event.index) {
                 case 0:
