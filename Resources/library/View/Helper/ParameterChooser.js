@@ -105,7 +105,9 @@ function View_Helper_ParameterChooser () {
             left: 6,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 6
+            zIndex: 6,
+            ellipsize: true,
+            wordWrap: true
         });
         
         // we do not need this view, but it allows the user to easier hit the date picker
@@ -151,7 +153,9 @@ function View_Helper_ParameterChooser () {
             textAlign: 'right',
             width: labelWidth - 6,
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
-            zIndex: 10
+            zIndex: 10,
+            ellipsize: true,
+            wordWrap: true
         });
 
         // we do not need this view, but it allows the user to easier hit the site picker
