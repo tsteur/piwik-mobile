@@ -74,24 +74,29 @@ function loadView (file) {
 
 loadFile('/model/AccountModel.js');
 
+// allow only portrait mode 
+Titanium.UI.currentWindow.orientationModes = [Titanium.UI.PORTRAIT, Titanium.UI.UPSIDE_PORTRAIT]; 
+
+// set orientation to portrait -> currently the app does not render properly if the user changes the
+// orientation of an already rendered window. all new opened window (even in landscape mode) are rendered 
+// good
+Titanium.UI.orientation = Titanium.UI.PORTRAIT;
+
 // variable globalWin will be available in each file and each context
 var globalWin = Titanium.UI.currentWindow;
 
 // do not close a Titanium.UI.Window when user presses the hardware back button, remove our own windows (view).
 globalWin.addEventListener('android:back', function (event) {
     Log.debug('androidBack', 'master.js');
-
-    // hack. we have to reset orientation if user presses back button while chart/fulldetail view is displayed
-    Titanium.UI.currentWindow.orientationModes = [Titanium.UI.PORTRAIT, Titanium.UI.UPSIDE_PORTRAIT]; 
-    Titanium.UI.orientation                    = Titanium.UI.PORTRAIT;
     
     Window.close();
 });
 
-if ('android' !== Titanium.Platform.osname)  {
+if (!isAndroid) {
     // we can not use the scrollableView on Android cause it is a bit buggy currently. As soon as one swipes to another
     // view the tableview will loose all it's rows on Android
     // TODO it will be fixed in Titanium 1.6 -> use scrollableview for android too
+
     var globalScrollView = Titanium.UI.createScrollableView({
         views: [],
         showPagingControl: false,
@@ -100,10 +105,11 @@ if ('android' !== Titanium.Platform.osname)  {
         width: globalWin.width ? globalWin.width : globalWin.size.width,
         height: globalWin.height ? globalWin.height : globalWin.size.height
     });
-    
+
     globalWin.add(globalScrollView);
 
     globalScrollView.addEventListener('scroll', function (event) {
+
         if (!event || !event.view) {
             // not the scrollview is scrolled
             
@@ -121,7 +127,7 @@ if ('android' !== Titanium.Platform.osname)  {
         
             return;
         }
-    
+
         Window.close();
     });
 }

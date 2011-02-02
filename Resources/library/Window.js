@@ -100,12 +100,12 @@ Window.createMvcWindow = function (params) {
     if (Window.getCurrentWindow()) {
         Window.getCurrentWindow().fireEvent('blur', {source: newWin, type:'blur'});
     }
-
-    if ('undefined' == (typeof globalScrollView)) {
-        globalWin.add(newWin);
-    } else {
+    
+    if ('undefined' != (typeof globalScrollView) && globalScrollView) {
         globalScrollView.addView(newWin);
         globalScrollView.scrollToView(newWin);
+    } else {
+        globalWin.add(newWin);
     }
     
     Window.views.push(newWin);
@@ -127,9 +127,14 @@ Window.createMvcWindow = function (params) {
  * @type null
  */
 Window.close = function (win, newWindowWillFollow) {
+    
+    if ('undefined' == (typeof newWindowWillFollow) || !newWindowWillFollow) {
+        newWindowWillFollow = false;
+    }
 
-    if (!isAndroid && Window.views && Window.views.length && 1 == Window.views.length) {
-        // If only 1 view is available
+    if (!isAndroid && Window.views && Window.views.length && 1 == Window.views.length && !newWindowWillFollow) {
+        // If only 1 view is available do never close the first screen on iOS, otherwise a blank window will appear
+
         return;
     }
 
@@ -137,41 +142,9 @@ Window.close = function (win, newWindowWillFollow) {
         win = Window.views.pop();
     }
     
-    if ('undefined' == (typeof newWindowWillFollow) || !newWindowWillFollow) {
-        newWindowWillFollow = false;
-    }
-        
-    if (!isAndroid && win && 1 === win.zIndex && !newWindowWillFollow) {
-        // do never close the first screen on iOS, otherwise a blank window will appear
+    if ('undefined' == (typeof win) || !win) {
     
         return;
-    }
-    
-    if (win) {
-        win.fireEvent('close', {});
-        win.hide();
-        Window.removedItems = 0;
-        
-        try {
-            // free some memory
-            Ui_Menu.cleanupMenu(win);
-            Window.cleanup(win, 0);
-            
-            if (('undefined' != typeof globalScrollView) && globalScrollView && globalScrollView.remove) {
-                globalScrollView.removeView(win);
-                // TODO do we have to remove the view afterwards manually?
-                // globalScrollView.remove(win);
-            } else if (globalWin && globalWin.remove) {
-                globalWin.remove(win);
-            } else {
-                Log.debug('can not remove view', 'Window');
-            }
-            
-        } catch (e){
-            Log.warn('failed to remove view from window: ' + e.message, 'Window');    
-        }
-        
-        win = null;
     }
     
     if (isAndroid
@@ -182,25 +155,45 @@ Window.close = function (win, newWindowWillFollow) {
         // blank window if we close the only opened window
         globalWin.close();
         
-    } else {
-        
-        if (Window.getCurrentWindow()) {
-            if (!isAndroid) {
-                globalScrollView.scrollToView(Window.getCurrentWindow());
-            }
-            
-            if (Window.getCurrentWindow().focus) {
-                Window.getCurrentWindow().focus();
-            }
-            
-            if (!newWindowWillFollow) {
-                /**
-                 * we have to update zIndex cause otherwise we can not detect a swipe (in globalScrollableView) to a 
-                 * previous view. we do not reset zIndex if a new window will follow cause zIndex is already correct
-                 * in such a case
-                 */
-                Window.zIndex = Window.getCurrentWindow().zIndex;
-            }
+        return;
+    }
+    
+    win.fireEvent('close', {});
+    win.hide();
+    Window.removedItems = 0;
+    
+    try {
+        // free some memory
+        Ui_Menu.cleanupMenu(win);
+        Window.cleanup(win, 0);
+
+        if ('undefined' != (typeof globalScrollView) && globalScrollView) {
+            globalScrollView.removeView(win);
+        } else {
+            globalWin.remove(win);
+        }
+
+    } catch (e){
+        Log.warn('failed to remove view from window: ' + e.message, 'Window');    
+    }
+    
+    win = null;
+    
+    if (!newWindowWillFollow && Window.getCurrentWindow()) {
+
+        if ('undefined' != (typeof globalScrollView) && globalScrollView) {
+            globalScrollView.scrollToView(Window.getCurrentWindow());
+        }
+
+        /**
+         * we have to update zIndex cause otherwise we can not detect a swipe (in globalScrollableView) to a 
+         * previous view. we do not reset zIndex if a new window will follow cause zIndex is already correct
+         * in such a case
+         */
+        Window.zIndex = Window.getCurrentWindow().zIndex;
+    
+        if (Window.getCurrentWindow().focus) {
+            Window.getCurrentWindow().focus();
         }
     }
 };

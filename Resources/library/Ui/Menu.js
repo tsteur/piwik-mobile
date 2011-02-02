@@ -10,11 +10,18 @@
  * @class   Creates an Android specific menu accessible on each screen. You can add items to the menu from any context
  *          by using the addItem method. The item will only be added if the current OS is android.
  *
- * @see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Android.OptionMenu-module">Option Menu Module API description</a>
+ * @see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object">Option Menu Module API description</a>
  *
  * @static
  */
 var Ui_Menu = {
+
+    /**
+     * Holds an instance of the Android Option Menu @link http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object
+     * 
+     * @type Titanium.Android.Menu
+     */
+    menu: null,
 
     /**
      * Defines whether the current system supports option menus. False if it is not supported, true otherwise.
@@ -32,24 +39,24 @@ var Ui_Menu = {
      * @type null
      */
     build: function () {
-        if (!Ui_Menu.hasMenu) {
+        if (!Ui_Menu.hasMenu || !Ui_Menu.menu) {
             return;
         }
         
-        var menu = Titanium.UI.Android.OptionMenu.createMenu();
-        var item = Titanium.UI.Android.OptionMenu.createMenuItem({title: _('General_Settings'), 
-                                                                  icon:  'images/icon/menu_settings.png'});
+        var menu = Ui_Menu.menu;
+        
+        menu.clear();
+        
+        var item = menu.add({title: _('General_Settings')});
         item.addEventListener('click', function () {
             Window.createMvcWindow({jsController: 'settings',
                                     jsAction:     'index'});
         });
-        
-        menu.add(item);
+        item.setIcon('images/icon/menu_settings.png');
         
         var view = Window.getCurrentWindow();
         
         if (!view || !view.zIndex) {
-            Titanium.UI.Android.OptionMenu.setMenu(menu);
         
             return;
         }
@@ -57,19 +64,20 @@ var Ui_Menu = {
         var menuItems = Session.get('menuItems' + view.zIndex, []);
         
         if (!menuItems || !menuItems.length) {
-            Titanium.UI.Android.OptionMenu.setMenu(menu);
         
             return;
         }
         
         for (var index = 0; index < menuItems.length; index++) {
-            item = Titanium.UI.Android.OptionMenu.createMenuItem(menuItems[index].options);
+            item = menu.add(menuItems[index].options);
             item.addEventListener('click', menuItems[index].onClick);
-        
-            menu.add(item);
+            
+            if (menuItems[index].options.icon) {
+                item.setIcon(menuItems[index].options.icon);
+            }
         }
         
-        Titanium.UI.Android.OptionMenu.setMenu(menu);
+        item = null;
     },
 
     /**
@@ -119,10 +127,53 @@ var Ui_Menu = {
         }
         
         Session.remove('menuItems' + view.zIndex);
+    },
+    
+    /**
+     * Initialize the menu.
+     * 
+     * @type null
+     */
+    init: function () {
+
+        // activate option menu
+        Ui_Menu.hasMenu = true;
+        
+        var activity    = null;
+            
+        if (Titanium.UI.currentWindow && Titanium.UI.currentWindow.activity) {
+            activity = Titanium.UI.currentWindow.activity;
+        } else if (Titanium.Android && Titanium.Android.currentActivity) {
+            activity = Titanium.Android.currentActivity;
+        }
+        
+        if (!activity) {
+        
+            return;
+        }
+        
+        activity.onPrepareOptionsMenu  = function(event) {
+        
+            if (Ui_Menu.menu) {
+            
+                Ui_Menu.build();
+                
+                return;
+            }
+
+            if (!event || !event.menu) {
+                Log.debug('No event given in OnCreateOptionsMenu', 'Ui_Menu');
+                
+                return;
+            }
+            
+            Ui_Menu.menu = event.menu;
+            Ui_Menu.build();
+        };
     }
 };
 
 if ('android' === Titanium.Platform.osname) {
     // enable menu for android
-    Ui_Menu.hasMenu = true;
+    Ui_Menu.init();
 }

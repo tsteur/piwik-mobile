@@ -213,13 +213,7 @@ Graph.parseMultipleRowsValues = function (lineValues) {
             
             valueString += '|' + values.substring(1);
             
-            if ('android' === Titanium.Platform.osname) {
-                // if we do not encode the uri on android, the image will not be displayed
-                labelString += '|' + encodeURI(rowIndex);
-            } else {
-                // if we encode the uri on iOs it will eg. display 'Windows%20XP' instead of 'Windows XP'
-                labelString += '|' + rowIndex;
-            }
+            labelString += '|' + rowIndex;
             
         }
     }
@@ -301,13 +295,7 @@ Graph.parseMultipleColumnsValues = function (values) {
                 
                 valueString += ',' + column;
 
-                if ('android' === Titanium.Platform.osname) {
-                    // if we do not encode the uri on android, the image will not be displayed
-                    labelString += '|' + encodeURI(columnIndex);  
-                } else {
-                    // if we encode the uri on iOs it will eg. display 'Windows%20XP' instead of 'Windows XP'
-                    labelString += '|' + columnIndex;
-                }
+                labelString += '|' + columnIndex;
                 
                 if (sumValues !== 0) {
                     var percentage    = Math.round(((column / sumValues) * 100));
@@ -513,9 +501,18 @@ Graph.getPieChartUrl = function (values) {
         return '';
     }
     
-    var url = Graph.domain + '?chco=' + Graph.colors;
+    var url = '?chco=' + Graph.colors;
     url    += '&cht=p&chd=t:' + content.percentageValues + '&chdl=' + content.labels + '&chdlp=b';
-    url    += '&chf=c,s,ffffff|bg,s,ffffff&chl=' + content.percentageLabels;
+    url    += '&chf=c,s,ffffff' + '|' + 'bg,s,ffffff&chl=' + content.percentageLabels;
+    
+    if ('android' === Titanium.Platform.osname) {
+        // if we do not encode the uri on android, the image will not be displayed
+        url = encodeURI(url);
+    } else {
+        // if we encode the uri on iOs it will eg. display 'Windows%20XP' instead of 'Windows XP'
+    }
+    
+    url     = Graph.domain + url;
     
     content = null;
     values  = null;

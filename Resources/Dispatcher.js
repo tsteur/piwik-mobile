@@ -54,10 +54,20 @@ Dispatcher.dispatch = function (win) {
     if (!params.view) {
         params.view = win;
     }
+    
+    if (isAndroid) { 
+        var dispatchView = params.view;
+        var tempview     = new View(params);
+        for (viewProperty in tempview) {
+            dispatchView[viewProperty] = tempview[viewProperty];
+        }
+    } else {
+        View.prototype   = params.view;
 
-    View.prototype   = params.view;
-
-    var dispatchView = new View(params);
+        var dispatchView = new View(params);
+    }
+    
+    dispatchView.init();
 
     // Ensure upper case first for controller name
     var firstUpperChar       = params.jsController.charAt(0).toUpperCase();
