@@ -58,7 +58,7 @@ function template () {
         top: top,
         left: 0,
         right: 0,
-        showVerticalScrollIndicator: false,
+        showVerticalScrollIndicator: true,
         showHorizontalScrollIndicator: false
     });
     
