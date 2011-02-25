@@ -25,7 +25,7 @@ var Graph = {};
  * 
  * @todo move this into config
  */
-Graph.colors = '684222,eede78,dfad6f,8d693f,d57474';
+Graph.colors = 'FFCC00,670001,FF6600,CC0001,FE9900';
 
 /**
  * Domain to the Google Chart API.
@@ -422,7 +422,7 @@ Graph.getOverviewLineChartUrl = function (lineValues) {
     
     var numXAxisGrids = 100 / content.numValues;
     
-    var url = Graph.domain + '?cht=ls&chco=' + Graph.colors + '&chd=t:' + content.dataPoints;
+    var url = '?cht=ls&chco=' + Graph.colors + '&chd=t:' + content.dataPoints;
     
     url    += '&chds=' + content.min + ',' + content.max;
     url    += '&chf=c,s,ffffff|bg,s,ffffff&chxt=y&chxl=0:|' + content.min + '|' + content.max + '&chxs=0,333333';
@@ -431,7 +431,7 @@ Graph.getOverviewLineChartUrl = function (lineValues) {
     content    = null;
     lineValues = null;
     
-    return url;
+    return Graph.domain + url.encodeUrlParams();
 };
 
 /**
@@ -466,7 +466,7 @@ Graph.getLineChartUrl = function (lineValues) {
     
     var numXAxisGrids = 100 / content.numValues;
     
-    var url = Graph.domain + '?cht=ls&chco=' + Graph.colors;
+    var url = '?cht=ls&chco=' + Graph.colors;
     
     url    += '&chd=t:' + content.dataPoints + '&chds=0,' + content.max + '&chdl=' + content.labels;
     url    += '&chf=c,s,ffffff|bg,s,ffffff';
@@ -476,7 +476,7 @@ Graph.getLineChartUrl = function (lineValues) {
     content    = null;
     lineValues = null;
     
-    return url;
+    return Graph.domain + url.encodeUrlParams();
 };
 
 /**
@@ -504,20 +504,11 @@ Graph.getPieChartUrl = function (values) {
     var url = '?chco=' + Graph.colors;
     url    += '&cht=p&chd=t:' + content.percentageValues + '&chdl=' + content.labels + '&chdlp=b';
     url    += '&chf=c,s,ffffff' + '|' + 'bg,s,ffffff&chl=' + content.percentageLabels;
-    
-    if ('android' === Titanium.Platform.osname) {
-        // if we do not encode the uri on android, the image will not be displayed
-        url = encodeURI(url);
-    } else {
-        // if we encode the uri on iOs it will eg. display 'Windows%20XP' instead of 'Windows XP'
-    }
-    
-    url     = Graph.domain + url;
-    
+
     content = null;
     values  = null;
     
-    return url;
+    return Graph.domain + url.encodeUrlParams();
 };
 
 /**
@@ -535,21 +526,21 @@ Graph.getPieChartUrl = function (values) {
  */
 Graph.getBarChartUrl = function (values) {
     
-    var content       = this.parseMultipleColumnsValues(values);
+    var content = this.parseMultipleColumnsValues(values);
 
     if (!content || 0 == content.numValues) {
         
         return '';
     }
 
-    var url = Graph.domain + '?chco=' + Graph.colors;
+    var url = '?chco=' + Graph.colors;
     url    += '&cht=bvs&chd=t:' + content.dataPoints + '&chds=0,' + content.max;
     url    += '&chdl=' + content.labels + '&chdlp=b' + '&chf=c,s,ffffff|bg,s,ffffff';
     
     content = null;
     values  = null;
     
-    return url;
+    return Graph.domain + url.encodeUrlParams();
 };
 
 /**
@@ -564,5 +555,7 @@ Graph.getBarChartUrl = function (values) {
  */
 Graph.getSparklineUrl = function (siteId, accessUrl, tokenAuth) {
 
-    return accessUrl + '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + tokenAuth;
+    var url = '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + tokenAuth;
+    
+    return accessUrl + url.encodeUrlParams();
 };

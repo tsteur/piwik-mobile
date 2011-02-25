@@ -56,3 +56,45 @@ String.prototype.toPiwikDate = function () {
 
     return formatDate;
 };
+
+/**
+ * Encodes url params. Use always this method instead of encodeUrI() cause it is this will work always.
+ * Uses Ti.Network.encodeURIComponent to encode the params. Currently it does not work correct if the string
+ * contains the protocol + domain.
+ *
+ * @example
+ * '?idSite=5&access[]=5'.encodeUrlParams();
+ *
+ * @returns {string}  The encoded url params
+ */
+String.prototype.encodeUrlParams = function () {
+
+    var url        = this;
+    var encodedURI = '';
+
+    if ('?' == this.substring(0, 1)) {
+        url        = url.substring(1);
+        encodedURI = '?';
+    }
+
+    var paramArray = url.split("&");
+    
+    for (var index = 0; index < paramArray.length; index++) {
+        var keyValue      = paramArray[index].split("=");
+        
+        if (keyValue[0]) {
+            keyValue[0]   = Ti.Network.encodeURIComponent(keyValue[0]);
+        }
+        
+        if (keyValue[1]) {
+            keyValue[1]   = Ti.Network.encodeURIComponent(keyValue[1]);
+        }
+        
+        paramArray[index] = keyValue.join("=");
+    }
+    
+    encodedURI = encodedURI + paramArray.join("&");
+    
+    return encodedURI;
+}
+
