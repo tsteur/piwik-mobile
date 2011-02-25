@@ -102,8 +102,8 @@ if (!isAndroid) {
         showPagingControl: false,
         left: 0,
         top: 0,
-        width: globalWin.width ? globalWin.width : globalWin.size.width,
-        height: globalWin.height ? globalWin.height : globalWin.size.height
+        width: Window.getWidth(),
+        height: Window.getHeight()
     });
 
     globalWin.add(globalScrollView);

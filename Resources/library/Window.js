@@ -72,12 +72,12 @@ Window.createMvcWindow = function (params) {
     }
         
     // increase the zIndex, ensures the next window will be displayed in front of the current window
-    Window.zIndex = Window.zIndex + 1;
-    
+    Window.zIndex = Window.zIndex + 1;    
+
     params.zIndex          = Window.zIndex;
     // .width is defined in iOS .size.width is defined in Android
-    params.width           = globalWin.width ? globalWin.width : globalWin.size.width;
-    params.height          = globalWin.height ? globalWin.height : globalWin.size.height;
+    params.width           = Window.getWidth();
+    params.height          = Window.getHeight();
     params.top             = 0;
     params.left            = 0;
     params.deleteOnScroll  = false;
@@ -113,6 +113,46 @@ Window.createMvcWindow = function (params) {
     newWin.deleteOnScroll = true;
     
     Dispatcher.dispatch(newWin);
+};
+
+/**
+ * Get the width of the current window.
+ *
+ * @returns {int} The width of the current window.
+ */
+Window.getWidth = function () {
+    
+    if (globalWin && globalWin.width) {
+    
+        return globalWin.width;
+    }
+    
+    if (globalWin && globalWin.size && globalWin.size.width) {
+    
+        return globalWin.size.width;
+    }
+    
+    return Ti.Platform.displayCaps.platformWidth;
+};
+
+/**
+ * Get the height of the current window.
+ *
+ * @returns {int} The height of the current window.
+ */
+Window.getHeight = function () {
+    
+    if (globalWin && globalWin.height) {
+    
+        return globalWin.height;
+    }
+    
+    if (globalWin && globalWin.size && globalWin.size.height) {
+    
+        return globalWin.size.height;
+    }
+    
+    return Ti.Platform.displayCaps.platformHeight;
 };
 
 /**
