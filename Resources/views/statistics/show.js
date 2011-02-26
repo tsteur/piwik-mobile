@@ -16,16 +16,17 @@
 function template () {
     var params     = this.params;
     var site       = this.site;
-    var top        = 0;
     
     this.addEventListener('dateChanged', function (event) {
 
         if (event && event.date) {
             params.date           = event.date;
         }
+        
         if (event && event.period) {
             params.period         = event.period;
         }
+        
         params.closeCurrentWindow = true;
     
         Window.createMvcWindow(params);    
@@ -39,42 +40,121 @@ function template () {
         Window.createMvcWindow(params);    
     });
 
-    var headline   = this.helper('headline', {headline: this.report ? this.report.name : '', 
-                                              showTools: true, 
-                                              date: this.date, 
-                                              period: this.period,
-                                              currentSite: site,
-                                              allowedSites: this.allowedSites});
+    var headline  = this.helper('headline', {headline: this.report ? this.report.name : '', 
+                                             showTools: true, 
+                                             date: this.date, 
+                                             period: this.period,
+                                             currentSite: site,
+                                             allowedSites: this.allowedSites});
 
     this.add(headline.subView);
-        
-    top            = headline.subView.height;
 
-    var scrollView = Titanium.UI.createScrollView({
+    var tableView = Titanium.UI.createTableView({
         width: this.width,
-        height: this.height - top,
-        contentWidth: 'auto',
-        contentHeight: 'auto',
-        top: top,
+        height: this.height - headline.subView.height,
+        top: headline.subView.height,
         left: 0,
         right: 0,
-        showVerticalScrollIndicator: true,
-        showHorizontalScrollIndicator: false
+        separatorColor: '#B8B4AB',
+        maxRowHeight: 300
     });
     
-    this.add(scrollView);
+    var tableViewRows = [];
     
-    top = 0;
+    if (!isAndroid) {
+        // pull to refresh, not supported by android
+        var pullViewHeader = Ti.UI.createView({
+            backgroundColor: config.theme.titleColor,
+            width: 320,
+            height: 60
+        });
+
+        var pullViewArrow = Ti.UI.createView({
+            backgroundImage: "images/icon/pull_arrow.png",
+            width: 23,
+            height: 60,
+            bottom: 10,
+            left: 20
+        });
+
+        var statusLabel = Ti.UI.createLabel({
+            text: _('Mobile_PullDownToRefresh'),
+            left: 55,
+            width: 200,
+            bottom: 30,
+            height: "auto",
+            color: "#ffffff",
+            textAlign: "center",
+            font: {fontSize: 13, fontWeight: "bold", fontFamily: config.theme.fontFamily},
+            shadowColor: "#999",
+            shadowOffset: {x: 0, y: 1}
+        });
+        
+        var now = new Date();
+        var lastUpdatedLabel = Ti.UI.createLabel({
+            text: String.format(_('Mobile_LastUpdated'), now.toLocaleTime()),
+            left: 55,
+            width: 200,
+            bottom: 15,
+            height: "auto",
+            color: "#ffffff",
+            textAlign: "center",
+            font: {fontSize: 12, fontFamily: config.theme.fontFamily},
+            shadowColor: "#999",
+            shadowOffset: {x: 0, y: 1}
+        });
+
+        pullViewHeader.add(pullViewArrow);
+        pullViewHeader.add(statusLabel);
+        pullViewHeader.add(lastUpdatedLabel);
+
+        tableView.headerPullView = pullViewHeader;
+
+        var pulling = false;
+
+        tableView.addEventListener('scroll', function(event) {
+            var offset = (event && event.contentOffset) ? event.contentOffset.y : 0;
+            
+            if (offset <= -65.0 && !pulling) {
+                var transform = Ti.UI.create2DMatrix();
+                transform     = transform.rotate(-180);
+                pulling       = true;
+                
+                pullViewArrow.animate({transform: transform, duration: 180});
+                statusLabel.text = _('Mobile_ReleaseToRefresh');
+                
+            } else if (pulling && offset > -65.0 && offset < 0) {
+                pulling          = false;
+                var transform    = Ti.UI.create2DMatrix();
+                
+                pullViewArrow.animate({transform: transform, duration: 180});
+                statusLabel.text = _('Mobile_PullDownToRefresh');
+            }
+        });
+
+        tableView.addEventListener('scrollEnd', function(event) {
+            if (pulling && event && event.contentOffset && event.contentOffset.y <= -65.0) {
+                params.closeCurrentWindow = true;
+
+                Window.createMvcWindow(params);
+            }
+        });
+    }
+    
+    Ui_Menu.addItem({title: _('Mobile_Refresh'), icon: 'images/icon/menu_refresh.png'}, function () {
+        params.closeCurrentWindow = true;
+        
+        Window.createMvcWindow(params);
+    });
+    
+    this.add(tableView);
     
     var dateChooser    = this.helper('parameterChooser', {date: this.date, 
                                                           period: this.period,
                                                           currentSite: site,
-                                                          top: top,
                                                           allowedSites: this.allowedSites});
     
-    scrollView.add(dateChooser.subView);
-    
-    top                = dateChooser.subView.top + dateChooser.subView.height;
+    tableViewRows.push(dateChooser.getRow());
 
     if (this.graphsEnabled && this.graphReport && this.graphData) {
      
@@ -88,12 +168,10 @@ function template () {
                  graphUrl   = Graph.getPieChartUrl(this.graphData);
          }
 
-        var graph = this.helper('graph', {title: this.report ? this.report.name : '',
-                                          graphUrl: graphUrl,
-                                          top: top});
+        var graph = this.helper('graph', {title:    this.report ? this.report.name : '',
+                                          graphUrl: graphUrl});
         
-        scrollView.add(graph.subView);
-        top       = graph.subView.top + graph.subView.height;
+        tableViewRows.push(graph.getRow());
     }
 
     var statsticTitleLabel = this.dimension;
@@ -112,10 +190,18 @@ function template () {
     
     var headlineStats  = {title: statsticTitleLabel, 
                           value: statsticValueLabel};
-                         
-    var visitorStats   = this.helper('statisticList', {values: this.reportData, 
-                                                       top: top,
+
+    var visitorStats   = this.helper('statisticList', {values:   this.reportData, 
                                                        headline: headlineStats});
+
+    tableViewRows      = tableViewRows.concat(visitorStats.getRows());
     
-    scrollView.add(visitorStats.subView);
+    if (!isAndroid) {
+        for (var index = 0; index < tableViewRows.length; index++) {
+            tableViewRows[index].selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE;
+        }
+    }
+    
+    tableView.setData(tableViewRows);
 }
+

@@ -48,25 +48,8 @@ function View_Helper_ParameterChooser () {
      */
     this.direct  = function () {
 
-        var view = Titanium.UI.createView({
-            width: this.view.width,
-            height: 40,
-            top: this.getOption('top', 0),
-            left: 0,
-            right: 0,
-            backgroundColor: '#f6f6f6',
-            zIndex: 2
-        });
-        
-        var bottomBorderView = Titanium.UI.createView({
-            height: 1,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#B8B4AB'
-        });
-        
-        view.add(bottomBorderView);
+        var view = Titanium.UI.createTableViewRow({height: 40,
+                                                   backgroundColor: '#f6f6f6'});
         
         this.addDayChooser(view);
         this.addSiteChooser(view);
@@ -76,6 +59,11 @@ function View_Helper_ParameterChooser () {
         this.initDate();
 
         return this;
+    };
+    
+    this.getRow = function () {
+        
+        return this.subView;
     };
 
     /**
@@ -102,26 +90,17 @@ function View_Helper_ParameterChooser () {
             text: ' - ',
             height: 'auto',
             width: labelWidth - 6,
-            left: 6,
+            left: isAndroid ? 5 : 10,
             color: '#996600',
             font: {fontSize: config.theme.fontSizeNormal, fontWeight: 'bold', fontFamily: config.theme.fontFamily},
             zIndex: 6,
             ellipsize: true,
             wordWrap: true
         });
-        
-        // we do not need this view, but it allows the user to easier hit the date picker
-        this.dateView = Titanium.UI.createView({height: 39,
-                                                top: 0,
-                                                left: 4,
-                                                width: labelWidth,
-                                                zIndex: 4});
 
         this.period       = this.getOption('period', this.period);
 
-        this.dateView.add(this.dateValue);
-        view.add(this.dateView);
-        this.dateView.show();
+        view.add(this.dateValue);
     };
     
     /**
@@ -148,7 +127,7 @@ function View_Helper_ParameterChooser () {
         this.siteChooser =  Titanium.UI.createLabel({
             text: currentSite.name,
             height: 'auto',
-            right: 6,
+            right: isAndroid ? 5 : 10,
             color: '#996600',
             textAlign: 'right',
             width: labelWidth - 6,
@@ -157,17 +136,8 @@ function View_Helper_ParameterChooser () {
             ellipsize: true,
             wordWrap: true
         });
-
-        // we do not need this view, but it allows the user to easier hit the site picker
-        this.siteView = Titanium.UI.createView({height: 39,
-                                                top: 0,
-                                                right: 4,
-                                                width: labelWidth,
-                                                zIndex: 8});
         
-        this.siteView.add(this.siteChooser);
-        view.add(this.siteView);
-        this.siteView.show();
+        view.add(this.siteChooser);
     };
 
     /**

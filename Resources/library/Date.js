@@ -253,3 +253,13 @@ Date.prototype.toPiwikQueryStringLastDays = function (period) {
 
     return dateString;
 };
+
+/**
+ * Convert date to a locale time format.
+ *
+ * @returns {string}  A string containing only the time. Time should be localized. 
+ */
+Date.prototype.toLocaleTime = function () {
+
+    return this.toLocaleTimeString().split('GMT')[0];
+};

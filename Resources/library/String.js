@@ -98,3 +98,13 @@ String.prototype.encodeUrlParams = function () {
     return encodedURI;
 }
 
+/**
+ * Strip whitespace from the beginning and end of a string.
+ *
+ * @returns {string}  The trimmed string
+ */
+String.prototype.trim = function () {
+
+    return this.replace (/^\s+/, '').replace (/\s+$/, '');
+}
+

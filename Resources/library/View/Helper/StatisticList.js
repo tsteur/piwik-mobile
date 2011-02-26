@@ -33,26 +33,11 @@
 function View_Helper_StatisticList () {
 
     /**
-     * Because Titanium does not have a layout manager (at least not for android) we have to count the current top
-     * position ourselves.
-     *
-     * @type int
-     */
-    this.topValue    = 0;
-
-    /**
      * The font size each label has to use. This shall ensure each label uses the same font size.
      *
      * @type int
      */
-    this.fontSize    = config.theme.fontSizeNormal;
-
-    /**
-     * The height of one row in pixel. This is needed to calculate the top position of the next view.
-     *
-     * @type int
-     */
-    this.labelHeight = 29;
+    this.fontSize    = config.theme.fontSizeNormal + 1;
 
     /**
      * The width of each left label within the statistic list.
@@ -66,13 +51,13 @@ function View_Helper_StatisticList () {
     /**
      * The width of each right label within the statistic list.
      * 
-     * 120 width - 10 left - 3 right = 107
+     * 100 width - 10 left - 3 right = 107
      *
-     * @defaults "107"
+     * @defaults "87"
      *
      * @type {Number|string}
      */
-    this.rightLabelWidth = 107;
+    this.rightLabelWidth = 87;
 
     /**
      * Creates the 'subView' container and triggers the rendering of the statisic values.
@@ -80,161 +65,109 @@ function View_Helper_StatisticList () {
      * @returns {View_Helper_ParameterChooser} An instance of the current state.
      */
     this.direct = function () {
-        
-        /**
-         * Some titles are longer than one line. To ensure the user is able to read the whole title we have to set a
-         * a higher label height. It is more a hack than a good solution. Unfortunately we can not use an 'auto' height 
-         * where the view arranges the needed height themselves because it is not possible to get the height of the
-         * whole rendered list in such a case. The view templates need the height of the rendered list (subView) for 
-         * further positioning.
-         *
-         * @todo we should think about a logic which calculates the height of each view depending on the number of 
-         *       characters and screen size. The widest charcter should be a 'w'. Depending on this width we are  
-         *       - perhaps - able to calculate a better label height. A problem is not calculateable word wraps.
-         */
-        if (330 > this.view.width) {
-            this.labelHeight = 38;
-        }
-        
+
         if (100 < parseInt(this.view.width, 10)) {  
-            this.leftLabelWidth  = parseInt(this.view.width, 10) - 120 - 30;
+            this.leftLabelWidth  = parseInt(this.view.width, 10) - 100 - 20;
         }
-
-        var view = Titanium.UI.createView({
-            width:  this.view.width,
-            height: 'auto',
-            top: this.getOption('top', 1),
-            left: 0,
-            zIndex: 2
-        });
-
-        this.renderHeadline(view);
-        this.renderList(view);
         
-        this.subView = view;
+        this.rows = [];
+
+        this.renderHeadline();
+        this.renderList();
         
         return this;
     };
+    
+    this.getRows = function () {
+    
+        return this.rows;
+    }
 
     /**
      * Adds the headline to the list if one is given.
      *
-     * @param   {Titanium.UI.View}   See {@link View_Helper#subView}
-     *
      * @type null
      */
-    this.renderHeadline = function (view) {
+    this.renderHeadline = function () {
     
         if (!this.getOption('headline', null)) {
            // add headline only if given
          
-           return view;
+           return;
         }
         
-        var headline = this.getOption('headline', {});
-    
-        var leftView = Ti.UI.createView({
-            height: this.labelHeight,
-            top: this.topValue,
-            left: 0,
-            right: 120,
-            backgroundColor: '#E4E2D7'
-        });
-
-        var rightView = Titanium.UI.createView({
-            height: this.labelHeight,
-            top: this.topValue,
-            right: 0,
-            width: 120,
-            backgroundColor: '#D5D3C8'
-        });
+        var headline    = this.getOption('headline', {});
         
+        var headlineRow = Ti.UI.createTableViewRow({backgroundColor: '#E4E2D7', 
+                                                    height: 'auto', 
+                                                    width: parseInt(this.view.width, 10)});
+
         var titleLabel = Titanium.UI.createLabel({
-            text: ' - ',
+            text: headline.title ? headline.title : ' - ',
             height: 'auto',
-            left: 10,
-            top: 4,
-            ellipsize: true,
+            left: isAndroid ? 5 : 10,
             width: this.leftLabelWidth,
             color: config.theme.titleColor,
+            top: isAndroid ? 10 : 13,
+            bottom: 10,
             font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
         });
         
         var valueLabel = Titanium.UI.createLabel({
-            text: ' - ',
+            text: headline.value ?  headline.value : ' - ',
             height: 'auto',
-            left: 10,
-            top: 4,
-            ellipsize: true,
+            right: 3,
             width: this.rightLabelWidth,
             color: config.theme.titleColor,
+            top: isAndroid ? 10 : 13,
+            bottom: 10,
             font: {fontSize: this.fontSize, fontWeight: 'bold', fontFamily: config.theme.fontFamily}
         });
-
-        if (headline.title) {
-            titleLabel.text = headline.title;
-        }
-
-        if (headline.value) {
-            valueLabel.text = headline.value;
-        }
         
-        this.topValue += this.labelHeight;
+        headlineRow.add(titleLabel);
+        headlineRow.add(valueLabel);
         
-        leftView.add(titleLabel);
-        rightView.add(valueLabel);
-        view.add(leftView);
-        view.add(rightView);
-        
-        view.height = this.topValue;
+        this.rows.push(headlineRow);
     };
 
     /**
      * Adds the statistic values to the list.
      *
-     * @param   {Titanium.UI.View}   See {@link View_Helper#subView}
-     *
      * @type null
      */
-    this.renderList = function (view) {
+    this.renderList  = function () {
     
-        var values       = this.getOption('values', []);
+        var values   = this.getOption('values', []);
     
         if (!values || !(values instanceof Array) || 0 === values.length) {
             
+            var view = Ti.UI.createTableViewRow();
+            
             var noDataInfoLabel = Titanium.UI.createLabel({
                 text: _('CoreHome_TableNoData'),
-                height: this.labelHeight,
+                height: 38,
                 left: 10,
-                top: this.topValue,
                 color: config.theme.textColor,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
             
             view.add(noDataInfoLabel);
             
-            this.topValue += this.labelHeight;
-            view.height = this.topValue + 1;
+            view.height = 38;
+            
+            this.rows.push(view);
          
            return;
         }
          
-        var color        = config.theme.textColor;
-        var leftBgColor  = null;
-        var rightBgColor = null;
+        var color    = config.theme.textColor;
+        var bgColor  = null;
 
         // needed for odd/even detection
-        var counter      = 0;
+        var counter  = 0;
         
-        var mainView = Ti.UI.createView({
-            top: this.topValue,
-            left: 0,
-            bottom: 1,
-            right: 0,
-            backgroundColor: '#f5f5f5',
-            zIndex: 1
-        });
-        view.add(mainView);
+        var topValue  = isAndroid ? 10 : 13;
+        var leftValue = isAndroid ? 5 : 10;
 
         for (var index = 0; index < values.length; index++) {
             var statistic = values[index];
@@ -242,80 +175,64 @@ function View_Helper_StatisticList () {
             if (!statistic) {
                 continue;
             }
+         
+            // @todo define config theme vars
+            bgColor     = '#f5f5f5';
+            if (counter % 2 == 1) {
+                bgColor = config.theme.backgroundColor;
+            }
+        
+            var statRow = Ti.UI.createTableViewRow({
+                height: 'auto',
+                width: parseInt(this.view.width, 10),
+                backgroundColor: bgColor
+            });
             
-            var title    = statistic.title;
+            var title    = String(statistic.title).trim();
             var value    = statistic.value;
             var logo     = null;
+            
+            if (('undefined' == typeof value) || null === value) {
+                value    = ' - ';
+            }
             
             if ('undefined' !== (typeof statistic.logo)) {
                 logo     = statistic.logo;
             }
-         
-            // @todo define config theme vars
-            leftBgcolor  = '#f5f5f5';
-            rightBgcolor = '#eeedeb';
-            
-            if (counter % 2 == 1) {
-                leftBgcolor  = config.theme.backgroundColor;
-                rightBgcolor = '#f5f5f5';
-            }
-
-            if ('#f5f5f5' != leftBgcolor) {
-                var leftView = Ti.UI.createView({
-                    height: this.labelHeight,
-                    top: this.topValue,
-                    left: 0,
-                    right: 120,
-                    backgroundColor: leftBgcolor,
-                    zIndex: 2
-                });
-                view.add(leftView);
-            }
-            
-            if ('#f5f5f5' != rightBgcolor) {
-                var rightView = Ti.UI.createView({
-                    height: this.labelHeight,
-                    top: this.topValue,
-                    right: 0,
-                    width: 120,
-                    backgroundColor: rightBgcolor,
-                    zIndex: 3
-                });
-                view.add(rightView);
-            }
-
+                
             var titleLabel = Titanium.UI.createLabel({
                 text: String(title),
                 height: 'auto',
-                left: 10,
-                top: this.topValue + 5,
+                left: leftValue,
                 width: this.leftLabelWidth,
                 color: color,
+                top: topValue, 
+                bottom: 10,
                 zIndex: 4,
-                ellipsize: true,
-                wordWrap: true,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
-            view.add(titleLabel);
+            
+            statRow.add(titleLabel);
 
             var valueLabel = Titanium.UI.createLabel({
-                text: ' - ',
+                text: String(value),
                 height: 'auto',
                 right: 3,
-                top: this.topValue + 5,
                 width: this.rightLabelWidth,
+                top: topValue, 
+                bottom: 10,
                 color: color,
                 zIndex: 5,
-                font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
+                font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily, fontWeight: 'bold'}
             });
-            view.add(valueLabel);
+            
+            statRow.add(valueLabel);
 
             if(logo) {
                 var imageView = Titanium.UI.createImageView({
                     height: statistic.logoHeight ? statistic.logoHeight : 16,
-                    image: logo,
+                    image: String(logo),
                     left: 10,
-                    top: this.topValue + 5,
                     zIndex: 6,
                     width: statistic.logoWidth ? statistic.logoWidth : 16
                 });
@@ -325,22 +242,13 @@ function View_Helper_StatisticList () {
                     titleLabel.width = this.leftLabelWidth - 25;
                 }
                 
-                view.add(imageView);
+                statRow.add(imageView);
             }
             
-            if (('undefined' !== typeof value) && null !== typeof value) {
-                valueLabel.text = "" + value;
-            }
-            
-            this.topValue += this.labelHeight;
             counter++;
+            
+            this.rows.push(statRow);
         }
-        
-        /**
-         * this is important because the view template otherwise can't access the height. the height is needed
-         * for further positioning within the view template.
-         */
-        view.height = this.topValue + 1;
     };
 }
 

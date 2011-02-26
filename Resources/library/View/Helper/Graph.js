@@ -70,29 +70,19 @@ function View_Helper_Graph () {
             return this;
         }
         
-        var view = Titanium.UI.createView({
-            height: 165,
-            top: this.getOption('top', 1),
-            width: this.view.width,
-            left: 0,
-            backgroundColor: config.theme.backgroundColor
-        });
+        var view = Titanium.UI.createTableViewRow({height: 165,
+                                                   backgroundColor: config.theme.backgroundColor});
     
         this.addGraph(view);
-        
-        var bottomBorderView = Titanium.UI.createView({
-            height: 1,
-            bottom: 0,
-            left: 0,
-            width: this.view.width,
-            backgroundColor: '#B8B4AB'
-        });
-        
-        view.add(bottomBorderView);
 
         this.subView = view;
         
         return this;
+    };
+    
+    this.getRow = function () {
+        
+        return this.subView;
     };
 
     /**
