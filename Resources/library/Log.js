@@ -172,6 +172,51 @@ Log.warn = function (message, title) {
 };
 
 /**
+ * Start profiling. Just for debugging purposes and to measure performance. Start the profiling by calling profileStart
+ * and finish the profiling by calling profileEnd.
+ *
+ * @example
+ * Log.profileStart('renderStatisticList');
+ * Log.profileStart('renderHeaderRow');
+ * Log.profileEnd('renderHeaderRow');
+ * Log.profileEnd('renderStatisticList');
+ *
+ * @param {string}  key    A key which describes the current profiling
+ *
+ * @type null
+ */
+Log.profileStart = function (key) {
+    Log['profiling' + key] = new Date().getTime();
+}
+
+/**
+ * Finish a previous started profiling. Logs needed time in ms and currently available free memory to console using
+ * warning level.
+ *
+ * @see Log#profileStart
+ *
+ * @param {string}  key    A key which describes the current profiling
+ *
+ * @type null
+ */
+Log.profileEnd = function (key) {
+    var now       = new Date().getTime();
+    
+    if ('undefined' === (typeof Log['profiling' + key]) || !Log['profiling' + key]) {
+        Titanium.API.warn('You have to call Log.profileStart("' + key + '")');
+        
+        return;
+    }
+    
+    var startTime = Log['profiling' + key];
+    
+    delete Log['profiling' + key];
+    
+    Titanium.API.warn('' + key + ': ' + (now - startTime) + 'ms');
+    Titanium.API.warn('' + key + ' Free mem: ' + (Titanium.Platform.availableMemory / 1000) + 'kb');
+}
+
+/**
  * Logs the elapsed time since the last logging call if profiling is enabled.
  * 
  * @type null
