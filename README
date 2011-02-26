@@ -19,6 +19,27 @@ Install
 =======
 See http://dev.piwik.org/trac/wiki/PiwikMobile
 
+Third-Party Components
+=======
+Name: Resources/images/icon/pull_arrow.png  
+Link: https://github.com/appcelerator/KitchenSink/tree/master/KitchenSink/Resources/images, 
+License: Apache v2 https://github.com/appcelerator/KitchenSink/blob/master/KitchenSink/LICENSE
+    
+Thanks to Champi which allowed us to use and change his great sets of Android Icons as long as Piwik Mobile is available 
+for free:
+Name: Resources/images/icon/chart_detail.png
+Name: Resources/images/icon/header_calendar.png
+Name: Resources/images/icon/header_globe.png
+Name: Resources/images/icon/header_settings.png
+Name: Resources/images/icon/menu_choosedate.png
+Name: Resources/images/icon/menu_chooseDown.png
+Name: Resources/images/icon/menu_refersh.png
+Name: Resources/images/icon/menu_settings.png
+Link: http://champi-design.deviantart.com/
+Link: http://champi-design.deviantart.com/art/Android-Mega-Pack-176417901?q=gallery%3Achampi-design&qo=7
+Link: http://champi-design.deviantart.com/art/Android-icons-174812881?q=gallery%3Achampi-design&qo=8
+Its free for personnal use, not for commercial 
+
 Contact
 =======
 http://piwik.org
