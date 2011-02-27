@@ -27,6 +27,7 @@
  *                                                     That is for the labels and for the value column.
  * @property {string}       [options.headline.title]   Optional - The headline for the label column.
  * @property {string}       [options.headline.value]   Optional - The headline for the value column.
+ * @property {boolean}      [options.showAll]          Optional - Whether show all results is activated or not
  * 
  * @augments View_Helper
  */
@@ -74,6 +75,7 @@ function View_Helper_StatisticList () {
 
         this.renderHeadline();
         this.renderList();
+        this.renderPaginator();
         
         return this;
     };
@@ -160,11 +162,11 @@ function View_Helper_StatisticList () {
            return;
         }
          
-        var color    = config.theme.textColor;
-        var bgColor  = null;
-
+        var color     = config.theme.textColor;
+        var bgColor   = null;
+        
         // needed for odd/even detection
-        var counter  = 0;
+        var counter   = 0;
         
         var topValue  = isAndroid ? 10 : 13;
         var leftValue = isAndroid ? 5 : 10;
@@ -208,7 +210,6 @@ function View_Helper_StatisticList () {
                 color: color,
                 top: topValue, 
                 bottom: 10,
-                zIndex: 4,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
             });
             
@@ -222,7 +223,6 @@ function View_Helper_StatisticList () {
                 top: topValue, 
                 bottom: 10,
                 color: color,
-                zIndex: 5,
                 font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily, fontWeight: 'bold'}
             });
             
@@ -233,12 +233,11 @@ function View_Helper_StatisticList () {
                     height: statistic.logoHeight ? statistic.logoHeight : 16,
                     image: String(logo),
                     left: 10,
-                    zIndex: 6,
                     width: statistic.logoWidth ? statistic.logoWidth : 16
                 });
                 
                 titleLabel.left      = 35;
-                if ('android' === Titanium.Platform.osname) {
+                if (this.leftLabelWidth === parseInt(this.leftLabelWidth, 10)) {
                     titleLabel.width = this.leftLabelWidth - 25;
                 }
                 
@@ -250,6 +249,40 @@ function View_Helper_StatisticList () {
             this.rows.push(statRow);
         }
     };
+    
+    this.renderPaginator = function () {
+
+        if (config.piwik.filterLimit > (this.rows.length - 1)) {
+            // a show all or show less button only makes sense if there are more or equal results than the used filter truncate value...
+        
+            return;
+        }
+        
+        var showAll = this.getOption('showAll', false);
+        
+        var paginatorRow = Ti.UI.createTableViewRow({
+            height: 'auto',
+            width: parseInt(this.view.width, 10),
+            color: config.theme.titleColor,
+            className: 'statPaginatorRow',
+            title: '',
+            font: {fontWeight: 'bold', fontFamily: config.theme.fontFamily}
+        });
+        
+        if (showAll) {
+            paginatorRow.title = _('Mobile_ShowLess');
+        } else {
+            paginatorRow.title = _('Mobile_ShowAll');
+        }
+        
+        var win = this.view;
+
+        paginatorRow.addEventListener('click', function (event) {
+            win.fireEvent('paginatorChanged', {showAll: !showAll});
+        });
+        
+        this.rows.push(paginatorRow);
+    }
 }
 
 /**

@@ -27,7 +27,8 @@ config.piwik = {
      */
     usedRow: 'nb_visits',
     defaultPeriod: 'day', 
-    defaultDate: 'yesterday'
+    defaultDate: 'yesterday',
+    filterLimit: 50
 };
 
 config.graph = {Actions: {getDownloads: {chartType: 'pie'},

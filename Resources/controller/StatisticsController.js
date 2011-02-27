@@ -25,7 +25,9 @@ function StatisticsController () {
     
         this.period       = this.getParam('period', periodSession);
         this.date         = this.getParam('date', dateSession);
-
+        this.showAll      = this.getParam('showAll', false);
+        this.view.showAll = this.showAll;
+        
         this.graphsEnabled      = Settings.getGraphsEnabled();
         this.view.graphsEnabled = this.graphsEnabled;
     };
@@ -73,6 +75,12 @@ function StatisticsController () {
                           filter_sort_order: sortOrder,
                           apiModule: report.module,
                           apiAction: report.action};
+                          
+        if (!this.showAll) {
+            parameter.filter_limit = config.piwik.filterLimit;
+        }  else {
+            parameter.filter_limit = -1;	
+        }
         
         if (this.date) {
             parameter.date  = this.date;

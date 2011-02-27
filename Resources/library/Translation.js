@@ -124,6 +124,8 @@ Translation.DEFAULT_TRANSLATION = {
     Mobile_Refresh:                                                     'Refresh',
     Mobile_ReleaseToRefresh:                                            'Release to refresh...',
     Mobile_SaveSuccessError:                                            'Please verify settings',
+    Mobile_ShowAll:                                                     'Show all',
+    Mobile_ShowLess:                                                    'Show less',
     Mobile_HttpTimeout:                                                 'HTTP Timeout',
     Mobile_HttpTimeoutInfo:                                             'increase if you receive timeout errors',
     Mobile_YouAreOffline:                                               'Sorry, you are currently offline'

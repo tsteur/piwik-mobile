@@ -28,6 +28,7 @@ function template () {
         }
         
         params.closeCurrentWindow = true;
+        params.showAll            = false;
     
         Window.createMvcWindow(params);    
     });
@@ -35,6 +36,15 @@ function template () {
     this.addEventListener('siteChanged', function (event) {
     
         params.site               = event.site;
+        params.closeCurrentWindow = true;
+        params.showAll            = false;
+    
+        Window.createMvcWindow(params);    
+    });
+    
+    this.addEventListener('paginatorChanged', function (event) {
+    
+        params.showAll            = event.showAll;
         params.closeCurrentWindow = true;
     
         Window.createMvcWindow(params);    
@@ -192,6 +202,7 @@ function template () {
                           value: statsticValueLabel};
 
     var visitorStats   = this.helper('statisticList', {values:   this.reportData, 
+                                                       showAll:  this.showAll,
                                                        headline: headlineStats});
 
     tableViewRows      = tableViewRows.concat(visitorStats.getRows());

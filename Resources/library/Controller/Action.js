@@ -88,7 +88,7 @@ function ActionController () {
      */
     this.getParam   = function (param, defaultValue) {
 
-        if (param && this.params && this.params[param]) {
+        if (param && this.params && 'undefined' !== (typeof this.params[param])) {
 
             return this.params[param];
         }
