@@ -365,7 +365,7 @@ function HttpRequest () {
             return;
         }
 
-        var requestUrl  = this.baseUrl;
+        var requestUrl  = '';
         
         if (parameter) {
             
@@ -375,6 +375,8 @@ function HttpRequest () {
                 requestUrl += paramName + '=' + parameter[paramName] + '&';
             }
         }
+        
+        requestUrl = this.baseUrl + requestUrl.encodeUrlParams();
         
         Log.debug('RequestUrl is ' + requestUrl, 'HttpRequest');
         
