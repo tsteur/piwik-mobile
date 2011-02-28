@@ -40,18 +40,19 @@ function template () {
         
         if (currentSection && currentSection !== latestSection) {
             section = Titanium.UI.createTableViewRow({height: 24,
+                                                      focusable: false,
                                                       className: 'siteSection' + index,
                                                       selectedBackgroundColor: '#B2AEA5',
                                                       backgroundColor: '#B2AEA5'});
 
             // @todo create a factory or something similar for this, eg Ui.tableViewRow.create();
-            if ('android' !== Titanium.Platform.osname) {
+            if (!isAndroid) {
                 section.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE;
             }
             
             var labelWidth  = 'auto';
             var left        = 10;
-            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.width, 10)) {
+            if (isAndroid && 100 < parseInt(this.width, 10)) {
                 // @todo set this to auto as soon as this bug is completely fixed #wrapbug
                 labelWidth  = parseInt(this.width, 10) - 50;
                 
@@ -117,7 +118,7 @@ function template () {
 
     Titanium.App.addEventListener('siteChanged', function (event) {
     
-        if (!event || !event.site) {
+        if (!event || !event.site || !tableData) {
             return;
         }
         
