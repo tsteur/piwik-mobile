@@ -8,7 +8,7 @@
 
 /**
  * @class  View helper which displays a headline. The helper includes icons which allows to navigate to the 
- *         setting tab and to close the current window (go back).
+ *         setting tab, add an account and more.
  *
  * @param    {Object}       [options]                     See {@link View_Helper#setOptions}
  * @property {string}       [options.headline=""]         Optional - The headline.

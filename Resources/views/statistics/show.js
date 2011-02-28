@@ -74,7 +74,7 @@ function template () {
     if (!isAndroid) {
         // pull to refresh, not supported by android
         var pullViewHeader = Ti.UI.createView({
-            backgroundColor: config.theme.titleColor,
+            backgroundColor: '#E2E7ED',
             width: 320,
             height: 60
         });
@@ -93,10 +93,10 @@ function template () {
             width: 200,
             bottom: 30,
             height: "auto",
-            color: "#ffffff",
+            color: "#576C89",
             textAlign: "center",
             font: {fontSize: 13, fontWeight: "bold", fontFamily: config.theme.fontFamily},
-            shadowColor: "#999",
+            shadowColor: "#fff",
             shadowOffset: {x: 0, y: 1}
         });
         
@@ -107,10 +107,10 @@ function template () {
             width: 200,
             bottom: 15,
             height: "auto",
-            color: "#ffffff",
+            color: "#576C89",
             textAlign: "center",
             font: {fontSize: 12, fontFamily: config.theme.fontFamily},
-            shadowColor: "#999",
+            shadowColor: "#fff",
             shadowOffset: {x: 0, y: 1}
         });
 
@@ -168,14 +168,14 @@ function template () {
 
     if (this.graphsEnabled && this.graphReport && this.graphData) {
      
-        var graphUrl   = null;
+        var graphUrl      = null;
          switch (this.graphReport.chartType) {
              case 'bar': 
-                 graphUrl   = Graph.getBarChartUrl(this.graphData);
+                 graphUrl = Graph.getBarChartUrl(this.graphData);
                  break;
                  
              default:
-                 graphUrl   = Graph.getPieChartUrl(this.graphData);
+                 graphUrl = Graph.getPieChartUrl(this.graphData);
          }
 
         var graph = this.helper('graph', {title:    this.report ? this.report.name : '',

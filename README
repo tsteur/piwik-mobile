@@ -22,9 +22,9 @@ See http://dev.piwik.org/trac/wiki/PiwikMobile
 Third-Party Components
 =======
 Name: Resources/images/icon/pull_arrow.png  
-Link: https://github.com/appcelerator/KitchenSink/tree/master/KitchenSink/Resources/images, 
-License: Apache v2 https://github.com/appcelerator/KitchenSink/blob/master/KitchenSink/LICENSE
-    
+Link: https://github.com/andmej/PullToRefresh
+License: https://github.com/andmej/PullToRefresh/blob/master/LICENSE
+
 Thanks to Champi which allowed us to use and change his great sets of Android Icons as long as Piwik Mobile is available 
 for free:
 Name: Resources/images/icon/chart_detail.png

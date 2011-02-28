@@ -7,10 +7,10 @@
  */
 
 /**
- * @class    View helper which displays a graph.
+ * @class    View helper which displays a graph. This helper renderes its content into a TableViewRow. 
+ *           You need a TableView therefore to display the rendered content.
  *
  * @property {Object}   options           See {@link View_Helper#setOptions}
- * @property {Int}      [options.top=1]   Optional - Top position of the resulting view
  * @property {string}   [options.title]   Optional - The title of the graph
  * @property {string}   options.graphUrl  The url to the graph without any sizes
  * 
@@ -29,50 +29,21 @@ function View_Helper_Graph () {
         
         if (!graphUrl) {
             Log.debug('No graphUrl given', 'graphHelper');
-            
-            this.subView = Titanium.UI.createView({
-                height: 40,
-                top: this.getOption('top', 1),
-                left: 1,
-                right: 1,
-                paddingBottom: 10,
-                backgroundColor: config.theme.backgroundColor
-            });
-
-            var labelWidth = 'auto';
-            if ('android' === Titanium.Platform.osname && 100 < parseInt(this.view.width, 10)) {
-                // @todo set this to auto as soon as this bug is completely fixed #wrapbug  
-                
-                labelWidth = parseInt(this.view.width, 10) - 40;
-            }
-            
-            var noDataInfoLabel = Titanium.UI.createLabel({
-                text: _('General_NoDataForGraph'),
-                height: 'auto',
-                left: 10,
-                top: 11,
-                width: labelWidth,
-                color: config.theme.textColor,
-                font: {fontSize: config.theme.fontSizeNormal, fontFamily: config.theme.fontFamily}
-            });
-       
-            var bottomBorderView = Titanium.UI.createView({
-                height: 1,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: '#B8B4AB'
-            });
-            
-            this.subView.add(noDataInfoLabel);            
-            this.subView.add(bottomBorderView);
+ 
+            this.subView = Ti.UI.createTableViewRow({height: 40, 
+                                                     title: _('General_NoDataForGraph'),
+                                                     left: 10,
+                                                     color: config.theme.textColor,
+                                                     font: {fontSize: config.theme.fontSizeNormal, 
+                                                            fontFamily: config.theme.fontFamily},
+                                                     width: parseInt(this.view.width, 10)});
             
             return this;
         }
         
         var view = Titanium.UI.createTableViewRow({height: 165,
                                                    backgroundColor: config.theme.backgroundColor});
-    
+
         this.addGraph(view);
 
         this.subView = view;
@@ -80,6 +51,11 @@ function View_Helper_Graph () {
         return this;
     };
     
+    /**
+     * Get the rendered content of this graph.
+     * 
+     * @returns Titanium.UI.TableViewRow
+     */
     this.getRow = function () {
         
         return this.subView;
@@ -92,26 +68,24 @@ function View_Helper_Graph () {
      *
      * @type null
      */
-    this.addGraph  = function (view) {
+    this.addGraph    = function (view) {
     
         // @todo can we calculate the width depending on the outer view? width is only correct under circumstances.
-        var width    = parseInt(this.view.width, 10) - 2 - 20;
-        var height   = 150;
+        var width        = parseInt(this.view.width, 10) - 2 - 20;
+        var height       = 150;
         
-        var graphUrl = this.getOption('graphUrl');
+        var graphUrl     = this.getOption('graphUrl', '');
         
-        graphUrl     = Graph.appendSize(graphUrl, width, height);
+        var fullGraphUrl = Graph.appendSize(graphUrl, width, height);
         
-        Log.debug(graphUrl, 'graph');
+        Log.debug(fullGraphUrl, 'graph');
         
         var graph = Titanium.UI.createImageView({width: width,
                                                  height: height,
                                                  top: 4,
-                                                 image: graphUrl,
+                                                 image: fullGraphUrl,
                                                  left: 10,
                                                  zIndex: 1});
-
-        var _this = this;
 
         var showDetailImage = Ti.UI.createImageView({image: 'images/icon/chart_detail.png', 
                                                      backgroundSelectedColor: '#E7E3D6',
@@ -128,7 +102,7 @@ function View_Helper_Graph () {
             Window.createMvcWindow({
                 jsController: 'chart',
                 jsAction: 'fulldetail',
-                graphUrl: _this.getOption('graphUrl')
+                graphUrl: graphUrl
             });
         });
         
@@ -136,7 +110,7 @@ function View_Helper_Graph () {
             Window.createMvcWindow({
                 jsController: 'chart',
                 jsAction: 'fulldetail',
-                graphUrl: _this.getOption('graphUrl')
+                graphUrl: graphUrl
             });
         });
         

@@ -8,7 +8,8 @@
 
 /**
  * @class   View helper which displays a list of statistics. The label is placed on the left side whereas the value
- *          is displayed on the right site. Additionally it is possible to add a headline for each column.
+ *          is displayed on the right site. Additionally it is possible to add a headline for each column. This helper
+ *          renders a list of TableViewRows. You need a TableView therefore to display the rendered content.
  * 
  * @property {Object}       options              See {@link View_Helper#setOptions}
  * @property {Array}        options.values       An array containing multiple values. Each value is represented by an 
@@ -80,6 +81,12 @@ function View_Helper_StatisticList () {
         return this;
     };
     
+    /**
+     * Get the rendered content of this statistic list.
+     * 
+     * @returns Array    A array containing all generated TableViewRows.
+     *                   ARRAY ( [int] => [TableViewRow] )
+     */
     this.getRows = function () {
     
         return this.rows;
@@ -143,21 +150,14 @@ function View_Helper_StatisticList () {
     
         if (!values || !(values instanceof Array) || 0 === values.length) {
             
-            var view = Ti.UI.createTableViewRow();
-            
-            var noDataInfoLabel = Titanium.UI.createLabel({
-                text: _('CoreHome_TableNoData'),
-                height: 38,
-                left: 10,
-                color: config.theme.textColor,
-                font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily}
-            });
-            
-            view.add(noDataInfoLabel);
-            
-            view.height = 38;
-            
-            this.rows.push(view);
+            var row = Ti.UI.createTableViewRow({height: 38, 
+                                                title: _('CoreHome_TableNoData'),
+                                                left: 10,
+                                                color: config.theme.textColor,
+                                                font: {fontSize: this.fontSize, fontFamily: config.theme.fontFamily},
+                                                width: parseInt(this.view.width, 10)});
+
+            this.rows.push(row);
          
            return;
         }

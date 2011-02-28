@@ -7,8 +7,9 @@
  */
 
 /**
- * @class   View helper which offers the possiblity to change standard parameters as described at 
- *          {@link http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters}
+ * @class   View helper which displays the current active standard parameters as described at 
+ *          {@link http://dev.piwik.org/trac/wiki/API/Reference#Standardparameters}. This helper renderes its content
+ *          into a TableViewRow. You need a TableView therefore to display the rendered content.
  * 
  * @property {Object}       [options]                 See {@link View_Helper#setOptions}
  * @property {string}       [options.period="day"]    Optional - The current active period.
@@ -61,6 +62,11 @@ function View_Helper_ParameterChooser () {
         return this;
     };
     
+    /**
+     * Get the rendered content of this parameter chooser.
+     * 
+     * @returns Titanium.UI.TableViewRow
+     */
     this.getRow = function () {
         
         return this.subView;
