@@ -45,7 +45,7 @@ function Ui_TableViewRow (params) {
     var fontSize    = 15;
     var fontWeight  = 'normal';
     
-    if ('android' !== Titanium.Platform.osname) {
+    if (!isAndroid) {
         fontSize    = 18;
         fontWeight  = 'bold';
         params.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.GRAY;
@@ -194,7 +194,7 @@ function Ui_TableViewRow (params) {
     row.changeValue(value);
     row.changeDescription(description);
     
-    if (params.onShowOptionMenu && 'android' === Titanium.Platform.osname) {
+    if (params.onShowOptionMenu && isAndroid) {
         row.addEventListener('touchstart', function (event) {
     
             if (row.accountId) {
@@ -218,7 +218,7 @@ function Ui_TableViewRow (params) {
             }
         });
         
-    } else if (params.onShowOptionMenu && 'android' !== Titanium.Platform.osname) {
+    } else if (params.onShowOptionMenu && !isAndroid) {
     
         row.addEventListener('swipe', function (event) {
             params.onShowOptionMenu.apply(row, [event]);
