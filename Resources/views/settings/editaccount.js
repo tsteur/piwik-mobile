@@ -29,6 +29,7 @@ function template () {
         height: this.height - top,
         contentWidth: 'auto',
         contentHeight: 'auto',
+        layout: 'vertical',
         top: top,
         left: 0,
         right: 0,
@@ -38,22 +39,20 @@ function template () {
     
     this.add(scrollView);
     
-    top = 10;
     var labelUrl    = Titanium.UI.createLabel({
         text: _('Mobile_AccessUrlLabel'),
         height: 22,
         left: left,
-        top: top,
+        top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 14}
+        font: {fontSize: 15}
     });
     
-    top = top + 26;
     var piwikUrl    = Titanium.UI.createTextField({
         color: config.theme.textColor,
-        height: 37,
-        top: top,
+        height: isAndroid ? 'auto' : 40,
+        top: 4,
         left: left,
         right: left,
         value: '',
@@ -62,86 +61,77 @@ function template () {
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
         autocorrect: false,
         focusable: true,
-        borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-        font: {fontSize: 14}
+        borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED    
     });
     
     // There's a bug in Titanium 1.4 and previous versions when using autocapitalizations UrlKeyboard will not work. But
     // autocapitalization is deactivated on url keyboards on android by default.
-    if ('android' !== Titanium.Platform.osname) {
+    if (!isAndroid) {
         piwikUrl.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
     }
     
-    top = top + 42;
     var labelAnonymous  = Titanium.UI.createLabel({
         text: _('Mobile_AnonymousAccess'),
         height: 22,
         left: left,
-        top: top,
+        top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 14}
+        font: {fontSize: 15}
     });
     
-    top = top + 28;
     var piwikAnonymous = Titanium.UI.createSwitch({
-        top:  top,
-        height: 27,
+        top:  6,
+        height: isAndroid ? 'auto' : 30,
         left: left,
         value: false,
         focusable: true
     });
     
-    top = top + 32;
     var labelUser  = Titanium.UI.createLabel({
         text: _('Login_Login'),
         height: 22,
         left: left,
-        top: top,
+        top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 14}
+        font: {fontSize: 15}
     });
     
-    top = top + 26;
     var piwikUser = Titanium.UI.createTextField({
         color: config.theme.textColor,
-        height: 37,
+        height: isAndroid ? 'auto' : 40,
         value: '',
-        top: top,
+        top: 4,
         left: left,
         right: left,
         keyboardType: isAndroid ? Titanium.UI.KEYBOARD_URL : Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType: Titanium.UI.RETURNKEY_NEXT,
         autocorrect: false,
         focusable: true,
-        borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-        autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
-        font: {fontSize: 14}
+        borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
     });
     
-    if ('android' !== Titanium.Platform.osname) {
+    if (!isAndroid) {
         // it seems that Titanium ignores 'autocapitalization' paramater on textfield creation and iOS devices
         piwikUser.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
     }
     
-    top = top + 42;
     var labelPassword  = Titanium.UI.createLabel({
         text: _('Login_Password'),
         height: 22,
         left: left,
-        top: top,
+        top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 14}
+        font: {fontSize: 15}
     });
-    
-    top = top + 26;
+   
     var piwikPassword = Titanium.UI.createTextField({
         value: '',
         color: config.theme.textColor,
-        height: 37,
-        top: top,
+        height: isAndroid ? 'auto' : 40,
+        top: 4,
         left: left,
         right: left,
         passwordMask: true,
@@ -150,25 +140,38 @@ function template () {
         keyboardType: isAndroid ? Titanium.UI.KEYBOARD_URL : Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType: Titanium.UI.RETURNKEY_DONE,
         borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-        autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
-        font: {fontSize: 14}
+        autocorrect: false
     });
+    
+    if (!isAndroid) {
+        // it seems that Titanium ignores 'autocapitalization' paramater on textfield creation and iOS devices
+        piwikPassword.autocapitalization = Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE;
+    }
     
     piwikAnonymous.addEventListener('change', function (event) {
 
+        // forces hide keyboard
+        piwikUser.blur();
+        piwikUrl.blur();
+        piwikPassword.blur();
+        
         if (event.value) {
             // anonymous is activated
         
-            piwikUser.value       = '';
-            piwikUser.enabled     = false;
-            piwikPassword.value   = '';
-            piwikPassword.enabled = false;
+            piwikUser.value        = '';
+            piwikUser.enabled      = false;
+            piwikUser.editable     = false;
+            piwikPassword.value    = '';
+            piwikPassword.enabled  = false;
+            piwikPassword.editable = false;
         
         } else {
             // anonymous is deactivated
             
-            piwikUser.enabled     = true;
-            piwikPassword.enabled = true;
+            piwikUser.enabled      = true;
+            piwikUser.editable     = true;
+            piwikPassword.enabled  = true;
+            piwikPassword.editable = true;
         
         }
     });
@@ -176,33 +179,14 @@ function template () {
     // @todo set keyboard: Titanium.UI.KEYBOARD_PASSWORD should be supported in Titanium Mobile 1.5.0
 
     var win = this.view;
-
-    top = top + 47;
-    var separator = Titanium.UI.createView({
-        height: 1,
-        left: 0,
-        right: 0,
-        top: top,
-        borderWidth: 0,
-        backgroundColor: '#908A7C',
-        zIndex: 3
-    });
     
-    top = top + 14;
     var save  = Titanium.UI.createButton({
         title:  _('General_Save'),
-        height: 37,
+        height: isAndroid ? 'auto' : 40,
         width:  205,
         left:   left,
-        top:    top,
-        color: '#D17D2A',
-        backgroundColor: '#F6F6F6',
-        borderRadius: config.theme.borderRadius,
-        selectedColor: config.theme.titleColor,
-        focusable: true,
-        borderColor: '#CACACA',
-        borderWidth: 1,
-        font: {fontSize: 14, fontWeight: 'bold'}
+        top:    13,
+        focusable: true
     });
     
     // restore values
@@ -405,21 +389,28 @@ function template () {
     scrollView.add(piwikUser);
     scrollView.add(labelPassword);
     scrollView.add(piwikPassword);
-    scrollView.add(separator);
     scrollView.add(save);
     
-    if ('android' == Ti.Platform.osname) {
+    if (isAndroid) {
         // this ensures the user can scroll and the textfield is visilbe while entering something via keyboard
         // otherwise the keyboard maybe hides the text field(s)
-        scrollView.contentHeight = (save.top + save.height) * 2;
+        if (save.center && save.center.y) {
+            scrollView.contentHeight = parseInt(save.center.y, 10) * 2;
+        } else {
+            scrollView.contentHeight = 2000;
+        }
         
         piwikPassword.addEventListener('focus', function (event) {
-            scrollView.scrollTo(0, labelPassword.top);
+            if (labelPassword.center && labelPassword.center.y) {
+                scrollView.scrollTo(0, parseInt(labelPassword.center.y, 10) - 20);
+            }
         });
         
         piwikUser.addEventListener('focus', function (event) {
-            scrollView.scrollTo(0, labelUser.top);
-        });
+            if (labelUser.center && labelUser.center.y) {
+                scrollView.scrollTo(0, parseInt(labelUser.center.y, 10) - 20);
+            }
+        }); 
     }
     
     piwikUrl.addEventListener('return', function(event){
@@ -449,3 +440,4 @@ function template () {
         save.fireEvent('click', myEvent);
     });
 }
+
