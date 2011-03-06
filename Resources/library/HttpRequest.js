@@ -429,6 +429,12 @@ function HttpRequest () {
 
         if (this.numReceivedCalls == this.registeredCalls.length) {
 
+            // we have to remove each registered call from the stack. otherwise each already sent request will be fired
+            // multiple times - on each sendRegisteredCalls()
+            while (this.registeredCalls && this.registeredCalls.length) {
+                this.registeredCalls.pop();
+            }
+            
             if (this.onAllResultsReceivedCallback) {
                 try {
                     this.onAllResultsReceivedCallback.apply(this.context, []);
@@ -437,18 +443,11 @@ function HttpRequest () {
                 }
             }
             
-            // we have to remove each registered call from the stack. otherwise each already sent request will be fired
-            // multiple times - on each sendRegisteredCalls()
-            while (this.registeredCalls && this.registeredCalls.length) {
-                this.registeredCalls.pop();
-            }
-            
             this.numReceivedCalls             = 0;
             this.onAllResultsReceivedCallback = null;
             this.registeredCalls              = [];
             this.errorMessageSent             = false;
             this.context                      = null;
-
         }
         
     };

@@ -90,6 +90,16 @@ function IndexController () {
 
         piwik.sendRegisteredCalls(function () {
 
+            if (this.sites && 1 == this.sites.length && this.sites[0]) {
+                // jump directly to site view
+                // @see http://dev.piwik.org/trac/ticket/2120
+                Window.createMvcWindow({jsController: 'site',
+                                        jsAction: 'index',
+                                        closeCurrentWindow: true,
+                                        site: this.sites[0]});
+                return;
+            }
+
             this.view.sites = this.sites;
             
             Cache.set('piwik_sites_allowed', this.sites, null);

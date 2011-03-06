@@ -16,6 +16,17 @@
 function template () {
      
     var headline       = this.helper('headline', {headline: '' + (this.site ? this.site.name : '')});
+
+    if (Window.views && 1 == Window.views.length) {
+        /**
+         * display SettingsChooser if this window is the first screen... this is the case if the user has access to only
+         * one site. In such a case the app does not open the "available websites" view. It opens this view directly. 
+         * So the user has not to press his only available site. If we do not add the settings chooser here, a iOS user 
+         * will not have the possibilty to change settings
+         * @see http://dev.piwik.org/trac/ticket/2120
+         */
+        headline.addSettingsChooser();
+    }
     
     this.add(headline.subView);
 
