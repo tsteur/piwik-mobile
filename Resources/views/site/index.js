@@ -39,38 +39,10 @@ function template () {
         currentSection = report.category;
         
         if (currentSection && currentSection !== latestSection) {
-            section = Titanium.UI.createTableViewRow({height: 24,
-                                                      focusable: false,
-                                                      className: 'siteSection' + index,
-                                                      selectedBackgroundColor: '#B2AEA5',
-                                                      backgroundColor: '#B2AEA5'});
-
-            // @todo create a factory or something similar for this, eg Ui.tableViewRow.create();
-            if (!isAndroid) {
-                section.selectionStyle = Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE;
-            }
+        
+            section = Ui_TableViewSection({title: String(report.category), 
+                                           className: 'siteSection' + index});
             
-            var labelWidth  = 'auto';
-            var left        = 10;
-            if (isAndroid && 100 < parseInt(this.width, 10)) {
-                // @todo set this to auto as soon as this bug is completely fixed #wrapbug
-                labelWidth  = parseInt(this.width, 10) - 50;
-                
-                // android does the positioning relative within the tableview row, not absolute
-                left        = 0;
-            }
-
-            headerLabel = Titanium.UI.createLabel({
-                text: String(report.category),
-                height: 24,
-                width: labelWidth,
-                textAlign: 'left',
-                color: '#ffffff',
-                left: left,
-                font: {fontSize: 14, fontFamily: config.theme.fontFamily}
-            });
-
-            section.add(headerLabel);
             tableData.push(section);
         }
         

@@ -104,7 +104,7 @@ function template () {
                 if(availableLanguageOptions[event.index] == _this.availableLanguages[langCode]) {
                     Settings.setLanguage(langCode);
         
-                    Translation.fetchTranslations();
+                    Translation.loadTranslations();
                     break;
                 }
             }
@@ -255,12 +255,6 @@ function template () {
                                       onClick: onChangeDefaultReportDate,
                                       value: defaultReportDateLabel, 
                                       hasChild: true}),
-                     Ui_TableViewRow({className: 'settingsSection1',
-                                      title: _('Mobile_HttpTimeout'),
-                                      description: _('Mobile_HttpTimeoutInfo'),
-                                      onClick: onChangeHttpTimeout,
-                                      value: Math.round(Settings.getHttpTimeout() / 1000) + 's',
-                                      hasChild: true}),
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_MultiChartLabel'),
                                       description: _('Mobile_MultiChartInfo'),
@@ -269,7 +263,15 @@ function template () {
                      Ui_TableViewRow({className: 'settingsSection2',
                                       title: _('Mobile_EnableGraphsLabel'),
                                       onClick: onChangeGraphs,
-                                      hasCheck: Boolean(this.graphsEnabled)})];
+                                      hasCheck: Boolean(this.graphsEnabled)}),
+                     Ui_TableViewSection({className: 'settingsHeadline1',
+                                          title: _('Mobile_Advanced')}),
+                     Ui_TableViewRow({className: 'settingsSection1',
+                                      title: _('Mobile_HttpTimeout'),
+                                      description: _('Mobile_HttpTimeoutInfo'),
+                                      onClick: onChangeHttpTimeout,
+                                      value: Math.round(Settings.getHttpTimeout() / 1000) + 's',
+                                      hasChild: true})];
     
     var top       = headline.subView.height + headline.subView.top;
     var height    = this.height - top;

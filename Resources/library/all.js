@@ -7,19 +7,20 @@
  *
  * @fileOverview Includes all available library files in a suitable order.
  */
-Titanium.include('/library/Log.js');
-Titanium.include('/library/Session.js');
-Titanium.include('/library/Window.js');
-Titanium.include('/library/View.js');
-Titanium.include('/library/View/Helper.js');
-Titanium.include('/library/Controller/Action.js');
-Titanium.include('/library/HttpRequest.js');
-Titanium.include('/library/Cache.js');
-Titanium.include('/library/Settings.js');
-Titanium.include('/library/Translation.js');
-Titanium.include('/library/Graph.js');
-Titanium.include('/library/Date.js');
-Titanium.include('/library/String.js');
-Titanium.include('/library/Ui/Picker.js');
-Titanium.include('/library/Ui/TableViewRow.js');
-Titanium.include('/library/Ui/Menu.js');
+Titanium.include('/library/Log.js',
+                 '/library/Session.js',
+                 '/library/Window.js',
+                 '/library/View.js',
+                 '/library/View/Helper.js',
+                 '/library/Controller/Action.js',
+                 '/library/HttpRequest.js',
+                 '/library/Cache.js',
+                 '/library/Settings.js',
+                 '/library/Translation.js',
+                 '/library/Graph.js',
+                 '/library/Date.js',
+                 '/library/String.js',
+                 '/library/Ui/Picker.js',
+                 '/library/Ui/TableViewRow.js',
+                 '/library/Ui/TableViewSection.js',
+                 '/library/Ui/Menu.js');
