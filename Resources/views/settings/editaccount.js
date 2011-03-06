@@ -221,7 +221,7 @@ function template () {
             
             var alertDialog = Titanium.UI.createAlertDialog({
                 title: _('General_Error'),
-                message: _('SitesManager_ExceptionInvalidUrl').replace('%s', url),
+                message: String.format(_('SitesManager_ExceptionInvalidUrl'), '' + url),
                 buttonNames: [_('General_Ok')]
             });
             
@@ -234,7 +234,7 @@ function template () {
 
             var alertDialog = Titanium.UI.createAlertDialog({
                 title: _('General_Error'),
-                message: _('General_Required').replace('%s', _('Login_Login')),
+                message: String.format(_('General_Required'), _('Login_Login')),
                 buttonNames: [_('General_Ok')]
             });
 
@@ -247,7 +247,7 @@ function template () {
 
             var alertDialog = Titanium.UI.createAlertDialog({
                 title: _('General_Error'),
-                message: _('General_Required').replace('%s', _('Login_Password')),
+                message: String.format(_('General_Required'), _('Login_Password')),
                 buttonNames: [_('General_Ok')]
             });
 
@@ -304,7 +304,7 @@ function template () {
                     if (!_this.piwik.errorMessageSent) {
                         var alertDialog = Titanium.UI.createAlertDialog({
                             title: _('General_Error'),
-                            message: _('General_ExceptionPrivilegeAtLeastOneWebsite').replace('%s', _('UsersManager_PrivView')),
+                            message: String.format(_('General_ExceptionPrivilegeAtLeastOneWebsite'), _('UsersManager_PrivView')),
                             buttonNames: [_('General_Ok')]
                         });
             

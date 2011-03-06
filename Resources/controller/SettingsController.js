@@ -185,7 +185,7 @@ function SettingsController () {
                     // @todo create translation key
                     var alertDialog = Titanium.UI.createAlertDialog({
                         title: _('General_PleaseUpdatePiwik'),
-                        message: _('General_PiwikXIsAvailablePleaseNotifyPiwikAdmin').replace('%s', _this.latestVersion),
+                        message: String.format(_('General_PiwikXIsAvailablePleaseNotifyPiwikAdmin'), '' + _this.latestVersion),
                         buttonNames: [_('General_Ok')]
                     });
 

@@ -236,7 +236,7 @@ function HttpRequest () {
 
                         var alertDialog = Titanium.UI.createAlertDialog({
                             title: _('General_Error'),
-                            message: _('General_RequestTimedOut').replace('%s', _this.baseUrl),
+                            message: String.format(_('General_RequestTimedOut'), '' + _this.baseUrl),
                             buttonNames: [_('General_Ok')]
                         });
 
@@ -251,7 +251,7 @@ function HttpRequest () {
                         
                         var alertDialog = Titanium.UI.createAlertDialog({
                             title: _('General_Error'),
-                            message: _('General_NotValid').replace('%s', _this.baseUrl),
+                            message: String.format(_('General_NotValid'), '' + _this.baseUrl),
                             buttonNames: [_('General_Ok')]
                         });
                         
