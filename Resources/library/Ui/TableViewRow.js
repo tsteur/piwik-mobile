@@ -42,7 +42,7 @@ function Ui_TableViewRow (params) {
         params = {};
     }
 
-    var fontSize    = 15;
+    var fontSize    = 16;
     var fontWeight  = 'normal';
     
     if (!isAndroid) {
@@ -53,7 +53,7 @@ function Ui_TableViewRow (params) {
 
     params.color = config.theme.textColor;
     params.font  = {fontFamily: config.theme.fontFamily, fontSize: fontSize, fontWeight: fontWeight};
-    
+
     var title       = params.title || null;
     var value       = params.value || null;
     var description = params.description || null;

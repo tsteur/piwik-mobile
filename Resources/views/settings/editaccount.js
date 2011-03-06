@@ -46,7 +46,7 @@ function template () {
         top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 15}
+        font: {fontSize: 16}
     });
     
     var piwikUrl    = Titanium.UI.createTextField({
@@ -77,7 +77,7 @@ function template () {
         top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 15}
+        font: {fontSize: 16}
     });
     
     var piwikAnonymous = Titanium.UI.createSwitch({
@@ -95,7 +95,7 @@ function template () {
         top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 15}
+        font: {fontSize: 16}
     });
     
     var piwikUser = Titanium.UI.createTextField({
@@ -124,7 +124,7 @@ function template () {
         top: 10,
         width: labelWidth,
         color: config.theme.titleColor,
-        font: {fontSize: 15}
+        font: {fontSize: 16}
     });
    
     var piwikPassword = Titanium.UI.createTextField({
