@@ -23,7 +23,7 @@
             <string>de</string>
             <key>Values</key>
             <array>
-                <string>am</string>
+                <string>ar</string>
                 <string>be</string>
                 <string>bg</string>
                 <string>id</string>
@@ -39,9 +39,12 @@
                 <string>fi</string>
                 <string>fr</string>
                 <string>gl</string>
+                <string>he</string>
                 <string>hu</string>
+                <string>is</string>
                 <string>it</string>
                 <string>ja</string>
+                <string>ka</string>
                 <string>ko</string>
                 <string>lt</string>
                 <string>nb</string>
@@ -56,6 +59,7 @@
                 <string>sq</string>
                 <string>sr</string>
                 <string>sv</string>
+                <string>te</string>
                 <string>th</string>
                 <string>tr</string>
                 <string>uk</string>
@@ -64,7 +68,7 @@
             </array>
             <key>Titles</key>
             <array>
-                <string>አማርኛ</string>
+                <string>العربية</string>
                 <string>Беларуская</string>
                 <string>Български</string>
                 <string>Bahasa Indonesia</string>
@@ -80,9 +84,12 @@
                 <string>Suomi</string>
                 <string>Français</string>
                 <string>Galego</string>
+                <string>עברית</string>
                 <string>Magyar</string>
+                <string>Íslenska</string>
                 <string>Italiano</string>
                 <string>日本語</string>
+                <string>ქართული</string>
                 <string>한국어</string>
                 <string>Lietuvių</string>
                 <string>Norsk (bokmål)</string>
@@ -97,6 +104,7 @@
                 <string>Shqip</string>
                 <string>Srpski</string>
                 <string>Svenska</string>
+                <string>తెలుగు</string>
                 <string>ไทย</string>
                 <string>Türkçe</string>
                 <string>Українська</string>

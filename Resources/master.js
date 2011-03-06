@@ -8,9 +8,9 @@
  * @fileOverview This is the main window. Every variable defined in this file is a global variable and available in each
  *               file and context. Be careful defining variables therefore.
  */
-Titanium.include('/config.js');
-Titanium.include('/library/all.js');
-Titanium.include('/Dispatcher.js');
+Titanium.include('/config.js', 
+                 '/library/all.js', 
+                 '/Dispatcher.js');
 
 /**
  * True if the current platform is Android, false otherwise. This variable is available everywhere / all contexts.
@@ -131,6 +131,8 @@ if (!isAndroid) {
         Window.close();
     });
 }
+
+Translation.loadTranslations();
 
 // save default period and date in session on app start. so we only have to work with session when we want to access 
 // chosen period/date.

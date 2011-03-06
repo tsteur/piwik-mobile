@@ -21,15 +21,18 @@ for I in `find ../Resources/ -name "*.js" -type f` ;
 
 done
 
-echo "merge following files into all.js"
+echo "updating languages"
+./updatelanguagefiles.py 
 
-echo '' > ../Resources/library/all.js;
+## echo "merge following files into all.js"
 
-for file in $files
-do 
-echo $file
-cat ../Resources$file >> ../Resources/library/all.js
-done 
+## echo '' > ../Resources/library/all.js;
+
+## for file in $files
+## do 
+## echo $file
+## cat ../Resources$file >> ../Resources/library/all.js
+## done 
 
 echo "removing wrong app logo if exists"
 

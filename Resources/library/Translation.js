@@ -111,6 +111,7 @@ Translation.DEFAULT_TRANSLATION = {
     General_PleaseUpdatePiwik:                                          'Please update your Piwik',
     General_RequestTimedOut:                                            'A data request to %s timed out. Please try again.',
     Mobile_AddAccount:                                                  'Add account',
+    Mobile_Advanced:                                                    'Advanced',
     Mobile_AnonymousAccess:                                             'Anonymous access',
     Mobile_AccessUrlLabel:                                              'Piwik Access Url',
     Mobile_ChooseHttpTimeout:                                           'Choose HTTP timeout value',
@@ -142,7 +143,6 @@ Translation.DEFAULT_TRANSLATION = {
  * @constant
  */
 Translation.AVAILABLE_LANGUAGES = {
-    am:         'አማርኛ',
     be:         'Беларуская',
     bg:         'Български',
     ca:         'Català',
@@ -160,6 +160,7 @@ Translation.AVAILABLE_LANGUAGES = {
     hu:         'Magyar',
     id:         'Bahasa Indonesia',
     it:         'Italiano',
+    is:         '\u00cdslenska',
     ja:         '日本語',
     ko:         '한국어',
     lt:         'Lietuvių',
@@ -175,12 +176,20 @@ Translation.AVAILABLE_LANGUAGES = {
     sq:         'Shqip',
     sr:         'Srpski',
     sv:         'Svenska',
-    th:         'ไทย',
     tr:         'Türkçe',
     uk:         'Українська',
     'zh-cn':    '简体中文',
     'zh-tw':    '台灣語'
 };
+
+// these languages are not supported / does not work on android
+if ('android' !== Titanium.Platform.osname) {
+    Translation.AVAILABLE_LANGUAGES.ar = '\u0627\u0644\u0639\u0631\u0628\u064a\u0629';
+    Translation.AVAILABLE_LANGUAGES.ka = '\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8';
+    Translation.AVAILABLE_LANGUAGES.he = '\u05e2\u05d1\u05e8\u05d9\u05ea';
+    Translation.AVAILABLE_LANGUAGES.te = '\u0c24\u0c46\u0c32\u0c41\u0c17\u0c41';
+    Translation.AVAILABLE_LANGUAGES.th = 'ไทย';
+}
 
 /**
  * Returns the translation for the given key if one exists or the key itself if not.
@@ -194,22 +203,6 @@ Translation.AVAILABLE_LANGUAGES = {
  */
 Translation.get  = function (key) {
 
-    // verify translation is loaded each time
-    if(!Translation.translations && Translation.getLocale()) {
-        var language = Translation.getLocale();
-    
-        if ('en' == language) {
-            // never fetch english translations
-            Translation.translations = Translation.DEFAULT_TRANSLATION;
-        } else {
-            Translation.translations  = Cache.get('translations_' + language);
-        }
-        
-        if (!Translation.translations || Cache.KEY_NOT_FOUND == Translation.translations) {
-            Translation.fetchTranslations();
-        }
-    } 
-    
     if (Translation.translations && Translation.translations[key]) {
         
         return Translation.translations[key];
@@ -275,148 +268,22 @@ Translation.getPeriod = function (period, plural) {
  * @todo implement a getMobileTranslations in LanguageManager that only returns required values? and load only 
  *       strings that are required for mobile version. saves us a lot of data transfer.
  */
-Translation.fetchTranslations = function () {
+Translation.loadTranslations = function () {
 
-    if (Translation.areCached()) {
-        
+    var locale = Translation.getLocale();
+    
+    if (!Translation.AVAILABLE_LANGUAGES || !Translation.AVAILABLE_LANGUAGES[locale]) {
+    
         return;
     }
     
-    var locale     = Translation.getLocale();
-    
-    var parameters = {module:       'API',
-                      method:       'LanguagesManager.getTranslationsForLanguage',
-                      format:       'json',
-                      token_auth:   Settings.getPiwikUserAuthToken(),
-                      languageCode: locale};
-                      
-    loadFile('/model/AccountModel.js');
-    
-    var accountManager = new AccountModel();
-    var accounts       = accountManager.getAccounts();
-    
-    var piwikUrl       = 'http://demo.piwik.org/';
-    
-    // try to use a configured accessUrl 
-    if (accounts && 0 < accounts.length) {
-        for (var index = 0; index < accounts.length; index++) {
-            if (!accounts[index] || !Boolean(accounts[index].active) || !accounts[index].accessUrl) {
-                continue;
-            }
-            
-            piwikUrl = accounts[index].accessUrl;
-            break;
-        }
+    try {
+        Titanium.include('/i18n/' + locale  + '.js' );
+    } catch (e) {
+        Log.error('Failed to load translations for locale ' + locale, 'Translation');
     }
-    
-    var request    = new HttpRequest();
-    
-    request.setBaseUrl(piwikUrl);
-    request.handleAs = 'json';
-    
-    request.handle(parameters, function (response, parameter) {
         
-        Translation.saveTranslation(response, parameters.languageCode);
-        
-        Titanium.App.fireEvent('translationsLoaded', {});
-        
-    });
-};
-
-/**
- * Checks whether translations of a chosen language are already cached.
- * 
- * @see Settings.getLanguage
- *
- * @returns {boolean} true if the translations are already cached, false otherwise.
- */
-Translation.areCached = function () {
-    var language             = Translation.getLocale();
-    
-    Translation.translations = Cache.get('translations_' + language);
-    
-    if (!Translation.translations) {
-    
-        return false;
-    }
-    
-    if (Cache.KEY_NOT_FOUND == Translation.translations) {
-        
-        return false;
-    }
-    
-    return true;
-};
-
-/**
- * Arranges the storage of all needed translations in cache for a later usage (beyond application sessions). Stores
- * only needed translations/keys which are defined in {@link Translation#DEFAULT_TRANSLATION}
- *
- * @param    {Array}    An array containing multiple translations in the following format:
- *                      Array (
- *                          [int] => Object (
- *                                     [label] => [The translation key]
- *                                     [value] => [The value of the translated key]
- *                          )
- *                      )
- * @param   {string}    locale          The locale which the translations belong to.
- *
- * @type null
- */
-Translation.saveTranslation = function (translations, locale) {
-    
-    translations             = Translation.filterTranslations(translations);
-    
-    Translation.translations = translations;
-    
-    if (locale && translations) {
-        Cache.set('translations_' + locale, translations, null);
-    }
-    
-    translations = null;
-};
-
-/**
- * Removes unneeded keys from translations. 
- * 
- * @param    {Array}    An array containing multiple translations in the following format:
- *                      Array (
- *                          [int] => Object (
- *                                     [label] => [The translation key]
- *                                     [value] => [The value of the translated key]
- *                          )
- *                      )
- *                      Considers a label as a needed translation only if there is a property in
- *                      {@link Translation#DEFAULT_TRANSLATION} having the same value.
- *
- * @returns  {Object}   An object containing only the needed translations, see {@link Translation#translations}.
- */
-Translation.filterTranslations = function (translations) {
-
-    if (!translations || !(translations instanceof Array) || !translations.length) {
-    
-        return {};
-    }
-
-    var neededTranslations = {};
-    
-    var key;
-    
-    for(var index = 0; index < translations.length; index++) {
-        if (!translations[index] || !translations[index].label || !translations[index].value) {
-            continue;
-        }
-    
-        key = translations[index].label;
-    
-        if(Translation.DEFAULT_TRANSLATION[key]) {
-            neededTranslations[key] = translations[index].value;
-        }
-    }
-    
-    translations = null;
-    
-    return neededTranslations;
+    Titanium.App.fireEvent('translationsLoaded', {});
 };
 
 /**
