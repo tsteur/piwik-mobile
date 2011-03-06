@@ -20,6 +20,48 @@ Titanium.include('/config.js',
 var isAndroid = ('android' === Ti.Platform.osname);
 
 /**
+ * Displays an error message to the user. Uses an alert dialog to display the error message and contact information.
+ * 
+ * @param {Error|string|number}  [exception]   An instance of an error object or any string/number. Should identify the
+ *                                             error
+ * 
+ * @example
+ * showErrorMessageToUser(Error('push() is not defined in HttpRequest'))
+ * showErrorMessageToUser('push() is not defined in HttpRequest')
+ * showErrorMessageToUser()
+ */
+function showErrorMessageToUser (exception) {
+    var message = "Please, contact mobile@piwik.org or visit http://piwik.org/mobile\n";
+    
+    message += "Error: ";
+    if ('undefined' !== (typeof exception) && exception) {
+        message += exception.toString();
+        Log.warn(exception.toString());
+    } else {
+        message += 'Unknown';
+    }
+    
+    message += "\nPlease, provide the following information:\n";
+    message += "System: " + Titanium.Platform.name + ' ' + Titanium.Platform.version + "\n";
+    
+    message += String.format("Piwik Mobile Version: %s - %s %s\n", 
+                             '' + Titanium.App.version, '' + Titanium.version, '' + Titanium.buildHash);
+    message += "Available memory " + Titanium.Platform.availableMemory + "\n";
+    
+    var caps =  Titanium.Platform.displayCaps;
+    message += String.format("Resolution: %sx%s %s (%s) \n", 
+                             '' + caps.platformWidth, '' + caps.platformHeight, '' + caps.density, '' + caps.dpi);
+
+    var alertDialog = Titanium.UI.createAlertDialog({
+        title: "An error occurred",
+        message: message,
+        buttonNames: ['OK']
+    });
+    
+    alertDialog.show();
+};
+
+/**
  * Includes a file by using Titanium.include. The difference is that this method works like an include_once.
  * 
  * @param {string}  file   The path and name of the file
@@ -38,7 +80,12 @@ function loadFile(file) {
         return;
     }
     
-    Titanium.include(file);
+    try {
+        Titanium.include(file);
+    } catch (exception) {
+        showErrorMessageToUser(exception);
+    }
+    
     this.loadedFiles[file] = true;
 }
 
@@ -63,7 +110,11 @@ function loadView (file) {
         return this.loadedFiles[file];
     }
 
-    Titanium.include(file);
+    try {
+        Titanium.include(file);
+    } catch (exception) {
+        showErrorMessageToUser(exception);
+    }
 
     if ('undefined' !== typeof template && template) {
         this.loadedFiles[file] = template;

@@ -70,49 +70,55 @@ Window.createMvcWindow = function (params) {
     if (params.view) {
         delete params.view;
     }
+    
+    try {
+            
+        // increase the zIndex, ensures the next window will be displayed in front of the current window
+        Window.zIndex = Window.zIndex + 1;    
+
+        params.zIndex          = Window.zIndex;
+        // .width is defined in iOS .size.width is defined in Android
+        params.width           = Window.getWidth();
+        params.height          = Window.getHeight();
+        params.top             = 0;
+        params.left            = 0;
+        params.deleteOnScroll  = false;
+        params.backgroundColor = config.theme.backgroundColor;
+
+        var newWin             = Titanium.UI.createView(params);
         
-    // increase the zIndex, ensures the next window will be displayed in front of the current window
-    Window.zIndex = Window.zIndex + 1;    
-
-    params.zIndex          = Window.zIndex;
-    // .width is defined in iOS .size.width is defined in Android
-    params.width           = Window.getWidth();
-    params.height          = Window.getHeight();
-    params.top             = 0;
-    params.left            = 0;
-    params.deleteOnScroll  = false;
-    params.backgroundColor = config.theme.backgroundColor;
-
-    var newWin             = Titanium.UI.createView(params);
-    
-    newWin.params = params;
-    
-    if (params.closeAllPreviousOpenedWindows) {
-        while (Window.views && Window.views.length) {
-            Window.close(Window.views.pop(), true);
+        newWin.params = params;
+        
+        if (params.closeAllPreviousOpenedWindows) {
+            while (Window.views && Window.views.length) {
+                Window.close(Window.views.pop(), true);
+            }
         }
-    }
+            
+        if (params.closeCurrentWindow && Window.views && Window.views.length) {
+            Window.close(Window.views.pop(), true);
+        } 
         
-    if (params.closeCurrentWindow && Window.views && Window.views.length) {
-        Window.close(Window.views.pop(), true);
-    } 
+        if (Window.getCurrentWindow()) {
+            Window.getCurrentWindow().fireEvent('blur', {source: newWin, type:'blur'});
+        }
+        
+        if ('undefined' != (typeof globalScrollView) && globalScrollView) {
+            globalScrollView.addView(newWin);
+            globalScrollView.scrollToView(newWin);
+        } else {
+            globalWin.add(newWin);
+        }
+        
+        Window.views.push(newWin);
+        
+        newWin.deleteOnScroll = true;
+        
+        Dispatcher.dispatch(newWin);
     
-    if (Window.getCurrentWindow()) {
-        Window.getCurrentWindow().fireEvent('blur', {source: newWin, type:'blur'});
+    } catch (exception) {
+        showErrorMessageToUser(exception);
     }
-    
-    if ('undefined' != (typeof globalScrollView) && globalScrollView) {
-        globalScrollView.addView(newWin);
-        globalScrollView.scrollToView(newWin);
-    } else {
-        globalWin.add(newWin);
-    }
-    
-    Window.views.push(newWin);
-    
-    newWin.deleteOnScroll = true;
-    
-    Dispatcher.dispatch(newWin);
 };
 
 /**

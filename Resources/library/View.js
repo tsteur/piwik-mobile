@@ -302,6 +302,8 @@ function View (params) {
         } catch (exception) {
             Log.warn('An error occurred while rendering view helper ' + helper + ':' + exception.message, 'View');
             
+            showErrorMessageToUser(exception);
+            
             return helperInstance;
         }
     };
@@ -355,6 +357,8 @@ function View (params) {
             
         } catch (e) {
             Log.warn('An error occurred while trying to render view ' + e.message, 'View');
+            
+            showErrorMessageToUser(e);
         }
     };
 }

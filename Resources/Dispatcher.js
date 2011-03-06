@@ -106,8 +106,9 @@ Dispatcher.dispatch = function (win) {
 
             } catch (e) {
             
-                // @todo implement an error controller
                 Log.warn('An error occured in action ' + params.jsAction + ': ' + e.message, 'Dispatcher');
+                
+                showErrorMessageToUser(e);
             }
             
         } else {

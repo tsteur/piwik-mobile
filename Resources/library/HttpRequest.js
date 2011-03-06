@@ -337,6 +337,8 @@ function HttpRequest () {
                         callback.apply(_this.context, [response, parameter]);
                     } catch (e) {
                         Log.warn('Failed to call callback method: ' + e.message, 'HttpRequest');
+                        
+                        showErrorMessageToUser(e);
                     }
                 }
                 
@@ -440,6 +442,8 @@ function HttpRequest () {
                     this.onAllResultsReceivedCallback.apply(this.context, []);
                 } catch (e) {
                     Log.debug('Failed to call allResultsReceivedCallback: ' + e.message, 'HttpRequest');
+                    
+                    showErrorMessageToUser(e);
                 }
             }
             
