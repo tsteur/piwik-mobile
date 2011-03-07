@@ -90,6 +90,7 @@ function View_Helper_Graph () {
         var showDetailImage = Ti.UI.createImageView({image: 'images/icon/chart_detail.png', 
                                                      backgroundSelectedColor: '#E7E3D6',
                                                      backgroundFocusedColor: '#E7E3D6',
+                                                     backgroundColor: '#ffffff',
                                                      focusable: true,
                                                      bottom: 8, 
                                                      right: 8, 

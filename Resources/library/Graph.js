@@ -504,6 +504,7 @@ Graph.getPieChartUrl = function (values) {
     var url = '?chco=' + Graph.colors;
     url    += '&cht=p&chd=t:' + content.percentageValues + '&chdl=' + content.labels + '&chdlp=b';
     url    += '&chf=c,s,ffffff' + '|' + 'bg,s,ffffff&chl=' + content.percentageLabels;
+    url    += '&chdls=000000';
 
     content = null;
     values  = null;
