@@ -88,8 +88,8 @@ function View_Helper_Graph () {
                                                  zIndex: 1});
 
         var showDetailImage = Ti.UI.createImageView({image: 'images/icon/chart_detail.png', 
-                                                     backgroundSelectedColor: '#E7E3D6',
-                                                     backgroundFocusedColor: '#E7E3D6',
+                                                     backgroundSelectedColor: '#FFC700',
+                                                     backgroundFocusedColor: '#FFC700',
                                                      backgroundColor: '#ffffff',
                                                      focusable: true,
                                                      bottom: 8, 
