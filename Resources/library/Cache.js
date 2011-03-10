@@ -133,7 +133,8 @@ Cache.get = function (key) {
 
         // do not invalidate the cache cause of a version mismatch if the key starts with account. Otherwise the 
         // previous created accounts will no longer be available and the user has to setup the accounts again
-        if ((!cacheEntry.version || Titanium.App.version !== cacheEntry.version) && 'account' != key.substr(0,7)) {
+        if ((!cacheEntry.version || Titanium.App.version !== cacheEntry.version) 
+             && 0 !== key.indexOf(Cache._addCacheKeyPrefix('account'))) {
 
             Log.debug('Cache invalid because of new app version' + Titanium.App.version, 'Cache');
         
