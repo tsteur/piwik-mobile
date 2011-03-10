@@ -30,6 +30,11 @@ function StatisticsController () {
         
         this.graphsEnabled      = Settings.getGraphsEnabled();
         this.view.graphsEnabled = this.graphsEnabled;
+        
+        this.deactivateChart    = {VisitFrequency_get: true,
+                                   UserSettings_getPlugin: true,
+                                   VisitsSummary_get: true,
+                                   Goals_get: true};
     };
 
     /**
@@ -117,7 +122,7 @@ function StatisticsController () {
             this.view.reportMetadata = response.reportMetadata;
         });
         
-        if (this.graphsEnabled) {
+        if (this.graphsEnabled && (!this.deactivateChart || !this.deactivateChart[report.uniqueId])) {
             
             var graphReport = {chartType: 'pie'};
             if (config.graph[report.module] && config.graph[report.module][report.action]) {
