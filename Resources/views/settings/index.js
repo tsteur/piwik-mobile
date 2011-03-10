@@ -240,6 +240,16 @@ function template () {
         
         timeoutDialog.show();
     };
+    
+    var onShowHelpAbout = function () {
+        Window.createMvcWindow({jsController: 'help',
+                                jsAction:     'about'});
+    };
+    
+    var onShowHelpFeedback = function () {
+        Window.createMvcWindow({jsController: 'help',
+                                jsAction:     'feedback'});
+    };
 
     var tableData = [Ui_TableViewRow({className: 'settingsSection1',
                                       title: _('UsersManager_ManageAccess'),
@@ -271,7 +281,15 @@ function template () {
                                       description: _('Mobile_HttpTimeoutInfo'),
                                       onClick: onChangeHttpTimeout,
                                       value: Math.round(Settings.getHttpTimeout() / 1000) + 's',
-                                      hasChild: true})];
+                                      hasChild: true}),
+                     Ui_TableViewSection({className: 'settingsHeadline1',
+                                          title: _('Mobile_Help')}),
+                     Ui_TableViewRow({className: 'settingsSection1',
+                                      title: String.format(_('General_AboutPiwikX'), 'Mobile'),
+                                      onClick: onShowHelpAbout}),
+                     Ui_TableViewRow({className: 'settingsSection1',
+                                      title: _('General_GiveUsYourFeedback'),
+                                      onClick: onShowHelpFeedback})];
     
     var top       = headline.subView.height + headline.subView.top;
     var height    = this.height - top;
