@@ -33,44 +33,6 @@ function template () {
     });
     this.add(scrollView);
     
-    var piwik = Ti.UI.createLabel({text: "Piwik - Open Source Web Analytics", 
-                                   color: config.theme.textColor,
-                                   textAlign: 'left',
-                                   height: 'auto',
-                                   top: 5, left: 5, right: 5});
-    scrollView.add(piwik);
-    
-    var copyright = Ti.UI.createLabel({text: "Copyright © 2011 The Piwik Team.", 
-                                       color: config.theme.textColor,
-                                       textAlign: 'left',
-                                       height: 'auto',
-                                       top: 5, left: 5, right: 5});
-    scrollView.add(copyright);  
-      
-    var teamLink = Ti.UI.createLabel({text: "http://piwik.org/the-piwik-team/", 
-                                       color: config.theme.titleColor,
-                                       textAlign: 'left',
-                                       height: 'auto',
-                                       top: 5, left: 5, right: 5});
-    teamLink.addEventListener('click', function () {
-        Titanium.Platform.openURL('http://piwik.org/the-piwik-team/');
-    });
-    scrollView.add(teamLink);
-      
-    var author = Ti.UI.createLabel({text: 'Individual contributions, components, and libraries are copyright their respective authors.', 
-                                    color: config.theme.textColor,
-                                    textAlign: 'left',
-                                    height: 'auto',
-                                    top: 5, left: 5, right: 5});
-    scrollView.add(author);
-    
-    var piwikLicense = Ti.UI.createLabel({text: 'Piwik Mobile is free software released under the GNU General Public License v3 or later license.', 
-                                          color: config.theme.textColor,
-                                          textAlign: 'left',
-                                          height: 'auto',
-                                          top: 5, left: 5, right: 5});
-    scrollView.add(piwikLicense);
-    
     var piwikOrgLink = Ti.UI.createLabel({text: 'Website: http://piwik.org', 
                                          focusable: true,
                                          top: 5, left: 5, right: 5,
@@ -92,8 +54,8 @@ function template () {
         Titanium.Platform.openURL('http://dev.piwik.org/svn/mobile');
     });
     scrollView.add(piwikDevLink);
-    
-    var gplContent = Ti.UI.createWebView({url: 'gpl-v3.0.txt', height: 'auto'});
+
+    var gplContent = Ti.UI.createWebView({url: 'license.html', height: 'auto', top: 8, left: 0, right: 0});
     scrollView.add(gplContent);
 }
 
