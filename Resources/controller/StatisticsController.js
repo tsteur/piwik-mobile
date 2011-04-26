@@ -34,7 +34,8 @@ function StatisticsController () {
         this.deactivateChart    = {VisitFrequency_get: true,
                                    UserSettings_getPlugin: true,
                                    VisitsSummary_get: true,
-                                   Goals_get: true};
+                                   Goals_get: true,
+                                   'Goals_get_idGoal--X': true};
     };
 
     /**
@@ -73,7 +74,7 @@ function StatisticsController () {
         
         if (report.dimension) {
             this.view.dimension   = report.dimension;
-        }        
+        }
         
         var parameter  = {idSite: this.view.site.idsite, 
                           date: 'today', 
@@ -81,6 +82,15 @@ function StatisticsController () {
                           apiModule: report.module,
                           apiAction: report.action};
                           
+        
+        if(report.parameters) {
+            for(var index in report.parameters) {
+                parameter[index] = report.parameters[index];
+            }
+            // Small hack for graphs to be disabled correctly
+            report.uniqueId = report.uniqueId.replace(/--[^_]/, '--X');
+        }
+        
         if (!this.showAll) {
             parameter.filter_limit = config.piwik.filterLimit;
         }  else {
@@ -177,7 +187,7 @@ function StatisticsController () {
         if (report && report.metrics) {
             if (!report.metrics[sortOrder]) {
                 // define another sortOrder if our prefered sortOrder is not available
-                for (var metricName in report.metrics) {
+                for (var metricName in report.metrics) {
                     sortOrder = metricName;
                 }
             }
@@ -217,7 +227,7 @@ function StatisticsController () {
                     label = response.reportMetadata[index].shortLabel;
                 }
                 
-                if (22 < label.length ) {
+                if (22 < label.length ) {
                     label = label.substr(0, 10) + '...' + label.substr(label.length - 10, 10);
                 }
 
@@ -308,12 +318,12 @@ function StatisticsController () {
             return '';
         }
         
-        if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
+        if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
             
             return accessUrl;
         }
         
-        if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
+        if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
             var lastSlash = accessUrl.lastIndexOf('/');
             accessUrl     = accessUrl.substr(0, lastSlash + 1);
             

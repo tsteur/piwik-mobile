@@ -32,7 +32,7 @@ function SiteController () {
         
         if (cachedReportData 
             && (cachedReportData instanceof Array) 
-            && 0 < cachedReportData.length) {
+            && 0 < cachedReportData.length) {
             
             this.view.availableReports = cachedReportData;
             
@@ -45,7 +45,7 @@ function SiteController () {
         var accountManager = this.getModel('Account');
         var account        = accountManager.getAccountById(site.accountId);
                
-        piwik.registerCall('API.getReportMetadata', {}, account, function (reportMetaData) {
+        piwik.registerCall('API.getReportMetadata', {idSites: site.idsite}, account, function (reportMetaData) {
         
             if (!reportMetaData) {
                 reportMetaData = [];
