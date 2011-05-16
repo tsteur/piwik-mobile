@@ -6,7 +6,7 @@
 # createnightbuild.sh <path_to_titanium_sdk> <path_to_androidsdk> <path_to_project_trunk> <location_of_android_keystore_file> <keystore_password> <keystore_alias> <distribution_location>
 #
 # Example:
-# ./createnightlybuild.sh /home/user/.titanium/mobilesdk/linux/1.6.0 /opt/android-sdk /home/user/piwik/svn/mobile/trunk /home/user/piwik/android.keystore "secret" "alias" /home/user/desktop
+# ./createnightlybuild.sh /home/user/.titanium/mobilesdk /opt/android-sdk /home/user/piwik/svn/mobile/trunk /home/user/piwik/android.keystore "secret" "alias" /home/user/desktop
 # 
 # Link: http://piwik.org
 # License: http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
@@ -30,4 +30,4 @@ KEYSTORE_ALIAS=$6
 BUILD_TARGET=$7
 
 echo "create nightly build"
-$PATH_TITANIUM_SDK/android/builder.py distribute "Piwik Mobile" $PATH_ANDROID_SDK $PATH_PROJECT_TRUNK "org.piwik.mobile" $KEYSTORE_FILE $KEYSTORE_PASSWORD $KEYSTORE_ALIAS $BUILD_TARGET 4
+$PATH_TITANIUM_SDK/linux/1.7.0/android/builder.py distribute "Piwik Mobile" $PATH_ANDROID_SDK $PATH_PROJECT_TRUNK "org.piwik.mobile" $KEYSTORE_FILE $KEYSTORE_PASSWORD $KEYSTORE_ALIAS $BUILD_TARGET 4
