@@ -22,6 +22,6 @@
     wordWrap: false;
     color: '#ffffff';
     minimumFontSize: '12dp';
-    fontSize: '21dp';
-    fontFamily: 'Arial';
+    font-size: '21dp';
+    font-family: 'Arial';
 }
