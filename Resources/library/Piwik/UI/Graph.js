@@ -21,7 +21,6 @@
  * 
  * @augments Piwik.UI.View
  */
-
 Piwik.UI.Graph = function () {
 
     /**
@@ -81,6 +80,11 @@ Piwik.UI.Graph = function () {
         var fullGraphUrl = graph.appendSize(graphUrl, width, height);
         
         Piwik.Log.debug(fullGraphUrl, 'Piwik.UI.Graph::addGraph');
+
+        if (Piwik.isAndroid) {
+            width  += 'dp';
+            height += 'dp';
+        }
         
         var graph = Ti.UI.createImageView({width: width,
                                            height: height,
