@@ -15,6 +15,7 @@ tableviewrow {
     font-size: 18;
     font-weight: 'bold';
     height: 'auto';
+    selectionStyle: 2;
 }
 
 .tableViewSection {
@@ -70,6 +71,19 @@ tableviewrow {
     height: 'auto';
     left: 10;
     top: 34;
+    bottom: 11;
+    color: '#808080';
+    ellipsize: true;
+    wordWrap: false;
+}
+
+#tableViewRowDescriptionLabelvertical {
+    font-size: 13;
+    textAlign: 'left';
+    width: 'auto';
+    height: 'auto';
+    left: 10;
+    top: 4;
     bottom: 11;
     color: '#808080';
     ellipsize: true;

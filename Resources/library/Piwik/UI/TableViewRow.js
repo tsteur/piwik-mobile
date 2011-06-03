@@ -15,12 +15,12 @@
  * @param  {Object}   [params]                    See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
  * @param  {string}   [params.value]              Optional. Displays a value within the row.
  * @param  {string}   [params.description]        Optional. Displays a description within the row.
+ * @param  {string}   [params.layout]             Optional. 'vertical' if a vertical layout shall be used. Use it only
+ *                                                if you don't set a value.
  * @param  {Object}   [params.rightImage]         Optional. An image to render in the right image area of the row cell.
  * @param  {string}   [params.rightImage.url]     The url (local or remote) to the right image.
  * @param  {number}   [params.rightImage.width]   The width of the right image.
  * @param  {number}   [params.rightImage.height]  The height of the right image.
- * @param  {Object}   [params.leftImage]          Optional, an image to render in the left image area of the row cell.
- * @param  {string}   [params.leftImage.url]      The local url to the left image.
  *
  * @example
  * var row = Piwik.Ui.createTableViewRow({title: 'Language',
@@ -48,23 +48,16 @@ Piwik.UI.TableViewRow = function () {
             params = {};
         }
 
-        if (Piwik.isIos) {
-            // @todo define this in jss
-            params.selectionStyle = Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY;
-        }
-
         var title       = params.title || null;
         var value       = params.value || null;
         var description = params.description || null;
         var rightImage  = params.rightImage || null;
-        var leftImage   = params.leftImage || null;
 
         // we handle those parameters ourselves... therefore we delete them and don't pass them to TableViewRow creation
         delete params.title;
         delete params.value;
         delete params.description;
         delete params.rightImage;
-        delete params.leftImage;
 
         var row = Ti.UI.createTableViewRow(params);
 
@@ -102,7 +95,7 @@ Piwik.UI.TableViewRow = function () {
 
                 this.descriptionLabel = Ti.UI.createLabel({
                     text: description,
-                    id: 'tableViewRowDescriptionLabel'
+                    id: 'tableViewRowDescriptionLabel' + (params.layout ? params.layout : '')
                 });
 
                 this.add(this.descriptionLabel);
@@ -122,7 +115,7 @@ Piwik.UI.TableViewRow = function () {
         /** @memberOf Titanium.UI.TableViewRow */
         row.changeValue = function (value) {
 
-            if (!this.valueLabel && (value || '' === value)) {
+            if (!this.valueLabel && (value || '' === value || 0 === value)) {
 
                 this.valueLabel = Ti.UI.createLabel({
                     text: value,
@@ -131,7 +124,7 @@ Piwik.UI.TableViewRow = function () {
 
                 this.add(this.valueLabel);
 
-            } else if (this.valueLabel && (value || '' === value)) {
+            } else if (this.valueLabel && (value || '' === value || 0 === value)) {
 
                 this.valueLabel.text = value;
 
@@ -179,11 +172,6 @@ Piwik.UI.TableViewRow = function () {
                                                        image: rightImage.url,
                                                        id: 'tableViewRowRightImage'});
             row.add(rowRightImage);
-        }
-
-        if (leftImage && leftImage.url) {
-
-            row.leftImage = leftImage.url;
         }
 
         return row;
