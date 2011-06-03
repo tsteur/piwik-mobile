@@ -21,7 +21,7 @@
 }
 
 .graphShowDetailImage {
-    image: 'images/icon/chart_detail.png';
+    image: 'images/chart_detail.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     backgroundColor: '#ffffff';
