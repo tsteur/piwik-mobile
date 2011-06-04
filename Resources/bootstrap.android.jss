@@ -152,7 +152,7 @@
 }
 
 .settingsTableViewRowHasChild {
-
+    hasChild: true;
 }
 
 .settingsTableViewRowHasCheck{
