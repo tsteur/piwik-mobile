@@ -495,6 +495,22 @@ Piwik.Network.StatisticsRequest = function () {
             
                 reportRow.push(row);
             }
+            
+        } else if (response && response.reportData && (response.reportData instanceof Object)) {
+            // since Piwik Server 1.5.0: for reports with no dimensions, like VisitsSummary.get
+
+            for (var key in response.reportData) {
+
+                var label = key;
+                if (response.columns && response.columns[key]) {
+                    label = response.columns[key];
+                }
+                
+                var value = response.reportData[key];
+
+                var row   = {title: label, value: value};
+                reportRow.push(row);
+            }
         }
         
         return reportRow;

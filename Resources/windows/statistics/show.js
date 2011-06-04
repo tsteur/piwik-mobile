@@ -151,8 +151,12 @@ function window (params) {
             statsticValueLabel = _('General_Value');
         }
 
-        var headlineStats = {title: statsticTitleLabel,
+        var headlineStats = null;
+        if (statsticTitleLabel && statsticValueLabel) {
+            // do not display headline for reports with no dimensions like 'VisitsSummary.get'
+            headlineStats = {title: statsticTitleLabel,
                              value: statsticValueLabel};
+        }
 
         var visitorStats  = Piwik.UI.createStatisticList({values:   event.reportData,
                                                           showAll:  event.showAll,
