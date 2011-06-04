@@ -356,12 +356,15 @@ Piwik.Network.HttpRequest = function () {
                      * 'No wrapped connection'    -> don't know what this exactly means
                      * 'Adapter is detached'      -> don't know what this exactly means
                      */
+                    if (!e.error) {
+                        e.error = 'Unknown';
+                    }
                         
                     this.errorMessageSent = true;
 
                     var alertDialog = Ti.UI.createAlertDialog({
                         title: _('General_Error'),
-                        message: _('General_ErrorRequest'),
+                        message: _('General_ErrorRequest') + ' Error Code: ' + e.error,
                         buttonNames: [_('General_Ok')]
                     });
 
