@@ -8,6 +8,7 @@
 #datePickerView {
     height: '300dp';
     width: '275dp';
+    layout: 'vertical';
 }
 
 #datePickerDatePicker {
@@ -15,7 +16,7 @@
     left: '7dp';
 }
 
-#datePickerPeriodSelector {
+#datePickerPeriodPicker {
     left: '7dp';
     bottom: '2dp';
     selectionIndicator: true;
