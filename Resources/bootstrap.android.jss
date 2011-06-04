@@ -108,7 +108,7 @@
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
-    font-size: '13dp';
+    font-size: '14dp';
 }
 
 #giveFeedbackReportBugInfoLabel {
@@ -120,7 +120,7 @@
     height: 'auto';
     text-align: 'left';
     font-weight: 'normal';
-    font-size: '13dp';
+    font-size: '14dp';
 }
 
 .giveFeedbackDeviceInfoLabel {
@@ -130,7 +130,7 @@
     right: '5dp';
     height: 'auto';
     text-align: 'left';
-    font-size: '13dp';
+    font-size: '14dp';
 }
 
 #giveFeedbackMadeByCommunityLabel {
@@ -141,7 +141,7 @@
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
-    font-size: '13dp';
+    font-size: '14dp';
 }
 
 /**
