@@ -54,6 +54,16 @@ Piwik.Network.RequestPool = function () {
     this.numReceivedCalls = 0;
 
     /**
+     * This property is set to true as soon as an error message was sent to the user. Regardless of which attached
+     * requests had an error. We do not want to inform the user more than once if an error occurs.
+     *
+     * @default "false"
+     *
+     * @type boolean
+     */
+    this.errorMessageSent = false;
+
+    /**
      * Sets (overwrites) the context.
      *
      * @param   {Object}     context   A given callback method will be executed in this context. This means you
@@ -94,6 +104,7 @@ Piwik.Network.RequestPool = function () {
         
         var call = null;
         var that = this;
+        that.errorMessageSent = false;
         
         for (var index = 0; index < this.attachedRequests.length; index++) {
             call = this.attachedRequests[index];
@@ -101,6 +112,18 @@ Piwik.Network.RequestPool = function () {
             call.onload = function () {
                 that.verifyAllResultsReceived();
             };
+
+            // this makes sure an error will be displayed only once, even if all attached requests fail.
+            call.onDisplayErrorAllowed = function () {
+
+                if (!that.errorMessageSent) {
+                    that.errorMessageSent = true;
+                    
+                    return true;
+                }
+
+                return false;
+            }
 
             if (call.send) {
                 call.send();

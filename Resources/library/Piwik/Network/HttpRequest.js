@@ -285,7 +285,7 @@ Piwik.Network.HttpRequest = function () {
 
         Piwik.Log.warn(e, 'Piwik.Network.HttpRequest::error');
 
-        if (e && e.error && '' !== e.error && !this.errorMessageSent && this.sendErrors) {
+        if (e && e.error && '' !== e.error && this.displayErrorAllowed()) {
 
             if ('Host is unresolved' == e.error.substr(0, 18)) {
                 // convert error message "Host is unresolved: notExistingDomain.org:80" to: "Host is unresolved"
@@ -385,6 +385,32 @@ Piwik.Network.HttpRequest = function () {
         if (this.onload) {
             this.onload();
         }
+    };
+
+    /**
+     * Detects whether it is ok to display an error message. 
+     *
+     * @returns {boolean} true if we are allowed to display an error message, false otherwise.
+     */
+    this.displayErrorAllowed = function () {
+        if (!this.sendErrors) {
+            // displaying errors are not allowed for this request
+
+            return false;
+        }
+
+        if (this.errorMessageSent) {
+            // an error message was already displayed. Do not display an error again.
+
+            return false;
+        }
+
+        if (this.onDisplayErrorAllowed) {
+
+            return this.onDisplayErrorAllowed();
+        }
+
+        return true;
     };
 
     /**

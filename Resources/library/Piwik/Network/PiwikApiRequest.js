@@ -183,7 +183,7 @@ Piwik.Network.PiwikApiRequest = function () {
         if (response && (response instanceof Object) && response.result && 'error' == response.result) {
             // the piwik response contains an error
             
-            if (this.errorMessageSent || !this.sendErrors) {
+            if (!this.displayErrorAllowed()) {
                 // verify whether we are authorized to display an error message
                 
                 return false;
