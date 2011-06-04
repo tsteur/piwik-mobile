@@ -191,9 +191,11 @@ function window () {
     this.addEventListener('focusWindow', function () {
         // update account list whenever window gets the focus (for example after saving an account). Makes sure an
         // previously added account is directly visible.
-        tableview.setData([]);
-        
-        that.open();
+        if (tableview.data && tableview.data.length) {
+
+            tableview.setData([]);
+            that.open();
+        }
     });
 
     /**

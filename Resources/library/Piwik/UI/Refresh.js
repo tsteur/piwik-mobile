@@ -116,8 +116,6 @@ Piwik.UI.Refresh = function () {
         var tableView  = this.getParam('tableView');
         tableView.setContentInsets({top: 60});
 
-        this.fireEvent('onRefresh', {type: 'onRefresh'});
-
         var now                      = new Date();
         this.lastUpdatedLabel.text   = String.format(_('Mobile_LastUpdated'), now.toLocaleTime());
         this.statusLabel.text        = _('Mobile_Reloading');
@@ -126,6 +124,8 @@ Piwik.UI.Refresh = function () {
         this.pullViewArrow.transform = Ti.UI.create2DMatrix();
         
         this.actInd.show();
+
+        this.fireEvent('onRefresh', {type: 'onRefresh'});
     };
 
     /**

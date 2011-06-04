@@ -74,6 +74,11 @@ function window () {
      */
     this.addWindow = function (newWin) {
 
+        var currentWindow = this.getCurrentWindow();
+        if (currentWindow) {
+            currentWindow.fireEvent('blurWindow', {});
+        }
+
         newWin.fireEvent('focusWindow', {});
 
         Piwik.UI.currentWindow = newWin;

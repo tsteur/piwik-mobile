@@ -59,13 +59,34 @@ function window (params) {
 
     tableview.addEventListener('click', function (event) {
 
-        if (!event || !event.rowData || !event.rowData.report) {
+        if (event && event.rowData && event.rowData.action) {
+
+            switch (event.rowData.action) {
+                case 'live':
+                        
+                    Piwik.UI.createWindow({url: 'statistics/live.js',
+                                           site: site,
+                                           autoRefresh: true});
+                    break;
+                
+                case 'visitorlog':
+
+                    Piwik.UI.createWindow({url: 'statistics/visitorlog.js',
+                                           site: site});
+
+                break;
+
+            }
+
             return;
         }
 
-        Piwik.UI.createWindow({url: 'statistics/show.js',
-                               report: event.rowData.report,
-                               site: site});
+        if (event && event.rowData && event.rowData.report) {
+            Piwik.UI.createWindow({url: 'statistics/show.js',
+                                   report: event.rowData.report,
+                                   site: site});
+        }
+
     });
 
     refresh.addEventListener('onRefresh', function () {
@@ -108,6 +129,14 @@ function window (params) {
             
             return;
         }
+
+        tableData.push(Piwik.UI.createTableViewRow({title:       _('Live_VisitorsInRealTime'),
+                                                    action:      'live',
+                                                    className:   'reportTableViewRow'}));
+
+        tableData.push(Piwik.UI.createTableViewRow({title:       _('Live_VisitorLog'),
+                                                    action:      'visitorlog',
+                                                    className:   'reportTableViewRow'}));
 
         for (var index = 0; index < event.availableReports.length; index++) {
             report = event.availableReports[index];

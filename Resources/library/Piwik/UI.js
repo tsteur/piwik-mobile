@@ -121,6 +121,10 @@ Piwik.UI.createWindow = function (params) {
         // (async if possible).
         newWin.open(params);
 
+        if (newWin.focus) {
+            newWin.focus();
+        }
+
     } catch (exception) {
 
         var uiError = Piwik.UI.createError({exception: exception});
@@ -320,6 +324,66 @@ Piwik.UI.createMenu = function (params) {
 Piwik.UI.createRefresh = function (params) {
 
     var instance = Piwik.require('UI/Refresh');
+    instance.setParams(params);
+    instance.init();
+
+    return instance;
+};
+
+/**
+ * Creates a new visitor overview instance.
+ *
+ * @see Piwik.UI.VisitorOverview
+ *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.VisitorOverview.
+ *
+ * @type Piwik.UI.VisitorOverview
+ *
+ * @returns The created visitor overview instance.
+ */
+Piwik.UI.createVisitorOverview = function (params) {
+
+    var instance = Piwik.require('UI/VisitorOverview');
+    instance.setParams(params);
+    instance.init();
+
+    return instance;
+};
+
+/**
+ * Creates a new visitor instance.
+ *
+ * @see Piwik.UI.Visitor
+ *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Visitor.
+ *
+ * @type Piwik.UI.Visitor
+ *
+ * @returns The created visitor instance.
+ */
+Piwik.UI.createVisitor = function (params) {
+
+    var instance = Piwik.require('UI/Visitor');
+    instance.setParams(params);
+    instance.init();
+
+    return instance;
+};
+
+/**
+ * Creates a new live overview instance.
+ *
+ * @see Piwik.UI.LiveOverview
+ *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.LiveOverview.
+ *
+ * @type Piwik.UI.LiveOverview
+ *
+ * @returns The created live overview instance.
+ */
+Piwik.UI.createLiveOverview = function (params) {
+
+    var instance = Piwik.require('UI/LiveOverview');
     instance.setParams(params);
     instance.init();
 

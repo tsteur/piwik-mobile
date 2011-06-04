@@ -10,6 +10,9 @@
 @import "parameterinfo.android.jss";
 @import "statisticlist.android.jss";
 @import "datepicker.android.jss";
+@import "liveoverview.android.jss";
+@import "visitoroverview.android.jss";
+@import "visitor.android.jss";
 
 #activityWaitIndicator {
     height: '40dp';
@@ -105,7 +108,7 @@
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
-    font-family: 'Arial';
+    font-size: '13dp';
 }
 
 #giveFeedbackReportBugInfoLabel {
@@ -117,7 +120,7 @@
     height: 'auto';
     text-align: 'left';
     font-weight: 'normal';
-    font-family: 'Arial';
+    font-size: '13dp';
 }
 
 .giveFeedbackDeviceInfoLabel {
@@ -127,7 +130,7 @@
     right: '5dp';
     height: 'auto';
     text-align: 'left';
-    font-family: 'Arial';
+    font-size: '13dp';
 }
 
 #giveFeedbackMadeByCommunityLabel {
@@ -138,7 +141,7 @@
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
-    font-family: 'Arial';
+    font-size: '13dp';
 }
 
 /**
@@ -224,4 +227,29 @@
 #statisticsTableView {
     maxRowHeight: '300dp';
     separatorColor: '#B8B4AB';
+}
+
+/**
+ * window statistics/live.js
+ */
+#liveTableView {
+}
+
+/**
+ * window statistics/visitor.js
+ */
+#visitorTableView {
+
+}
+
+/**
+ * window statistics/visitorlog.js
+ */
+#visitorLogTableView {
+
+}
+
+.visitorlogPagerTableViewRow {
+    color: '#336699';
+    left: 10;
 }

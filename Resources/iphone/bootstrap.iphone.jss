@@ -13,6 +13,9 @@
 @import "iphone/refresh.universal.jss";
 @import "iphone/datepicker.universal.jss";
 @import "iphone/menu.universal.jss";
+@import "iphone/liveoverview.universal.jss";
+@import "iphone/visitoroverview.universal.jss";
+@import "iphone/visitor.universal.jss";
 
 #activityWaitIndicator {
     height: 40;
@@ -233,4 +236,28 @@
 #statisticsTableView {
     maxRowHeight: 300;
     separatorColor: '#B8B4AB';
+}
+
+/**
+ * window statistics/live.js
+ */
+#liveTableView {
+}
+
+/**
+ * window statistics/visitor.js
+ */
+#visitorTableView {
+
+}
+
+/**
+ * window statistics/visitorlog.js
+ */
+#visitorLogTableView {
+
+}
+
+.visitorlogPagerTableViewRow {
+    color: '#336699';
 }

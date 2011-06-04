@@ -55,6 +55,15 @@ Piwik.UI.ActivityIndicator = function () {
     this.style       = 'waiting';
 
     /**
+     * The window where the loading message will be rendered into. We need a reference to this window cause otherwise
+     * we can't hide and remove the loading message. Piwik.UI.currentWindow possibly references to another window when
+     * the hide method is called.
+     *
+     * @type null|Piwik.UI.Window
+     */
+    this.view        = null;
+
+    /**
      * Shows an Activity Indicator. To remove the indicator, simply call 'hide' as soon as your script has finished.
      * Its useful to show the indicator for example as long as you fetch some data. Make sure the hide method will
      * be called afterwards. Otherwise, the Activity Indicator will be displayed for a long time. The style property
@@ -88,29 +97,31 @@ Piwik.UI.ActivityIndicator = function () {
         switch (this.style) {
             case 'loading':
 
-                var view = Ti.UI.currentWindow;
+                // we don't use Piwik.UI.currentWindow cause we don't want a reference to the currentWindow.
+                // if the user open's a new window, this.view would point to the new opened window.
+                this.view = Piwik.UI.layout.getCurrentWindow();
 
                 if (this.numRequests > 1) {
                     // just update the text cause loading message is already visible
                     
-                    if (message && view.loadingMessage) {
-                        view.loadingMessage.text = message;
-                    } else {
+                    if (message && this.view && this.view.loadingMessage) {
+                        this.view.loadingMessage.text = message;
+                    } else if (this.view && this.view.loadingMessage) {
                         // default message
-                        view.loadingMessage.text = _('General_LoadingData')
+                        this.view.loadingMessage.text = _('General_LoadingData')
                     }
 
                     return;
                 }
 
-                if (!view.loadingMessage && view.add) {
+                if (this.view && !this.view.loadingMessage && this.view.add) {
                     // the loading message does not exist, create it
-                    view.loadingMessage = Ti.UI.createLabel({
+                    this.view.loadingMessage = Ti.UI.createLabel({
                         text: message ? message : _('General_LoadingData'),
                         id: 'loadingActivityIndicatorLabel'
                     });
 
-                    view.add(view.loadingMessage);
+                    this.view.add(this.view.loadingMessage);
                 }
                     
                 break;
@@ -204,15 +215,14 @@ Piwik.UI.ActivityIndicator = function () {
         }
 
         // remove style 'loading'
-        var view = Ti.UI.currentWindow;
-
-        if (view.loadingMessage && view.loadingMessage.hide) {
-            view.loadingMessage.hide()
+        if (this.view && this.view.loadingMessage && this.view.loadingMessage.hide) {
+            this.view.loadingMessage.hide()
         }
 
-        if (view.loadingMessage && view.remove) {
-            view.remove(view.loadingMessage);
-            view.loadingMessage = null;
+        if (this.view && this.view.loadingMessage && this.view.remove) {
+            this.view.remove(this.view.loadingMessage);
+            this.view.loadingMessage = null;
+            this.view                = null;
         }
     };
 };

@@ -107,3 +107,38 @@ String.prototype.trim = function () {
 
     return this.replace (/^\s+/, '').replace (/\s+$/, '');
 };
+
+/**
+ * We need an url like http://demo.piwik.org/ or http://demo.piwik.org/foo/bar/
+ * Therefore we have to add a trailing / if it doesn't exist already or remove for example index.php if url is
+ * http://demo.piwik.org/index.php
+ *
+ * @param   {string}   accessUrl    A piwik access url.
+ *
+ * @returns {string}   The formatted access url.
+ */
+String.prototype.formatAccessUrl = function () {
+    var accessUrl = this;
+
+    if (!accessUrl) {
+        Piwik.Log.debug('missing Accessurl in formatAccessUrl', 'String::formatAccessUrl');
+
+        return '';
+    }
+
+    if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
+
+        return accessUrl;
+    }
+
+    if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
+        var lastSlash = accessUrl.lastIndexOf('/');
+        accessUrl     = accessUrl.substr(0, lastSlash + 1);
+
+        return accessUrl;
+    }
+
+    accessUrl = accessUrl + '/';
+
+    return accessUrl;
+};

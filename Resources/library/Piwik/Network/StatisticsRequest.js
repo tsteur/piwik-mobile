@@ -483,7 +483,7 @@ Piwik.Network.StatisticsRequest = function () {
                 
                 if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].logo) {
                     
-                    row.logo = this._formatAccessUrl(account.accessUrl) + response.reportMetadata[index].logo;
+                    row.logo = ('' + account.accessUrl).formatAccessUrl() + response.reportMetadata[index].logo;
                     
                     if (response.reportMetadata[index].logoWidth) {
                         row.logoWidth  = response.reportMetadata[index].logoWidth;
@@ -498,39 +498,5 @@ Piwik.Network.StatisticsRequest = function () {
         }
         
         return reportRow;
-    };
-    
-    /**
-     * We need an url like http://demo.piwik.org/ or http://demo.piwik.org/foo/bar/
-     * Therefore we have to add a trailing / if it doesn't exist already or remove for example index.php if url is 
-     * http://demo.piwik.org/index.php 
-     *
-     * @param   {string}   accessUrl    A piwik access url.
-     *
-     * @returns {string}   The formatted access url.
-     */
-    this._formatAccessUrl = function (accessUrl) {
-    
-        if (!accessUrl) {
-            Piwik.Log.debug('missing Accessurl in formatAccessUrl', 'Piwik.Network.StatisticsRequest::_formatAccessUrl');
-            
-            return '';
-        }
-        
-        if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
-            
-            return accessUrl;
-        }
-        
-        if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
-            var lastSlash = accessUrl.lastIndexOf('/');
-            accessUrl     = accessUrl.substr(0, lastSlash + 1);
-            
-            return accessUrl;
-        }
-        
-        accessUrl = accessUrl + '/';
-        
-        return accessUrl;
     };
 };
