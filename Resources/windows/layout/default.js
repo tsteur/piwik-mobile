@@ -52,6 +52,9 @@ function window () {
      */
     this.menu     = null;
 
+    /**
+     * @private
+     */
     var layout    = this;
     
     /**
@@ -169,11 +172,6 @@ function window () {
      */
     this.init = function () {
 
-        Ti.Gesture.addEventListener('orientationchange', function (event) {
-
-            return;
-        });
-
         this.header = Piwik.UI.createHeader({title: 'Piwik Mobile'});
         this.menu   = Piwik.UI.createMenu({menuView: this.header.getHeaderView()});
 
@@ -213,5 +211,15 @@ function window () {
                 }
             });
         }
+
+        Ti.Gesture.addEventListener('orientationchange', function (event) {
+
+            if (layout.scrollView) {
+                // make sure current window is still visible after orientation change (only iOS)
+                layout.scrollView.scrollToView(Piwik.UI.currentWindow);
+            }
+            
+            return;
+        });
     };
 }
