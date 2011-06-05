@@ -137,18 +137,62 @@ function window (params) {
                                visitor: event.rowData.visitor});
     });
 
-    this.lastMinutes = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastMinutes'), '30')});
-    this.lastHours   = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastHours'), '24')});
-
-    var visitorDefaultRows = [this.lastMinutes.getRow(),
-                              this.lastHours.getRow(),
-                              Piwik.UI.createTableViewSection({title: _('General_Visitors')})];
-
+    /**
+     * Holds a list of the last 30 visitors across multiple requests. We'll render only visitors which are defined
+     * in this array.
+     *
+     * Array (
+     *    [int] => [Object Visitor]
+     * )
+     *
+     * @type Array
+     * @private
+     */
+    var visitors = [];
     var visitorRows = [];
 
     request.addEventListener('onload', function (event) {
 
         refresh.refreshDone();
+
+        if (!event.details || !event.details.length) {
+
+            if (!that.lastMinutes || !that.lastHours) {
+                // make sure at least live overview will be rendered
+                that.lastMinutes = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastMinutes'), '30')});
+                that.lastHours   = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastHours'), '24')});
+
+                tableView.setData([that.lastMinutes.getRow(), that.lastHours.getRow()]);
+            }
+
+            if (event.lastMinutes) {
+                that.lastMinutes.refresh({actions: event.lastMinutes.actions,
+                                          visits: event.lastMinutes.visits});
+            }
+
+            if (event.lastHours) {
+                that.lastHours.refresh({actions: event.lastHours.actions,
+                                        visits: event.lastHours.visits});
+            }
+
+            return;
+        }
+
+        // clear previous displayed data
+        tableView.setData([]);
+
+        that.lastMinutes = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastMinutes'), '30')});
+        that.lastHours   = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastHours'), '24')});
+
+        /**
+         * Holds all rows that shall be rendered
+         *
+         * @type Array
+         * @private
+         */
+        var visitorRows  = [that.lastMinutes.getRow(),
+                            that.lastHours.getRow(),
+                            Piwik.UI.createTableViewSection({title: _('General_Visitors')})];
 
         if (event.lastMinutes) {
             that.lastMinutes.refresh({actions: event.lastMinutes.actions,
@@ -160,34 +204,18 @@ function window (params) {
                                     visits: event.lastHours.visits});
         }
 
-        if (!event.details || !event.details.length) {
-
-            return;
-        }
-        
-        tableView.setData([]);
-
-        // insert new rows
-        var visitorOverview = null;
-        var visitorRow      = null;
-        var visitor         = null;
+        // prepend each new visitor to visitors list. Recent visitors have a lower index afterwards, older visitors
+        // have a higher index. This makes sure we can simply remove older visitors later.
+        var visitor = null;
         for (var index = event.details.length; 0 <= index; index--) {
 
-           visitor = event.details[index];
+            visitor = event.details[index];
 
             if (!visitor) {
                 continue;
             }
 
-            visitorOverview = Piwik.UI.createVisitorOverview({visitor: visitor, accessUrl: accessUrl});
-            visitorRow      = visitorOverview.getRow();
-
-            // add visitor information to the row. This makes it possibly to access this value when
-            // the user clicks on a row within the tableview (click event).
-            // we do not do this in VisitorOverview UI widget cause it's a window specific thing.
-            visitorRow.visitor   = visitor;
-            
-            visitorRows.unshift(visitorRow);
+            visitors.unshift(visitor);
         }
 
         if (visitor && visitor.serverTimestamp) {
@@ -195,13 +223,32 @@ function window (params) {
             latestRequestedTimestamp = visitor.serverTimestamp;
         }
 
-        // remove all old rows if tableView contains more rows than 30...
-        // otherwise there are possibly memory/scrolling issues
-        while (visitorRows && visitorRows.length && 30 <= visitorRows.length) {
-            visitorRows.pop();
+        // remove all old visitors / render only the latest 30 visitors. otherwise there are possibly
+        // memory/scrolling issues
+        visitors = visitors.slice(0, 30);
+
+        // now render all rows. We have to re-render even already rendered visitors. There seems to be a bug in
+        // Titanium. If I set an already rendered Row via setData() again, the row will be rendered twice (only on iOS).
+        // If I set it again the same row will be rendered thrice instead of only once. That means previous rendered
+        // rows will not be removed via "setData". It does only append the new rows but not remove already rendered
+        // TableViewRows as soon as a reuse an already rendered row.
+        var visitorOverview = null;
+        var visitorRow      = null;
+        for (var index = 0; index < visitors.length; index++) {
+            visitor = visitors[index];
+
+            visitorOverview    = Piwik.UI.createVisitorOverview({visitor: visitor, accessUrl: accessUrl});
+            visitorRow         = visitorOverview.getRow();
+
+            // add visitor information to the row. This makes it possibly to access this value when
+            // the user clicks on a row within the tableview (click event).
+            // we do not do this in VisitorOverview UI widget cause it's a window specific thing.
+            visitorRow.visitor = visitor;
+
+            visitorRows.push(visitorRow);
         }
 
-        tableView.setData(visitorDefaultRows.concat(visitorRows));
+        tableView.setData(visitorRows);
 
         if (params.autoRefresh) {
             that.refreshTimer = setTimeout(function () {
