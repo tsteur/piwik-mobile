@@ -63,12 +63,11 @@ Piwik.UI.DatePicker = function () {
      * @param    {Date}      params.maxDate     The maximum date for value
      * @param    {String}    params.period      The currently active period
      *
-     * @type Piwik.UI.DatePicker|Titanium.UI.Picker|null
+     * @type Piwik.UI.DatePicker|null
      *
      * @returns A date picker instance on android, a Ti.UI.Picker instance on iOS. Returns null if creation was not
      *          successful
      *
-     * @todo Return a Piwik.UI.DatePicker instance on all platforms.
      * @todo Open iPad DatePicker in a PopOver as recommended by apple
      */
     this.init = function (params) {
@@ -89,10 +88,13 @@ Piwik.UI.DatePicker = function () {
      *
      * @param    {Object}   params   Parameters as defined in {@link Piwik.UI.DatePicker#init}
      *
+     * @type Piwik.UI.DatePicker
+     *
      * @fires    Piwik.UI.DatePicker#event:onSet
      */
     this.createIos = function (params) {
         var view       = Piwik.UI.currentWindow;
+        var that       = this;
 
         params.id      = 'datePicker';
 
@@ -131,10 +133,6 @@ Piwik.UI.DatePicker = function () {
         var closePicker = null;
         closePicker     = function () {
 
-            if (view && view.removeEventListener && closePicker) {
-                view.removeEventListener('close', closePicker);
-            }
-
             if (toolbar && toolbar.hide) {
                 toolbar.hide();
             }
@@ -142,22 +140,24 @@ Piwik.UI.DatePicker = function () {
             if (Ti.UI.currentWindow && Ti.UI.currentWindow.remove && picker) {
                 Ti.UI.currentWindow.remove(picker);
             }
+
             if (Ti.UI.currentWindow && Ti.UI.currentWindow.remove && toolbar) {
                 Ti.UI.currentWindow.remove(toolbar);
             }
         };
 
         view.addEventListener('close', closePicker);
+        view.addEventListener('blurWindow', closePicker);
 
         var fireUpdateEvent = function (date, period) {
             var myEvent = {date: date, period: period, type: 'onSet'};
 
-            picker.fireEvent('onSet', myEvent);
+            that.fireEvent('onSet', myEvent);
 
             if (closePicker) {
                 // setTimeout to make sure the async fireEvent was executed. Otherwise the closePicker() would cancel
                 // the event execution.
-                setTimeout(closePicker, 200);
+                setTimeout(closePicker, 100);
             }
         };
 
@@ -174,7 +174,7 @@ Piwik.UI.DatePicker = function () {
             fireUpdateEvent(picker.pickerValue, 'year');
         });
 
-        return picker;
+        return this;
     };
 
     /**
