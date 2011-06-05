@@ -318,7 +318,7 @@ function window () {
                                                       hasChild: Piwik.isIos,
                                                       onClick: onChangeHttpTimeout,
                                                       value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
-                         Piwik.UI.createTableViewSection({title: _('Mobile_Help'), style: 'native'}),
+                         Piwik.UI.createTableViewSection({title: _('General_Help'), style: 'native'}),
                          Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasChild',
                                                       title: String.format(_('General_AboutPiwikX'), 'Mobile'),
                                                       onClick: onShowHelpAbout,

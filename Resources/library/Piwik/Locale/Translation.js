@@ -156,6 +156,8 @@ Piwik.Locale.Translation = new function () {
         General_Outlink:                                                    'Outlink',
         General_Download:                                                   'Download',
         General_Goal:                                                       'Goal',
+        General_Help:                                                       'Help',
+        General_Visitor:                                                    'Visitor',
         Mobile_AddAccount:                                                  'Add account',
         Mobile_Advanced:                                                    'Advanced',
         Mobile_AnonymousAccess:                                             'Anonymous access',
@@ -163,7 +165,6 @@ Piwik.Locale.Translation = new function () {
         Mobile_ChooseHttpTimeout:                                           'Choose HTTP timeout value',
         Mobile_DefaultReportDate:                                           'Report date',
         Mobile_EnableGraphsLabel:                                           'Display graphs',
-        Mobile_Help:                                                        'Help',
         Mobile_HttpIsNotSecureWarning:                                      "Your Piwik authToken is sent in clear text if you use 'HTTP'. For this reason we recommend HTTPS for secure transport of data over the internet. Do you want to proceed?",
         Mobile_LastUpdated:                                                 'Last Updated: %s',
         Mobile_MultiChartLabel:                                             'Display sparklines',
@@ -178,7 +179,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_ShowLess:                                                    'Show less',
         Mobile_HttpTimeout:                                                 'HTTP Timeout',
         Mobile_HttpTimeoutInfo:                                             'Increase if you receive timeout errors',
-        Mobile_VerifyAccount:                                               'Verify Account',
+        Mobile_VerifyAccount:                                               'Verifying Account',
         Mobile_YouAreOffline:                                               'Sorry, you are currently offline'
     };
 

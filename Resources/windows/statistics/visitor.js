@@ -27,7 +27,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#titleOptions
      */
-    this.titleOptions = {title: 'Visitor'};
+    this.titleOptions = {title: _('General_Visitor')};
 
     /**
      * @see Piwik.UI.Window#menuOptions
