@@ -104,15 +104,18 @@ function window (params) {
 
         var site = event.site;
 
+        this.titleOptions = {title: event.report ? event.report.name : ''};
+        this.menuOptions  = {dayChooser: true,
+                             siteChooser: true,
+                             optionMenuSettingsChooser: true,
+                             date: event.date,
+                             period: event.period,
+                             currentSite: site,
+                             allowedSites: allowedSites};
+
         // update header and menu after each request cause of a possibly period and/or date change.
-        Piwik.UI.layout.header.refresh({title: event.report ? event.report.name : ''});
-        Piwik.UI.layout.menu.refresh({dayChooser: true,
-                                      siteChooser: true,
-                                      optionMenuSettingsChooser: true,
-                                      date: event.date,
-                                      period: event.period,
-                                      currentSite: site,
-                                      allowedSites: allowedSites});
+        Piwik.UI.layout.header.refresh(this.titleOptions);
+        Piwik.UI.layout.menu.refresh(this.menuOptions);
 
         var tableViewRows = [];
 
