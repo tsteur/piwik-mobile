@@ -216,6 +216,7 @@ function window () {
 
             if (layout.scrollView) {
                 // make sure current window is still visible after orientation change (only iOS)
+                // see http://jira.appcelerator.org/browse/TIMOB-3497 
                 layout.scrollView.scrollToView(Piwik.UI.currentWindow);
             }
             
