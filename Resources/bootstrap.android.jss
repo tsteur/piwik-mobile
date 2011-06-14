@@ -22,6 +22,7 @@
 #loadingActivityIndicatorLabel {
     color: '#000000';
     zIndex: 999;
+    font-weight: 'bold';
 }
 
 .piwikWindow {
