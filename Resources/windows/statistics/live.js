@@ -80,7 +80,14 @@ function window (params) {
     });
 
     this.addEventListener('focusWindow', function () {
-        if (params.autoRefresh && tableView.data && tableView.data.length) {
+        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
+            // start auto refresh again if user returns to this window from a previous displayed window
+            refresh.refresh();
+        }
+    });
+    
+    Ti.App.addEventListener('resume', function () {
+        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
             // start auto refresh again if user returns to this window from a previous displayed window
             refresh.refresh();
         }
@@ -91,8 +98,6 @@ function window (params) {
             // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
             clearTimeout(that.refreshTimer);
         }
-
-        // start auto refresh again on resume event?
     });
 
     if (Ti.UI.currentWindow && Ti.UI.currentWindow.activity) {
@@ -107,7 +112,6 @@ function window (params) {
     }
 
     refresh.addEventListener('onRefresh', function () {
-
         if (that.refreshTimer) {
             // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
             // request in a few seconds again
