@@ -93,6 +93,13 @@ Piwik.Network.AccountRequest = function () {
     this.latestVersion = null;
 
     /**
+     * Holds the id of an account if the account already exists or if the creation of a new account was successful.
+     *
+     * @type string
+     */
+    this.accountId     = null;
+
+    /**
      * Add an event listener receive triggered events. The callback will be executed in the
      * Piwik.UI.Window context.
      *
@@ -123,6 +130,7 @@ Piwik.Network.AccountRequest = function () {
      *
      * @param   {Object}     params
      * @param   {Object}     params.account                 The account that shall be saved/requested
+     * @param   {string}     [params.account.id]            The id of the account if the account already exists
      * @param   {string}     params.account.accessUrl       The url to the Piwik Server installation
      * @param   {boolean}    params.account.anonymous       True if anonymous mode is enabled, false otherwise
      * @param   {string}     params.account.username        The username, if anonymous is disabled
@@ -139,6 +147,11 @@ Piwik.Network.AccountRequest = function () {
     this.send = function (params) {
 
         var account = params.account;
+
+        this.accountId = null;
+        if (account && account.id) {
+            this.accountId = account.id;
+        }
 
         if (!account || !account.accessUrl || 'http' !== account.accessUrl.substr(0, 4).toLowerCase()) {
 
@@ -217,11 +230,11 @@ Piwik.Network.AccountRequest = function () {
      */
     this.verifyAccess = function (account) {
 
-        if (!account.accountId) {
+        if (!this.accountId) {
             // account doesn't already exist. we have to create the account and activate the account by default
             account.active = 1;
         }
-
+        
         this.requestVersion();
 
         var piwikRequest = Piwik.require('Network/PiwikApiRequest');

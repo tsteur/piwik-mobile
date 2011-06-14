@@ -16,7 +16,7 @@
  * @this     {Piwik.UI.Window}
  * @augments {Piwik.UI.Window}
  */
-function window () {
+function window (params) {
 
     /**
      * @see Piwik.UI.Window#titleOptions
@@ -114,6 +114,10 @@ function window () {
                        anonymous: piwikAnonymous.value,
                        password:  piwikPassword.value,
                        name:      piwikAnonymous.value ? _('Mobile_AnonymousAccess') : piwikUser.value};
+
+        if (params && params.accountId) {
+            account.id = params.accountId;
+        }
 
         // send the request to verify the entered account values.
         request.send({account: account});
@@ -326,7 +330,7 @@ function window () {
         }
 
         var accountId      = params.accountId;
-
+        
         var accountManager = Piwik.require('App/Accounts');
         var account        = accountManager.getAccountById(accountId);
 
