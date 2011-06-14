@@ -139,7 +139,11 @@ function window (params) {
         tableViewRows.push(Piwik.UI.createTableViewSection({title:  event.reportDate}));
 
         // @see Piwik.Network.StatisticsRequest#report
-        var statsticTitleLabel = event.report.dimension;
+        var statsticTitleLabel = null;
+        if (event.report && event.report.dimension) {
+            statsticTitleLabel = event.report.dimension;
+        }
+
         if (event.columns && event.columns.label) {
             // @see Piwik.Network.StatisticsRequest#columns
             statsticTitleLabel = event.columns.label;
