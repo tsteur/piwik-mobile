@@ -11,9 +11,9 @@
  *          identified by an unique key and is accessible as long as the app session persists. The session is a
  *          simple and very fast cache. 
  *          Currently, following keys are in use:
- *          piwik_parameter_period                     The current selected period
- *          piwik_parameter_date                       The current selected date
- *          piwik_report_metadata_{accountId}_{lang}   Report metadata for a specific account
+ *          piwik_parameter_period                              The current selected period
+ *          piwik_parameter_date                                The current selected date
+ *          piwik_report_metadata_{accountId}_{idSite}_{lang}   Report metadata for a specific account
  *
  * @example
  * Piwik.App.Session.set('period', 'week');   // store the value week under the key period

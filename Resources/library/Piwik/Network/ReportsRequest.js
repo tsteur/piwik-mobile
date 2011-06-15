@@ -97,7 +97,9 @@ Piwik.Network.ReportsRequest = function () {
         var language = settings.getLanguage();
 
         // the report contains text/translations, therefore we have to add the language to the cache key.
-        this.sessionKey      = 'piwik_report_metadata_' + this.site.accountId + '_' + language;
+        // the report contains a list of reports which are site specific, for example goals. Therefore we have to cache
+        // the result by idSite and accountId.
+        this.sessionKey      = 'piwik_report_metadata_' + this.site.accountId + '_' + this.site.idsite + '_' + language;
         var cachedReportData = session.get(this.sessionKey);
         
         if (!params.reload
