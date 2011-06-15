@@ -12,11 +12,12 @@
  *           of the visit and more. The overview will be rendered into a TableViewRow. Therefore, you need a TableView
  *           in order to display the rendered content. The rendered row is accessible via getRow().
  *
- * @param {Object}   params             See {@link Piwik.UI.View#setParams}
- * @param {Object}   params.visitor     An object containing all available visitor information. As returned by the
- *                                      method 'Live.getgetLastVisitsDetails'.
- * @param {string}   params.accessUrl   The url to the piwik installation (to the piwik installation the visit
- *                                      belongs to) containing a trailing slash. For example 'http://demo.piwik.org/'
+ * @param {Object}   params                See {@link Piwik.UI.View#setParams}
+ * @param {Object}   params.visitor        An object containing all available visitor information. As returned by the
+ *                                         method 'Live.getgetLastVisitsDetails'.
+ * @param {string}   params.accessUrl      The url to the piwik installation (to the piwik installation the visit
+ *                                         belongs to) containing a trailing slash. For example 'http://demo.piwik.org/'
+ * @param {boolean}  params.useFirstVisit  Display date, time, ... from the first visit.
  *
  * @example
  * var overview = Piwik.UI.createVisitorOverview({visitor: visitor, accessUrl: accessUrl});
@@ -56,7 +57,14 @@ Piwik.UI.VisitorOverview = function () {
         // horizontal layout. Therefore we need the dateAndIconsView.
         var dateAndIconsView  = Ti.UI.createView({id: 'visitorOverviewDateView'});
 
-        dateAndIconsView.add(Ti.UI.createLabel({text: visitor.serverDatePretty + ' - ' + visitor.serverTimePretty,
+        var timeLabel = '';
+        if (this.getParam('useFirstVisit', false)) {
+            timeLabel = visitor.serverDatePrettyFirstAction + ' - ' + visitor.serverTimePrettyFirstAction;
+        } else {
+            timeLabel = visitor.serverDatePretty + ' - ' + visitor.serverTimePretty;
+        }
+
+        dateAndIconsView.add(Ti.UI.createLabel({text: timeLabel,
                                                 id: 'visitorOverviewDateTimeLabel'}));
 
         // use different className for the first icon. This makes it possible to specify for example another distance

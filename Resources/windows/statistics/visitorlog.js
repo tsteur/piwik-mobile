@@ -110,12 +110,14 @@ function window (params) {
                     continue;
                 }
 
-                if (0 == index && visitor.serverTimestamp) {
+                if (0 == index && visitor.firstActionTimestamp) {
                     // store the timestamp of the first visitor as the latest requested timestamp
-                    latestRequestedTimestamp = visitor.serverTimestamp;
+                    latestRequestedTimestamp = visitor.firstActionTimestamp;
                 }
-
-                visitorOverview = Piwik.UI.createVisitorOverview({visitor: visitor, accessUrl: accessUrl});
+                
+                visitorOverview = Piwik.UI.createVisitorOverview({visitor: visitor,
+                                                                  accessUrl: accessUrl,
+                                                                  useFirstVisit: true});
                 visitorRow      = visitorOverview.getRow();
 
                 // add visitor information to the row. This makes it possibly to access this value when
