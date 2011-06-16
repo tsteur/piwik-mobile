@@ -89,6 +89,9 @@ function window (params) {
 
     });
 
+    // we always want to force the reload (do not use a cached result) of the available reports if user presses
+    // menu button 'reload', but not if window gets focus again.
+    var forceRequestReload = true;
     refresh.addEventListener('onRefresh', function () {
 
         if (site) {
@@ -96,8 +99,10 @@ function window (params) {
             // new rows afterwards.
             tableview.setData([]);
             
-            request.send({site: site, reload: true});
+            request.send({site: site, reload: forceRequestReload});
         }
+
+        forceRequestReload = true;
     });
 
     // this event is fired from another window, therefore we use Ti.App
@@ -110,6 +115,11 @@ function window (params) {
 
         site              = event.site;
         that.titleOptions = {title: '' + event.site.name};
+    });
+
+    this.addEventListener('focusWindow', function () {
+        forceRequestReload = false;
+        refresh.refresh();
     });
 
     request.addEventListener('onload', function (event) {
