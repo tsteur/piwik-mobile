@@ -23,6 +23,7 @@
     color: '#000000';
     zIndex: 999;
     font-weight: 'bold';
+    font-size: '14dp';
 }
 
 .piwikWindow {
