@@ -426,6 +426,13 @@ Piwik.UI.Menu = function () {
             } else {
                 this.settingsIcon.hide();
             }
+
+            // hack. prevent header title from overlapping menu icons.
+            // @todo find a better solution for this.
+            var layout = Piwik.UI.layout;
+            if (layout && layout.header && layout.header.titleLabel.right) {
+                layout.header.titleLabel.right = right + 'dp';
+            }
         }
 
         if (this.getParam('addAccountChooser', false) || this.getParam('optionMenuAddAccountChooser', false)) {
