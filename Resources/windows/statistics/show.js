@@ -67,9 +67,7 @@ function window (params) {
 
         params.showAll    = false;
 
-        tableView.setData([]);
-
-        request.send(params);
+        refresh.refresh();
     });
 
     this.addEventListener('onSiteChanged', function (event) {
@@ -78,18 +76,14 @@ function window (params) {
         params.site    = event.site;
         params.showAll = false;
 
-        tableView.setData([]);
-
-        request.send(params);
+        refresh.refresh();
     });
 
     this.addEventListener('onPaginatorChanged', function (event) {
 
         params.showAll = event.showAll;
 
-        tableView.setData([]);
-
-        request.send(params);
+        refresh.refresh();
     });
 
     refresh.addEventListener('onRefresh', function () {
