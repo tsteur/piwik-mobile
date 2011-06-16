@@ -109,6 +109,30 @@ String.prototype.trim = function () {
 };
 
 /**
+ * Adds the size unit, for example dp (densitiy pixels) depending on the current platform.
+ *
+ * @returns {string|number}  The converted string on Android, the parsed integer on iOS
+ */
+String.prototype.toSizeUnit = function () {
+    if (!Piwik.isAndroid) {
+
+        return parseInt(this);
+    }
+
+    if (!this) {
+
+        return this;
+    }
+
+    if (-1 == this.indexOf('dp')) {
+
+        return this + 'dp';
+    }
+
+    return this;
+};
+
+/**
  * We need an url like http://demo.piwik.org/ or http://demo.piwik.org/foo/bar/
  * Therefore we have to add a trailing / if it doesn't exist already or remove for example index.php if url is
  * http://demo.piwik.org/index.php

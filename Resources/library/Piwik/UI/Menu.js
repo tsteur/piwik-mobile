@@ -396,7 +396,7 @@ Piwik.UI.Menu = function () {
             var right = 0;
 
             if (this.getParam('addAccountChooser', false)) {
-                this.addAccountIcon.right = right + 'dp';
+                this.addAccountIcon.right = ('' + right).toSizeUnit();
                 right                     = right + parseInt(this.addAccountIcon.width, 10);
                 this.addAccountIcon.show();
             } else {
@@ -404,7 +404,7 @@ Piwik.UI.Menu = function () {
             }
 
             if (this.getParam('siteChooser', false)) {
-                this.siteChooserIcon.right = right + 'dp';
+                this.siteChooserIcon.right = ('' + right).toSizeUnit();
                 right                      = right + parseInt(this.siteChooserIcon.width, 10);
                 this.siteChooserIcon.show();
             } else {
@@ -412,7 +412,7 @@ Piwik.UI.Menu = function () {
             }
 
             if (this.getParam('dayChooser', false)) {
-                this.dayChooserIcon.right = right + 'dp';
+                this.dayChooserIcon.right = ('' + right).toSizeUnit();
                 right                     = right + parseInt(this.dayChooserIcon.width, 10);
                 this.dayChooserIcon.show();
             } else {
@@ -420,7 +420,7 @@ Piwik.UI.Menu = function () {
             }
             
             if (this.getParam('settingsChooser', false)) {
-                this.settingsIcon.right = right + 'dp';
+                this.settingsIcon.right = ('' + right).toSizeUnit();
                 right                   = right + parseInt(this.settingsIcon.width, 10);
                 this.settingsIcon.show();
             } else {

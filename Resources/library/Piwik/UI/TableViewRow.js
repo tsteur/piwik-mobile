@@ -167,8 +167,8 @@ Piwik.UI.TableViewRow = function () {
 
         if (rightImage && rightImage.url) {
 
-            var rowRightImage = Ti.UI.createImageView({width: rightImage.width,
-                                                       height: rightImage.height,
+            var rowRightImage = Ti.UI.createImageView({width: ('' + rightImage.width).toSizeUnit(),
+                                                       height: ('' + rightImage.height).toSizeUnit(),
                                                        image: rightImage.url,
                                                        id: 'tableViewRowRightImage'});
             row.add(rowRightImage);
