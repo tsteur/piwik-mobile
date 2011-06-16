@@ -430,8 +430,8 @@ Piwik.UI.Menu = function () {
             // hack. prevent header title from overlapping menu icons.
             // @todo find a better solution for this.
             var layout = Piwik.UI.layout;
-            if (layout && layout.header && layout.header.titleLabel.right) {
-                layout.header.titleLabel.right = right + 'dp';
+            if (layout && layout.header && layout.header.titleLabel) {
+                layout.header.titleLabel.right = ('' + right).toSizeUnit();
             }
         }
 
