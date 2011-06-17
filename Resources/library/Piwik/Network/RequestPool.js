@@ -123,7 +123,7 @@ Piwik.Network.RequestPool = function () {
                 }
 
                 return false;
-            }
+            };
 
             if (call.send) {
                 call.send();

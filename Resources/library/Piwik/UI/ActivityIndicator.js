@@ -108,7 +108,7 @@ Piwik.UI.ActivityIndicator = function () {
                         this.view.loadingMessage.text = message;
                     } else if (this.view && this.view.loadingMessage) {
                         // default message
-                        this.view.loadingMessage.text = _('General_LoadingData')
+                        this.view.loadingMessage.text = _('General_LoadingData');
                     }
 
                     return;
@@ -216,7 +216,7 @@ Piwik.UI.ActivityIndicator = function () {
 
         // remove style 'loading'
         if (this.view && this.view.loadingMessage && this.view.loadingMessage.hide) {
-            this.view.loadingMessage.hide()
+            this.view.loadingMessage.hide();
         }
 
         if (this.view && this.view.loadingMessage && this.view.remove) {

@@ -358,8 +358,8 @@ Piwik.UI.DatePicker = function () {
 
             if (1 == event.index) {
                 // fire event only if user pressed Update button
-                var event = {date: that.value, period: that.period, type: 'onSet'};
-                that.fireEvent('onSet', event);
+                var myEvent = {date: that.value, period: that.period, type: 'onSet'};
+                that.fireEvent('onSet', myEvent);
             }
         });
     };

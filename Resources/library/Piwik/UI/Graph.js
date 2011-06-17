@@ -81,15 +81,13 @@ Piwik.UI.Graph = function () {
         
         Piwik.Log.debug(fullGraphUrl, 'Piwik.UI.Graph::addGraph');
 
-        if (Piwik.isAndroid) {
-            width  += 'dp';
-            height += 'dp';
-        }
+        width  = ('' + width).toSizeUnit();
+        height = ('' + height).toSizeUnit();
         
-        var graph = Ti.UI.createImageView({width: width,
-                                           height: height,
-                                           id: 'graphImage',
-                                           image: fullGraphUrl});
+        var graphImage = Ti.UI.createImageView({width: width,
+                                                height: height,
+                                                id: 'graphImage',
+                                                image: fullGraphUrl});
 
         var showDetailImage = Ti.UI.createImageView({className: 'graphShowDetailImage'});
         
@@ -99,7 +97,7 @@ Piwik.UI.Graph = function () {
                                    graphUrl: graphUrl});
         });
         
-        view.add(graph);
+        view.add(graphImage);
         view.add(showDetailImage);
     };
 };

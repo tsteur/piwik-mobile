@@ -211,8 +211,9 @@ Piwik.UI.Refresh = function () {
 
             var offset = (event && event.contentOffset) ? event.contentOffset.y : 0;
 
+            var transform;
             if (offset <= -65.0 && !that.pulling) {
-                var transform = Ti.UI.create2DMatrix();
+                transform = Ti.UI.create2DMatrix();
                 transform     = transform.rotate(-180);
                 that.pulling  = true;
 
@@ -221,7 +222,7 @@ Piwik.UI.Refresh = function () {
 
             } else if (that.pulling && offset > -65.0 && offset < 0) {
                 that.pulling     = false;
-                var transform    = Ti.UI.create2DMatrix();
+                transform    = Ti.UI.create2DMatrix();
 
                 that.pullViewArrow.animate({transform: transform, duration: 180});
                 that.statusLabel.text = _('Mobile_PullDownToRefresh');

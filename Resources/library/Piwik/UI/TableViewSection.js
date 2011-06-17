@@ -50,6 +50,7 @@ Piwik.UI.TableViewSection = function () {
 
         params.className = 'tableViewSection';
 
+        var section;
         if (Piwik.isIos) {
             // @todo define this in jss
             params.selectionStyle  = Ti.UI.iPhone.TableViewCellSelectionStyle.NONE;
@@ -69,13 +70,13 @@ Piwik.UI.TableViewSection = function () {
                 params.headerView        = headerView;
             }
 
-            var section = Ti.UI.createTableViewSection(params);
+            section = Ti.UI.createTableViewSection(params);
 
             return section;
         }
 
         // use a row instead of a section cause the row is better to style on Android.
-        var section = Ti.UI.createTableViewRow(params);
+        section = Ti.UI.createTableViewRow(params);
 
         section.add(headerLabel);
 

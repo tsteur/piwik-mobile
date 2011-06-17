@@ -111,7 +111,7 @@ Piwik.UI.Visitor = function () {
 
                 case 'returning':
 
-                    visitorTypeText = '' + visitor.visitorType
+                    visitorTypeText = '' + visitor.visitorType;
 
                     if (visitor.visitCount) {
                         var visits = '' + (parseInt(visitor.visitCount, 10));

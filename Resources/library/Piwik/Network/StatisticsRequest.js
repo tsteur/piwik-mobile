@@ -320,17 +320,17 @@ Piwik.Network.StatisticsRequest = function () {
                 targetDate   = targetDate.toPiwikDate();
             }
             
-            var parameter    = {idSite: this.site.idsite,
-                                period: this.period,
-                                filter_truncate: 4,
-                                filter_sort_order: this.sortOrderColumn,
-                                apiModule: this.report.module,
-                                apiAction: this.report.action,
-                                date: targetDate.toPiwikQueryString()};
+            var gParameter    = {idSite: this.site.idsite,
+                                 period: this.period,
+                                 filter_truncate: 4,
+                                 filter_sort_order: this.sortOrderColumn,
+                                 apiModule: this.report.module,
+                                 apiAction: this.report.action,
+                                 date: targetDate.toPiwikQueryString()};
 
             var graphRequest = Piwik.require('Network/PiwikApiRequest');
             graphRequest.setMethod('API.getProcessedReport');
-            graphRequest.setParameter(parameter);
+            graphRequest.setParameter(gParameter);
             graphRequest.setAccount(account);
             graphRequest.setCallback(this, function (response) {
                 if (!response) {
@@ -409,6 +409,9 @@ Piwik.Network.StatisticsRequest = function () {
     this._formatGraphData = function (response) {
     
         var graphRows = {};
+        var report;
+        var label;
+
         if (response && response.reportData && (response.reportData instanceof Array) && 0 < response.reportData.length) {
             for (var index = 0; index < response.reportData.length; index++) {
                 
@@ -416,8 +419,8 @@ Piwik.Network.StatisticsRequest = function () {
                     continue;    
                 }
                 
-                var report = response.reportData[index];
-                var label  = report.label;
+                report = response.reportData[index];
+                label  = report.label;
                 
                 if (response.reportMetadata 
                     && response.reportMetadata[index] 
@@ -458,28 +461,32 @@ Piwik.Network.StatisticsRequest = function () {
     this._formatReportData = function (response, account) {
             
         var reportRow = [];
-      
+        var label;
+        var value;
+        var row;
+
         if (response && response.reportData && (response.reportData instanceof Array) && 0 < response.reportData.length) {
+
             for (var index = 0; index < response.reportData.length; index++) {
                 
                 if (!response.reportData[index]) {
                     continue;    
                 }
                 
-                var label = response.reportData[index].label;
+                label = response.reportData[index].label;
                 
                 if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].shortLabel) {
                     // always prefer the sortLabel
                     label = response.reportMetadata[index].shortLabel;
                 }
                 
-                var value = response.reportData[index].value;
+                value = response.reportData[index].value;
                 
                 if (response.reportData[index][this.sortOrderColumn]) {
                     value = response.reportData[index][this.sortOrderColumn];
                 }
                 
-                var row = {title: label, value: value};
+                row = {title: label, value: value};
                 
                 if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].logo) {
                     
@@ -501,14 +508,14 @@ Piwik.Network.StatisticsRequest = function () {
 
             for (var key in response.reportData) {
 
-                var label = key;
+                label = key;
                 if (response.columns && response.columns[key]) {
                     label = response.columns[key];
                 }
                 
-                var value = response.reportData[key];
+                value = response.reportData[key];
 
-                var row   = {title: label, value: value};
+                row   = {title: label, value: value};
                 reportRow.push(row);
             }
         }

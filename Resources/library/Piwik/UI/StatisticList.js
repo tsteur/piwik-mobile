@@ -227,7 +227,7 @@ Piwik.UI.StatisticList = function () {
         });
         
         this.rows.push(paginatorRow);
-    }
+    };
 };
 
 /**

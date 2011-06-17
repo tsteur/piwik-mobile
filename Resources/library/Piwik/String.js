@@ -116,7 +116,7 @@ String.prototype.trim = function () {
 String.prototype.toSizeUnit = function () {
     if (!Piwik.isAndroid) {
 
-        return parseInt(this);
+        return parseInt(this, 10);
     }
 
     if (!this) {
