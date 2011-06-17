@@ -32,6 +32,8 @@ function window (params) {
 
     var site          = params.site ? params.site : null;
     
+    var currentRequestedSite = {idsite: null, accountId: null};
+    
     /**
      * @see Piwik.UI.Window#titleOptions
      */
@@ -94,12 +96,26 @@ function window (params) {
     var forceRequestReload = true;
     refresh.addEventListener('onRefresh', function () {
 
-        if (site) {
+        // site has changed if the accountId is different or if idsite is different.
+        var siteHasChanged = (site &&
+                              currentRequestedSite &&
+                              (currentRequestedSite.idsite != site.idsite ||
+                               currentRequestedSite.accountId != site.accountId));
+
+        // update only if site has changed or if we force request reload
+        if (site && (siteHasChanged || forceRequestReload)) {
+
+            currentRequestedSite = site;
+
             // remove all tableview rows. This should ensure there are no rendering issues when setting
             // new rows afterwards.
             tableview.setData([]);
             
             request.send({site: site, reload: forceRequestReload});
+            
+        } else {
+
+            refresh.refreshDone();
         }
 
         forceRequestReload = true;
@@ -118,6 +134,7 @@ function window (params) {
     });
 
     this.addEventListener('focusWindow', function () {
+
         forceRequestReload = false;
         refresh.refresh();
     });
@@ -188,6 +205,10 @@ function window (params) {
      * Send the async request to fetch a list of all available reports.
      */
     this.open = function () {
+
+        if (site) {
+            currentRequestedSite = site;
+        }
 
         request.send({site: site});
     };
