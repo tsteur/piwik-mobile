@@ -13,10 +13,12 @@ Ti.include('/config.js',
            '/library/Piwik.js');
 
 // all orientationModes are welcome
-Ti.UI.currentWindow.orientationModes = [Ti.UI.PORTRAIT,
-                                        Ti.UI.UPSIDE_PORTRAIT,
-                                        Ti.UI.LANDSCAPE_LEFT,
-                                        Ti.UI.LANDSCAPE_RIGHT];
+if (Piwik.isIos) {
+    Ti.UI.currentWindow.orientationModes = [Ti.UI.PORTRAIT,
+                                            Ti.UI.UPSIDE_PORTRAIT,
+                                            Ti.UI.LANDSCAPE_LEFT,
+                                            Ti.UI.LANDSCAPE_RIGHT];
+}
 
 // do not close a Ti.UI.Window when user presses the hardware back button, remove our own windows. only android
 Ti.UI.currentWindow.addEventListener('android:back', function () {
