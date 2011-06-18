@@ -33,6 +33,7 @@ function window (params) {
 
     var latestRequestedTimestamp = null;
     var oldestVisitId            = null;
+    var usedMaxVisitIds          = [];
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
@@ -93,10 +94,30 @@ function window (params) {
         var nextPagerRow    = Ti.UI.createTableViewRow({title: _('General_Next'),
                                                         className: 'visitorlogPagerTableViewRow'});
         nextPagerRow.addEventListener('click', function () {
-            params.minTimestamp      = latestRequestedTimestamp;
-            params.maxIdVisit        = null;
+
+            var previousUsedMaxIdVisit = null;
+            if (usedMaxVisitIds && usedMaxVisitIds.length) {
+                // remove the current displayed maxVisitId from stack
+                usedMaxVisitIds.pop();
+                // now we are able to get the previous displayed maxVisitId
+                if (usedMaxVisitIds[usedMaxVisitIds.length - 1]) {
+                    previousUsedMaxIdVisit = usedMaxVisitIds[usedMaxVisitIds.length - 1];
+                }
+            }
+
+            params.maxIdVisit          = previousUsedMaxIdVisit;
+
+            // if there is no previousUsedMaxIdVisit given, request by minTimestamp. We always prefer maxIdVisit here
+            // cause when maxIdVisit is used, we get the users sorted by VisitId/firstVisitTime
+            if (!previousUsedMaxIdVisit) {
+                params.minTimestamp    = latestRequestedTimestamp;
+            } else {
+                params.minTimestamp    = null;
+            }
+
             params.fetchLiveOverview = false;
-            request.send(params);
+
+            refresh.refresh();
         });
 
         visitorRows.push(nextPagerRow);
@@ -127,7 +148,7 @@ function window (params) {
 
                 visitorRows.push(visitorRow);
             }
-
+            
             if (visitor && visitor.idVisit) {
                 // store the id of the last visitor
                 oldestVisitId = visitor.idVisit;
@@ -140,7 +161,12 @@ function window (params) {
             params.minTimestamp      = null;
             params.maxIdVisit        = oldestVisitId;
             params.fetchLiveOverview = false;
-            request.send(params);
+            refresh.refresh();
+
+            if (oldestVisitId) {
+                // store the previous used oldestVisitId. This makes sure we can display the same previous users
+                usedMaxVisitIds.push(oldestVisitId);
+            }
         });
 
         visitorRows.push(previousPagerRow);
