@@ -57,6 +57,6 @@ config.piwik = {
     defaultReportDate: 'day##yesterday',
     filterLimit: 30,
     multiChartEnabled: false,
-    latestServerVersion: '1.4.0',
+    latestServerVersion: '1.5.0',
     graphsEnabled: true
 };
