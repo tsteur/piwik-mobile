@@ -58,5 +58,6 @@ config.piwik = {
     filterLimit: 30,
     multiChartEnabled: false,
     latestServerVersion: '1.5.0',
-    graphsEnabled: true
+    graphsEnabled: true,
+    trackingEnabled: false
 };

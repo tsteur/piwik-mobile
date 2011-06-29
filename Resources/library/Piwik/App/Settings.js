@@ -61,6 +61,29 @@ Piwik.App.Settings = new function () {
     };
 
     /**
+     * Sets (overwrites) whether the anonymous tracking within Piwik Mobile is enabled or disabled.
+     *
+     * @param {boolean}  value   true to enable tracking, false otherwise.
+     *
+     * @type null
+     */
+    this.setTrackingEnabled = function (value) {
+
+        value = Boolean(value);
+
+        this._set('trackingEnabled', 'Bool', value);
+    };
+
+    /**
+     * Retrieve the stored tracking enabled value.
+     *
+     * @returns {boolean}  true if user has enabled tracking, false otherwise.
+     */
+    this.isTrackingEnabled = function () {
+        return this._get('trackingEnabled', 'Bool', config.piwik.trackingEnabled);
+    };
+
+    /**
      * Sets (overwrites) whether the display of graphs in statistics is enabled or disabled.
      *
      * @param {boolean}  value   true to enable graphs, false otherwise.

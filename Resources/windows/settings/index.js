@@ -46,6 +46,14 @@ function window () {
             
             indexEvent = {};
         }
+        
+        var onChangeAnonymousTracking = function (event) {
+
+            this.hasCheck = !this.hasCheck;
+
+            var settings  = Piwik.require('App/Settings');
+            settings.setTrackingEnabled(this.hasCheck);
+        };
 
         var onChangeSparkline = function (event) {
 
@@ -303,6 +311,10 @@ function window () {
                                                       value: defaultReportDateLabel,
                                                       hasChild: Piwik.isIos}),
                          Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasCheck',
+                                                      title: _('Mobile_AnonymousTracking'),
+                                                      onClick: onChangeAnonymousTracking,
+                                                      hasCheck: Boolean(indexEvent.trackingEnabled)}),
+                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasCheck',
                                                       title: _('Mobile_MultiChartLabel'),
                                                       description: _('Mobile_MultiChartInfo'),
                                                       onClick: onChangeSparkline,
@@ -352,6 +364,7 @@ function window () {
         eventResult.piwikMultiCharts   = settings.getPiwikMultiChart();
         eventResult.piwikLanguage      = settings.getLanguage();
         eventResult.graphsEnabled      = settings.getGraphsEnabled();
+        eventResult.trackingEnabled    = settings.isTrackingEnabled();
         eventResult.availableLanguages = translation.getAvailableLanguages();
 
         this.fireEvent('onopen', eventResult);
