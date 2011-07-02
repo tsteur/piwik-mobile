@@ -22,6 +22,7 @@ Piwik.Network.WebsitesRequest = function () {
      * @param   {string}    event.type               The name of the event.
      * @param   {Array}     event.sites              See {@link Piwik.Network.WebsitesRequest#sites}.
      * @param   {boolean}   event.showMultiChart     See {@link Piwik.Network.WebsitesRequest#showMultiChart}.
+     * @param   {boolean}   event.filterUsed         See {@link Piwik.Network.WebsitesRequest#filterUsed}.
      */
 
     /**
@@ -48,6 +49,22 @@ Piwik.Network.WebsitesRequest = function () {
      * @type Array
      */
     this.accounts       = [];
+
+    /**
+     * True if search function was used, false otherwise.
+     *
+     * @defaults false
+     *
+     * @type boolean
+     */
+    this.filterUsed     = false;
+
+    /**
+     * @private
+     *
+     * @type Piwik.Network.RequestPool|null
+     */
+    var requestPool     = null;
 
     /**
      * Initialize / reset all previous defined or fetched values. We have to do this cause it is possible to call the
@@ -91,11 +108,11 @@ Piwik.Network.WebsitesRequest = function () {
      * {@link Piwik.Network.WebsitesRequest#onReceiveSitesWithAtLeastViewAccess} for each received request result (for
      * each account).
      */
-    this.send = function () {
+    this.send = function (params) {
         this.init();
 
-        var piwikRequest    = null;
-        var requestPool     = Piwik.require('Network/RequestPool');
+        var piwikRequest = null;
+        requestPool      = Piwik.require('Network/RequestPool');
         requestPool.setContext(this);
 
         if (!this.accounts || !this.accounts.length) {
@@ -105,6 +122,7 @@ Piwik.Network.WebsitesRequest = function () {
             return;
         }
 
+        var parameter = null;
         for (var index = 0; index < this.accounts.length; index++) {
         
             if (!this.accounts[index] || !Boolean(this.accounts[index].active)) {
@@ -114,8 +132,19 @@ Piwik.Network.WebsitesRequest = function () {
 
             // create a request to fetch all sites the user has at least view access
             piwikRequest = Piwik.require('Network/PiwikApiRequest');
-            piwikRequest.setMethod('SitesManager.getSitesWithAtLeastViewAccess');
-            piwikRequest.setParameter({accountId: this.accounts[index].id});
+            parameter    = {accountId: this.accounts[index].id, limit: 5};
+            
+            if (params && params.filterName) {
+                parameter.pattern = params.filterName;
+                piwikRequest.setMethod('SitesManager.getPatternMatchSites');
+                this.filterUsed   = true;
+
+            } else {
+                piwikRequest.setMethod('SitesManager.getSitesWithAtLeastViewAccess');
+                this.filterUsed   = false;
+            }
+
+            piwikRequest.setParameter(parameter);
             piwikRequest.setAccount(this.accounts[index]);
             piwikRequest.setCallback(this, this.onReceiveSitesWithAtLeastViewAccess);
 
@@ -124,6 +153,15 @@ Piwik.Network.WebsitesRequest = function () {
         }
 
         requestPool.send(this.loaded);
+    };
+
+    /**
+     * Abort all previous fired requests. No callback method will be called.
+     */
+    this.abort = function () {
+        if (requestPool && requestPool.abort) {
+            requestPool.abort();
+        }
     };
 
     /**
@@ -143,17 +181,14 @@ Piwik.Network.WebsitesRequest = function () {
             return;
         }
 
-        // try to find the account that was used to send the request, depending on the accountId. we need the account
-        // information only if showMultiChart is enabled at the moment.
+        // try to find the account that was used to send the request, depending on the accountId.
         var account = {};
-        if (this.showMultiChart) {
-            for (var index = 0; index < this.accounts.length; index++) {
-                if (this.accounts[index] && this.accounts[index].id == parameter.accountId) {
-                    // this account was used to send the request
-                    account = this.accounts[index];
+        for (var index = 0; index < this.accounts.length; index++) {
+            if (this.accounts[index] && this.accounts[index].id == parameter.accountId) {
+                // this account was used to send the request
+                account = this.accounts[index];
 
-                    break;
-                }
+                break;
             }
         }
 
@@ -172,7 +207,7 @@ Piwik.Network.WebsitesRequest = function () {
                 site.sparklineUrl = graph.getSparklineUrl(site.idsite, account.accessUrl, account.tokenAuth);
             }
 
-            site.accountId = parameter.accountId;
+            site.accountId   = parameter.accountId;
 
             this.sites.push(site);
         }
@@ -193,6 +228,7 @@ Piwik.Network.WebsitesRequest = function () {
 
         var eventResult = {type: 'onload',
                            sites: this.sites,
+                           filterUsed: this.filterUsed,
                            showMultiChart: this.showMultiChart};
 
         this.fireEvent('onload', eventResult);

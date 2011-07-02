@@ -134,11 +134,35 @@ Piwik.Network.RequestPool = function () {
     };
 
     /**
+     * Abort all previous fired requests. Does not execute any callback. Does not send any error message to the user.
+     * Does reset the complete RequestPool after aborting each request.
+     */
+    this.abort = function () {
+
+        // make sure no callback method will be executed
+        this.context                      = null;
+        this.onAllResultsReceivedCallback = null;
+        
+        // make sure we don't send an error message to the user cause of this abort.
+        this.errorMessageSent = true;
+
+        // abort each request
+        var call = null;
+        while (this.attachedRequests && this.attachedRequests.length) {
+            call = this.attachedRequests.pop();
+            call.abort();
+        }
+
+        // reset Request Pool
+        this.numReceivedCalls             = 0;
+        this.attachedRequests             = [];
+    };
+
+    /**
      * Verifies whether all results are finished by comparing the number of received calls and the number of
      * attached requests. Fires the 'onAllResultsReceivedCallback' as soon as this case occurs.
      */
     this.verifyAllResultsReceived = function () {
-
         this.numReceivedCalls++;
 
         if (this.numReceivedCalls != this.attachedRequests.length) {

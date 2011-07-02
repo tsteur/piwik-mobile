@@ -93,11 +93,19 @@ Piwik.Network.HttpRequest = function () {
     this.callback         = null;
 
     /**
+     * An instance of the Titanium HTTP Client instance we have used to send the request. Is only set if the request is
+     * currently in progress.
+     *
+     * @type Titanium.Network.HTTPClient
+     */
+    this.xhr              = null;
+
+    /**
      * Sets (overwrites) the base url.
      * 
      * @param {string} baseUrl   An url without any GET parameter/Query. For example: 'http://domain.tld/dir/ectory'.
      *                           Do not include GET parameter like this 'http://domain.tld/dir/ectory?' or 
-     *                           'http://domain.tld/dir/ectory?key=1&key2=2'. Use {@link Piwk.Network.HttpRequest#setParameters}
+     *                           'http://domain.tld/dir/ectory?key=1&key2=2'. Use {@link Piwk.Network.HttpRequest#setParameter}
      *                           instead.
      * 
      * @type null
@@ -186,23 +194,47 @@ Piwik.Network.HttpRequest = function () {
         
         Piwik.Log.debug('RequestUrl is ' + requestUrl, 'Piwik.Network.HttpRequest::handle');
         
-        var xhr      = Ti.Network.createHTTPClient({validatesSecureCertificate: false});
+        this.xhr      = Ti.Network.createHTTPClient({validatesSecureCertificate: false, enableKeepAlive: false});
         var that     = this;
         
-        xhr.onload   = function () { that.load(this); };
-        xhr.onerror  = function () { that.error(); };
+        this.xhr.onload   = function () { that.load(this); };
+        this.xhr.onerror  = function () { that.error(); };
 
         var settings = Piwik.require('App/Settings');
         
         // override the iPhone default timeout -> this timeout should never occur since we have implemented our own
         // timeout which is lower than this timeout.
         var timeoutValue = parseInt(settings.getHttpTimeout(), 10);
-        xhr.timeout      = timeoutValue;
-        xhr.setTimeout(timeoutValue);
+        this.xhr.timeout      = timeoutValue;
+        this.xhr.setTimeout(timeoutValue);
 
-        xhr.open("GET", requestUrl);
+        this.xhr.open("GET", requestUrl);
         
-        xhr.send({});
+        this.xhr.send({});
+    };
+
+    /**
+     * Abort a pending request. Does not send any error to the user about this report. Does not call any callback
+     * method.
+     *
+     * @returns   {boolean}   True if there was a pending request which we have aborted. False otherwise.
+     */
+    this.abort = function () {
+
+        if (this.xhr && this.xhr.abort) {
+
+            // make sure not to notify the user about this abort
+            this.sendErrors = false;
+            
+            // make sure no callback method will be called.
+            this.setCallback({}, function () {});
+            
+            this.xhr.abort();
+
+            return true;
+        }
+
+        return false;
     };
 
     /**
@@ -271,6 +303,7 @@ Piwik.Network.HttpRequest = function () {
             this.onload();
         }
 
+        this.xhr = null;
         callback = null;
         response = null;
     };
@@ -379,6 +412,7 @@ Piwik.Network.HttpRequest = function () {
 
         callback.apply(this.context, []);
 
+        this.xhr      = null;
         callback      = null;
 
         // onload hook
