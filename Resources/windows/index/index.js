@@ -30,8 +30,34 @@ function window () {
     this.menuOptions  = {settingsChooser: true};
 
     var request       = Piwik.require('Network/WebsitesRequest');
+    var searchBar     = Ti.UI.createSearchBar({id: 'websiteSearchBar',
+                                               hintText: _('Find a site')});
+    
+    searchBar.addEventListener('return', function (event) {
 
-    var tableview     = Ti.UI.createTableView({id: 'websitesTableView'});
+        if (!event) {
+
+            return;
+        }
+
+        request.abort();
+
+        refresh.refresh();
+        
+        searchBar.blur();
+    });
+
+    searchBar.addEventListener('cancel', function () {
+
+        searchBar.value = '';
+        searchBar.blur();
+
+        refresh.refresh();
+    });
+
+    this.add(searchBar);
+
+    var tableview     = Ti.UI.createTableView({id: 'websitesTableView', top: searchBar.height});
 
     tableview.addEventListener('click', function (event) {
         if (!event || !event.rowData || !event.rowData.site) {
@@ -53,8 +79,13 @@ function window () {
         // remove all tableview rows. This makes sure there are no rendering issues when setting
         // new rows afterwards.
         tableview.setData([]);
-        
-        request.send();
+
+        var params = {};
+        if (searchBar && searchBar.value) {
+            params.filterName = searchBar.value;
+        }
+
+        request.send(params);
     });
 
     request.addEventListener('onload', function (event) {
@@ -66,9 +97,11 @@ function window () {
             return;
         }
 
-        if (1 == event.sites.length && event.sites[0]) {
+        if (!event.filterUsed && 1 == event.sites.length && event.sites[0]) {
             // user has access to only one site. jump directly to site view
             // @see http://dev.piwik.org/trac/ticket/2120
+            // do not jump directly to site view if user has used the filter/searchBar. Maybe that is not the site
+            // he was looking for.
 
             Piwik.UI.createWindow({url: 'site/index.js',
                                    closeCurrentWindow: true,
@@ -85,7 +118,7 @@ function window () {
                 continue;
             }
 
-            rows.push(Piwik.UI.createTableViewRow({title: site.name,
+            rows.push(Piwik.UI.createTableViewRow({title: '' + site.name,
                                                    id: site.idsite,
                                                    name: 'site' + site.idsite,
                                                    site: site,

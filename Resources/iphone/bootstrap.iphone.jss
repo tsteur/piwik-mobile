@@ -42,6 +42,15 @@
     hasChild: true;
 }
 
+#websiteSearchBar {
+    showCancel: true;
+    barColor: '#B2AEA5';
+    height: 43;
+    top: 0;
+    autocorrect: false;
+    autocapitalization: 0;
+}
+
 /**
  * window site/index.js
  */
