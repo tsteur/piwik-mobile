@@ -324,6 +324,11 @@ Piwik.Network.AccountRequest = function () {
                 return;
             }
 
+            if (response.value) {
+                var serverVersionEvent = {url: '/piwik/server-version/' + response.value, title: 'Piwik Server Version'};
+                Piwik.getTracker().trackEvent(serverVersionEvent);
+            } 
+
             // response.value is for example "0.6.4-rc1" or "0.6.3"
             var version       = response.value + '';
             var latestVersion = that.latestVersion + '';
