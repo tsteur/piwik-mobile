@@ -68,8 +68,17 @@ Piwik.UI.Window = function (params) {
     var that = this;
 
     this.addEventListener('focusWindow', function () {
-        // refresh the headline as well as the menu each time a window gets the focus.
 
+        var urlParams  = ('' + that.url).split('/');
+        var controller = urlParams[0];
+        var action     = ('' + urlParams[1]).split('.js')[0];
+        var title      = controller + ' ' + action;
+        var url        = '/window/' + controller + '/' + action;
+
+        // track a page view
+        Piwik.getTracker().setDocumentTitle(title).setCurrentUrl(url).trackPageView();
+
+        // refresh the headline as well as the menu each time a window gets the focus.
         Piwik.UI.layout.header.refresh(that.titleOptions);
         Piwik.UI.layout.menu.refresh(that.menuOptions);
     });
