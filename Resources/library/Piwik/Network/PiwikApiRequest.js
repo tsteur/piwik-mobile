@@ -213,8 +213,6 @@ Piwik.Network.PiwikApiRequest = function () {
     
     /**
      * Sends the request to the piwik api (async).
-     *
-     * @type void
      */
     this.send = function () {
 
@@ -233,8 +231,6 @@ Piwik.Network.PiwikApiRequest = function () {
         this.parameter     = this._mixinParameter(this.parameter);
         
         this.handle();
-        
-        return;
     };
 };
 

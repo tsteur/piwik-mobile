@@ -195,7 +195,7 @@ Piwik.Network.HttpRequest = function () {
         Piwik.Log.debug('RequestUrl is ' + requestUrl, 'Piwik.Network.HttpRequest::handle');
         
         this.xhr      = Ti.Network.createHTTPClient({validatesSecureCertificate: false, enableKeepAlive: false});
-        var that     = this;
+        var that      = this;
         
         this.xhr.onload   = function () { that.load(this); };
         this.xhr.onerror  = function () { that.error(); };
