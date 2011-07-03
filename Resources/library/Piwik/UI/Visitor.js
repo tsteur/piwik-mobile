@@ -168,6 +168,8 @@ Piwik.UI.Visitor = function () {
 
             referrerRow.addEventListener('click', function () {
                 if (visitor.referrerUrl) {
+
+                    Piwik.getTracker().trackLink('/visitor/referrer-url', 'link');
                     Titanium.Platform.openURL(visitor.referrerUrl);
                 }
             });

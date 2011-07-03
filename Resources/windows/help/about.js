@@ -34,12 +34,19 @@ function window () {
     var piwikOrgLink  = Ti.UI.createLabel({text: 'Website: http://piwik.org',
                                            id: 'aboutPiwikLinkToPiwiwkLabel'});
     piwikOrgLink.addEventListener('click', function () {
-        Ti.Platform.openURL('http://piwik.org');
+
+        var link = 'http://piwik.org';
+
+        Piwik.getTracker().trackLink(link, 'link');
+        Ti.Platform.openURL(link);
     });
     
     var piwikDevLink  = Ti.UI.createLabel({text: 'Source Code: http://dev.piwik.org/svn/mobile',
                                            id: 'aboutPiwikLinkToSvnLabel'});
     piwikDevLink.addEventListener('click', function () {
+        var link = 'http://dev.piwik.org/svn/mobile';
+
+        Piwik.getTracker().trackLink(link, 'link');
         Ti.Platform.openURL('http://dev.piwik.org/svn/mobile');
     });
 
