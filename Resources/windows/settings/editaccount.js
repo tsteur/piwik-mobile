@@ -146,6 +146,7 @@ function window (params) {
 
                 // has the user clicked the OK button?
                 if (event && event.index) {
+                    
                     saveAccount();
 
                     return;
@@ -216,6 +217,8 @@ function window (params) {
     request.addEventListener('onInvalidUrl', function (event) {
         activityIndicator.hide();
 
+        Piwik.getTracker().trackEvent({title: 'Account Invalid Url', url: '/account/edit/invalid-url'});
+
         var url = '';
         if (event && event.url) {
             url = '' + event.url;
@@ -233,6 +236,8 @@ function window (params) {
     request.addEventListener('onMissingUsername', function () {
         activityIndicator.hide();
 
+        Piwik.getTracker().trackEvent({title: 'Account Missing Username', url: '/account/edit/missing-username'});
+
         var alertDialog = Ti.UI.createAlertDialog({
             title: _('General_Error'),
             message: String.format(_('General_Required'), _('Login_Login')),
@@ -247,6 +252,8 @@ function window (params) {
     request.addEventListener('onMissingPassword', function () {
         activityIndicator.hide();
 
+        Piwik.getTracker().trackEvent({title: 'Account Missing Password', url: '/account/edit/missing-password'});
+
         var alertDialog = Ti.UI.createAlertDialog({
             title: _('General_Error'),
             message: String.format(_('General_Required'), _('Login_Password')),
@@ -260,6 +267,8 @@ function window (params) {
 
     request.addEventListener('onReceiveAuthTokenError', function (event) {
         activityIndicator.hide();
+
+        Piwik.getTracker().trackEvent({title: 'Account Receive Token Error', url: '/account/edit/receive-token-error'});
 
         if (event && !event.errorMessageSent) {
 
@@ -276,6 +285,8 @@ function window (params) {
     request.addEventListener('onNoViewAccess', function (event) {
         activityIndicator.hide();
 
+        Piwik.getTracker().trackEvent({title: 'Account No View Access', url: '/account/edit/no-view-access'});
+
         if (event && !event.errorMessageSent) {
             var alertDialog = Ti.UI.createAlertDialog({
                 title: _('General_Error'),
@@ -287,8 +298,13 @@ function window (params) {
         }
     });
 
-    request.addEventListener('onload', function () {
+    request.addEventListener('onload', function (event) {
         activityIndicator.hide();
+
+        if (event) {
+            var trackingUrl = '/account/' + event.action + '/' + (event.success ? 'success' : 'error');
+            Piwik.getTracker().trackEvent({title: 'Account ' + event.action, url: trackingUrl});
+        }
 
         // save and verify account was successful
         var alertDialog = Ti.UI.createAlertDialog({

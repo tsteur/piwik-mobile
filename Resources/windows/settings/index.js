@@ -51,6 +51,10 @@ function window () {
 
             this.hasCheck = !this.hasCheck;
 
+            var action    = this.hasCheck ? 'enable' : 'disable';
+            Piwik.getTracker().trackEvent({title: 'Anonymous Tracking ' + action,
+                                           url: '/settings/anonymous-tracking/' + action});
+
             var settings  = Piwik.require('App/Settings');
             settings.setTrackingEnabled(this.hasCheck);
         };
@@ -59,6 +63,10 @@ function window () {
 
             this.hasCheck = !this.hasCheck;
 
+            var action    = this.hasCheck ? 'enable' : 'disable';
+            Piwik.getTracker().trackEvent({title: 'Multisite Graphs ' + action,
+                                           url: '/settings/multisite-graphs/' + action});
+
             var settings  = Piwik.require('App/Settings');
             settings.setPiwikMultiChart(this.hasCheck);
         };
@@ -66,6 +74,10 @@ function window () {
         var onChangeGraphs = function (event) {
 
             this.hasCheck = !this.hasCheck;
+
+            var action    = this.hasCheck ? 'enable' : 'disable';
+            Piwik.getTracker().trackEvent({title: 'Graphs ' + action,
+                                           url: '/settings/graphs/' + action});
 
             var settings  = Piwik.require('App/Settings');
             settings.setGraphsEnabled(this.hasCheck);
@@ -137,6 +149,9 @@ function window () {
                         // and then break the loop
                         var settings = Piwik.require('App/Settings');
                         settings.setLanguage(langCode);
+
+                        Piwik.getTracker().trackEvent({title: 'Language Change',
+                                                       url: '/settings/change-language/' + langCode});
 
                         var translation = Piwik.require('Locale/Translation');
                         translation.load();
@@ -243,6 +258,11 @@ function window () {
                         break;
                 }
 
+                var chPeriod = settings.getPiwikDefaultPeriod();
+                var chDate   = settings.getPiwikDefaultDate();
+                Piwik.getTracker().trackEvent({title: 'Default Report Date Change',
+                                               url: '/settings/change-defaultreportdate/' + chPeriod + '/' + chDate});
+
                 session.set('piwik_parameter_period', settings.getPiwikDefaultPeriod());
                 session.set('piwik_parameter_date', settings.getPiwikDefaultDate());
             });
@@ -279,6 +299,9 @@ function window () {
                 row.changeValue(timeoutValue);
 
                 timeoutValue     = parseInt(timeoutValue.replace('s', ''), 10) * 1000;
+
+                Piwik.getTracker().trackEvent({title: 'Timeout Value',
+                                               url: '/settings/change-httptimeout/' + timeoutValue});
 
                 var settings     = Piwik.require('App/Settings');
                 settings.setHttpTimeout(timeoutValue);
