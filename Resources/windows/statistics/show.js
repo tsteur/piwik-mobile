@@ -48,6 +48,8 @@ function window (params) {
         Piwik.Tracker.setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
     }
 
+    Piwik.Tracker.setCustomVariable(4, 'reportPeriod', params.period ? params.period : 'unknown', 'page');
+
     var request      = Piwik.require('Network/StatisticsRequest');
     var tableView    = Ti.UI.createTableView({id: 'statisticsTableView'});
     var refresh      = Piwik.UI.createRefresh({tableView: tableView});
@@ -62,6 +64,8 @@ function window (params) {
 
     this.addEventListener('onDateChanged', function (event) {
         // user has changed the date and/or period -> reload statistics using the updated date/period
+
+        Piwik.getTracker().trackEvent({title: 'Date/Period changed', url: '/statistic-change/date-period'});
 
         if (event && event.date) {
             params.date   = event.date;
@@ -79,6 +83,8 @@ function window (params) {
     this.addEventListener('onSiteChanged', function (event) {
         // user has changed the site -> load statistics of the new site
 
+        Piwik.getTracker().trackEvent({title: 'Site changed', url: '/statistic-change/site'});
+
         params.site    = event.site;
         params.showAll = false;
 
@@ -86,6 +92,12 @@ function window (params) {
     });
 
     this.addEventListener('onPaginatorChanged', function (event) {
+
+        if (event.showAll) {
+            Piwik.getTracker().trackEvent({title: 'Show all changed', url: '/statistic-change/show-all/enabled'});
+        } else {
+            Piwik.getTracker().trackEvent({title: 'Show all changed', url: '/statistic-change/show-all/disabled'});
+        }
 
         params.showAll = event.showAll;
 
