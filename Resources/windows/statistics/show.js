@@ -43,9 +43,9 @@ function window (params) {
     this.menuOptions  = {};
 
     if (params.report) {
-        Piwik.Tracker.setCustomVariable(1, 'module', params.report.module, 'page');
-        Piwik.Tracker.setCustomVariable(2, 'action', params.report.action, 'page');
-        Piwik.Tracker.setCustomVariable(3, 'dimension', params.report.dimension, 'page');
+        Piwik.Tracker.setCustomVariable(1, 'reportModule', params.report.module, 'page');
+        Piwik.Tracker.setCustomVariable(2, 'reportAction', params.report.action, 'page');
+        Piwik.Tracker.setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
     }
 
     var request      = Piwik.require('Network/StatisticsRequest');
