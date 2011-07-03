@@ -82,7 +82,6 @@ Piwik.UI.createWindow = function (params) {
 
     try {
         var url                = params.url;
-        delete params.url;
 
         // increase the zIndex, ensures the next window will be displayed in front of the current window
         this.layout.zIndex     = this.layout.zIndex + 1;
