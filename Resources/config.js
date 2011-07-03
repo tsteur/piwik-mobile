@@ -61,3 +61,16 @@ config.piwik = {
     graphsEnabled: true,
     trackingEnabled: false
 };
+
+/**
+ * Tracking related settings.
+ *
+ * @type Object
+ */
+config.tracking = {
+    enabled: true,
+    siteId: 25,
+    apiVersion: 1,
+    baseUrl: 'http://mobileapp.piwik.org',
+    piwikServerUrl: 'http://demo.piwik.org/piwik.php'
+};
