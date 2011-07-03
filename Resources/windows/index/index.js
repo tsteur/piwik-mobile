@@ -55,6 +55,10 @@ function window () {
         refresh.refresh();
     });
 
+    this.addEventListener('blurWindow', function () {
+        searchBar.blur();
+    });
+
     this.add(searchBar);
 
     var tableview     = Ti.UI.createTableView({id: 'websitesTableView', top: searchBar.height});
