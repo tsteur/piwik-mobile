@@ -143,38 +143,12 @@ Piwik.Tracker = new function () {
         this.trackEvent(event);
     };
 
-    this.trackLink = function (sourceUrl, linkType, customData) {
+    this.trackLink = function (sourceUrl, linkType) {
 
         parameter           = {url: this.currentUrl};
         parameter[linkType] = sourceUrl;
 
-        if ('undefined' !== (typeof customData) && customData) {
-            this.setCustomData(customData);
-        }
-
         this.track(parameter);
-    };
-
-    this.setCustomData = function (key_or_obj, value) {
-
-        if ('undefined' === (typeof key_or_obj) || !key_or_obj) {
-
-            return;
-        }
-
-        if (!parameter.data) {
-            parameter.data = {};
-        }
-
-        if ('string' == (typeof key_or_obj).toLocaleLowerCase()) {
-            parameter.data[key_or_obj] = value;
-        } else if ('object' == (typeof key_or_obj).toLocaleLowerCase()) {
-            for (var key in key_or_obj) {
-                parameter.data[key] = key_or_obj[key];
-            }
-        }
-
-        return this;
     };
 
     this.setDocumentTitle = function (title) {
@@ -248,10 +222,6 @@ Piwik.Tracker = new function () {
         parameter.h      = now.getHours();
         parameter.m      = now.getMinutes();
         parameter.s      = now.getSeconds();
-        
-        if (parameter.data) {
-            parameter.data = JSON.stringify(parameter.data);
-        }
 
         // 1 = record request, 0 = do not record request
         parameter.rec    = 1;
