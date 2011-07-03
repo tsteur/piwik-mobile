@@ -215,8 +215,19 @@ Piwik.include('/library/Piwik/Log.js',
               '/library/Piwik/String.js',
               '/library/Piwik/Locale.js',
               '/library/Piwik/UI.js',
-              '/library/Piwik/UI/OptionMenu.js');
+              '/library/Piwik/UI/OptionMenu.js',
+              '/library/Piwik/Tracker.js');
 
 if (Piwik.Profiler.ENABLED) {
     Piwik.Log.setProfiler(Piwik.Profiler);
 }
+
+/**
+ * Returns a tracker instance.
+ *
+ * @type Piwik.Tracker
+ */
+Piwik.getTracker = function () {
+
+    return Piwik.Tracker;
+};

@@ -42,6 +42,8 @@ var hasActivatedAccount = bootstrapAccounts.hasActivedAccount();
 // reset bootstrapAccounts instance, otherwise it will be available in global context
 bootstrapAccounts       = undefined;
 
+Piwik.getTracker().askForPermission();
+
 if (hasActivatedAccount) {
     // open our welcome window
     Piwik.UI.createWindow({url: 'index/index.js'});
