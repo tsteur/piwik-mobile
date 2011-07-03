@@ -16,6 +16,7 @@
  *          piwik_sites_allowed                        All allowed sites an user has at least view access
  *          accounts_available                         A list/array of all available account ids
  *          account_{accountId}                        Account information
+ *          tracking_visitor_uuid                      An unique visitor tracking id for this user
  *
  * @static
  *

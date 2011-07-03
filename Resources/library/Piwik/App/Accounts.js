@@ -114,6 +114,23 @@ Piwik.App.Accounts = function () {
     };
 
     /**
+     * Returns the number of configured active. Counts inactive as well as active accounts.
+     *
+     * @type number
+     */
+    this.getNumAccounts = function () {
+
+        var accounts = this.getAccounts();
+
+        if (accounts && accounts.length) {
+
+            return accounts.length;
+        }
+
+        return 0;
+    };
+
+    /**
      * Verifies whether the user has already defined at least one active account.
      *
      * @returns {boolean} true if the user already has an active account, false otherwise.
