@@ -45,7 +45,7 @@
 #websiteSearchBar {
     showCancel: true;
     barColor: '#B2AEA5';
-    height: 43;
+    height: '43dp';
     top: 0;
     autocorrect: false;
     autocapitalization: 0;
