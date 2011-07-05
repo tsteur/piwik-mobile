@@ -266,6 +266,8 @@ Piwik.Network.HttpRequest = function () {
 
         } catch (exception) {
 
+            Piwik.UI.createError({exception: exception, errorCode: 'PiHrLo26'});
+
             this.error({error: 'Failed to parse response'});
 
             return;
@@ -294,7 +296,7 @@ Piwik.Network.HttpRequest = function () {
         } catch (e) {
             Piwik.Log.warn('Failed to call callback method: ' + e.message, 'Piwik.Network.HttpRequest::load#callback');
 
-            var uiError = Piwik.UI.createError({exception: e});
+            var uiError = Piwik.UI.createError({exception: e, errorCode: 'PiHrLo29'});
             uiError.showErrorMessageToUser();
         }
 
@@ -392,6 +394,9 @@ Piwik.Network.HttpRequest = function () {
                     if (!e.error) {
                         e.error = 'Unknown';
                     }
+
+                    Piwik.UI.createError({exception: e, type: e.error,
+                                          file: 'Piwik/Network/HttpRequest.js', errorCode: 'PiHrLe39'});
                         
                     this.errorMessageSent = true;
 

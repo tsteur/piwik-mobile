@@ -126,7 +126,7 @@ Piwik.UI.createWindow = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception});
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCw12'});
         uiError.showErrorMessageToUser();
     }
 
@@ -149,14 +149,22 @@ Piwik.UI.createDatePicker = function (params) {
     if (!params) {
         params  = {};
     }
-    
-    params.type = Ti.UI.PICKER_TYPE_DATE;
 
-    var picker  = Piwik.require('UI/DatePicker');
-    
-    picker.setParams(params);
-    
-    return picker.init(params);
+    try {
+
+        params.type = Ti.UI.PICKER_TYPE_DATE;
+
+        var picker  = Piwik.require('UI/DatePicker');
+
+        picker.setParams(params);
+
+        return picker.init(params);
+        
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiDp16'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -172,9 +180,16 @@ Piwik.UI.createDatePicker = function (params) {
  */
 Piwik.UI.createTableViewRow = function (params) {
 
-    var instance = Piwik.require('UI/TableViewRow');
+    try {
+        var instance = Piwik.require('UI/TableViewRow');
 
-    return instance.init(params);
+        return instance.init(params);
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiTr11'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -190,9 +205,16 @@ Piwik.UI.createTableViewRow = function (params) {
  */
 Piwik.UI.createTableViewSection = function (params) {
 
-    var instance = Piwik.require('UI/TableViewSection');
+    try {
+        var instance = Piwik.require('UI/TableViewSection');
 
-    return instance.init(params);
+        return instance.init(params);
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiTs21'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -242,11 +264,18 @@ Piwik.UI.createError = function (params) {
  */
 Piwik.UI.createGraph = function (params) {
 
-    var instance = Piwik.require('UI/Graph');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/Graph');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCg27'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -262,11 +291,18 @@ Piwik.UI.createGraph = function (params) {
  */
 Piwik.UI.createStatisticList = function (params) {
 
-    var instance = Piwik.require('UI/StatisticList');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/StatisticList');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiSl30'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -282,11 +318,18 @@ Piwik.UI.createStatisticList = function (params) {
  */
 Piwik.UI.createHeader = function (params) {
 
-    var header = Piwik.require('UI/Header');
-    header.setParams(params);
-    header.init();
+    try {
+        var header = Piwik.require('UI/Header');
+        header.setParams(params);
+        header.init();
 
-    return header;
+        return header;
+        
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCh33'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -302,11 +345,18 @@ Piwik.UI.createHeader = function (params) {
  */
 Piwik.UI.createMenu = function (params) {
 
-    var menu = Piwik.require('UI/Menu');
-    menu.setParams(params);
-    menu.init();
+    try {
+        var menu = Piwik.require('UI/Menu');
+        menu.setParams(params);
+        menu.init();
 
-    return menu;
+        return menu;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCm35'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -322,11 +372,18 @@ Piwik.UI.createMenu = function (params) {
  */
 Piwik.UI.createRefresh = function (params) {
 
-    var instance = Piwik.require('UI/Refresh');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/Refresh');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCr38'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -342,11 +399,18 @@ Piwik.UI.createRefresh = function (params) {
  */
 Piwik.UI.createVisitorOverview = function (params) {
 
-    var instance = Piwik.require('UI/VisitorOverview');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/VisitorOverview');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiVo41'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -362,11 +426,18 @@ Piwik.UI.createVisitorOverview = function (params) {
  */
 Piwik.UI.createVisitor = function (params) {
 
-    var instance = Piwik.require('UI/Visitor');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/Visitor');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCv43'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**
@@ -382,9 +453,16 @@ Piwik.UI.createVisitor = function (params) {
  */
 Piwik.UI.createLiveOverview = function (params) {
 
-    var instance = Piwik.require('UI/LiveOverview');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/LiveOverview');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiLo46'});
+        uiError.showErrorMessageToUser();
+    }
 };

@@ -295,6 +295,9 @@ Piwik.Locale.Translation = new function () {
             Ti.include('/i18n/' + locale  + '.js' );
         } catch (e) {
             Piwik.Log.error('Failed to load translations for locale ' + locale, 'Piwik.Locale.Translation::load');
+
+            var uiError = Piwik.UI.createError({exception: e, errorCode: 'PiTrLo35'});
+            uiError.showErrorMessageToUser();
         }
 
         Ti.App.fireEvent('onTranslationsLoaded', {type: 'onTranslationsLoaded'});

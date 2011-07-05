@@ -105,15 +105,15 @@ Piwik.Tracker = new function () {
         parameter.action_name = '' + this.documentTitle;
         parameter.url         = this.currentUrl;
 
-        this.track(parameter);
+        this.track();
     };
 
     this.trackEvent = function (event) {
-
+        
         parameter.action_name = '' + event.title;
         parameter.url         = baseUrl + '/event' + event.url;
 
-        this.track(parameter);
+        this.track();
     };
 
     this.trackGoal = function (goalId) {
@@ -121,7 +121,7 @@ Piwik.Tracker = new function () {
         parameter.idgoal = '' + goalId;
         parameter.url    = this.currentUrl;
 
-        this.track(parameter);
+        this.track();
     };
 
     this.trackException = function (exception) {
@@ -131,16 +131,31 @@ Piwik.Tracker = new function () {
             return;
         }
 
+        exception.file    = '' + exception.file;
+        exception.message = '' + exception.message;
+
+        if (exception && exception.file && exception.file.length > 60) {
+            // use max 60 chars
+            exception.file = exception.file.substr(exception.file.length - 60);
+        }
+
+        if (exception && exception.message && exception.message.length > 200) {
+            // use max 200 chars
+            exception.message = exception.message.substr(0, 200);
+        }
+
         var url   = '/exception/' + exception.type;
         url      += '/' + exception.errorCode;
         url      += '/' + exception.file;
         url      += '/' + exception.line
-        url      += '/' + exception.description
+        url      += '/' + exception.message
 
         var title = 'Exception ' + exception.type;
-        var event = {title: title, url: url};
 
-        this.trackEvent(event);
+        parameter.action_name = '' + title;
+        parameter.url         = baseUrl + url;
+
+        this.track();
     };
 
     this.trackLink = function (sourceUrl, linkType) {
@@ -186,7 +201,7 @@ Piwik.Tracker = new function () {
         return settings.isTrackingEnabled();
     };
 
-    this.track = function (parameter) {
+    this.track = function () {
 
         if (!config.tracking.enabled) {
 

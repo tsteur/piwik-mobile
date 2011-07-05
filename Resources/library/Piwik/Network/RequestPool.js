@@ -150,7 +150,10 @@ Piwik.Network.RequestPool = function () {
         var call = null;
         while (this.attachedRequests && this.attachedRequests.length) {
             call = this.attachedRequests.pop();
-            call.abort();
+
+            if (call.abort) {
+                call.abort();
+            }
         }
 
         // reset Request Pool
@@ -183,7 +186,7 @@ Piwik.Network.RequestPool = function () {
                 Piwik.Log.debug('Failed to call allResultsReceivedCallback: ' + e.message,
                                 'Piwik.Network.RequestPool::verifyAllResultsReceived');
 
-                var uiError = Piwik.UI.createError({exception: e});
+                var uiError = Piwik.UI.createError({exception: e, errorCode: 'PiRpVr18'});
                 uiError.showErrorMessageToUser();
             }
         }

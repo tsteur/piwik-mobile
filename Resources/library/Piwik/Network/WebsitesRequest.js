@@ -106,7 +106,10 @@ Piwik.Network.WebsitesRequest = function () {
      * Sends a request for each configured account to determine all websites the user has at least view access. Executes
      * the {@link Piwik.Network.WebsitesRequest#loaded} method as soon as all responses are received. Executes the
      * {@link Piwik.Network.WebsitesRequest#onReceiveSitesWithAtLeastViewAccess} for each received request result (for
-     * each account).
+     * each account). Requests by default only 5 sites per account (if filterName is not given).
+     *
+     * @param   {Object}        params
+     * @param   {Object}        params.filterName        Search only for sites which contains the given filterName.
      */
     this.send = function (params) {
         this.init();
