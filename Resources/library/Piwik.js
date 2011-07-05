@@ -123,7 +123,7 @@ Piwik.include = function (args) {
             file = '/library/Piwik/UI/Error.js';
             Ti.include(file);
             // do not use Piwik.UI.createError... this would again use Piwik.require/include and we could end in a loop
-            var uiError = new Piwik.UI.Error(exception);
+            var uiError = new Piwik.UI.Error({exception: exception, errorCode: 'PiPiIn16'});
             uiError.showErrorMessageToUser();
         }
     }
@@ -195,7 +195,7 @@ Piwik.requireWindow = function (file) {
         Ti.include(file);
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception});
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiPiRw19'});
         uiError.showErrorMessageToUser();
     }
 

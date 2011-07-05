@@ -9,9 +9,15 @@
 /**
  * @class   An error UI widget is created by the method Piwik.UI.createError. The error UI widget is intended to display
  *          error information to the user instead of simply logging to the log. So the user has a good chance to give
- *          us feedback about the occurred error.
+ *          us feedback about the occurred error. Tracks automatically each created error.
  *
  * @param    {Object}           params               See {@link Piwik.UI.View#setParams}
+ * @param    {string}           [params.file]        The name of the file in which the exception occurred
+ * @param    {number}           [params.line]        The number of the line in which the exception occurred
+ * @param    {string}           [params.type]        The exception type. A single word which describes the occurred
+ *                                                   exception. For example TypeError.
+ * @param    {string}           [params.errorCode]   An unique errorCode which allows us to identify where the
+ *                                                   exception occurred.
  * @param    {Error|string}     params.exception     An instance of an previously occurred error or a string containing
  *                                                   an error message.
  *
@@ -38,13 +44,53 @@ Piwik.UI.Error = function () {
      */
     this.init = function () {
 
-        var exception = this.getParam('exception');
+        var exception   = this.getParam('exception');
 
         if (config.debugging && exception && 'object' == (typeof exception).toLowerCase()) {
             throw exception;
         }
 
+        this.trackError();
+
         return this;
+    };
+
+    /**
+     * Track an occurred error.
+     */
+    this.trackError = function () {
+
+        var exception   = this.getParam('exception');
+        var line        = this.getParam('line', 'unknown');
+        var file        = this.getParam('file', 'unknown');
+        var type        = this.getParam('type', 'unknown');
+        var errorCode   = this.getParam('errorCode', '0');
+
+        if (exception && exception instanceof Error) {
+
+            if (exception.name) {
+                type = exception.name;
+            }
+
+            if (exception.sourceURL) {
+                file = exception.sourceURL;
+            }
+
+            if (exception.line) {
+                line = exception.line;
+            }
+
+        }
+
+        try {
+            Piwik.getTracker().trackException({type: type,
+                                               errorCode: errorCode,
+                                               file: file,
+                                               line: line,
+                                               message: '' + exception});
+        } catch (e) {
+            Piwik.Log.warn('An error occurred while tracking an error... ' + e);
+        }
     };
 
     /**
