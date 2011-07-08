@@ -238,7 +238,8 @@ Piwik.Network.AccountRequest = function () {
         this.requestVersion();
 
         var piwikRequest = Piwik.require('Network/PiwikApiRequest');
-        piwikRequest.setMethod('SitesManager.getSitesIdWithAtLeastViewAccess');
+        piwikRequest.setMethod('SitesManager.getSitesWithAtLeastViewAccess');
+        piwikRequest.setParameter({limit: 1});
         piwikRequest.setAccount(account);
         piwikRequest.setCallback(this, function (response) {
             var eventResult = null;
