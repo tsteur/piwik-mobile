@@ -10,6 +10,7 @@
     barColor: '#B2AEA5';
     navBarHidden: false;
     fullscreen: false;
-    modal: true;
+    modal: false;
+    tabBarHidden: true;
     title: 'Piwik Mobile';
 }
