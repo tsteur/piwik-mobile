@@ -154,19 +154,47 @@ Piwik.UI.Menu = function () {
 
             // android
             this.settingsIcon    = Ti.UI.createImageView({id: 'menuSettingsIcon'});
-            this.settingsIcon.addEventListener('click', function () { that.onChooseSettings(); });
+            this.settingsIcon.addEventListener('click', function () {
+                
+                var menuEvent = {title: 'Menu Click - Open Settings',
+                                 url: '/menu-click/open-settings'};
+                Piwik.getTracker().trackEvent(menuEvent);
+
+                that.onChooseSettings();
+            });
             this.menuView.add(this.settingsIcon);
 
             this.siteChooserIcon = Ti.UI.createImageView({id: 'menuSiteChooserIcon'});
-            this.siteChooserIcon.addEventListener('click', function () { that.onChooseSite(); });
+            this.siteChooserIcon.addEventListener('click', function () {
+
+                var menuEvent = {title: 'Menu Click - Choose Site',
+                                 url: '/menu-click/choose-site'};
+                Piwik.getTracker().trackEvent(menuEvent);
+
+                that.onChooseSite();
+            });
             this.menuView.add(this.siteChooserIcon);
 
             this.dayChooserIcon  = Ti.UI.createImageView({id: 'menuDayChooserIcon'});
-            this.dayChooserIcon.addEventListener('click', function () { that.onChooseDate(); });
+            this.dayChooserIcon.addEventListener('click', function () {
+
+                var menuEvent = {title: 'Menu Click - Choose Date',
+                                 url: '/menu-click/choose-date'};
+                Piwik.getTracker().trackEvent(menuEvent);
+                
+                that.onChooseDate();
+            });
             this.menuView.add(this.dayChooserIcon);
             
             this.addAccountIcon  = Ti.UI.createImageView({id: 'menuAddAccountIcon'});
-            this.addAccountIcon.addEventListener('click', function () { that.onAddAccount(); });
+            this.addAccountIcon.addEventListener('click', function () {
+
+                var menuEvent = {title: 'Menu Click - Add Account',
+                                 url: '/menu-click/add-account'};
+                Piwik.getTracker().trackEvent(menuEvent);
+                
+                that.onAddAccount();
+            });
             this.menuView.add(this.addAccountIcon);
         }
 
@@ -225,6 +253,7 @@ Piwik.UI.Menu = function () {
      * set in order to execute this action.
      */
     this.onChooseDate = function () {
+
         var max    = new Date();
         var min    = new Date(2008, 0, 1);
         var picker = Piwik.UI.createDatePicker({value: this.date,
@@ -246,7 +275,7 @@ Piwik.UI.Menu = function () {
      * @fires Piwik.UI.Menu#event:onSiteChanged
      */
     this.onChooseSite = function () {
-        
+
         var currentSite      = this.getParam('currentSite', {name: '', accountId: null, idsite: null});
         // allowedSiteNames  = an array of all available site names ['demo.piwik.org', 'Piwik Forums', '...']
         var allowedSiteNames = [];
@@ -366,9 +395,6 @@ Piwik.UI.Menu = function () {
                 Ti.UI.currentWindow.rightNavButton = null;
             }
 
-            // always reset left nav button
-            Ti.UI.currentWindow.leftNavButton = null;
-
             if (labels.length) {
                 this.toolBar = Ti.UI.createButtonBar({labels: labels,
                                                       id: 'menuButtonBar'});
@@ -385,6 +411,7 @@ Piwik.UI.Menu = function () {
                     var button  = buttons[event.index];
 
                     if (button && button.onClick) {
+
                         that[button.onClick]();
                     }
                 });
@@ -439,6 +466,11 @@ Piwik.UI.Menu = function () {
             Piwik.UI.OptionMenu.addItem({title: _('Mobile_AddAccount'),
                                          icon: 'images/menu_add.png'},
                                         function () {
+
+                                            var menuEvent = {title: 'Option Menu Add Account',
+                                                             url: '/android-option-menu/add-account'};
+                                            Piwik.getTracker().trackEvent(menuEvent);
+
                                             that.onAddAccount();
                                         });
         }
@@ -448,6 +480,11 @@ Piwik.UI.Menu = function () {
             Piwik.UI.OptionMenu.addItem({title: _('General_ChooseDate'),
                                          icon: 'images/menu_choosedate.png'},
                                         function () {
+
+                                            var menuEvent = {title: 'Option Menu Choose Date',
+                                                             url: '/android-option-menu/choose-date'};
+                                            Piwik.getTracker().trackEvent(menuEvent);
+                                            
                                             that.onChooseDate();
                                         });
 
@@ -457,6 +494,11 @@ Piwik.UI.Menu = function () {
             Piwik.UI.OptionMenu.addItem({title : _('General_ChooseWebsite'),
                                          icon: 'images/menu_chooseDown.png'},
                                          function () {
+
+                                            var menuEvent = {title: 'Option Menu Choose Site',
+                                                             url: '/android-option-menu/choose-site'};
+                                            Piwik.getTracker().trackEvent(menuEvent);
+                                             
                                             that.onChooseSite();
                                         });
         }
@@ -465,6 +507,11 @@ Piwik.UI.Menu = function () {
             Piwik.UI.OptionMenu.addItem({title :  _('General_Settings'),
                                          icon: 'images/menu_settings.png'},
                                          function () {
+
+                                            var menuEvent = {title: 'Option Menu Open Settings',
+                                                             url: '/android-option-menu/open-settings'};
+                                            Piwik.getTracker().trackEvent(menuEvent);
+                                             
                                              that.onChooseSettings();
                                          });
         }
@@ -472,6 +519,11 @@ Piwik.UI.Menu = function () {
         if (this.getParam('closeWindow', false)) {
 
             Piwik.UI.OptionMenu.addItem({title: _('General_Close')}, function (event) {
+
+                var menuEvent = {title: 'Option Menu Close Window',
+                                 url: '/android-option-menu/close-window'};
+                Piwik.getTracker().trackEvent(menuEvent);
+
                 Piwik.UI.currentWindow.close();
             });
         }

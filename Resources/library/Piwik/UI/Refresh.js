@@ -74,6 +74,11 @@ Piwik.UI.Refresh = function () {
                                      icon: 'images/menu_refresh.png'}, function () {
 
             if (!that.reloading) {
+
+                var refreshEvent = {title: 'Refresh Page',
+                                    url: '/refresh/android-option-menu'};
+                Piwik.getTracker().trackEvent(refreshEvent);
+
                 that.refresh();
             }
         });
@@ -232,6 +237,10 @@ Piwik.UI.Refresh = function () {
         tableView.addEventListener('scrollEnd', function(event) {
             if (that.pulling && !that.reloading && event && event.contentOffset && event.contentOffset.y <= -65.0) {
 
+                var refreshEvent = {title: 'Refresh Page',
+                                    url: '/refresh/ios-pull-to-refresh'};
+                Piwik.getTracker().trackEvent(refreshEvent);
+                
                 // the user was pulling, no reloading is currently running, the user scrolled to the correct section
                 that.refresh();
             }
