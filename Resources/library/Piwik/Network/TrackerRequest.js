@@ -7,7 +7,7 @@
  */
 
 /**
- * @class  
+ * @class    Sends tracking requests to a piwik instance. The piwik instance can be configured within the config.
  *
  * @augments Piwik.Network.HttpRequest
  */

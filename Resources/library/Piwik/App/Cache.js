@@ -17,6 +17,7 @@
  *          accounts_available                         A list/array of all available account ids
  *          account_{accountId}                        Account information
  *          tracking_visitor_uuid                      An unique visitor tracking id for this user
+ *          app_last_initialized                       Int, the app version number when it was last initialized
  *
  * @static
  *

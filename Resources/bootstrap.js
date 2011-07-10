@@ -42,8 +42,6 @@ var hasActivatedAccount = bootstrapAccounts.hasActivedAccount();
 // reset bootstrapAccounts instance, otherwise it will be available in global context
 bootstrapAccounts       = undefined;
 
-Piwik.getTracker().askForPermission();
-
 if (hasActivatedAccount) {
     // open our welcome window
     Piwik.UI.createWindow({url: 'index/index.js'});
@@ -52,4 +50,13 @@ if (hasActivatedAccount) {
     // user has not already created an (active) account. directly show create account window. user has to create at
     // least one account
     Piwik.UI.createWindow({url: 'settings/editaccount.js'});
+}
+
+// initialization available since Piwik Mobile 1.6.0. Execute if property not exists (fresh install or if initialization
+// wasn't done since 1.6.0)
+if (!Ti.App.Properties.hasProperty('app_last_initialized') || 
+    Ti.App.Properties.getInt('app_last_initialized', 100) < 160) {
+    Piwik.getTracker().askForPermission();
+
+    Ti.App.Properties.setInt('app_last_initialized', parseInt(Ti.App.version.replace(/\./g, ''), 10));
 }

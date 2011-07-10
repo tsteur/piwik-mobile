@@ -164,6 +164,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_AddAccount:                                                  'Add account',
         Mobile_Advanced:                                                    'Advanced',
         Mobile_AnonymousAccess:                                             'Anonymous access',
+        Mobile_AnonymousTracking:                                           'Anonymous tracking',
         Mobile_AccessUrlLabel:                                              'Piwik Access Url',
         Mobile_ChooseHttpTimeout:                                           'Choose HTTP timeout value',
         Mobile_DefaultReportDate:                                           'Report date',

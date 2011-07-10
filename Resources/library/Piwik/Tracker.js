@@ -147,8 +147,8 @@ Piwik.Tracker = new function () {
         var url   = '/exception/' + exception.type;
         url      += '/' + exception.errorCode;
         url      += '/' + exception.file;
-        url      += '/' + exception.line
-        url      += '/' + exception.message
+        url      += '/' + exception.line;
+        url      += '/' + exception.message;
 
         var title = 'Exception ' + exception.type;
 
@@ -280,13 +280,6 @@ Piwik.Tracker = new function () {
             return;
         }
 
-        var cache = Piwik.require('App/Cache');
-
-        if (cache.KEY_NOT_FOUND !== cache.get('tracking_visitor_uuid')) {
-            // we already asked the user
-            return;
-        }
-
         // uuid does not exist, this means user starts the app the first time.
         // ask user whether he wants to enable or disable tracking
         var alertDialog = Titanium.UI.createAlertDialog({
@@ -296,7 +289,7 @@ Piwik.Tracker = new function () {
         });
 
         alertDialog.addEventListener('click', function (event) {
-            Piwik.Log.warn(event);
+
             if (!event) {
 
                 return;
