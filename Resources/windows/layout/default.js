@@ -181,7 +181,7 @@ function window () {
 
             this.scrollView = Ti.UI.createScrollableView({
                 views: [],
-                showPagingControl: false
+                className: 'layoutWinScrollableView'
             });
 
             Ti.UI.currentWindow.add(this.scrollView);

@@ -17,6 +17,12 @@
 @import "iphone/visitoroverview.universal.jss";
 @import "iphone/visitor.universal.jss";
 
+.layoutWinScrollableView {
+    pagingControlColor: '#B2AEA5';
+    showPagingControl: true;
+    pagingControlHeight: 20;
+}
+
 #activityWaitIndicator {
     height: 40;
     width: 40;

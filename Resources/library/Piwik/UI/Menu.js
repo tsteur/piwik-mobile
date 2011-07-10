@@ -395,6 +395,9 @@ Piwik.UI.Menu = function () {
                 Ti.UI.currentWindow.rightNavButton = null;
             }
 
+            // always reset left nav button
+            Ti.UI.currentWindow.leftNavButton = null;
+
             if (labels.length) {
                 this.toolBar = Ti.UI.createButtonBar({labels: labels,
                                                       id: 'menuButtonBar'});
