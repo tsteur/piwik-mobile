@@ -30,8 +30,6 @@
  * @param {string}     [params.siteChooser="false"]                 Optional. Adds an Android Option Menu Item and a
  *                                                                  button to the window where the user has the
  *                                                                  ability to select another website.
- *                                                                  Requires the otherwise optional 'currentSite'
- *                                                                  and 'allowedSites' parameters.
  * @param {string}     [params.settingsChooser="false"]             Optional. Adds an Android Option Menu and a
  *                                                                  button to the window where the user has the
  *                                                                  ability to open the "Settings" window.
@@ -39,10 +37,6 @@
  *                                                                  the user has the possibility to close the current
  *                                                                  window.
  * @param {string}     [params.period="day"]        Optional. The current active period.
- * @param {Object}     [params.currentSite]         Optional. The current active site as an object.
- * @param {Array}      [params.allowedSites]        Optional. An array of sites where the user has at least
- *                                                  view access. The format has to be similar to
- *                                                  {@link http://piwik.org/demo/?module=API&method=SitesManager.getSitesWithAtLeastViewAccess&format=JSON&token_auth=anonymous}
  * @param {Date|string}  [options.date]             Optional. The current selected date. Can be either a Date
  *                                                  object or string in the following Format
  *                                                  "YYYY-MM-DD". Defaults to the current date (now).
@@ -269,80 +263,69 @@ Piwik.UI.Menu = function () {
     };
     
     /**
-     * Opens a dialog where the user can choose another website. The currentSite and the allowedSites parameter has to
-     * be set in order to execute this action.
+     * Opens a dialog where the user can choose another website. 
      *
      * @fires Piwik.UI.Menu#event:onSiteChanged
      */
     this.onChooseSite = function () {
 
-        var currentSite      = this.getParam('currentSite', {name: '', accountId: null, idsite: null});
-        // allowedSiteNames  = an array of all available site names ['demo.piwik.org', 'Piwik Forums', '...']
-        var allowedSiteNames = [];
-        var allowedSites     = this.getParam('allowedSites', []);
-        var currentSiteIndex = null;
-
-        // extract the names of each site to display them within an options dialog
-        for (var index = 0; index < allowedSites.length; index++) {
-        
-            var site = allowedSites[index];
-
-            if (site && site.name) {
-                allowedSiteNames.push('' + site.name);
-            } else {
-                allowedSiteNames.push('');
-            }
-
-            // detect current selected site index so we are able to preselect it later
-            if (site
-                && currentSite
-                && currentSite.accountId == site.accountId
-                && currentSite.idsite == site.idsite
-                && currentSite.name == site.name) {
-                currentSiteIndex = index;
-            }
-        }
-
-        allowedSiteNames.push(_('SitesManager_Cancel_js'));
-
-        var dialog = Ti.UI.createOptionDialog({
-            title: _('General_ChooseWebsite'),
-            options: allowedSiteNames,
-            cancel: (allowedSiteNames.length - 1)
-        });
-
-        if (null !== currentSiteIndex) {
-            dialog.selectedIndex = currentSiteIndex;
-        }
-
         var that = this;
-        dialog.addEventListener('click', function (event) {
 
-            // android reports cancel = true whereas iOS returns the previous defined cancel index
-            if (!event || event.cancel === event.index || true === event.cancel) {
+        var win  = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
+                                       modal: true,
+            top: 0,
+                                       barColor: '#B2AEA5',
+                                       title: _('General_ChooseWebsite')});
+
+        if (Piwik.isIos) {
+
+            var cancelButton = Ti.UI.createButton({title: _('General_Close'),
+                                                   style: Ti.UI.iPhone.SystemButtonStyle.DONE});
+
+            cancelButton.addEventListener('click', function () {
+
+                try {
+                    if (win && win.close) {
+                        win.close();
+                    }
+                } catch (e) {
+                    Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
+                }
+
+            });
+
+            win.rightNavButton = cancelButton;
+        }
+
+        win.open();
+        
+        var websitesList = Piwik.UI.createWebsitesList({view: win});
+
+        var onChooseSite = function (event) {
+            if (!event || !event.site) {
 
                 return;
             }
 
-            if (event.index == currentSiteIndex) {
-                // user selected same value as already selected, we don't have to fire a change event therefore.
+            that.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
 
-                return;
+            // fire further event so other windows are able to listen to this event, too
+            Ti.App.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
+
+            try {
+                if (win && win.close) {
+                    win.close();
+                }
+            } catch (e) {
+                Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
+            
+            websitesList = null;
+        };
 
-            var selectedSite = allowedSites[event.index];
-            currentSiteIndex = event.index;
-
-            if (selectedSite) {
-
-                that.fireEvent('onSiteChanged', {site: selectedSite, type: 'onSiteChanged'});
-
-                // fire further event so other windows are able to listen to this event, too
-                Ti.App.fireEvent('onSiteChanged', {site: selectedSite, type: 'onSiteChanged'});
-            }
-        });
-
-        dialog.show();
+        websitesList.addEventListener('onChooseSite', onChooseSite);
+        
+        websitesList.request();
     };
     
     /**

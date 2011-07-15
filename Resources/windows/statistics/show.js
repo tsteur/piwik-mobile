@@ -54,12 +54,6 @@ function window (params) {
     var tableView    = Ti.UI.createTableView({id: 'statisticsTableView'});
     var refresh      = Piwik.UI.createRefresh({tableView: tableView});
 
-    var cache        = Piwik.require('App/Cache');
-    var allowedSites = cache.get('piwik_sites_allowed');
-    if (cache.KEY_NOT_FOUND === allowedSites) {
-        allowedSites = [this.site];
-    }
-
     this.add(tableView);
 
     this.addEventListener('onDateChanged', function (event) {
@@ -121,9 +115,7 @@ function window (params) {
                              siteChooser: true,
                              optionMenuSettingsChooser: true,
                              date: event.date,
-                             period: event.period,
-                             currentSite: site,
-                             allowedSites: allowedSites};
+                             period: event.period};
 
         // update header and menu after each request cause of a possibly period and/or date change.
         Piwik.UI.layout.header.refresh(this.titleOptions);

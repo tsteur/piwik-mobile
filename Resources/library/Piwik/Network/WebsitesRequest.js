@@ -67,6 +67,14 @@ Piwik.Network.WebsitesRequest = function () {
     var requestPool     = null;
 
     /**
+     * A prefix for event handlers. Fixes an issue that the same event names fires multiple times. Cause other requests
+     * do also fire 'onload' event on the same object (Piwik.UI.currentWindow)
+     *
+     * @type string
+     */
+    this.eventPrefix    = null;
+
+    /**
      * Initialize / reset all previous defined or fetched values. We have to do this cause it is possible to call the
      * 'send' method multiple times.
      */
@@ -88,7 +96,12 @@ Piwik.Network.WebsitesRequest = function () {
      * @param   {Function}   callback   Callback function to invoke when the event is fired
      */
     this.addEventListener = function (name, callback) {
-        Piwik.UI.currentWindow.addEventListener(name, callback);
+
+        if (!this.eventPrefix) {
+            this.eventPrefix = String(Math.random()).slice(2,8);
+        }
+
+        Piwik.UI.currentWindow.addEventListener(this.eventPrefix + name, callback);
     };
 
     /**
@@ -99,7 +112,12 @@ Piwik.Network.WebsitesRequest = function () {
      *                                  via addEventListener.
      */
     this.fireEvent = function (name, event) {
-        Piwik.UI.currentWindow.fireEvent(name, event);
+
+        if (!this.eventPrefix) {
+            this.eventPrefix = String(Math.random()).slice(2,8);
+        }
+
+        Piwik.UI.currentWindow.fireEvent(this.eventPrefix + name, event);
     };
 
     /**
@@ -226,8 +244,11 @@ Piwik.Network.WebsitesRequest = function () {
      */
     this.loaded = function () {
 
-        var cache = Piwik.require('App/Cache');
-        cache.set('piwik_sites_allowed', this.sites);
+        if (!this.filterUsed) {
+            // cache only if no filter was used
+            var cache = Piwik.require('App/Cache');
+            cache.set('piwik_sites_allowed', this.sites);
+        }
 
         var eventResult = {type: 'onload',
                            sites: this.sites,

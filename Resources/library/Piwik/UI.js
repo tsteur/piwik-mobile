@@ -466,3 +466,30 @@ Piwik.UI.createLiveOverview = function (params) {
         uiError.showErrorMessageToUser();
     }
 };
+
+/**
+ * Creates a new website list instance.
+ *
+ * @see Piwik.UI.WebsiteList
+ *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.WebsiteList.
+ *
+ * @type Piwik.UI.WebsiteList
+ *
+ * @returns The created website list instance.
+ */
+Piwik.UI.createWebsitesList = function (params) {
+
+    try {
+        var instance = Piwik.require('UI/WebsitesList');
+        instance.setParams(params);
+        instance.init();
+
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiWl48'});
+        uiError.showErrorMessageToUser();
+    }
+};

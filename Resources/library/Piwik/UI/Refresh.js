@@ -93,6 +93,41 @@ Piwik.UI.Refresh = function () {
     };
 
     /**
+     * Overwrites the default addEventListener. Connect events to the tableview. Prevents issues when using
+     * the refersh UI widget twice within a single window. Otherwise always both refresh UI widgets will get the event.
+     * 
+     * @see Piwik.UI.View#addEventListener
+     */
+    this.addEventListener = function (name, callback) {
+
+        var tableView  = this.getParam('tableView');
+
+        if (!tableView) {
+
+            return;
+        }
+        
+        tableView.addEventListener(name, callback);
+    };
+
+    /**
+     * Overwrites the default removeEventListener. Connect events to the tableview. Prevents issues when using
+     * the refersh UI widget twice within a single window. Otherwise always both refresh UI widgets will get the event.
+     *
+     * @see Piwik.UI.View#removeEventListener
+     */
+    this.fireEvent = function (name, event) {
+        var tableView  = this.getParam('tableView');
+
+        if (!tableView) {
+
+            return;
+        }
+
+        tableView.fireEvent(name, event);
+    };
+
+    /**
      * Triggers the refresh state. Displays an activity indicator and a message that the window is currently reloading
      * the data.
      *

@@ -12,3 +12,8 @@
    width: 'auto';
    height: 'auto';
 }
+
+.menuWinChooserWebsite {
+    barColor: '#B2AEA5';
+    modal: true;
+}

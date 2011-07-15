@@ -73,6 +73,7 @@ Piwik.UI.View = function () {
      *                                  via addEventListener.
      */
     this.fireEvent = function (name, event) {
+
         if (Piwik.UI.currentWindow) {
             Piwik.UI.currentWindow.fireEvent(name, event);
         }
@@ -86,8 +87,22 @@ Piwik.UI.View = function () {
      * @param   {Function}   callback   Callback function to invoke when the event is fired
      */
     this.addEventListener = function (name, callback) {
+
         if (Piwik.UI.currentWindow) {
             Piwik.UI.currentWindow.addEventListener(name, callback);
+        }
+    };
+
+    /**
+     * Remove a previously added event listener
+     *
+     * @param   {string}     name       Name of the event you want to remove.
+     * @param   {Function}   callback   Callback function passed in addEventListener.
+     */
+    this.removeEventListener = function (name, callback) {
+
+        if (Piwik.UI.currentWindow) {
+            Piwik.UI.currentWindow.removeEventListener(name, callback);
         }
     };
 
