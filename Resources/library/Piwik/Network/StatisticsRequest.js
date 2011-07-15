@@ -412,8 +412,6 @@ Piwik.Network.StatisticsRequest = function () {
         var report;
         var label;
 
-        response.reportData = [{"label":"0h","nb_visits":0,"nb_actions":0,"nb_actions_per_visit":0,"avg_time_on_site":"00:00:00","bounce_rate":"0%","conversion_rate":"0%"},{"label":"1h","nb_visits":0,"nb_actions":0,"nb_actions_per_visit":0,"avg_time_on_site":"00:00:00","bounce_rate":"0%","conversion_rate":"0%"},{"label":"2h","nb_visits":0,"nb_actions":0,"nb_actions_per_visit":0,"avg_time_on_site":"00:00:00","bounce_rate":"0%","conversion_rate":"0%"},{"label":"3h","nb_visits":0,"nb_actions":0,"nb_actions_per_visit":0,"avg_time_on_site":"00:00:00","bounce_rate":"0%","conversion_rate":"0%"},{"label":"Others","nb_visits":1,"nb_actions":1,"nb_actions_per_visit":1,"avg_time_on_site":"00:00:00","bounce_rate":"100%","conversion_rate":"0%"}];
-
         if (response && response.reportData && (response.reportData instanceof Array) && 0 < response.reportData.length) {
             for (var index = 0; index < response.reportData.length; index++) {
 
