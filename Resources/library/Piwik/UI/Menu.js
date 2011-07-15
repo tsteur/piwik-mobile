@@ -271,13 +271,14 @@ Piwik.UI.Menu = function () {
 
         var that = this;
 
-        var win  = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
-                                       modal: true,
-            top: 0,
-                                       barColor: '#B2AEA5',
-                                       title: _('General_ChooseWebsite')});
+        var win  = null;
 
         if (Piwik.isIos) {
+
+            win  = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
+                                       modal: true,
+                                       barColor: '#B2AEA5',
+                                       title: _('General_ChooseWebsite')});
 
             var cancelButton = Ti.UI.createButton({title: _('General_Close'),
                                                    style: Ti.UI.iPhone.SystemButtonStyle.DONE});
@@ -295,11 +296,21 @@ Piwik.UI.Menu = function () {
             });
 
             win.rightNavButton = cancelButton;
+            
+            win.open();
+            
+        } else if (Piwik.isAndroid) {
+            win = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
+                                      fullscreen: false,
+                                      modal: true,
+                                      title: _('General_ChooseWebsite')});
+            var view = Ti.UI.createView({backgroundColor: '#fff'});
+
+            win.add(view);
         }
 
-        win.open();
-        
-        var websitesList = Piwik.UI.createWebsitesList({view: win});
+        var websitesList = Piwik.UI.createWebsitesList({view: Piwik.isAndroid ? view : win,
+                                                        displaySparklines: false});
 
         var onChooseSite = function (event) {
             if (!event || !event.site) {
@@ -321,11 +332,14 @@ Piwik.UI.Menu = function () {
             }
             
             websitesList = null;
+            win          = null;
         };
 
         websitesList.addEventListener('onChooseSite', onChooseSite);
         
         websitesList.request();
+
+        win.open({modal: true});
     };
     
     /**

@@ -80,6 +80,7 @@ Piwik.Network.WebsitesRequest = function () {
      */
     this.init = function () {
         this.sites          = [];
+        this.filterUsed     = false;
 
         var settings        = Piwik.require('App/Settings');
         this.showMultiChart = settings.getPiwikMultiChart();
@@ -128,9 +129,18 @@ Piwik.Network.WebsitesRequest = function () {
      *
      * @param   {Object}        params
      * @param   {Object}        params.filterName        Search only for sites which contains the given filterName.
+     * @param   {boolean}       [params.reload="false"]  If true, it will not use an already cached result.
      */
     this.send = function (params) {
         this.init();
+
+        if (!params) {
+            params = {};
+        }
+
+        if (!params.reload) {
+            params.reload = false;
+        }
 
         var piwikRequest = null;
         requestPool      = Piwik.require('Network/RequestPool');
@@ -141,6 +151,20 @@ Piwik.Network.WebsitesRequest = function () {
             this.loaded();
 
             return;
+        }
+
+        if (!params.reload && (!params || !params.filterName)) {
+            // no filter used, use cached result if it exist
+            var session     = Piwik.require('App/Session');
+            var cachedSites = session.get('piwik_sites_allowed');
+            if (cachedSites) {
+                this.filterUsed = false;
+                this.sites      = cachedSites;
+
+                this.loaded();
+
+                return;
+            }
         }
 
         var parameter = null;
@@ -246,8 +270,8 @@ Piwik.Network.WebsitesRequest = function () {
 
         if (!this.filterUsed) {
             // cache only if no filter was used
-            var cache = Piwik.require('App/Cache');
-            cache.set('piwik_sites_allowed', this.sites);
+            var session = Piwik.require('App/Session');
+            session.set('piwik_sites_allowed', this.sites);
         }
 
         var eventResult = {type: 'onload',

@@ -50,6 +50,10 @@ Piwik.UI.WebsitesList = function () {
         var that          = this;
         var win           = this.getParam('view');
 
+        // we always want to force the reload (do not use a cached result) of the available websites if user presses
+        // menu button 'reload', but not if for example the user searches for a site.
+        var forceRequestReload = true;
+
         var searchBar     = Ti.UI.createSearchBar({id: 'websiteSearchBar',
                                                    hintText: _('Find a site')});
 
@@ -62,6 +66,7 @@ Piwik.UI.WebsitesList = function () {
 
             request.abort();
 
+            forceRequestReload = false;
             refresh.refresh();
 
             searchBar.blur();
@@ -72,6 +77,7 @@ Piwik.UI.WebsitesList = function () {
             searchBar.value = '';
             searchBar.blur();
 
+            forceRequestReload = false;
             refresh.refresh();
         });
 
@@ -102,12 +108,14 @@ Piwik.UI.WebsitesList = function () {
             // new rows afterwards.
             tableview.setData([]);
 
-            var params = {};
+            var params = {reload: forceRequestReload};
             if (searchBar && searchBar.value) {
                 params.filterName = searchBar.value;
             }
 
             request.send(params);
+
+            forceRequestReload = true;
         });
 
         request.addEventListener('onload', function (event) {
@@ -138,6 +146,10 @@ Piwik.UI.WebsitesList = function () {
 
                 if (!site) {
                     continue;
+                }
+
+                if (!that.getParam('displaySparklines', true)) {
+                    site.sparklineUrl = null;
                 }
 
                 rows.push(Piwik.UI.createTableViewRow({title: '' + site.name,

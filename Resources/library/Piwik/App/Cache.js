@@ -13,7 +13,6 @@
  *          'cache_' to each key. Each cache entry is automatically expired as soon as the app version changes.
  *          If you need a cache which caches not beyond application sessions, use Piwik.App.Session instead.
  *          Currently, following keys are in use:
- *          piwik_sites_allowed                        All allowed sites an user has at least view access
  *          accounts_available                         A list/array of all available account ids
  *          account_{accountId}                        Account information
  *          tracking_visitor_uuid                      An unique visitor tracking id for this user
