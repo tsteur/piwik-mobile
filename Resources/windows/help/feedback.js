@@ -53,7 +53,7 @@ function window () {
                                       className: 'giveFeedbackDeviceInfoLabel'});
     
     var caps        = Ti.Platform.displayCaps;
-    var resoulution = Ti.UI.createLabel({text: String.format("Resolution: %sx%s %s (%s)", 
+    var resolution  = Ti.UI.createLabel({text: String.format("Resolution: %sx%s %s (%s)",
                                                              '' + caps.platformWidth, 
                                                              '' + caps.platformHeight, 
                                                              '' + caps.density, 
@@ -66,6 +66,7 @@ function window () {
     var network  = Ti.UI.createLabel({text: String.format("Network: %s", '' + Ti.Network.networkTypeName),
                                       className: 'giveFeedbackDeviceInfoLabel'});
 
+
     var work     = Ti.UI.createLabel({text: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik. Please contact us.',
                                       id: 'giveFeedbackMadeByCommunityLabel'});
 
@@ -74,10 +75,52 @@ function window () {
     scrollView.add(platform);
     scrollView.add(version);
     scrollView.add(memory);
-    scrollView.add(resoulution);
+    scrollView.add(resolution);
     scrollView.add(locale);
     scrollView.add(network);
     scrollView.add(work);
+
+    var sendEmail = function () {
+        var emailDialog = Ti.UI.createEmailDialog();
+        emailDialog.setSubject("Feedback Piwik Mobile");
+        emailDialog.setToRecipients(['mobile@piwik.org']);
+
+        if (emailDialog.setBarColor) {
+            emailDialog.setBarColor('#B2AEA5');
+        }
+
+        if (!emailDialog.isSupported()) {
+
+            return;
+        }
+
+        var message = 'Your Message: \n\n\nYour Device: \n' + platform.text + '\n';
+        message    += version.text + '\n' + memory.text + '\n';
+        message    += resolution.text + '\n' + locale.text + '\n' + network.text;
+
+        emailDialog.setMessageBody(message);
+
+        emailDialog.addEventListener('complete', function (event) {
+
+            if (Piwik.isIos && event && event.result && event.result == emailDialog.SENT) {
+                // android doesn't give us useful result codes. it anyway shows a toast.
+                alert(_('Feedback_ThankYou'));
+            }
+        });
+
+        emailDialog.open();
+    };
+    
+    Piwik.UI.OptionMenu.addItem({title: 'Email us'}, sendEmail);
+    this.addEventListener('focusWindow', function () {
+
+        if (Piwik.isIos) {
+            var emailus = Ti.UI.createButton({title: 'Email us'});
+            emailus.addEventListener('click', sendEmail);
+            Ti.UI.currentWindow.rightNavButton = emailus;
+        }
+
+    });
 
     this.open = function () {
 
