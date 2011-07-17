@@ -72,5 +72,9 @@ config.tracking = {
     siteId: 25,
     apiVersion: 1,
     baseUrl: 'http://mobileapp.piwik.org',
-    piwikServerUrl: 'http://demo.piwik.org/piwik.php'
+    piwikServerUrl: 'http://demo.piwik.org/piwik.php',
+    /**
+     * Set to 0 for unlimited tracks
+     */
+    maxTracksPerDay: 200
 };

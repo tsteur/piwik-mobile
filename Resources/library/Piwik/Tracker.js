@@ -13,24 +13,48 @@
  */
 Piwik.Tracker = new function () {
 
-    this.siteId        = config.tracking.siteId;
-    this.apiVersion    = config.tracking.apiVersion;
+    this.siteId         = config.tracking.siteId;
+    this.apiVersion     = config.tracking.apiVersion;
 
-    this.documentTitle = '';
-    this.currentUrl    = '';
+    this.documentTitle  = '';
+    this.currentUrl     = '';
 
-    var visitCount     = 0;
-    var uuid           = null;
-    var baseUrl        = config.tracking.baseUrl;
+    var numTracksToday  = 0;
+    var dateStringToday = '';
 
-    var numAccounts    = Piwik.require('App/Accounts').getNumAccounts();
+    var visitCount      = 0;
+    var uuid            = null;
+    var baseUrl         = config.tracking.baseUrl;
 
-    var parameter      = {};
+    var numAccounts     = Piwik.require('App/Accounts').getNumAccounts();
+
+    var parameter       = {};
 
     this.init = function () {
 
-        visitCount = this._getVisitCount();
-        uuid       = this._getUniqueId();
+        visitCount      = this._getVisitCount();
+        uuid            = this._getUniqueId();
+    };
+
+    this.isNewDay = function () {
+        var now     = new Date();
+        var dateNow = now.toDateString();
+        // dateNow is like 'Sun Jul 17 2011'
+
+        if (!dateStringToday) {
+            // initialize dateStringToday
+            dateStringToday = dateNow;
+        }
+
+
+        if (dateNow != dateStringToday) {
+            // it is a new day
+            dateStringToday = dateNow;
+            
+            return true;
+        }
+
+        return false;
     };
 
     this._getUniqueId = function () {
@@ -196,6 +220,11 @@ Piwik.Tracker = new function () {
 
     this.isEnabled = function () {
 
+        if (!config.tracking.enabled) {
+
+            return false;
+        }
+
         var settings = Piwik.require('App/Settings');
 
         return settings.isTrackingEnabled();
@@ -203,12 +232,18 @@ Piwik.Tracker = new function () {
 
     this.track = function () {
 
-        if (!config.tracking.enabled) {
+        if (!this.isEnabled()) {
 
             return;
         }
 
-        if (!this.isEnabled()) {
+        if (this.isNewDay()) {
+            numTracksToday = 0;
+        }
+
+        if (config.tracking.maxTracksPerDay && config.tracking.maxTracksPerDay <= numTracksToday) {
+            // set maxTracksPerDay to 0 for unlimited tracks per day
+            // otherwise do not track more than configured
 
             return;
         }
@@ -219,6 +254,8 @@ Piwik.Tracker = new function () {
         
         tracker.setParameter(parameter);
         tracker.send();
+
+        numTracksToday++;
 
         parameter = {};
     };
