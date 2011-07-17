@@ -77,8 +77,9 @@ Piwik.Profiler = new function ()  {
 
             return;
         }
-        
-        Piwik.Profiler['profiling' + key] = new Date().getTime();
+
+        Piwik.Profiler['profilingMem' + key]  = '' + Ti.Platform.availableMemory;
+        Piwik.Profiler['profilingDate' + key] = new Date().getTime();
     };
 
     /**
@@ -90,8 +91,6 @@ Piwik.Profiler = new function ()  {
      * @param {string}  key    A key which describes the current profiling and which was used in the start method.
      *
      * @type void
-     *
-     * @todo instead of simply logging the 'now available memory' we could log the used memory since the start call.
      */
     this.end = function (key) {
         if (!this.ENABLED) {
@@ -101,17 +100,19 @@ Piwik.Profiler = new function ()  {
         
         var now = new Date().getTime();
 
-        if ('undefined' === (typeof Piwik.Profiler['profiling' + key]) || !Piwik.Profiler['profiling' + key]) {
+        if ('undefined' === (typeof Piwik.Profiler['profilingDate' + key]) || !Piwik.Profiler['profilingDate' + key]) {
             Ti.API.warn('You have to call this.start("' + key + '")');
 
             return;
         }
 
-        var startTime = Piwik.Profiler['profiling' + key];
+        var startTime = Piwik.Profiler['profilingDate' + key];
+        var startMem  = Piwik.Profiler['profilingMem' + key];
 
-        delete Piwik.Profiler['profiling' + key];
+        delete Piwik.Profiler['profilingDate' + key];
 
         Ti.API.warn('' + key + ': ' + (now - startTime) + 'ms');
-        Ti.API.warn('' + key + ' Free mem: ' + (Ti.Platform.availableMemory / 1000) + 'kb');
+        Ti.API.warn('' + key + ' Start free mem: ' + startMem + 'b');
+        Ti.API.warn('' + key + ' Now free mem: ' + Ti.Platform.availableMemory + 'b');
     };
 };
