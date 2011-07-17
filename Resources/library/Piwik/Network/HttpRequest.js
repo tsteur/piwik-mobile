@@ -209,7 +209,11 @@ Piwik.Network.HttpRequest = function () {
         this.xhr.setTimeout(timeoutValue);
 
         this.xhr.open("GET", requestUrl);
-        
+
+        if (Piwik.isAndroid && Ti.userAgent) {
+            this.xhr.setRequestHeader('User-Agent', Ti.userAgent);
+        }
+
         this.xhr.send({});
     };
 
