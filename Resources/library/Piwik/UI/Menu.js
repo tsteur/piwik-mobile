@@ -280,8 +280,8 @@ Piwik.UI.Menu = function () {
                                        barColor: '#B2AEA5',
                                        title: _('General_ChooseWebsite')});
 
-            var cancelButton = Ti.UI.createButton({title: _('General_Close'),
-                                                   style: Ti.UI.iPhone.SystemButtonStyle.DONE});
+            var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
+                                                   style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
 
             cancelButton.addEventListener('click', function () {
 
@@ -295,7 +295,7 @@ Piwik.UI.Menu = function () {
 
             });
 
-            win.rightNavButton = cancelButton;
+            win.leftNavButton = cancelButton;
             
             win.open();
             
