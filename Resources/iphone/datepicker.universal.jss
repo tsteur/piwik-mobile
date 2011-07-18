@@ -10,10 +10,7 @@
     zIndex: 102;
 }
 
-#datePickerToolBar {
-    zIndex: 101;
-    borderTop: true;
-    borderBottom: false;
-    translucent: true;
-    barColor: '#999';
+#datePickerPeriodTableView {
+    top: 0;
+    style: 1;
 }

@@ -72,6 +72,14 @@ Piwik.UI.DatePicker = function () {
      */
     this.init = function (params) {
 
+        if (this.getParam('period')) {
+            this.period = this.getParam('period');
+        }
+
+        if (this.getParam('value')) {
+            this.value  = this.getParam('value');
+        }
+
         if (Piwik.isIos) {
 
             return this.createIos(params);
@@ -93,86 +101,91 @@ Piwik.UI.DatePicker = function () {
      * @fires    Piwik.UI.DatePicker#event:onSet
      */
     this.createIos = function (params) {
-        var view       = Piwik.UI.currentWindow;
-        var that       = this;
 
-        params.id      = 'datePicker';
+        var win   = Ti.UI.createWindow({modal: true,
+                                        barColor: '#B2AEA5',
+                                        title: _('General_ChooseDate')});
+        var that  = this;
+
+        params.id = 'datePicker';
 
         try {
-            var picker = Ti.UI.createPicker(params);
+            var datePicker = Ti.UI.createPicker(params);
+            datePicker.addEventListener('change', function (event) {
+                that.value = event.value;
+            });
+
+            win.add(datePicker);
+
         } catch (e) {
             Piwik.Log.error('Failed to create picker' + e.message, 'Piwik.UI.DatePicker::createIos');
 
             return;
         }
 
-        // we add the picker and toolbar to the Ti.Window and not to the Piwik.Window./layout The scrollableView within
-        // the Piwik.Window would make it difficult to select a date. We have to make sure that the picker will be
-        // removed from the window as soon as one closes or opens a new Piwik.Window.
-        Ti.UI.currentWindow.add(picker);
+        var periods   = [Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodDay'),
+                                                      period: 'day',
+                                                      hasCheck: ('day' == this.period)}),
+                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodWeek'),
+                                                      period: 'week',
+                                                      hasCheck: ('week' == this.period)}),
+                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodMonth'),
+                                                      period: 'month',
+                                                      hasCheck: ('month' == this.period)}),
+                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodYear'),
+                                                      period: 'year',
+                                                      hasCheck: ('year' == this.period)})];
 
-        var updateDay   = Ti.UI.createButton({title: _('CoreHome_PeriodDay')});
-        var updateWeek  = Ti.UI.createButton({title: _('CoreHome_PeriodWeek')});
-        var updateMonth = Ti.UI.createButton({title: _('CoreHome_PeriodMonth')});
-        var updateYear  = Ti.UI.createButton({title: _('CoreHome_PeriodYear')});
-        var flexSpace   = Ti.UI.createButton({systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE});
+        var tableView = Ti.UI.createTableView({id: 'datePickerPeriodTableView',
+                                               bottom: datePicker.height,
+                                               data: periods});
 
-        var toolbar     = Ti.UI.createToolbar({
-            items: [updateDay, flexSpace, updateWeek, flexSpace, updateMonth, flexSpace, updateYear],
-            bottom: picker.height,
-            id: 'datePickerToolBar'
+        tableView.addEventListener('click', function (event) {
+           for (var index = 0; index < 4; index++) {
+               periods[index].hasCheck = false;
+           }
+
+            that.period        = event.rowData.period;
+            event.row.hasCheck = true;
         });
 
-        Ti.UI.currentWindow.add(toolbar);
+        win.add(tableView);
+        
+        var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
+                                               style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
+        cancelButton.addEventListener('click', function () {
 
-        picker.pickerValue     = params.value;
-        picker.addEventListener('change', function (event) {
-            picker.pickerValue = event.value;
-        });
-
-        var closePicker = null;
-        closePicker     = function () {
-
-            if (toolbar && toolbar.hide) {
-                toolbar.hide();
+            try {
+                if (win && win.close) {
+                    win.close();
+                }
+            } catch (e) {
+                Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
+        });
 
-            if (Ti.UI.currentWindow && Ti.UI.currentWindow.remove && picker) {
-                Ti.UI.currentWindow.remove(picker);
+        win.leftNavButton = cancelButton;
+
+        var doneButton    = Ti.UI.createButton({title: _('General_Done'),
+                                                style: Ti.UI.iPhone.SystemButtonStyle.DONE});
+        doneButton.addEventListener('click', function () {
+
+            try {
+                var myEvent = {date: that.value, period: that.period, type: 'onSet'};
+
+                that.fireEvent('onSet', myEvent);
+                
+                if (win && win.close) {
+                    win.close();
+                }
+            } catch (e) {
+                Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
-
-            if (Ti.UI.currentWindow && Ti.UI.currentWindow.remove && toolbar) {
-                Ti.UI.currentWindow.remove(toolbar);
-            }
-        };
-
-        view.addEventListener('close', closePicker);
-        view.addEventListener('blurWindow', closePicker);
-
-        var fireUpdateEvent = function (date, period) {
-            var myEvent = {date: date, period: period, type: 'onSet'};
-
-            that.fireEvent('onSet', myEvent);
-
-            if (closePicker) {
-                // setTimeout to make sure the async fireEvent was executed. Otherwise the closePicker() would cancel
-                // the event execution.
-                setTimeout(closePicker, 100);
-            }
-        };
-
-        updateDay.addEventListener('click', function (event) {
-            fireUpdateEvent(picker.pickerValue, 'day');
         });
-        updateWeek.addEventListener('click', function (event) {
-            fireUpdateEvent(picker.pickerValue, 'week');
-        });
-        updateMonth.addEventListener('click', function (event) {
-            fireUpdateEvent(picker.pickerValue, 'month');
-        });
-        updateYear.addEventListener('click', function (event) {
-            fireUpdateEvent(picker.pickerValue, 'year');
-        });
+
+        win.rightNavButton = doneButton;
+
+        win.open();
 
         return this;
     };
@@ -181,14 +194,6 @@ Piwik.UI.DatePicker = function () {
      * Renders the Android date picker by using an OptionDialog.
      */
     this.createAndroid = function () {
-
-        if (this.getParam('value')) {
-            this.value  = this.getParam('value');
-        }
-
-        if (this.getParam('period')) {
-            this.period = this.getParam('period');
-        }
 
         var view        = Ti.UI.createView({id: 'datePickerView'});
 
