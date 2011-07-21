@@ -5,14 +5,14 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
-@import "tableview.android.jss";
-@import "graph.android.jss";
-@import "parameterinfo.android.jss";
-@import "statisticlist.android.jss";
-@import "datepicker.android.jss";
-@import "liveoverview.android.jss";
-@import "visitoroverview.android.jss";
-@import "visitor.android.jss";
+@import "android/tableview.android.jss";
+@import "android/graph.android.jss";
+@import "android/parameterinfo.android.jss";
+@import "android/statisticlist.android.jss";
+@import "android/datepicker.android.jss";
+@import "android/liveoverview.android.jss";
+@import "android/visitoroverview.android.jss";
+@import "android/visitor.android.jss";
 
 #activityWaitIndicator {
     height: '40dp';
