@@ -275,9 +275,9 @@ Piwik.UI.Menu = function () {
         var win  = null;
 
         if (Piwik.isIpad && Ti.UI.iPad) {
-            win = Ti.UI.iPad.createPopover({width: 320, 
-                                            height: 460, 
-                                            title: _('General_ChooseWebsite')});
+            win = Piwik.UI.createPopover({width: 320, 
+                                          height: 460, 
+                                          title: _('General_ChooseWebsite')});
                                             
         } else if (Piwik.isIos) {
 

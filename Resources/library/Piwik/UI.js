@@ -493,3 +493,22 @@ Piwik.UI.createWebsitesList = function (params) {
         uiError.showErrorMessageToUser();
     }
 };
+
+/**
+ * Creates a new iPad Popover widget.
+ *
+ * @param   {Object} params      A dictionary object properties defined in Titanium.UI.iPad.Popover.
+ *
+ * @type Titanium.UI.iPad.Popover
+ *
+ * @returns The created popover instance.
+ */
+Piwik.UI.createPopover = function (params) {
+    if (this.popover && this.popover.hide) {
+        this.popover.hide();
+    }
+    
+    this.popover = Ti.UI.iPad.createPopover(params);
+    
+    return this.popover;
+};
