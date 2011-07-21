@@ -105,7 +105,7 @@ Piwik.UI.DatePicker = function () {
 
         if (Piwik.isIpad && Ti.UI.iPad) {
             win = Ti.UI.iPad.createPopover({width: 320, 
-                                            height: 460, 
+                                            height: 430, 
                                             title: _('General_ChooseDate')});
         } else {
             
