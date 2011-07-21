@@ -141,27 +141,9 @@ Piwik.UI.TableViewRow = function () {
 
         if (params.onShowOptionMenu && Piwik.isAndroid) {
             // there is no native event 'onShowOptionMenu' available in Titanium, therefore we 'fake' it
-            row.addEventListener('touchstart', function (event) {
+            row.addEventListener('longpress', function (event) {
 
-                if (row.accountId) {
-                    row.optionTimeout = setTimeout(function () {
-                        params.onShowOptionMenu.apply(row, [event]);
-                    }, 1000);
-                }
-            });
-
-            row.addEventListener('touchend', function (event) {
-                if (row.optionTimeout) {
-                    clearTimeout(row.optionTimeout);
-                    delete row.optionTimeout;
-                }
-            });
-
-            row.addEventListener('touchcancel', function (event) {
-                if (row.optionTimeout) {
-                    clearTimeout(row.optionTimeout);
-                    delete row.optionTimeout;
-                }
+                params.onShowOptionMenu.apply(row, [event]);
             });
         } 
 
