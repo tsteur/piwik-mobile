@@ -101,10 +101,19 @@ Piwik.UI.DatePicker = function () {
      * @fires    Piwik.UI.DatePicker#event:onSet
      */
     this.createIos = function (params) {
+        var win;
 
-        var win   = Ti.UI.createWindow({modal: true,
-                                        barColor: '#B2AEA5',
-                                        title: _('General_ChooseDate')});
+        if (Piwik.isIpad && Ti.UI.iPad) {
+            win = Ti.UI.iPad.createPopover({width: 320, 
+                                            height: 460, 
+                                            title: _('General_ChooseDate')});
+        } else {
+            
+            win = Ti.UI.createWindow({modal: true,
+                                      barColor: '#B2AEA5',
+                                      title: _('General_ChooseDate')});
+        }
+        
         var that  = this;
 
         params.id = 'datePicker';
@@ -185,7 +194,11 @@ Piwik.UI.DatePicker = function () {
 
         win.rightNavButton = doneButton;
 
-        win.open();
+        if (Piwik.isIpad) {
+            win.show({view: params.source ? params.source : null});
+        } else {
+            win.open();
+        }
 
         return this;
     };

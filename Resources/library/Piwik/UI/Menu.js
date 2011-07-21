@@ -247,13 +247,14 @@ Piwik.UI.Menu = function () {
      * set in order to execute this action.
      */
     this.onChooseDate = function () {
-
+        
         var max    = new Date();
         var min    = new Date(2008, 0, 1);
         var picker = Piwik.UI.createDatePicker({value: this.date,
                                                 maxDate: max,
                                                 period: this.period,
                                                 selectionIndicator: true,
+                                                source: this.toolBar ? this.toolBar : this.dayChooserIcon,
                                                 minDate: min});
 
         var that   = this;
