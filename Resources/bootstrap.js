@@ -54,7 +54,7 @@ if (hasActivatedAccount) {
 
 // initialization available since Piwik Mobile 1.6.0. Execute if property not exists (fresh install or if initialization
 // wasn't done since 1.6.0)
-if (!Ti.App.Properties.hasProperty('app_last_initialized') || 
+if (!Ti.App.Properties.hasProperty('app_last_initialized') ||
     Ti.App.Properties.getInt('app_last_initialized', 100) < 160) {
     Piwik.getTracker().askForPermission();
 
