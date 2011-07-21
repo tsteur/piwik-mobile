@@ -55,7 +55,7 @@ Piwik.UI.WebsitesList = function () {
         var forceRequestReload = true;
 
         var searchBar     = Ti.UI.createSearchBar({id: 'websiteSearchBar',
-                                                   hintText: _('Find a site')});
+                                                   hintText: _('Mobile_SearchWebsite')});
 
         searchBar.addEventListener('return', function (event) {
 
