@@ -274,7 +274,12 @@ Piwik.UI.Menu = function () {
 
         var win  = null;
 
-        if (Piwik.isIos) {
+        if (Piwik.isIpad && Ti.UI.iPad) {
+            win = Ti.UI.iPad.createPopover({width: 320, 
+                                            height: 460, 
+                                            title: _('General_ChooseWebsite')});
+                                            
+        } else if (Piwik.isIos) {
 
             win  = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
                                        modal: true,
@@ -326,7 +331,11 @@ Piwik.UI.Menu = function () {
 
             try {
                 if (win && win.close) {
+                    // window
                     win.close();
+                } else if (win && win.hide) {
+                    // popover
+                    win.hide();
                 }
             } catch (e) {
                 Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
@@ -340,7 +349,11 @@ Piwik.UI.Menu = function () {
         
         websitesList.request();
 
-        win.open({modal: true});
+        if (Piwik.isIpad) {
+            win.show({view: this.toolBar});
+        } else {
+            win.open({modal: true});
+        }
     };
     
     /**

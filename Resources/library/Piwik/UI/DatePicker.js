@@ -160,20 +160,23 @@ Piwik.UI.DatePicker = function () {
 
         win.add(tableView);
         
-        var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
-                                               style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
-        cancelButton.addEventListener('click', function () {
-
-            try {
-                if (win && win.close) {
-                    win.close();
+        if (!Piwik.isIpad) {
+            
+            var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
+                                                   style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
+            cancelButton.addEventListener('click', function () {
+    
+                try {
+                    if (win && win.close) {
+                        win.close();
+                    }
+                } catch (e) {
+                    Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
                 }
-            } catch (e) {
-                Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
-            }
-        });
-
-        win.leftNavButton = cancelButton;
+            });
+    
+            win.leftNavButton = cancelButton;
+        }
 
         var doneButton    = Ti.UI.createButton({title: _('General_Done'),
                                                 style: Ti.UI.iPhone.SystemButtonStyle.DONE});
@@ -185,7 +188,11 @@ Piwik.UI.DatePicker = function () {
                 that.fireEvent('onSet', myEvent);
                 
                 if (win && win.close) {
+                    // window
                     win.close();
+                } else if (win && win.hide) {
+                    // popover
+                    win.hide();
                 }
             } catch (e) {
                 Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
