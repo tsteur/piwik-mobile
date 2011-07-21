@@ -7,35 +7,137 @@
  */
  
 /**
- * @class   Tracker
+ * @class   Piwik Tracker tracks page views, events and so on to a configured Piwik Server installation. Tracking
+ *          can be configured in config.js. Sends the requests async. The tracking is anonymous and will only be
+ *          executed if user has enabled tracking and if tracking is enabled in configuration. Make sure no user
+ *          data will be sent to the Piwik Server installation. For example the name of a website (via DocumentTitle)
+ *          and so on.
  *
  * @static
  */
 Piwik.Tracker = new function () {
 
+    /**
+     * The siteId of the Piwik Server installation. It'll track everything into this site.
+     *
+     * @type number
+     */
     this.siteId         = config.tracking.siteId;
+
+    /**
+     * The api version of the Piwik Server installation.
+     *
+     * @type number
+     */
     this.apiVersion     = config.tracking.apiVersion;
 
-    this.documentTitle  = '';
-    this.currentUrl     = '';
+    /**
+     * Holds the current document title. This document title will be used in all trackings until another document
+     * title is set.
+     * 
+     * @see Piwik.Tracker#setDocumentTitle
+     *
+     * @defaults ""
+     *
+     * @type string
+     */
+    var documentTitle  = '';
 
+    /**
+     * Holds the current url. This url will be used in all trackings until another current url is set.
+     *
+     * @see Piwik.Tracker#setCurrentUrl
+     *
+     * @defaults ""
+     *
+     * @type string
+     */
+    var currentUrl     = '';
+
+    /**
+     * How many trackings have been done today. We reset this as soon as a new day starts. 
+     *
+     * @defaults 0
+     *
+     * @type number
+     */
     var numTracksToday  = 0;
+
+    /**
+     * Holds the date string in the format "Sun Jul 17 2011". This allows us to detect whether a new day has started
+     * by comparing this value with the current date string.
+     *
+     * @see Piwik.Tracker#isNewDay
+     *
+     * @defaults ""
+     *
+     * @type string
+     */
     var dateStringToday = '';
 
+    /**
+     * Holds the number of how often the user has already started the app (visits). We store this value in application
+     * storage and increase it by one on each app start.
+     *
+     * @see Piwik.Tracker#_getVisitCount
+     *
+     * @defaults 0
+     *
+     * @type number
+     */
     var visitCount      = 0;
+
+    /**
+     * Holds the visitor uuid. The uuid is an anonymous / pseudo unique ID to fingerprint an user. We create an
+     * uuid for each user on app start and store this uuid in application store afterwards. This makes sure we always
+     * use the same uuid for an user.
+     *
+     * @see Piwik.Tracker#_getUniqueId
+     *
+     * @type null|string
+     */
     var uuid            = null;
+
+    /**
+     * This is the baseUrl which will be prepended to absolute/relative paths. If you set - for example - the current
+     * Url to '/x/y' it will prepend this url. This makes sure we have a uri including protocol and so on.
+     *
+     * @type string
+     */
     var baseUrl         = config.tracking.baseUrl;
 
-    var numAccounts     = Piwik.require('App/Accounts').getNumAccounts();
+    /**
+     * Holds the number of accounts the user has configured.
+     *
+     * @defaults 0
+     *
+     * @type number
+     */
+    var numAccounts     = 0
 
+    /**
+     * These parameters holds all tracking information and will be send to the Piwik Server installation. Will be reset
+     * after each tracking.
+     *
+     * @type Object
+     */
     var parameter       = {};
 
+    /**
+     * Initializes the tracker.
+     */
     this.init = function () {
 
         visitCount      = this._getVisitCount();
         uuid            = this._getUniqueId();
+        numAccounts     = Piwik.require('App/Accounts').getNumAccounts();
     };
 
+    /**
+     * Detects whether a new day has started or not.
+     *
+     * @returns  {boolean}  true if it is a new day, false otherwise.
+     */
     this.isNewDay = function () {
         var now     = new Date();
         var dateNow = now.toDateString();
@@ -57,6 +159,13 @@ Piwik.Tracker = new function () {
         return false;
     };
 
+    /**
+     * Get the unique visitor id. If no visitor id exists, it'll arrange the generation of an uuid.
+     *
+     * @private
+     *
+     * @type string
+     */
     this._getUniqueId = function () {
 
         if (uuid) {
@@ -78,6 +187,15 @@ Piwik.Tracker = new function () {
         return this._generateUniqueId();
     };
 
+    /**
+     * Generates an unique visitor id for this user. The generated unique id will be different each time you call it.
+     * Once a visitor id is generated, it will be stored in application cache for later usage via
+     * {@link Piwik.Tracker#_getUniqueId}
+     *
+     * @private
+     *
+     * @type string
+     */
     this._generateUniqueId = function () {
 
         var now   = new Date();
@@ -95,6 +213,14 @@ Piwik.Tracker = new function () {
         return uuid;
     };
 
+    /**
+     * Increase the count by one and return the current visit count. Make sure this method will be only called once
+     * per app start.
+     *
+     * @private
+     *
+     * @type number
+     */
     this._getVisitCount = function () {
 
         if (visitCount) {
@@ -102,7 +228,7 @@ Piwik.Tracker = new function () {
             return visitCount;
         }
 
-        // have a look whether there is already a visitcount number
+        // have a look whether there is already a visit count number
         var cache            = Piwik.require('App/Cache');
         var cachedVisitCount = cache.get('tracking_visit_count');
 
@@ -124,14 +250,26 @@ Piwik.Tracker = new function () {
         return visitCount;
     };
 
+    /**
+     * Log a page view. A page view is for example a new opened window or navigating to an already opened window.
+     * Make sure you've set a document title {@link Piwik.Tracker#setDocumentTitle} and current url
+     * {@link Piwik.Tracker#setCurrentUrl} before.
+     */
     this.trackPageView = function () {
 
-        parameter.action_name = '' + this.documentTitle;
-        parameter.url         = this.currentUrl;
+        parameter.action_name = '' + documentTitle;
+        parameter.url         = currentUrl;
 
         this.track();
     };
 
+    /**
+     * Logs an event. An event is for example a click or a setting change.
+     *
+     * @param   {Object}    event
+     * @param   {string}    event.title     The title of the event.
+     * @param   {string}    event.url       An absolute url to identify this event without protocol and so on.
+     */
     this.trackEvent = function (event) {
         
         parameter.action_name = '' + event.title;
@@ -140,14 +278,29 @@ Piwik.Tracker = new function () {
         this.track();
     };
 
+    /**
+     * Track a specific goal. Make sure you've set a document title before. Uses the last set url automatically.
+     * 
+     * @param {number} goalId
+     */
     this.trackGoal = function (goalId) {
 
         parameter.idgoal = '' + goalId;
-        parameter.url    = this.currentUrl;
+        parameter.url    = currentUrl;
 
         this.track();
     };
 
+    /**
+     * Logs an exception.
+     *
+     * @param   {Object}    exception
+     * @param   {string}    exception.file        The name of the file where the exception was thrown.
+     * @param   {string}    exception.line        The number of the line where the exception was thrown.
+     * @param   {string}    exception.message     The exception message.
+     * @param   {string}    exception.type        The name of the exception, for example TypeError.
+     * @param   {string}    exception.errorCode   An absolute url to identify this event without protocol and so on.
+     */
     this.trackException = function (exception) {
 
         if (!exception) {
@@ -182,29 +335,61 @@ Piwik.Tracker = new function () {
         this.track();
     };
 
+    /**
+     * Logs an outlink or download link.
+     * 
+     * @param  {string}  sourceUrl    An absolute url without protocol and so on
+     * @param  {string}  linkType     Either 'download' or 'outlink'
+     */
     this.trackLink = function (sourceUrl, linkType) {
 
-        parameter           = {url: this.currentUrl};
+        parameter           = {url: currentUrl};
         parameter[linkType] = sourceUrl;
 
         this.track(parameter);
     };
 
+    /**
+     * Sets (overrides) the document title.
+     * 
+     * @param  {string}  title
+     *
+     * @type Piwik.Tracker
+     */
     this.setDocumentTitle = function (title) {
-        this.documentTitle = '' + title;
+        documentTitle = '' + title;
 
         return this;
     };
 
+    /**
+     * Sets (overrides) the current url.
+     *
+     * @param  {string}  title     An absolute url without protocol and so on.
+     *
+     * @type Piwik.Tracker
+     */
     this.setCurrentUrl = function (url) {
-        this.currentUrl = baseUrl + url;
+        currentUrl = baseUrl + url;
 
         return this;
     };
 
+    /**
+     * Set custom variable within this visit. All set custom variables will be recognized in the next tracking and
+     * reset afterwards.
+     *
+     * @param  {number}  index    The index of the custom variable
+     * @param  {string}  name     The number of the custom variable
+     * @param  {string}  value    The value of the custom variable
+     * @param  {string}  scope    Either 'page' or 'visit' scope.
+     *                            - "visit" will store the name/value in the visit and will persist it in the cookie
+     *                              for the duration of the visit
+     *                            - "page" will store the name/value in the page view.
+     */
     this.setCustomVariable = function (index, name, value, scope) {
 
-        var key = 'cvar'
+        var key = 'cvar';
         if (scope && 'page' == scope) {
             key = 'cvar';
         } else if (scope && 'visit' == scope) {
@@ -218,6 +403,12 @@ Piwik.Tracker = new function () {
         parameter[key]['' + index] = ['' + name, '' + value];
     };
 
+    /**
+     * Detects whether tracking is enabled or disabled. It considers the config as well as whether the user has allowed
+     * tracking.
+     *
+     * @returns {boolean}  true if tracking is enabled, false otherwise.
+     */
     this.isEnabled = function () {
 
         if (!config.tracking.enabled) {
@@ -230,6 +421,10 @@ Piwik.Tracker = new function () {
         return settings.isTrackingEnabled();
     };
 
+    /**
+     * Execute a track. Track will only be executed if tracking is enabled and if maxTracksPerDay is not achieved.
+     * All required parameters will automatically be set.
+     */
     this.track = function () {
 
         if (!this.isEnabled()) {
@@ -238,6 +433,7 @@ Piwik.Tracker = new function () {
         }
 
         if (this.isNewDay()) {
+            // reset num tracks today and allow again maxTracksPerDay
             numTracksToday = 0;
         }
 
@@ -260,6 +456,10 @@ Piwik.Tracker = new function () {
         parameter = {};
     };
 
+    /**
+     * Mixin all required default parameter needed to execute a tracking request. For example siteId, custom variables
+     * with visit scope, resolution, uuid, visitcount and so on.
+     */
     this._mixinDefaultParameter = function () {
 
         if (!parameter) {
@@ -310,6 +510,11 @@ Piwik.Tracker = new function () {
         }
     };
 
+    /**
+     * Ask the user for anonymous tracking permission. User will only be asked if tracking is enabled. If user agrees,
+     * the setting will automatically be enabled. If not, tracking will be still disabled. Make sure this method will
+     * only executed once the user starts the app the first time.
+     */
     this.askForPermission = function () {
 
         if (!config.tracking.enabled) {
