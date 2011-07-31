@@ -34,7 +34,6 @@
 }
 
 .piwikWindow {
-    background-color: '#ffffff';
 }
 
 /**
