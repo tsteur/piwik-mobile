@@ -61,8 +61,10 @@ function window () {
      * Retrieve the current displayed window.
      *
      * @returns {void|Piwik.UI.Window}  The current displayed window or void if no window is opened.
+     * 
+     * @private
      */
-    this.getCurrentWindow = function () {
+    this._getCurrentWindow = function () {
         if (this.windows && this.windows.length) {
 
             return this.windows[this.windows.length - 1];
@@ -70,19 +72,22 @@ function window () {
     };
 
     /**
-     * Add a new window to the layout so that it will be visible afterwards.
+     * Add a new window to the layout so that it will be visible afterwards. Does also add a property named
+     * "rootWindow" to the newWin object which references to the root window (Ti.UI.Window) of the view.
      *
      * @param    {Piwik.UI.Window}    newWin   The window that shall be added to the layout.
      *                                         The window will be visible afterwards.
      */
     this.addWindow = function (newWin) {
 
-        var currentWindow = this.getCurrentWindow();
+        var currentWindow = this._getCurrentWindow();
         if (currentWindow) {
             currentWindow.fireEvent('blurWindow', {});
         }
 
         newWin.fireEvent('focusWindow', {});
+
+        newWin.rootWindow      = Ti.UI.currentWindow;
 
         Piwik.UI.currentWindow = newWin;
 
@@ -133,7 +138,7 @@ function window () {
         window    = null;
         oldWindow = null;
 
-        var newActiveWindow = this.getCurrentWindow();
+        var newActiveWindow = this._getCurrentWindow();
 
         if (!newActiveWindow) {
 
