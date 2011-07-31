@@ -8,6 +8,8 @@
 
 /**
  * @class    Fetches statistics using the 'metadata' api. See <a href="http://piwik.org/docs/analytics-api/metadata/#toc-listing-all-the-metadata-api-functions">Metadata API</a>
+ * 
+ * @augments Piwik.Network.Request
  */
 Piwik.Network.StatisticsRequest = function () {
 
@@ -192,28 +194,6 @@ Piwik.Network.StatisticsRequest = function () {
         this.site             = null;
         this.showAll          = false;
         this.sortOrderColumn  = null;
-    };
-
-    /**
-     * Add an event listener to receive triggered events. The callback will be executed in the
-     * Piwik.UI.Window context.
-     *
-     * @param   {string}     name       Name of the event you want to listen to.
-     * @param   {Function}   callback   Callback function to invoke when the event is fired
-     */
-    this.addEventListener = function (name, callback) {
-        Piwik.UI.currentWindow.addEventListener(name, callback);
-    };
-
-    /**
-     * Fires an event to all listeners. The event will be fired in Piwik.UI.Window context.
-     *
-     * @param   {string}     name       Name of the event you want to fire.
-     * @param   {Function}   event      An event object that will be passed to the callback function which was added
-     *                                  via addEventListener.
-     */
-    this.fireEvent = function (name, event) {
-        Piwik.UI.currentWindow.fireEvent(name, event);
     };
     
     /**
@@ -527,3 +507,8 @@ Piwik.Network.StatisticsRequest = function () {
         return reportRow;
     };
 };
+
+/**
+ * Extend Piwik.Network.Request
+ */
+Piwik.Network.StatisticsRequest.prototype = Piwik.require('Network/Request');

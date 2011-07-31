@@ -8,6 +8,8 @@
 
 /**
  * @class    Fetches a list of all available reports for a given site using the metadata API.
+ * 
+ * @augments Piwik.Network.Request
  */
 Piwik.Network.ReportsRequest = function () {
 
@@ -43,28 +45,6 @@ Piwik.Network.ReportsRequest = function () {
      * @type string
      */
     this.sessionKey       = null;
-
-    /**
-     * Add an event listener to receive triggered events. The callback will be executed in the
-     * Piwik.UI.Window context.
-     *
-     * @param   {string}     name       Name of the event you want to listen to.
-     * @param   {Function}   callback   Callback function to invoke when the event is fired
-     */
-    this.addEventListener = function (name, callback) {
-        Piwik.UI.currentWindow.addEventListener(name, callback);
-    };
-
-    /**
-     * Fires an event to all listeners. The event will be fired in Piwik.UI.Window context.
-     *
-     * @param   {string}     name       Name of the event you want to fire.
-     * @param   {Function}   event      An event object that will be passed to the callback function which was added
-     *                                  via addEventListener.
-     */
-    this.fireEvent = function (name, event) {
-        Piwik.UI.currentWindow.fireEvent(name, event);
-    };
 
     /**
      * Initialize / reset all previous defined or fetched values. We have to do this cause it is possible to call the
@@ -163,3 +143,8 @@ Piwik.Network.ReportsRequest = function () {
         this.fireEvent('onload', eventResult);
     };
 };
+
+/**
+ * Extend Piwik.Network.Request
+ */
+Piwik.Network.ReportsRequest.prototype = Piwik.require('Network/Request');
