@@ -37,7 +37,8 @@ function window (params) {
 
     this.add(tableView);
 
-    var visitor = Piwik.UI.createVisitor({visitor: params.visitor, accessUrl: params.accessUrl});
+    var visitor = this.create('Visitor', {visitor: params.visitor, 
+                                          accessUrl: params.accessUrl});
 
     tableView.setData(visitor.getRows());
 

@@ -12,6 +12,7 @@
  *
  * @param    {Object}       [options]              See {@link Piwik.UI.View#setParams}
  * @param    {string}       [options.title=""]     Optional. The title.
+ *                                                 
  *
  * @augments Piwik.UI.View
  */
@@ -77,9 +78,10 @@ Piwik.UI.Header = function () {
      * @type void
      */
     this.setHeadline = function () {
-
-        if (Piwik.isIos && Ti.UI.currentWindow) {
-            Ti.UI.currentWindow.title = this.getParam('title', '');
+        var win = this.getParam('window');
+        
+        if (Piwik.isIos && win && win.rootWindow) {
+            win.rootWindow.title = this.getParam('title', '');
 
             return;
         }

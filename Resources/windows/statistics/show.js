@@ -41,6 +41,8 @@ function window (params) {
      * @see Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
+    
+    var that          = this;
 
     if (params.report) {
         Piwik.Tracker.setCustomVariable(1, 'reportModule', params.report.module, 'page');
@@ -52,7 +54,7 @@ function window (params) {
 
     var request      = Piwik.require('Network/StatisticsRequest');
     var tableView    = Ti.UI.createTableView({id: 'statisticsTableView'});
-    var refresh      = Piwik.UI.createRefresh({tableView: tableView});
+    var refresh      = this.create('Refresh', {tableView: tableView});
 
     this.add(tableView);
 
@@ -110,26 +112,28 @@ function window (params) {
 
         var site = event.site;
 
-        this.titleOptions = {title: event.report ? event.report.name : ''};
-        this.menuOptions  = {dayChooser: true,
+        that.titleOptions = {title: event.report ? event.report.name : '',
+                             window: that};
+        that.menuOptions  = {dayChooser: true,
                              siteChooser: true,
                              optionMenuSettingsChooser: true,
                              date: event.date,
-                             period: event.period};
+                             period: event.period,
+                             window: that};
 
         // update header and menu after each request cause of a possibly period and/or date change.
-        Piwik.UI.layout.header.refresh(this.titleOptions);
-        Piwik.UI.layout.menu.refresh(this.menuOptions);
+        Piwik.UI.layout.header.refresh(that.titleOptions);
+        Piwik.UI.layout.menu.refresh(that.menuOptions);
 
         var tableViewRows = [];
 
-        tableViewRows.push(Piwik.UI.createTableViewSection({title: site ? site.name : ''}));
+        tableViewRows.push(that.create('TableViewSection', {title: site ? site.name : ''}));
 
         if (event.graphsEnabled && event.graphData) {
 
             var graph    = Piwik.require('Graph');
             var graphUrl = graph.getPieChartUrl(event.graphData);
-            graph        = Piwik.UI.createGraph({graphUrl: graphUrl});
+            graph        = that.create('Graph', {graphUrl: graphUrl});
 
             tableViewRows.push(graph.getRow());
         }
@@ -140,7 +144,7 @@ function window (params) {
             optionDate = optionDate.toPiwikDate();
         }
 
-        tableViewRows.push(Piwik.UI.createTableViewSection({title:  event.reportDate}));
+        tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
 
         // @see Piwik.Network.StatisticsRequest#report
         var statsticTitleLabel = null;
@@ -169,7 +173,7 @@ function window (params) {
                              value: statsticValueLabel};
         }
 
-        var visitorStats  = Piwik.UI.createStatisticList({values:   event.reportData,
+        var visitorStats  = that.create('StatisticList', {values:   event.reportData,
                                                           showAll:  event.showAll,
                                                           headline: headlineStats});
 

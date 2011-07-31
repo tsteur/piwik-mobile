@@ -93,11 +93,11 @@ Piwik.UI.Visitor = function () {
                                                            '' + visitor.serverTimePretty,
                                                            '' + visitor.visitDurationPretty);
 
-        this.rows.push(Piwik.UI.createTableViewRow({title: visitDateLabel,
+        this.rows.push(this.create('TableViewRow', {title: visitDateLabel,
                                                     className: 'visitorTableViewRow'}));
 
         if (visitor.visitIp) {
-            this.rows.push(Piwik.UI.createTableViewRow({title: _('General_VisitorIP'),
+            this.rows.push(this.create('TableViewRow', {title: _('General_VisitorIP'),
                                                         className: 'visitorTableViewRow',
                                                         value: visitor.visitIp}));
         }
@@ -122,7 +122,7 @@ Piwik.UI.Visitor = function () {
                     break;
             }
 
-            this.rows.push(Piwik.UI.createTableViewRow({title: _('General_VisitType'),
+            this.rows.push(this.create('TableViewRow', {title: _('General_VisitType'),
                                                         className: 'visitorTableViewRow',
                                                         value: visitorTypeText}));
         }
@@ -130,7 +130,7 @@ Piwik.UI.Visitor = function () {
         if (visitor.goalConversions) {
             var goalConversionsText = String.format(_('General_VisitConvertedNGoals'),
                                                     '' + parseInt(visitor.goalConversions, 10));
-            this.rows.push(Piwik.UI.createTableViewRow({title: goalConversionsText,
+            this.rows.push(this.create('TableViewRow', {title: goalConversionsText,
                                                         className: 'visitorTableViewRow'}));
         }
 
@@ -164,7 +164,7 @@ Piwik.UI.Visitor = function () {
                 referrerParams.title += String.format(": '%s'", '' + visitor.referrerKeyword);
             }
 
-            var referrerRow = Piwik.UI.createTableViewRow(referrerParams);
+            var referrerRow = this.create('TableViewRow', referrerParams);
 
             referrerRow.addEventListener('click', function () {
                 if (visitor.referrerUrl) {
@@ -178,7 +178,7 @@ Piwik.UI.Visitor = function () {
         }
 
         if (visitor.country) {
-            this.rows.push(Piwik.UI.createTableViewRow({title: _('UserCountry_Country'),
+            this.rows.push(this.create('TableViewRow', {title: _('UserCountry_Country'),
                                                         value: visitor.country,
                                                         className: 'visitorTableViewRow'}));
             // leftImage: {url: accessUrl + visitor.countryFlag}
@@ -203,7 +203,7 @@ Piwik.UI.Visitor = function () {
             return;
         }
 
-        this.rows.push(Piwik.UI.createTableViewSection({title: _('CustomVariables_CustomVariables')}));
+        this.rows.push(this.create('TableViewSection', {title: _('CustomVariables_CustomVariables')}));
 
         for (var customVariableIndex in visitor.customVariables) {
 
@@ -211,7 +211,7 @@ Piwik.UI.Visitor = function () {
             var customVariableName  = customVariable['customVariableName' + customVariableIndex];
             var customVariableValue = customVariable['customVariableValue' + customVariableIndex];
 
-            this.rows.push(Piwik.UI.createTableViewRow({title: customVariableName,
+            this.rows.push(this.create('TableViewRow', {title: customVariableName,
                                                         className: 'visitorTableViewRow',
                                                         value: customVariableValue}));
         }
@@ -232,17 +232,17 @@ Piwik.UI.Visitor = function () {
         var visitor   = this.getParam('visitor', {});
         var accessUrl = this.getParam('accessUrl', '');
         
-        this.rows.push(Piwik.UI.createTableViewSection({title: _('UserSettings_VisitorSettings')}));
+        this.rows.push(this.create('TableViewSection', {title: _('UserSettings_VisitorSettings')}));
 
         if (visitor.operatingSystem) {
-            this.rows.push(Piwik.UI.createTableViewRow({title: 'OS',
+            this.rows.push(this.create('TableViewRow', {title: 'OS',
                                                         className: 'visitorTableViewRow',
                                                         value: visitor.operatingSystem}));
             // leftImage: {url: accessUrl + visitor.operatingSystemIcon}
         }
 
         if (visitor.browserName) {
-            this.rows.push(Piwik.UI.createTableViewRow({title: _('UserSettings_ColumnBrowser'),
+            this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnBrowser'),
                                                         className: 'visitorTableViewRow',
                                                         value: visitor.browserName}));
             // leftImage: {url: accessUrl + visitor.browserIcon}
@@ -257,14 +257,14 @@ Piwik.UI.Visitor = function () {
         }
 
         if (resolution) {
-            this.rows.push(Piwik.UI.createTableViewRow({title: _('UserSettings_ColumnResolution'),
+            this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnResolution'),
                                                         className: 'visitorTableViewRow',
                                                         value: resolution}));
         }
 
         if (visitor.pluginsIcons && visitor.pluginsIcons.length) {
 
-            var row = Piwik.UI.createTableViewRow({className: 'visitorTableViewRow'});
+            var row = this.create('TableViewRow', {className: 'visitorTableViewRow'});
             row.add(Ti.UI.createLabel({text: _('UserSettings_Plugins'),
                                        id: 'tableViewRowTitleLabel'}));
             
@@ -298,7 +298,7 @@ Piwik.UI.Visitor = function () {
 
         var numActions = parseInt(visitor.actions, 10);
         
-        this.rows.push(Piwik.UI.createTableViewSection({title: String.format(_('VisitsSummary_NbActions'),
+        this.rows.push(this.create('TableViewSection', {title: String.format(_('VisitsSummary_NbActions'),
                                                                              '' + numActions)}));
 
         for (var index = 0; index < visitor.actionDetails.length; index++) {

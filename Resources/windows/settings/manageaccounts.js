@@ -32,7 +32,8 @@ function window () {
     
     var onUpdateAccount = function () {
         // will be executed in row context, therefore this == Piwik.UI.TableViewRow
-        Piwik.UI.createWindow({url: 'settings/editaccount.js',
+        that.create('Window', {url: 'settings/editaccount.js',
+                               target: 'modal',
                                accountId: this.accountId});
     };
     
@@ -160,7 +161,7 @@ function window () {
         for (var index = 0; index < event.accounts.length; index++) {
             account    = event.accounts[index];
 
-            tableData.push(Piwik.UI.createTableViewRow({className: 'manageAccountsRow',
+            tableData.push(that.create('TableViewRow', {className: 'manageAccountsRow',
                                                         title: '' + account.name,
                                                         description: account.accessUrl,
                                                         accountId: account.id,
@@ -173,9 +174,9 @@ function window () {
 
         tableview.setData(tableData);
     
-        if (Piwik.isIos) {
+        if (Piwik.isIos && !Piwik.isIpad) {
             var editButton = Ti.UI.createButton({systemButton: Ti.UI.iPhone.SystemButton.EDIT});
-            Ti.UI.currentWindow.leftNavButton = editButton;
+            that.rootWindow.leftNavButton = editButton;
 
             editButton.addEventListener('click', function () {
                 tableview.editing = !tableview.editing;

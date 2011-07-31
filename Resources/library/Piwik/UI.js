@@ -60,7 +60,9 @@ Piwik.UI.bootstrap = function (options) {
  *                                                       has to be relative to the 'Resources/windows' directory.
  * @param {string}    [params.exitOnClose=false]         if true, it makes sure android exits the app when this
  *                                                       window is closed and no other activity (window) is running
- * @param {boolean}   [params.closeCurrentWindow=false]  If true, it closes the currently displayed window.
+ * @param {string}    [params.target]                    Only for iPad. Defines whether the window shall be placed in
+ *                                                       'detailView', 'masterView' or 'modal' window.
+ * @param {Piwik.UI.Window} [params.closeWindow]         If true, it closes the given window.
  * @param {*}         params.*                           You can pass other parameters as you need it. The created
  *                                                       controller and view can access those values. You can use
  *                                                       this for example if you want to pass a site, date, period
@@ -79,6 +81,9 @@ Piwik.UI.createWindow = function (params) {
     if (!params) {
         params = {};
     }
+    
+    delete params.window;
+    delete params.rootWindow;
 
     try {
         var url                = params.url;
@@ -103,14 +108,13 @@ Piwik.UI.createWindow = function (params) {
         // extend newWin
         Piwik.UI.Window.apply(newWin, []);
 
-        if (params.closeCurrentWindow && Piwik.UI.currentWindow) {
-            Piwik.UI.currentWindow.close(true);
+        if (params.closeWindow) {
+            params.closeWindow.close(true);
         }
 
         // add window to layout so that it will be visible afterwards
         this.layout.addWindow(newWin);
-        
-        Piwik.UI.currentWindow = newWin;
+
         newWin.deleteOnScroll  = true;
 
         // extend newWin again and render the requested template

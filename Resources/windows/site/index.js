@@ -54,7 +54,7 @@ function window (params) {
     var that      = this;
 
     var tableview = Ti.UI.createTableView({id: 'reportsTableView'});
-    var refresh   = Piwik.UI.createRefresh({tableView: tableview});
+    var refresh   = this.create('Refresh', {tableView: tableview});
     var tableData = [];
     
     this.add(tableview);
@@ -66,14 +66,14 @@ function window (params) {
             switch (event.rowData.action) {
                 case 'live':
                         
-                    Piwik.UI.createWindow({url: 'statistics/live.js',
+                    that.create('Window', {url: 'statistics/live.js',
                                            site: site,
                                            autoRefresh: true});
                     break;
                 
                 case 'visitorlog':
 
-                    Piwik.UI.createWindow({url: 'statistics/visitorlog.js',
+                    that.create('Window', {url: 'statistics/visitorlog.js',
                                            site: site});
 
                 break;
@@ -84,7 +84,7 @@ function window (params) {
         }
 
         if (event && event.rowData && event.rowData.report) {
-            Piwik.UI.createWindow({url: 'statistics/show.js',
+            that.create('Window', {url: 'statistics/show.js',
                                    report: event.rowData.report,
                                    site: site});
         }
@@ -131,6 +131,17 @@ function window (params) {
 
         site              = event.site;
         that.titleOptions = {title: '' + event.site.name};
+        
+        if (Piwik.isIpad) {
+            
+            that.titleOptions = {title: '' + (site ? site.name : ''),
+                                 rootWindow: that.rootWindow};
+
+            Piwik.UI.layout.header.refresh(that.titleOptions);
+            
+            forceRequestReload = false;
+            refresh.refresh();
+        }
     });
 
     this.addEventListener('focusWindow', function () {
@@ -157,11 +168,11 @@ function window (params) {
             return;
         }
 
-        tableData.push(Piwik.UI.createTableViewRow({title:       _('Live_VisitorsInRealTime'),
+        tableData.push(that.create('TableViewRow', {title:       _('Live_VisitorsInRealTime'),
                                                     action:      'live',
                                                     className:   'reportTableViewRow'}));
 
-        tableData.push(Piwik.UI.createTableViewRow({title:       _('Live_VisitorLog'),
+        tableData.push(that.create('TableViewRow', {title:       _('Live_VisitorLog'),
                                                     action:      'visitorlog',
                                                     className:   'reportTableViewRow'}));
 
@@ -178,14 +189,14 @@ function window (params) {
             // display the new/changed section
             if (currentSection && currentSection !== latestSection) {
 
-                section    = Piwik.UI.createTableViewSection({title: String(report.category)});
+                section    = that.create('TableViewSection', {title: String(report.category)});
 
                 tableData.push(section);
             }
 
             latestSection  = currentSection;
 
-            tableData.push(Piwik.UI.createTableViewRow({title:     report.name,
+            tableData.push(that.create('TableViewRow', {title:     report.name,
                                                         report:    report,
                                                         className: 'reportTableViewRow'}));
         }

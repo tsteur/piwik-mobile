@@ -27,9 +27,11 @@ function window (params) {
      * @see Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
+    
+    var that          = this;
 
     // we'll display an activity indicator while verifying the entered account url+credentials.
-    var activityIndicator = Piwik.UI.createActivityIndicator();
+    var activityIndicator = this.create('ActivityIndicator');
     var request           = Piwik.require('Network/AccountRequest');
     var scrollView        = Ti.UI.createScrollView({id: 'editAccountScrollView'});
 
@@ -317,15 +319,22 @@ function window (params) {
 
         alertDialog.addEventListener('click', function () {
 
-            if (1 === Piwik.UI.layout.windows.length) {
+            if (Piwik.isIpad) {
+                
+                // update list of available websites and close currentwindow
+                that.create('Window', {url: 'index/index.js',
+                                       closeWindow: that});
+                                       
+            } else if (1 === Piwik.UI.layout.windows.length) {
                 // this screen is the first Piwik window (in most cases the user started the app the first time),
                 // open websites overview instead of closing this window.
-                Piwik.UI.createWindow({url: 'index/index.js',
-                                       closeCurrentWindow: true});
+                that.create('Window', {url: 'index/index.js',
+                                       closeWindow: that});
             } else {
+
                 // close this window, so user has the possibility to add another account or
                 // something else. settings/manageaccounts will be visible afterwards.
-                Piwik.UI.currentWindow.close();
+                that.close();
             }
         });
 

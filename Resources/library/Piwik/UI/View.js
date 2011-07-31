@@ -74,9 +74,21 @@ Piwik.UI.View = function () {
      */
     this.fireEvent = function (name, event) {
 
-        if (Piwik.UI.currentWindow) {
-            Piwik.UI.currentWindow.fireEvent(name, event);
+        var window = this.getParam('window');
+        if (window) {
+            window.fireEvent(name, event);
         }
+    };
+    
+    this.create = function (widget, params) {
+        
+        var window = this.getParam('window');
+        
+        if (window) {
+            return window.create(widget, params);
+        }
+        
+        return;
     };
 
     /**
@@ -88,8 +100,9 @@ Piwik.UI.View = function () {
      */
     this.addEventListener = function (name, callback) {
 
-        if (Piwik.UI.currentWindow) {
-            Piwik.UI.currentWindow.addEventListener(name, callback);
+        var window = this.getParam('window');
+        if (window) {
+            window.addEventListener(name, callback);
         }
     };
 
@@ -101,8 +114,9 @@ Piwik.UI.View = function () {
      */
     this.removeEventListener = function (name, callback) {
 
-        if (Piwik.UI.currentWindow) {
-            Piwik.UI.currentWindow.removeEventListener(name, callback);
+        var window = this.getParam('window');
+        if (window) {
+            window.removeEventListener(name, callback);
         }
     };
 

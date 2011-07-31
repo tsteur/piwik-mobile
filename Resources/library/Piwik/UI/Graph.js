@@ -89,16 +89,23 @@ Piwik.UI.Graph = function () {
                                                 id: 'graphImage',
                                                 image: fullGraphUrl});
 
-        var showDetailImage = Ti.UI.createImageView({className: 'graphShowDetailImage'});
-        
-        // event to open graph in fullscreen
-        showDetailImage.addEventListener('click', function () {
-            Piwik.UI.createWindow({url: 'graph/fulldetail.js',
-                                   graphUrl: graphUrl});
-        });
-        
         view.add(graphImage);
-        view.add(showDetailImage);
+        
+        if (!Piwik.isIpad) {
+            
+            var showDetailImage = Ti.UI.createImageView({className: 'graphShowDetailImage'});
+            
+            var that = this;
+            // event to open graph in fullscreen
+            showDetailImage.addEventListener('click', function () {
+                that.create('Window', {url: 'graph/fulldetail.js',
+                                       target: 'modal',
+                                       graphUrl: graphUrl});
+            });
+            
+            view.add(showDetailImage);
+        }
+        
     };
 };
 

@@ -191,8 +191,7 @@ Piwik.UI.Menu = function () {
             });
             this.menuView.add(this.addAccountIcon);
         }
-
-        this.refresh();
+        
         
         return this;
     };
@@ -232,14 +231,14 @@ Piwik.UI.Menu = function () {
      * Opens the 'add a new account' window
      */
     this.onAddAccount = function () {
-        Piwik.UI.createWindow({url: 'settings/editaccount.js'});
+        this.create('Window', {url: 'settings/editaccount.js', target: 'modal'});
     };
 
     /**
      * Opens the 'Settings' window
      */
     this.onChooseSettings = function () {
-        Piwik.UI.createWindow({url: 'settings/index.js'}); 
+        this.create('Window', {url: 'settings/index.js'}); 
     };
 
     /**
@@ -250,7 +249,7 @@ Piwik.UI.Menu = function () {
         
         var max    = new Date();
         var min    = new Date(2008, 0, 1);
-        var picker = Piwik.UI.createDatePicker({value: this.date,
+        var picker = this.create('DatePicker', {value: this.date,
                                                 maxDate: max,
                                                 period: this.period,
                                                 selectionIndicator: true,
@@ -274,8 +273,8 @@ Piwik.UI.Menu = function () {
 
         var win  = null;
 
-        if (Piwik.isIpad && Ti.UI.iPad) {
-            win = Piwik.UI.createPopover({width: 320, 
+        if (Piwik.isIpad) {
+            win = this.create('Popover', {width: 320, 
                                           height: 460, 
                                           title: _('General_ChooseWebsite')});
                                             
@@ -315,7 +314,7 @@ Piwik.UI.Menu = function () {
             win.add(view);
         }
 
-        var websitesList = Piwik.UI.createWebsitesList({view: Piwik.isAndroid ? view : win,
+        var websitesList = this.create('WebsitesList', {view: Piwik.isAndroid ? view : win,
                                                         displaySparklines: false});
 
         var onChooseSite = function (event) {
@@ -370,6 +369,10 @@ Piwik.UI.Menu = function () {
             this.setParams(params);
         }
 
+        var win        = this.getParam('window', {});
+
+        var rootWindow = win.rootWindow;
+
         var that       = this;
         
         this.period    = this.getParam('period', this.period);
@@ -403,17 +406,22 @@ Piwik.UI.Menu = function () {
 
             if (this.toolBar) {
                 this.toolBar.hide();
-                Ti.UI.currentWindow.rightNavButton = null;
+                
+                if (rootWindow) {
+                    rootWindow.rightNavButton = null;
+                }
             }
 
-            // always reset left nav button
-            Ti.UI.currentWindow.leftNavButton = null;
+            // always reset left nav button, but not in iPad devices
+            if (!Piwik.isIpad && rootWindow) {
+                rootWindow.leftNavButton = null;
+            }
 
-            if (labels.length) {
+            if (labels.length && rootWindow) {
                 this.toolBar = Ti.UI.createButtonBar({labels: labels,
                                                       id: 'menuButtonBar'});
 
-                Ti.UI.currentWindow.rightNavButton = this.toolBar;
+                rootWindow.rightNavButton = this.toolBar;
 
                 this.toolBar.addEventListener('click', function (event) {
                     if (!event || !event.source) {
@@ -538,7 +546,7 @@ Piwik.UI.Menu = function () {
                                  url: '/android-option-menu/close-window'};
                 Piwik.getTracker().trackEvent(menuEvent);
 
-                Piwik.UI.currentWindow.close();
+                that.close();
             });
         }
     };

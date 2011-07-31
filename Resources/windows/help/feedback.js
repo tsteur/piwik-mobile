@@ -25,6 +25,8 @@ function window () {
      * @see Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
+    
+    var that          = this;
 
     var scrollView    = Ti.UI.createScrollView({id: 'giveFeedbackScrollView'});
     
@@ -117,7 +119,7 @@ function window () {
         if (Piwik.isIos) {
             var emailus = Ti.UI.createButton({title: 'Email us'});
             emailus.addEventListener('click', sendEmail);
-            Ti.UI.currentWindow.rightNavButton = emailus;
+            that.rootWindow.rightNavButton = emailus;
         }
 
     });

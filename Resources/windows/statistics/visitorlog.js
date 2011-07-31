@@ -30,6 +30,8 @@ function window (params) {
      * @see Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
+    
+    var that          = this;
 
     var latestRequestedTimestamp = null;
     var oldestVisitId            = null;
@@ -37,7 +39,7 @@ function window (params) {
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
-    var refresh   = Piwik.UI.createRefresh({tableView: tableView});
+    var refresh   = this.create('Refresh', {tableView: tableView});
     var site      = params.site;
 
     this.add(tableView);
@@ -73,7 +75,7 @@ function window (params) {
         }
 
         // open a new window to displayed detailed information about the visitor
-        Piwik.UI.createWindow({url: 'statistics/visitor.js',
+        that.create('Window', {url: 'statistics/visitor.js',
                                accessUrl: accessUrl,
                                visitor: event.rowData.visitor});
     });
@@ -136,7 +138,7 @@ function window (params) {
                     latestRequestedTimestamp = visitor.firstActionTimestamp;
                 }
                 
-                visitorOverview = Piwik.UI.createVisitorOverview({visitor: visitor,
+                visitorOverview = that.create('VisitorOverview', {visitor: visitor,
                                                                   accessUrl: accessUrl,
                                                                   useFirstVisit: true});
                 visitorRow      = visitorOverview.getRow();

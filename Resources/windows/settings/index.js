@@ -271,7 +271,7 @@ function window () {
         };
 
         var onManageAccess = function () {
-            Piwik.UI.createWindow({url: 'settings/manageaccounts.js'});
+            that.create('Window', {url: 'settings/manageaccounts.js', target: 'modal'});
         };
 
         var onChangeHttpTimeout = function () {
@@ -311,54 +311,57 @@ function window () {
         };
 
         var onShowHelpAbout = function () {
-            Piwik.UI.createWindow({url: 'help/about.js'});
+            that.create('Window', {url: 'help/about.js', target: 'modal'});
         };
 
         var onShowHelpFeedback = function () {
-            Piwik.UI.createWindow({url: 'help/feedback.js'});
+            that.create('Window', {url: 'help/feedback.js', target: 'modal'});
         };
 
-        var tableData = [Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasChild',
+        var tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
                                                       title: _('UsersManager_ManageAccess'),
                                                       onClick: onManageAccess,
                                                       hasChild: true}),
-                         Piwik.UI.createTableViewSection({title: _('General_GeneralSettings'), style: 'native'}),
-                         Piwik.UI.createTableViewRow({className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                         that.create('TableViewSection', {title: _('General_GeneralSettings'), 
+                                                          style: 'native'}),
+                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('General_Language'),
                                                       onClick: onChangeLanguage,
                                                       value: currentLanguage,
                                                       hasChild: Piwik.isIos}),
-                         Piwik.UI.createTableViewRow({className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('Mobile_DefaultReportDate'),
                                                       onClick: onChangeDefaultReportDate,
                                                       value: defaultReportDateLabel,
                                                       hasChild: Piwik.isIos}),
-                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasCheck',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
                                                       title: _('Mobile_AnonymousTracking'),
                                                       onClick: onChangeAnonymousTracking,
                                                       hasCheck: Boolean(indexEvent.trackingEnabled)}),
-                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasCheck',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
                                                       title: _('Mobile_MultiChartLabel'),
                                                       description: _('Mobile_MultiChartInfo'),
                                                       onClick: onChangeSparkline,
                                                       hasCheck: Boolean(indexEvent.piwikMultiCharts)}),
-                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasCheck',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
                                                       title: _('Mobile_EnableGraphsLabel'),
                                                       onClick: onChangeGraphs,
                                                       hasCheck: Boolean(indexEvent.graphsEnabled)}),
-                         Piwik.UI.createTableViewSection({title: _('Mobile_Advanced'), style: 'native'}),
-                         Piwik.UI.createTableViewRow({className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                         that.create('TableViewSection', {title: _('Mobile_Advanced'), 
+                                                          style: 'native'}),
+                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('Mobile_HttpTimeout'),
                                                       description: _('Mobile_HttpTimeoutInfo'),
                                                       hasChild: Piwik.isIos,
                                                       onClick: onChangeHttpTimeout,
                                                       value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
-                         Piwik.UI.createTableViewSection({title: _('General_Help'), style: 'native'}),
-                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasChild',
+                         that.create('TableViewSection', {title: _('General_Help'), 
+                                                          style: 'native'}),
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
                                                       title: String.format(_('General_AboutPiwikX'), 'Mobile'),
                                                       onClick: onShowHelpAbout,
                                                       hasDetail: true}),
-                         Piwik.UI.createTableViewRow({className: 'settingsTableViewRowHasChild',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
                                                       title: _('General_GiveUsYourFeedback'),
                                                       onClick: onShowHelpFeedback,
                                                       hasDetail: true})];

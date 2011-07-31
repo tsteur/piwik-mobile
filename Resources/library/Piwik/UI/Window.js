@@ -11,7 +11,7 @@
  *
  * @augments Titanium.UI.View
  */
-Piwik.UI.Window = function (params) {
+Piwik.UI.Window = function () {
 
     /**
      * This event will be fired before the window is getting closed.
@@ -78,10 +78,28 @@ Piwik.UI.Window = function (params) {
         // track a page view
         Piwik.getTracker().setDocumentTitle(title).setCurrentUrl(url).trackPageView();
 
+        var titleOptions        = that.titleOptions;
+        var menuOptions         = that.menuOptions;
+        titleOptions.window     = that;
+        menuOptions.window      = that;
+ 
         // refresh the headline as well as the menu each time a window gets the focus.
-        Piwik.UI.layout.header.refresh(that.titleOptions);
-        Piwik.UI.layout.menu.refresh(that.menuOptions);
+        Piwik.UI.layout.header.refresh(titleOptions);
+        Piwik.UI.layout.menu.refresh(menuOptions);
     });
+    
+    this.create = function (widget, params) {
+        
+        if (!params) {
+            params = {};
+        }
+        
+        if (!params.window) {
+            params.window = that;
+        }
+        
+        return Piwik.UI['create' + widget](params);
+    };
 
     /**
      * Closes the window in a safe way.
@@ -96,7 +114,7 @@ Piwik.UI.Window = function (params) {
             newWindowWillFollow = false;
         }
 
-        if (Piwik.isIos && 1 == Piwik.UI.layout.windows.length && !newWindowWillFollow) {
+        if (!Piwik.isIpad && Piwik.isIos && 1 == Piwik.UI.layout.windows.length && !newWindowWillFollow) {
             // If only 1 view is available do never close the first screen on iOS, otherwise a blank window will appear
 
             return;

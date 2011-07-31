@@ -21,15 +21,21 @@ function window () {
 
     /**
      * @see Piwik.UI.Window#titleOptions
+     * 
+     * The last whitespace forces an redraw of the title on the iPad. Without this redraw the title will be aligned
+     * right.
      */
-    this.titleOptions = {title: 'Piwik Mobile'};
+    this.titleOptions = {title: 'Piwik Mobile '};
 
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {settingsChooser: true};
+    this.menuOptions  = {settingsChooser: !Piwik.isIpad};
 
-    var websitesList  = Piwik.UI.createWebsitesList({view: this, handleOnlyOneSiteAvailableEvent: true});
+    var that          = this;
+
+    var websitesList  = this.create('WebsitesList', {handleOnlyOneSiteAvailableEvent: !Piwik.isIpad,
+                                                     view: this});
 
     websitesList.addEventListener('onChooseSite', function (event) {
         if (!event || !event.site) {
@@ -37,7 +43,8 @@ function window () {
             return;
         }
 
-        Piwik.UI.createWindow({url: 'site/index.js',
+        that.create('Window', {url: 'site/index.js',
+                               target: 'masterView',
                                site: event.site});
     });
 
@@ -49,8 +56,9 @@ function window () {
         
         // user has access to only one site. jump directly to site view
         // @see http://dev.piwik.org/trac/ticket/2120
-        Piwik.UI.createWindow({url: 'site/index.js',
-                               closeCurrentWindow: true,
+        that.create('Window', {url: 'site/index.js',
+                               closeWindow: that,
+                               target: 'masterView',
                                site: event.site});
     });
 

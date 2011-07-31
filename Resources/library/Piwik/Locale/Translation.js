@@ -110,6 +110,7 @@ Piwik.Locale.Translation = new function () {
         General_Others:                                                     'Others',
         General_PiwikXIsAvailablePleaseNotifyPiwikAdmin:                    '%s is available. Please notify the site administrator.',
         General_Previous:                                                   'Previous',
+        General_Reports:                                                    'Reports',
         General_Required:                                                   '%s required',
         General_GeneralSettings:                                            'General Settings',
         General_Subtotal:                                                   'Subtotal',

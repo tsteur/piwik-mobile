@@ -91,7 +91,7 @@ Piwik.UI.Refresh = function () {
 
         return this;
     };
-
+    
     /**
      * Overwrites the default addEventListener. Connect events to the tableview. Prevents issues when using
      * the refersh UI widget twice within a single window. Otherwise always both refresh UI widgets will get the event.

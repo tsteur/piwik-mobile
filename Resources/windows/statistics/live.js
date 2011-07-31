@@ -40,7 +40,7 @@ function window (params) {
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'liveTableView'});
-    var refresh   = Piwik.UI.createRefresh({tableView: tableView});
+    var refresh   = this.create('Refresh', {tableView: tableView});
 
     this.add(tableView);
 
@@ -136,7 +136,7 @@ function window (params) {
         }
 
         // open a new window to displayed detailed information about the visitor
-        Piwik.UI.createWindow({url: 'statistics/visitor.js',
+        that.create('Window', {url: 'statistics/visitor.js',
                                accessUrl: accessUrl,
                                visitor: event.rowData.visitor});
     });
@@ -163,8 +163,8 @@ function window (params) {
 
             if (!that.lastMinutes || !that.lastHours) {
                 // make sure at least live overview will be rendered
-                that.lastMinutes = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastMinutes'), '30')});
-                that.lastHours   = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastHours'), '24')});
+                that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
+                that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
 
                 tableView.setData([that.lastMinutes.getRow(), that.lastHours.getRow()]);
             }
@@ -185,8 +185,8 @@ function window (params) {
         // clear previous displayed data
         tableView.setData([]);
 
-        that.lastMinutes = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastMinutes'), '30')});
-        that.lastHours   = Piwik.UI.createLiveOverview({title: String.format(_('Live_LastHours'), '24')});
+        that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
+        that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
 
         /**
          * Holds all rows that shall be rendered
@@ -196,7 +196,7 @@ function window (params) {
          */
         var visitorRows  = [that.lastMinutes.getRow(),
                             that.lastHours.getRow(),
-                            Piwik.UI.createTableViewSection({title: _('General_Visitors')})];
+                            that.create('TableViewSection', {title: _('General_Visitors')})];
 
         if (event.lastMinutes) {
             that.lastMinutes.refresh({actions: event.lastMinutes.actions,
@@ -241,7 +241,8 @@ function window (params) {
         for (var index = 0; index < visitors.length; index++) {
             visitor = visitors[index];
 
-            visitorOverview    = Piwik.UI.createVisitorOverview({visitor: visitor, accessUrl: accessUrl});
+            visitorOverview    = that.create('VisitorOverview', {visitor: visitor, 
+                                                                 accessUrl: accessUrl});
             visitorRow         = visitorOverview.getRow();
 
             // add visitor information to the row. This makes it possibly to access this value when

@@ -101,10 +101,11 @@ Piwik.UI.DatePicker = function () {
      * @fires    Piwik.UI.DatePicker#event:onSet
      */
     this.createIos = function (params) {
+        
         var win;
 
         if (Piwik.isIpad && Ti.UI.iPad) {
-            win = Piwik.UI.createPopover({width: 320, 
+            win = this.create('Popover', {width: 320, 
                                           height: 430, 
                                           title: _('General_ChooseDate')});
         } else {
@@ -132,16 +133,16 @@ Piwik.UI.DatePicker = function () {
             return;
         }
 
-        var periods   = [Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodDay'),
+        var periods   = [this.create('TableViewRow', {title: _('CoreHome_PeriodDay'),
                                                       period: 'day',
                                                       hasCheck: ('day' == this.period)}),
-                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodWeek'),
+                         this.create('TableViewRow', {title: _('CoreHome_PeriodWeek'),
                                                       period: 'week',
                                                       hasCheck: ('week' == this.period)}),
-                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodMonth'),
+                         this.create('TableViewRow', {title: _('CoreHome_PeriodMonth'),
                                                       period: 'month',
                                                       hasCheck: ('month' == this.period)}),
-                         Piwik.UI.createTableViewRow({title: _('CoreHome_PeriodYear'),
+                         this.create('TableViewRow', {title: _('CoreHome_PeriodYear'),
                                                       period: 'year',
                                                       hasCheck: ('year' == this.period)})];
 

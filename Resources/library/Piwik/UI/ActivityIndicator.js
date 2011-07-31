@@ -56,8 +56,7 @@ Piwik.UI.ActivityIndicator = function () {
 
     /**
      * The window where the loading message will be rendered into. We need a reference to this window cause otherwise
-     * we can't hide and remove the loading message. Piwik.UI.currentWindow possibly references to another window when
-     * the hide method is called.
+     * we can't hide and remove the loading message.
      *
      * @type null|Piwik.UI.Window
      */
@@ -93,20 +92,23 @@ Piwik.UI.ActivityIndicator = function () {
                         'Piwik.UI.ActivityIndicator::show');
 
         this.numRequests++;
+        
+        this.view = this.getParam('window');
+            
+        if (!this.view) {
+            
+            return;
+        }
 
         switch (this.style) {
             case 'loading':
 
-                // we don't use Piwik.UI.currentWindow cause we don't want a reference to the currentWindow.
-                // if the user open's a new window, this.view would point to the new opened window.
-                this.view = Piwik.UI.layout.getCurrentWindow();
-
                 if (this.numRequests > 1) {
                     // just update the text cause loading message is already visible
                     
-                    if (message && this.view && this.view.loadingMessage) {
+                    if (message && this.view.loadingMessage) {
                         this.view.loadingMessage.text = message;
-                    } else if (this.view && this.view.loadingMessage) {
+                    } else if (this.view.loadingMessage) {
                         // default message
                         this.view.loadingMessage.text = _('General_LoadingData');
                     }
@@ -114,7 +116,7 @@ Piwik.UI.ActivityIndicator = function () {
                     return;
                 }
 
-                if (this.view && !this.view.loadingMessage && this.view.add) {
+                if (!this.view.loadingMessage && this.view.add) {
                     // the loading message does not exist, create it
                     this.view.loadingMessage = Ti.UI.createLabel({
                         text: message ? message : _('General_LoadingData'),
@@ -128,30 +130,32 @@ Piwik.UI.ActivityIndicator = function () {
 
             case 'waiting':
             default:
+            
+                var win = this.view.window;
 
                 if (this.numRequests > 1) {
                     // just update the text cause wait indicator is already visible
 
-                    if (Ti.UI.currentWindow.waitIndicatorImage && message) {
-                        Ti.UI.currentWindow.waitIndicatorImage.message = message;
+                    if (win && win.waitIndicatorImage && message) {
+                        win.waitIndicatorImage.message = message;
                     }
 
                     return;
                 }
 
-                if (!Ti.UI.currentWindow
-                    || !Ti.UI.currentWindow.waitIndicatorImage
-                    || !Ti.UI.currentWindow.waitIndicatorImage.show) {
+                if (!win
+                    || !win.waitIndicatorImage
+                    || !win.waitIndicatorImage.show) {
                     // the waitIndicator does not exist, create it
 
-                    Ti.UI.currentWindow.waitIndicatorImage = Ti.UI.createActivityIndicator({
+                    win.waitIndicatorImage = Ti.UI.createActivityIndicator({
                         id: 'activityWaitIndicator',
                         message: message ? message : '',
                         style: Ti.UI.iPhone ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : ''
                     });
                 }
 
-                Ti.UI.currentWindow.waitIndicatorImage.show();
+                win.waitIndicatorImage.show();
 
                 break;
         }
@@ -205,24 +209,37 @@ Piwik.UI.ActivityIndicator = function () {
 
             return;
         }
+        
+        this.view = this.getParam('window');
+        
+        if (!this.view) {
+            return;
+        }
+        
+        var win = this.view.win;
 
         // remove style 'waiting'
-        if (Ti.UI.currentWindow
-            && Ti.UI.currentWindow.waitIndicatorImage
-            && Ti.UI.currentWindow.waitIndicatorImage.hide) {
+        if (win
+            && win.waitIndicatorImage
+            && win.waitIndicatorImage.hide) {
 
-            Ti.UI.currentWindow.waitIndicatorImage.hide();
+            win.waitIndicatorImage.hide();
         }
 
         // remove style 'loading'
-        if (this.view && this.view.loadingMessage && this.view.loadingMessage.hide) {
+        if (this.view.loadingMessage && this.view.loadingMessage.hide) {
             this.view.loadingMessage.hide();
         }
 
-        if (this.view && this.view.loadingMessage && this.view.remove) {
+        if (this.view.loadingMessage && this.view.remove) {
             this.view.remove(this.view.loadingMessage);
             this.view.loadingMessage = null;
             this.view                = null;
         }
     };
 };
+
+/**
+ * Extend Piwik.UI.View
+ */
+Piwik.UI.ActivityIndicator.prototype = Piwik.require('UI/View');
