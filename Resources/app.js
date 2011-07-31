@@ -18,7 +18,7 @@ var options = {url: 'bootstrap.js',
 
 var win     = Ti.UI.createWindow(options);
 
-if (Ti.Platform.name == 'android') {
+if ('android' == Ti.Platform.name) {
     
     win.open();
 
