@@ -70,7 +70,7 @@
 /**
  * window help/about.js
  */
-#aboutPiwkScrollView {
+#aboutPiwikScrollView {
     bottom: 0;
     top: 0;
     left: 0;
@@ -107,6 +107,7 @@
     top: 8;
     left: 0;
     right: 0;
+    touchEnabled: false;
 }
 
 /**

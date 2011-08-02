@@ -27,9 +27,15 @@ function window () {
      */
     this.menuOptions  = {};
 
-    var scrollView    = Ti.UI.createScrollView({id: 'aboutPiwkScrollView'});
+    var view = null;
+    
+    if (Piwik.isAndroid) {
+        view = Ti.UI.createView({id: 'aboutPiwikView'});
+    } else {
+        view = Ti.UI.createScrollView({id: 'aboutPiwikScrollView'});
+    }
 
-    this.add(scrollView);
+    this.add(view);
     
     var piwikOrgLink  = Ti.UI.createLabel({text: 'Website: http://piwik.org',
                                            id: 'aboutPiwikLinkToPiwiwkLabel'});
@@ -51,12 +57,11 @@ function window () {
     });
 
     var gplContent    = Ti.UI.createWebView({url: 'license.html',
-                                             id: 'aboutPiwikLicenseWebView',
-                                             touchEnabled: false});
+                                             id: 'aboutPiwikLicenseWebView'});
 
-    scrollView.add(piwikOrgLink);
-    scrollView.add(piwikDevLink);
-    scrollView.add(gplContent);
+    view.add(piwikOrgLink);
+    view.add(piwikDevLink);
+    view.add(gplContent);
 
     this.open = function () {
 

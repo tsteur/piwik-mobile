@@ -65,12 +65,8 @@
 /**
  * window help/about.js
  */
-#aboutPiwkScrollView {
-    contentWidth: 'auto';
-    contentHeight: 'auto';
+#aboutPiwikView {
     layout: 'vertical';
-    showVerticalScrollIndicator: true;
-    showHorizontalScrollIndicator: false;
 }
 
 #aboutPiwikLinkToPiwiwkLabel {
@@ -94,7 +90,8 @@
 }
 
 #aboutPiwikLicenseWebView {
-    height: 'auto';
+    scalesPageToFit: false;
+    touchEnabled: true;
     top: '8dp';
     left: 0;
     right: 0;
