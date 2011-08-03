@@ -60,7 +60,7 @@ Piwik.isIpad     = ('ipad' === Piwik.osName);
  *
  * @type boolean
  */
-Piwik.isIphone   = ('iphone' === Piwik.osName);
+Piwik.isIphone   = (Piwik.isIos && !Piwik.isIpad);
 
 /**
  * Holds a list of already loaded files. A Ti.include() is very slow, especially on Android.
