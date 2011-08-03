@@ -135,7 +135,7 @@ function window (params) {
         if (Piwik.isIpad) {
             
             that.titleOptions = {title: '' + (site ? site.name : ''),
-                                 rootWindow: that.rootWindow};
+                                 window: that};
 
             Piwik.UI.layout.header.refresh(that.titleOptions);
             
