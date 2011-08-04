@@ -34,7 +34,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {closeWindow: true};
+    this.menuOptions  = {};
 
     var graphUrl      = params.graphUrl;
 

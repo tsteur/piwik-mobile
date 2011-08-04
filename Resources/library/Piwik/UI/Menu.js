@@ -33,9 +33,6 @@
  * @param {string}     [params.settingsChooser="false"]             Optional. Adds an Android Option Menu and a
  *                                                                  button to the window where the user has the
  *                                                                  ability to open the "Settings" window.
- * @param {string}     [params.closeWindow="false"]                 Optional. Adds an Android Option Menu Item where
- *                                                                  the user has the possibility to close the current
- *                                                                  window.
  * @param {string}     [params.period="day"]        Optional. The current active period.
  * @param {Date|string}  [options.date]             Optional. The current selected date. Can be either a Date
  *                                                  object or string in the following Format
@@ -305,13 +302,19 @@ Piwik.UI.Menu = function () {
             win.open();
             
         } else if (Piwik.isAndroid) {
-            win = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
-                                      fullscreen: false,
-                                      modal: true,
-                                      title: _('General_ChooseWebsite')});
+
+            var crt  = Ti.UI.currentWindow;
+            win      = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
+                                           title: _('General_ChooseWebsite')});
             var view = Ti.UI.createView({backgroundColor: '#fff'});
 
             win.add(view);
+            
+            win.addEventListener('close', function () {
+                // don't know why but we have to restore the currentWindow reference on modal window close
+                // @todo check whether we still have to do this.
+                Ti.UI.currentWindow = crt;
+            });
         }
 
         var websitesList = this.create('WebsitesList', {view: Piwik.isAndroid ? view : win,
@@ -329,7 +332,7 @@ Piwik.UI.Menu = function () {
             Ti.App.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
 
             try {
-                if (win && win.close) {
+                if (win && (Piwik.isAndroid || Piwik.isIphone)) {
                     // window
                     win.close();
                 } else if (win && win.hide) {
@@ -341,7 +344,6 @@ Piwik.UI.Menu = function () {
             }
             
             websitesList = null;
-            win          = null;
         };
 
         websitesList.addEventListener('onChooseSite', onChooseSite);
@@ -536,18 +538,6 @@ Piwik.UI.Menu = function () {
                                              
                                              that.onChooseSettings();
                                          });
-        }
-
-        if (this.getParam('closeWindow', false)) {
-
-            Piwik.UI.OptionMenu.addItem({title: _('General_Close')}, function (event) {
-
-                var menuEvent = {title: 'Option Menu Close Window',
-                                 url: '/android-option-menu/close-window'};
-                Piwik.getTracker().trackEvent(menuEvent);
-
-                that.close();
-            });
         }
     };
 

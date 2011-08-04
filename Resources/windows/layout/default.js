@@ -22,7 +22,7 @@ function window () {
      *
      * @type Array
      */
-    this.windows  = [];
+    this.windows   = [];
     
     /**
      * zIndex counter. Will be increased by one for each new created window. This ensures a new created window will be
@@ -32,7 +32,7 @@ function window () {
      *
      * @type Number
      */
-    this.zIndex   = 0;
+    this.zIndex    = 0;
 
     /**
      * A reference to the layout header.
@@ -41,7 +41,7 @@ function window () {
      *
      * @type Piwik.UI.Header
      */
-    this.header   = null;
+    this.header    = null;
 
     /**
      * A reference to the layout menu.
@@ -50,12 +50,17 @@ function window () {
      *
      * @type Piwik.UI.Menu
      */
-    this.menu     = null;
+    this.menu      = null;
 
     /**
      * @private
      */
-    var layout    = this;
+    var layout     = this;
+
+    /**
+     * @private
+     */
+    var rootWindow = Ti.UI.currentWindow;
     
     /**
      * Retrieve the current displayed window.
@@ -87,7 +92,7 @@ function window () {
 
         newWin.fireEvent('focusWindow', {});
 
-        newWin.rootWindow      = Ti.UI.currentWindow;
+        newWin.rootWindow      = rootWindow;
 
         Piwik.UI.currentWindow = newWin;
 
@@ -97,7 +102,7 @@ function window () {
             this.scrollView.addView(newWin);
             this.scrollView.scrollToView(newWin);
         } else {
-            Ti.UI.currentWindow.add(newWin);
+            rootWindow.add(newWin);
         }
     };
 
@@ -120,10 +125,10 @@ function window () {
         if (Piwik.isAndroid
             && (!this.windows || !this.windows.length)
             && !newWindowWillFollow
-            && Ti.UI.currentWindow) {
+            && rootWindow) {
             // close window only on Android to exit the app. Closing the app is not allowed on iOS and we would end in a
             // blank window if we close the only opened window
-            Ti.UI.currentWindow.close();
+            rootWindow.close();
 
             return;
         }
@@ -132,7 +137,7 @@ function window () {
         if (oldWindow && 'undefined' != (typeof this.scrollView) && this.scrollView) {
             this.scrollView.removeView(oldWindow);
         } else {
-            Ti.UI.currentWindow.remove(oldWindow);
+            rootWindow.remove(oldWindow);
         }
 
         window    = null;
