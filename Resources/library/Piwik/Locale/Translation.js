@@ -176,6 +176,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_LastUpdated:                                                 'Last Updated: %s',
         Mobile_MultiChartLabel:                                             'Display sparklines',
         Mobile_MultiChartInfo:                                              'Next to each website on the welcome screen',
+        Mobile_NavigationBack:                                              'Back',
         Mobile_NetworkNotReachable:                                         'Network not reachable',
         Mobile_PullDownToRefresh:                                           'Pull down to refresh...',
         Mobile_Refresh:                                                     'Refresh',

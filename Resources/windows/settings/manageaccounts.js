@@ -173,15 +173,6 @@ function window () {
         }
 
         tableview.setData(tableData);
-    
-        if (Piwik.isIos && !Piwik.isIpad) {
-            var editButton = Ti.UI.createButton({systemButton: Ti.UI.iPhone.SystemButton.EDIT});
-            that.rootWindow.leftNavButton = editButton;
-
-            editButton.addEventListener('click', function () {
-                tableview.editing = !tableview.editing;
-            });
-        }
 
         if (Piwik.isIos && tableview.scrollToTop) {
             // make sure the first row is visible on iPad

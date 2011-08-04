@@ -120,7 +120,7 @@ Piwik.UI.Window = function () {
             return;
         }
 
-        this.fireEvent('close', {type: 'close'});
+        this.fireEvent('closeWindow', {type: 'closeWindow'});
     
         try {
             // hide view so we make sure the view will no longer be visible, even if the later removeWindow does

@@ -18,18 +18,4 @@ var options = {url: 'bootstrap.js',
 
 var win     = Ti.UI.createWindow(options);
 
-if ('android' == Ti.Platform.name) {
-    
-    win.open();
-
-} else {
-
-    var tabGroup = Ti.UI.createTabGroup();
-    var tab1     = Ti.UI.createTab({
-        title: ' ',
-        window: win
-    });
-
-    tabGroup.addTab(tab1);
-    tabGroup.open();
-}
+win.open();

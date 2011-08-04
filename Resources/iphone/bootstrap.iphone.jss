@@ -36,6 +36,10 @@
 .piwikWindow {
 }
 
+.piwikRootWindow {
+    barColor: '#B2AEA5';
+}
+
 /**
  * window index/index.js
  */
@@ -70,16 +74,8 @@
 /**
  * window help/about.js
  */
-#aboutPiwikScrollView {
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    contentWidth: 'auto';
-    contentHeight: 'auto';
+#aboutPiwikView {
     layout: 'vertical';
-    showVerticalScrollIndicator: true;
-    showHorizontalScrollIndicator: false;
 }
 
 #aboutPiwikLinkToPiwiwkLabel {
@@ -103,11 +99,11 @@
 }
 
 #aboutPiwikLicenseWebView {
-    height: 'auto';
+    touchEnabled: true;
+    height: 300;
     top: 8;
     left: 0;
     right: 0;
-    touchEnabled: false;
 }
 
 /**

@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  *
- * @fileOverview layout 'layout/default.js' .
+ * @fileOverview layout 'layout/android.js' .
  */
 
 /**
- * @class Piwik Mobile layout. Handles how header, menu and the content will be displayed. How new windows will be
- *        removed or added and so on.
+ * @class Piwik Mobile Android layout. Handles how header, menu and the content will be displayed. How new windows 
+ *        will be removed or added and so on.
  *
  * @this {Piwik.UI.Window}
  */
@@ -98,12 +98,7 @@ function window () {
 
         this.windows.push(newWin);
 
-        if ('undefined' != (typeof this.scrollView) && this.scrollView) {
-            this.scrollView.addView(newWin);
-            this.scrollView.scrollToView(newWin);
-        } else {
-            rootWindow.add(newWin);
-        }
+        rootWindow.add(newWin);
     };
 
     /**
@@ -119,8 +114,8 @@ function window () {
      *                                                    how to remove the window.
      */
     this.removeWindow = function (window, newWindowWillFollow) {
-        // window should be equal to current displayed window
-        var oldWindow = this.windows.pop();
+        // remove the current opened window from stack
+        this.windows.pop();
 
         if (Piwik.isAndroid
             && (!this.windows || !this.windows.length)
@@ -134,14 +129,7 @@ function window () {
         }
 
         // remove window from main window so that it will be no longer visible
-        if (oldWindow && 'undefined' != (typeof this.scrollView) && this.scrollView) {
-            this.scrollView.removeView(oldWindow);
-        } else {
-            rootWindow.remove(oldWindow);
-        }
-
-        window    = null;
-        oldWindow = null;
+        rootWindow.remove(window);
 
         var newActiveWindow = this._getCurrentWindow();
 
@@ -156,14 +144,8 @@ function window () {
         // bring previous displayed window to front if no new window follows
         if (!newWindowWillFollow) {
 
-            // scroll to new window so this view will be visible
-            if ('undefined' != (typeof this.scrollView) && this.scrollView) {
-                this.scrollView.scrollToView(Piwik.UI.currentWindow);
-            }
-
             /**
-             * we have to update zIndex cause otherwise we can not detect a swipe (in globalScrollableView) to a
-             * previous view. we do not reset zIndex if a new window will follow cause zIndex is already correct
+             * we do not reset zIndex if a new window will follow cause zIndex is already correct
              * in such a case
              */
             this.zIndex = Piwik.UI.currentWindow.zIndex;
@@ -185,51 +167,8 @@ function window () {
         this.header = Piwik.UI.createHeader({title: 'Piwik Mobile'});
         this.menu   = Piwik.UI.createMenu({menuView: this.header.getHeaderView()});
 
-        if (Piwik.isIos) {
-            // we can not use the scrollableView on Android cause it is a bit buggy currently. As soon as one swipes
-            // to another view the tableview will loose all it's rows on Android
-
-            this.scrollView = Ti.UI.createScrollableView({
-                views: [],
-                className: 'layoutWinScrollableView'
-            });
-
-            Ti.UI.currentWindow.add(this.scrollView);
-
-            this.scrollView.addEventListener('scroll', function (event) {
-
-                if (!event || !event.view) {
-                    // not the scrollview is scrolled
-
-                    return;
-                }
-
-                if (!event.view.zIndex || parseInt(event.view.zIndex, 10) >= parseInt(layout.zIndex, 10)) {
-                    // this is a scroll to a new opened view, not a close view
-
-                    return;
-                }
-
-                if (!event.view.deleteOnScroll) {
-                    // delete on scroll is disabled cause view will be currently created
-
-                    return;
-                }
-
-                if (Piwik.UI.currentWindow.close) {
-                    Piwik.UI.currentWindow.close();
-                }
-            });
-        }
-
         Ti.Gesture.addEventListener('orientationchange', function (event) {
 
-            if (layout.scrollView) {
-                // make sure current window is still visible after orientation change (only iOS)
-                // see http://jira.appcelerator.org/browse/TIMOB-3497 
-                layout.scrollView.scrollToView(Piwik.UI.currentWindow);
-            }
-            
             return;
         });
     };

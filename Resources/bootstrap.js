@@ -37,8 +37,10 @@ bootstrapSettings     = undefined;
 // bootstrap layout
 if (Piwik.isIpad) {
     Piwik.UI.bootstrap({layoutUrl: 'layout/ipad.js'});
+} else if (Piwik.isIphone) {
+    Piwik.UI.bootstrap({layoutUrl: 'layout/iphone.js'});
 } else {
-    Piwik.UI.bootstrap({layoutUrl: 'layout/default.js'});
+    Piwik.UI.bootstrap({layoutUrl: 'layout/android.js'});
 }
 
 var bootstrapAccounts   = Piwik.require('App/Accounts');

@@ -27,13 +27,7 @@ function window () {
      */
     this.menuOptions  = {};
 
-    var view = null;
-    
-    if (Piwik.isAndroid) {
-        view = Ti.UI.createView({id: 'aboutPiwikView'});
-    } else {
-        view = Ti.UI.createScrollView({id: 'aboutPiwikScrollView'});
-    }
+    var view = Ti.UI.createView({id: 'aboutPiwikView'});
 
     this.add(view);
     

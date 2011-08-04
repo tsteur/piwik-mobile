@@ -65,7 +65,7 @@ function window (params) {
 
     var accessUrl        = ('' + account.accessUrl).formatAccessUrl();
 
-    this.addEventListener('close', function () {
+    this.addEventListener('closeWindow', function () {
         if (that.refreshTimer) {
             // do no longer execute autoRefresh if user closed the window
             clearTimeout(that.refreshTimer);
