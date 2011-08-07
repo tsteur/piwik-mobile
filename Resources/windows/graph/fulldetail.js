@@ -53,41 +53,24 @@ function window (params) {
 
     var pictureWidth   = originalWidth - 20;
     var pictureHeight  = originalHeight - 20;
+
+    var graph          = Piwik.require('Graph');
     
     if (isPortrait) {
-        // change width/height cause we are in portrait mode, we'll rotate the image later
-        var tempWidth  = pictureWidth;
-        pictureWidth   = pictureHeight;
-        pictureHeight  = tempWidth;
+        graphUrl      = graph.appendSize(graphUrl, pictureHeight, pictureWidth);
+    } else {
+        graphUrl      = graph.appendSize(graphUrl, pictureWidth, pictureHeight);
     }
 
-    var graph     = Piwik.require('Graph');
-    graphUrl      = graph.appendSize(graphUrl, pictureWidth, pictureHeight);
-    
     Piwik.Log.debug('graphUrl is ' + graphUrl, 'graph/fulldetail::window');
 
-    // canScale: true is important for iPhone Retina display, anchorPoint is important cause otherwise the rotation of
-    // the image will not work correctly.
-    var imageView = Ti.UI.createImageView({width:  pictureWidth,
-                                           height: pictureHeight,
+    var imageView = Ti.UI.createImageView({width: Piwik.isIphone ? pictureWidth : 'auto',
+                                           height:  Piwik.isIphone ? pictureHeight : 'auto',
                                            canScale: true,
                                            enableZoomControls: false,
-                                           anchorPoint: {x: 0.5, y: 0.5},
                                            image: graphUrl});
 
     this.add(imageView);
-    
-    if (isPortrait) {
-
-        // rotate the image
-        var imageTransform      = Ti.UI.create2DMatrix();
-        imageTransform          = imageTransform.rotate(90);
-        var spinAnimation       = Ti.UI.createAnimation();
-        spinAnimation.transform = imageTransform;
-        spinAnimation.duration  = 10;
-
-        imageView.animate(spinAnimation);
-    }
 
     this.open = function () {
     };
