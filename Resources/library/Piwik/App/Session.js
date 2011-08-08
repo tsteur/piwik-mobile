@@ -15,6 +15,7 @@
  *          piwik_parameter_period                              The current selected period
  *          piwik_parameter_date                                The current selected date
  *          piwik_report_metadata_{accountId}_{idSite}_{lang}   Report metadata for a specific account
+ *          modal_window_opened                                 Whether currently a modal window is opened or not.
  *
  * @example
  * Piwik.App.Session.set('period', 'week');   // store the value week under the key period

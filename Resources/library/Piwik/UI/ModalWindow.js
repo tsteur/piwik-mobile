@@ -28,6 +28,14 @@
  */
 Piwik.UI.ModalWindow = function () {
     
+    /**
+     * A simple count var. Is used to count how often the window open method was executed. It should prevent
+     * that we end in a never ending loop.
+     * 
+     * @defaults 0
+     * 
+     * @type int
+     */
     this.counter = 0;
 
     /**
@@ -142,12 +150,12 @@ Piwik.UI.ModalWindow = function () {
             return;
         }
        
-        if (this.isAModalWindowOpened() && this.counter > 7) {
-            // the app will crash if we open a modal window while another modal window is opened or not completely 
-            // closed. So wait another 300 ms. Set the timeout max 7 times.
-            var that = this;
+        if (this.isAModalWindowOpened() && this.counter < 7) {
             this.counter++;
-
+            // the app will crash if we open a modal window while another modal window is opened or not completely 
+            // closed. So wait another 300 ms. Execute the timeout max 7 times.
+            
+            var that = this;
             setTimeout(function () {
                 that.open();
             }, 300);
