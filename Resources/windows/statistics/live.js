@@ -30,7 +30,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
+    this.menuOptions  = {siteChooser: true};
 
     this.refreshTimer = null;
 
@@ -64,6 +64,25 @@ function window (params) {
     }
 
     var accessUrl        = ('' + account.accessUrl).formatAccessUrl();
+
+    this.addEventListener('onSiteChanged', function (event) {
+        // user has changed the site
+
+        Piwik.getTracker().trackEvent({title: 'Site changed', url: '/statistic-change/site'});
+
+        params.site    = event.site;
+        account        = accountManager.getAccountById(event.site.accountId);
+        latestRequestedTimestamp = 0;
+        
+        if (!account) {
+            
+            return;
+        }
+        
+        accessUrl        = ('' + account.accessUrl).formatAccessUrl();
+
+        refresh.refresh();
+    });
 
     this.addEventListener('closeWindow', function () {
         if (that.refreshTimer) {

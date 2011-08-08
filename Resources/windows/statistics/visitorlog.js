@@ -29,7 +29,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
+    this.menuOptions  = {siteChooser: true};
     
     var that          = this;
 
@@ -50,6 +50,19 @@ function window (params) {
 
         return;
     }
+
+    this.addEventListener('onSiteChanged', function (event) {
+        // user has changed the site
+
+        Piwik.getTracker().trackEvent({title: 'Site changed', url: '/statistic-change/site'});
+
+        params.site              = event.site;
+        latestRequestedTimestamp = null;
+        oldestVisitId            = null;
+        usedMaxVisitIds          = [];
+
+        refresh.refresh();
+    });
     
     var accountManager   = Piwik.require('App/Accounts');
     var account          = accountManager.getAccountById(site.accountId);
