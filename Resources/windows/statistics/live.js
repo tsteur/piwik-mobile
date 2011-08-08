@@ -149,15 +149,15 @@ function window (params) {
     });
 
     tableView.addEventListener('click', function (event) {
-        if (!event || !event.rowData || !event.rowData.visitor) {
+        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
 
             return;
         }
 
         // open a new window to displayed detailed information about the visitor
-        that.create('Window', {url: 'statistics/visitor.js',
-                               accessUrl: accessUrl,
-                               visitor: event.rowData.visitor});
+        that.create('Visitor', {accessUrl: accessUrl,
+                                visitor: event.rowData.visitor,
+                                openView: event.row.popoverView});
     });
 
     /**

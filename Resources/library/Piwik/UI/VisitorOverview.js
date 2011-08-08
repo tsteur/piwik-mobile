@@ -63,6 +63,8 @@ Piwik.UI.VisitorOverview = function () {
         } else {
             timeLabel = visitor.serverDatePretty + ' - ' + visitor.serverTimePretty;
         }
+        
+        this.row.popoverView = dateAndIconsView;
 
         dateAndIconsView.add(Ti.UI.createLabel({text: timeLabel,
                                                 id: 'visitorOverviewDateTimeLabel'}));

@@ -9,19 +9,19 @@
 /**
  * @class    A visitor is created by the method Piwik.UI.createVisitor. The visitor UI widget displays detailed
  *           information of a single visitor. Like visit date/time, referrer, actions, duration, custom
- *           variables, plugins, screen and more. The visitor information will be rendered into a list of
- *           TableViewRow's. Therefore, you need a TableView in order to display the rendered content.
- *           The rendered rows are accessible via getRows().
+ *           variables, plugins, screen and more. The visitor information will be displayed within a window. 
  *
  * @param {Object}   params             See {@link Piwik.UI.View#setParams}
  * @param {Object}   params.visitor     An object containing all available visitor information. As returned by the
  *                                      method 'Live.getgetLastVisitsDetails'.
  * @param {string}   params.accessUrl   The url to the piwik installation (to the piwik installation the visit
  *                                      belongs to) containing a trailing slash. For example 'http://demo.piwik.org/'
+ * @param {string}   params.openView    An instance of a Titanium UI widget. This is needed for the PopOver creation.
+ *                                      The arrow of the PopOver (iPad) will point to this view. If this view is not
+ *                                      given, the visitor will not be opened on iPad or crash.
  *
  * @example
- * var visit = Piwik.UI.createVisitor({visitor: visitor, accessUrl: accessUrl});
- * var rows  = visit.getRows();
+ * var visit = Piwik.UI.createVisitor({visitor: visitor, accessUrl: accessUrl, openView: tableViewRow});
  *
  * @augments Piwik.UI.View
  */
@@ -57,7 +57,19 @@ Piwik.UI.Visitor = function () {
         this.createCustomVariables();
         this.createSystem();
         this.createActionDetails();
+        
+        var win       = this.create('ModalWindow', {title: _('General_Visitor'),
+                                                    openView: this.getParam('openView')});
+   
+        var tableView = Ti.UI.createTableView({id: 'visitorTableView'});
+    
+        win.add(tableView);
+        
+        tableView.setData(this.getRows());
+        win.open();
 
+        Piwik.getTracker().trackEvent({title: 'View Visitor', url: '/visitor/open'});
+        
         return this;
     };
 

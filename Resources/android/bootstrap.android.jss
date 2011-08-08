@@ -13,6 +13,7 @@
 @import "android/liveoverview.android.jss";
 @import "android/visitoroverview.android.jss";
 @import "android/visitor.android.jss";
+@import "android/modalwindow.android.jss";
 
 #activityWaitIndicator {
     height: '40dp';
@@ -241,13 +242,6 @@
  * window statistics/live.js
  */
 #liveTableView {
-}
-
-/**
- * window statistics/visitor.js
- */
-#visitorTableView {
-
 }
 
 /**

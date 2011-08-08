@@ -91,7 +91,6 @@ Piwik.UI.createWindow = function (params) {
         // increase the zIndex, ensures the next window will be displayed in front of the current window
         this.layout.zIndex     = this.layout.zIndex + 1;
         params.zIndex          = this.layout.zIndex;
-        params.deleteOnScroll  = false;
         params.className       = 'piwikWindow';
 
         // newWin is the view we will render everything into
@@ -115,8 +114,6 @@ Piwik.UI.createWindow = function (params) {
         // add window to layout so that it will be visible afterwards
         this.layout.addWindow(newWin);
 
-        newWin.deleteOnScroll  = true;
-
         // extend newWin again and render the requested template
         winTemplate.apply(newWin, [params]);
 
@@ -135,6 +132,34 @@ Piwik.UI.createWindow = function (params) {
     }
 
     return newWin;
+};
+
+/**
+ * Creates a new modal window instance.
+ *
+ * @see Piwik.UI.ModalWindow
+ *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.ModalWindow.
+ *
+ * @type Piwik.UI.ModalWindow
+ *
+ * @returns The created modal window instance.
+ */
+Piwik.UI.createModalWindow = function (params) {
+
+    try {
+        var instance = Piwik.require('UI/ModalWindow');
+        instance.setParams(params);
+
+        instance.init();
+        
+        return instance;
+
+    } catch (exception) {
+
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiMw17'});
+        uiError.showErrorMessageToUser();
+    }
 };
 
 /**

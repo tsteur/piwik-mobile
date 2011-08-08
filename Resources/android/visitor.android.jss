@@ -11,6 +11,10 @@
     enableZoomControls: false;
 }
 
+#visitorTableView {
+
+}
+
 .visitorTableViewRow {
     selectionStyle: 0;
     focusable: false;

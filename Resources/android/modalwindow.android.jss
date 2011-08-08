@@ -5,10 +5,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
-#menuButtonBar {
-   bottom: 0;
-   style: 4;
-   barColor: '#999';
-   width: 'auto';
-   height: 'auto';
+.modalWindow {
+    left: 0;
+    right: 0;
+    backgroundColor: '#E4E2D7';
+    height: 'auto';
 }

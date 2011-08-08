@@ -16,6 +16,7 @@
 @import "iphone/liveoverview.universal.jss";
 @import "iphone/visitoroverview.universal.jss";
 @import "iphone/visitor.universal.jss";
+@import "iphone/modalwindow.universal.jss";
 
 .layoutWinScrollableView {
     pagingControlColor: '#B2AEA5';
@@ -253,13 +254,6 @@
  * window statistics/live.js
  */
 #liveTableView {
-}
-
-/**
- * window statistics/visitor.js
- */
-#visitorTableView {
-
 }
 
 /**

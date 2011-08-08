@@ -267,57 +267,11 @@ Piwik.UI.Menu = function () {
     this.onChooseSite = function () {
 
         var that = this;
+        
+        var win  = this.create('ModalWindow', {openView: this.toolBar, 
+                                              title: _('General_ChooseWebsite')});
 
-        var win  = null;
-
-        if (Piwik.isIpad) {
-            win = this.create('Popover', {width: 320, 
-                                          height: 460, 
-                                          title: _('General_ChooseWebsite')});
-                                            
-        } else if (Piwik.isIos) {
-
-            win  = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
-                                       modal: true,
-                                       barColor: '#B2AEA5',
-                                       title: _('General_ChooseWebsite')});
-
-            var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
-                                                   style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
-
-            cancelButton.addEventListener('click', function () {
-
-                try {
-                    if (win && win.close) {
-                        win.close();
-                    }
-                } catch (e) {
-                    Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
-                }
-
-            });
-
-            win.leftNavButton = cancelButton;
-            
-            win.open();
-            
-        } else if (Piwik.isAndroid) {
-
-            var crt  = Ti.UI.currentWindow;
-            win      = Ti.UI.createWindow({className: 'menuWinChooserWebsite',
-                                           title: _('General_ChooseWebsite')});
-            var view = Ti.UI.createView({backgroundColor: '#fff'});
-
-            win.add(view);
-            
-            win.addEventListener('close', function () {
-                // don't know why but we have to restore the currentWindow reference on modal window close
-                // @todo check whether we still have to do this.
-                Ti.UI.currentWindow = crt;
-            });
-        }
-
-        var websitesList = this.create('WebsitesList', {view: Piwik.isAndroid ? view : win,
+        var websitesList = this.create('WebsitesList', {view: win.getView(),
                                                         displaySparklines: false});
 
         var onChooseSite = function (event) {
@@ -332,13 +286,8 @@ Piwik.UI.Menu = function () {
             Ti.App.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
 
             try {
-                if (win && (Piwik.isAndroid || Piwik.isIphone)) {
-                    // window
-                    win.close();
-                } else if (win && win.hide) {
-                    // popover
-                    win.hide();
-                }
+                // window
+                win.close();
             } catch (e) {
                 Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
@@ -350,11 +299,7 @@ Piwik.UI.Menu = function () {
         
         websitesList.request();
 
-        if (Piwik.isIpad) {
-            win.show({view: this.toolBar});
-        } else {
-            win.open({modal: true});
-        }
+        win.open();
     };
     
     /**

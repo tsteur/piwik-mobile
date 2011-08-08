@@ -102,18 +102,8 @@ Piwik.UI.DatePicker = function () {
      */
     this.createIos = function (params) {
         
-        var win;
-
-        if (Piwik.isIpad && Ti.UI.iPad) {
-            win = this.create('Popover', {width: 320, 
-                                          height: 430, 
-                                          title: _('General_ChooseDate')});
-        } else {
-            
-            win = Ti.UI.createWindow({modal: true,
-                                      barColor: '#B2AEA5',
-                                      title: _('General_ChooseDate')});
-        }
+        var win   = this.create('ModalWindow', {title: _('General_ChooseDate'), 
+                                                openView: params.source ? params.source : null});
         
         var that  = this;
 
@@ -160,24 +150,6 @@ Piwik.UI.DatePicker = function () {
         });
 
         win.add(tableView);
-        
-        if (!Piwik.isIpad) {
-            
-            var cancelButton = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
-                                                   style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
-            cancelButton.addEventListener('click', function () {
-    
-                try {
-                    if (win && win.close) {
-                        win.close();
-                    }
-                } catch (e) {
-                    Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
-                }
-            });
-    
-            win.leftNavButton = cancelButton;
-        }
 
         var doneButton    = Ti.UI.createButton({title: _('General_Done'),
                                                 style: Ti.UI.iPhone.SystemButtonStyle.DONE});
@@ -188,25 +160,15 @@ Piwik.UI.DatePicker = function () {
 
                 that.fireEvent('onSet', myEvent);
                 
-                if (win && win.close) {
-                    // window
-                    win.close();
-                } else if (win && win.hide) {
-                    // popover
-                    win.hide();
-                }
+                win.close();
             } catch (e) {
                 Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
         });
 
-        win.rightNavButton = doneButton;
+        win.setRightNavButton(doneButton);
 
-        if (Piwik.isIpad) {
-            win.show({view: params.source ? params.source : null});
-        } else {
-            win.open();
-        }
+        win.open();
 
         return this;
     };
