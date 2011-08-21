@@ -70,7 +70,6 @@ function window (params) {
         className: 'editAccountTextField',
         value: '',
         passwordMask: true,
-        clearOnEdit: true,
         autocorrect: false,
         keyboardType: Ti.UI.KEYBOARD_DEFAULT,
         returnKeyType: Ti.UI.RETURNKEY_DONE,
