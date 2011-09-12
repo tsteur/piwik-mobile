@@ -57,6 +57,13 @@ function window () {
 
             var settings  = Piwik.require('App/Settings');
             settings.setTrackingEnabled(this.hasCheck);
+            
+            var alertDialog = Ti.UI.createAlertDialog({
+                message: _('Mobile_AskForAnonymousTrackingPermission'),
+                buttonNames: [_('General_Ok')]
+            });
+            
+            alertDialog.show();
         };
 
         var onChangeSparkline = function (event) {
