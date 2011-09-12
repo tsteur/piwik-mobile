@@ -183,7 +183,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_Reloading:                                                   'Reloading...',
         Mobile_ReleaseToRefresh:                                            'Release to refresh...',
         Mobile_SaveSuccessError:                                            'Please verify settings',
-        Mobile_SearchWebsite:                                               'Search website',
+        Mobile_SearchWebsite:                                               'Search websites',
         Mobile_ShowAll:                                                     'Show all',
         Mobile_ShowLess:                                                    'Show less',
         Mobile_HttpTimeout:                                                 'HTTP Timeout',
