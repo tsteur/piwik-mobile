@@ -49,7 +49,7 @@ config.debugging      = false;
  * @type Object
  */
 config.piwik = {
-    timeout: 120000,
+    timeout: 60000,
     /**
      * default row to be used in all statistics
      */
@@ -59,7 +59,14 @@ config.piwik = {
     multiChartEnabled: false,
     latestServerVersion: '1.5.0',
     graphsEnabled: true,
-    trackingEnabled: false
+    trackingEnabled: false,
+    
+    graph: {
+          filter_truncate: 4, 
+          fontSize: 9,
+          showMetricTitle: 1,
+          aliasedGraph: 1
+    }
 };
 
 /**

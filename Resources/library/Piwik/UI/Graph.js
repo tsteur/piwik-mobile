@@ -76,17 +76,19 @@ Piwik.UI.Graph = function () {
 
         var graphUrl     = this.getParam('graphUrl', '');
 
-        var graph        = Piwik.require('Graph');
-        var fullGraphUrl = graph.appendSize(graphUrl, width, height);
+        
+        var graph        = this.getParam('graph');
+        var fullGraphUrl = graph.appendSize(graphUrl, width, height, !Piwik.isAndroid);
         
         Piwik.Log.debug(fullGraphUrl, 'Piwik.UI.Graph::addGraph');
 
-        width  = ('' + width).toSizeUnit();
-        height = ('' + height).toSizeUnit();
+        width  = ('' + width);
+        height = ('' + height);
         
         var graphImage = Ti.UI.createImageView({width: width,
                                                 height: height,
-                                                id: 'graphImage',
+                                                id: 'graphImage', 
+                                                hires: true,
                                                 image: fullGraphUrl});
 
         view.add(graphImage);

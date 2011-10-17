@@ -214,18 +214,9 @@ Piwik.Network.StatisticsRequest = function () {
         var periodSession = session.get('piwik_parameter_period');
         var dateSession   = session.get('piwik_parameter_date');
 
-        var requestPool   = Piwik.require('Network/RequestPool');
-        requestPool.setContext(this);
-
         this.period       = params.period || periodSession;
         this.date         = params.date || dateSession;
         this.showAll      = params.showAll || this.showAll;
-
-        this.deactivateChart = {VisitFrequency_get: true,
-                                UserSettings_getPlugin: true,
-                                VisitsSummary_get: true,
-                                Goals_get: true,
-                                'Goals_get_idGoal--X': true};
 
         this.site            = params.site;
 
@@ -234,12 +225,14 @@ Piwik.Network.StatisticsRequest = function () {
 
         this.report          = params.report;
         this.sortOrderColumn = this._getSortOrder(this.report);
+        this.accessUrl       = account.accessUrl;
 
         var parameter  = {idSite: this.site.idsite,
                           date: 'today', 
-                          filter_sort_order: this.sortOrderColumn,
+                          filter_sort_column: this.sortOrderColumn,
                           apiModule: this.report.module,
-                          apiAction: this.report.action};
+                          apiAction: this.report.action,
+                          period: this.period};
 
         if(this.report.parameters) {
             for(var index in this.report.parameters) {
@@ -267,15 +260,14 @@ Piwik.Network.StatisticsRequest = function () {
             parameter.date  = parameter.date.toPiwikDate().toPiwikQueryString();
         }
 
-        parameter.period    = this.period;
-        this.accessUrl      = account.accessUrl;
-
         var statsRequest    = Piwik.require('Network/PiwikApiRequest');
         statsRequest.setMethod('API.getProcessedReport');
         statsRequest.setParameter(parameter);
         statsRequest.setAccount(account);
         statsRequest.setCallback(this, function (response) {
             if (!response) {
+                this.loaded();
+            
                 return;
             }
 
@@ -284,46 +276,11 @@ Piwik.Network.StatisticsRequest = function () {
             this.metadata       = response.metadata;
             this.columns        = response.columns;
             this.reportData     = this._formatReportData(response, account);
+            
+            this.loaded();
         });
-
-        requestPool.attach(statsRequest);
-
-        if (this.graphsEnabled && (!this.deactivateChart || !this.deactivateChart[this.report.uniqueId])) {
-
-            var targetDate   = new Date();
-            
-            if (this.date) {
-                targetDate   = this.date;
-            }
-            
-            if ('string' === (typeof targetDate).toLowerCase()) {
-                targetDate   = targetDate.toPiwikDate();
-            }
-            
-            var gParameter    = {idSite: this.site.idsite,
-                                 period: this.period,
-                                 filter_truncate: 4,
-                                 filter_sort_order: this.sortOrderColumn,
-                                 apiModule: this.report.module,
-                                 apiAction: this.report.action,
-                                 date: targetDate.toPiwikQueryString()};
-
-            var graphRequest = Piwik.require('Network/PiwikApiRequest');
-            graphRequest.setMethod('API.getProcessedReport');
-            graphRequest.setParameter(gParameter);
-            graphRequest.setAccount(account);
-            graphRequest.setCallback(this, function (response) {
-                if (!response) {
-                    return;
-                }
-
-                this.graphData = this._formatGraphData(response);
-            });
-
-            requestPool.attach(graphRequest);
-        }
         
-        requestPool.send(this.loaded);
+        statsRequest.send();
     };
 
     /**
@@ -375,55 +332,6 @@ Piwik.Network.StatisticsRequest = function () {
         
         return sortOrder;
     };
-
-    /**
-     * Formats the response of the getProcessedReport as required by the Graph API.
-     *
-     * @param   {Object}   response    Response of the getProcessedReport request.
-     * 
-     * @returns {Object}   Graph data which can be used to display pie or bar charts in the following style:
-     *                     Object (
-     *                         [label] => [value]
-     *                     )
-     */
-    this._formatGraphData = function (response) {
-    
-        var graphRows = {};
-        var report;
-        var label;
-
-        if (response && response.reportData && (response.reportData instanceof Array) && 0 < response.reportData.length) {
-            for (var index = 0; index < response.reportData.length; index++) {
-
-                if (!response.reportData[index]) {
-                    continue;    
-                }
-
-                report = response.reportData[index];
-                label  = report.label;
-                
-                if (response.reportMetadata 
-                    && response.reportMetadata[index] 
-                    && response.reportMetadata[index].shortLabel) {
-                    // always prefer the sortLabel
-                    label  = response.reportMetadata[index].shortLabel;
-                }
-                
-                if (22 < label.length ) {
-                    label  = label.substr(0, 10) + '...' + label.substr(label.length - 10, 10);
-                }
-
-                if ('undefined' !== (typeof report[this.sortOrderColumn]) && null !== report[this.sortOrderColumn]) {
-                    graphRows[label] = report[this.sortOrderColumn];
-                } else {
-                    graphRows[label] = report.value;
-                }
-            }
-        }    
-
-        return graphRows;
-    };
-
     /**
      * Formats the response of the getProcessedReport as required by the StatisticsList API.
      *

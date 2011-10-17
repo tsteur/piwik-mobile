@@ -129,13 +129,38 @@ function window (params) {
 
         tableViewRows.push(that.create('TableViewSection', {title: site ? site.name : ''}));
 
-        if (event.graphsEnabled && event.graphData) {
+        var graph    = null;
+        var graphUrl = null;
+        if (event.graphsEnabled && event.report.imageGraphUrl) {
+            // Piwik 1.6 or higher
 
-            var graph    = Piwik.require('Graph');
-            var graphUrl = graph.getPieChartUrl(event.graphData);
-            graph        = that.create('Graph', {graphUrl: graphUrl});
-
+            graph               = Piwik.require('PiwikGraph');
+            var accountManager  = Piwik.require('App/Accounts');
+            var account         = accountManager.getAccountById(event.site.accountId);
+            graphUrl            = event.report.imageGraphUrl;
+            
+            if (event.sortOrderColumn) {
+                graphUrl       += '&filter_sort_column=' + event.sortOrderColumn;
+            }
+            
+            graphUrl            = graph.generateUrl(graphUrl, account, event.site, event.report);
+            graph               = that.create('Graph', {graphUrl: graphUrl, graph: graph});
+            
             tableViewRows.push(graph.getRow());
+            
+        } else if (event.graphsEnabled && ('undefined' == typeof(event.report.imageGraphUrl))) {
+            // Piwik 1.5 or older
+                      
+            graph     = Piwik.require('Graph');
+            graphUrl  = graph.getPieChartUrl(event);
+            
+            if (graphUrl) {
+                
+                graph = that.create('Graph', {graphUrl: graphUrl, graph: graph});
+                
+                tableViewRows.push(graph.getRow());
+            }
+            
         }
 
         // we need a Date object. Convert to date object if a string is given

@@ -53,22 +53,46 @@ function window (params) {
 
     var pictureWidth   = originalWidth - 20;
     var pictureHeight  = originalHeight - 20;
-
-    var graph          = Piwik.require('Graph');
     
-    if (isPortrait) {
-        graphUrl      = graph.appendSize(graphUrl, pictureHeight, pictureWidth);
-    } else {
-        graphUrl      = graph.appendSize(graphUrl, pictureWidth, pictureHeight);
-    }
 
-    Piwik.Log.debug('graphUrl is ' + graphUrl, 'graph/fulldetail::window');
-
-    var imageView = Ti.UI.createImageView({width: Piwik.isIphone ? pictureWidth : 'auto',
-                                           height:  Piwik.isIphone ? pictureHeight : 'auto',
+    var graphRenderedByPiwik = !!(-1 === graphUrl.indexOf('http://chart.apis'));
+    
+    var graph     = null;
+    var imageView = null;
+    
+    if (graphRenderedByPiwik) {
+        graph     = Piwik.require('PiwikGraph');
+        // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
+        graphUrl  = graph.appendSize(graphUrl, pictureWidth, pictureHeight, !Piwik.isAndroid);
+    
+        Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
+    
+        imageView = Ti.UI.createImageView({width: pictureWidth,
+                                           height:  pictureHeight,
                                            canScale: true,
+                                           hires: true,
                                            enableZoomControls: false,
                                            image: graphUrl});
+        
+    } else {
+        
+        graph     = Piwik.require('Graph');
+            
+        if (isPortrait) {
+            graphUrl = graph.appendSize(graphUrl, pictureHeight, pictureWidth, true);
+        } else {
+            graphUrl = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+        }
+
+        Piwik.Log.debug('graphUrl is ' + graphUrl, 'graph/fulldetail::window');
+    
+        imageView = Ti.UI.createImageView({width: Piwik.isIphone ? pictureWidth : 'auto',
+                                           height:  Piwik.isIphone ? pictureHeight : 'auto',
+                                           canScale: true,
+                                           hires: true,
+                                           enableZoomControls: false,
+                                           image: graphUrl});
+    } 
 
     this.add(imageView);
 
