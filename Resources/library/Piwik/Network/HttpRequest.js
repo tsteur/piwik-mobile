@@ -198,7 +198,7 @@ Piwik.Network.HttpRequest = function () {
         var that      = this;
         
         this.xhr.onload   = function () { that.load(this); };
-        this.xhr.onerror  = function () { that.error(); };
+        this.xhr.onerror  = function () { that.error({error: 'Timeout'}); };
 
         var settings = Piwik.require('App/Settings');
         
@@ -351,6 +351,7 @@ Piwik.Network.HttpRequest = function () {
                     break;
 
                 case 'Request aborted':
+                case 'Timeout':
                 case 'Chunked stream ended unexpectedly':
 
                     this.errorMessageSent = true;
