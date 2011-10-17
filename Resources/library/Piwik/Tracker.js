@@ -524,7 +524,7 @@ Piwik.Tracker = new function () {
 
         // uuid does not exist, this means user starts the app the first time.
         // ask user whether he wants to enable or disable tracking
-        var alertDialog = Titanium.UI.createAlertDialog({
+        var alertDialog = Ti.UI.createAlertDialog({
             title: _('Mobile_HelpUsToImprovePiwikMobile'),
             message: _('Mobile_AskForAnonymousTrackingPermission'),
             buttonNames: [_('General_No'), _('General_Yes')]
