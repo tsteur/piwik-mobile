@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-<deployment-targets>
-    <target device="mobileweb">false</target>
-    <target device="iphone">true</target>
-    <target device="ipad">true</target>
-    <target device="android">true</target>
-    <target device="blackberry">false</target>
-</deployment-targets>
-<id>org.piwik.mobile</id>
-<name>Piwik Mobile</name>
-<version>1.6.0</version>
-<publisher>Piwik.org</publisher>
-<url>http://piwik.org</url>
-<description>Piwik is a downloadable, open source (GPL licensed) real time web analytics software program. It provides you with detailed reports on your website visitors: the search engines and keywords they used, the language they speak, your popular pages... and so much more. Piwik aims to be an open source alternative to Google Analytics. You can access these reports by using this mobile client.</description>
-<copyright>2011 by Piwik.org</copyright>
-<icon>default_app_logo.png</icon>
+    <deployment-targets>
+        <target device="mobileweb">false</target>
+        <target device="iphone">true</target>
+        <target device="ipad">true</target>
+        <target device="android">true</target>
+        <target device="blackberry">false</target>
+    </deployment-targets>
+    <id>org.piwik.mobile</id>
+    <name>Piwik Mobile</name>
+    <version>1.6.0</version>
+    <publisher>Piwik.org</publisher>
+    <url>http://piwik.org</url>
+    <description>Piwik is a downloadable, open source (GPL licensed) real time web analytics software program. It provides you with detailed reports on your website visitors: the search engines and keywords they used, the language they speak, your popular pages... and so much more. Piwik aims to be an open source alternative to Google Analytics. You can access these reports by using this mobile client.</description>
+    <copyright>2011 by Piwik.org</copyright>
+    <icon>default_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
@@ -22,28 +22,27 @@
     <fullscreen>false</fullscreen>
     <navbar-hidden>false</navbar-hidden>
     <analytics>false</analytics>
-<guid>e0134140-a395-46b8-8f20-31172990b391</guid>
-<iphone>
-    <orientations device="iphone">
-        <orientation>Ti.UI.PORTRAIT</orientation>
-        <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
-        <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
-        <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
-    </orientations>
-    <orientations device="ipad">
-        <orientation>Ti.UI.PORTRAIT</orientation>
-        <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
-        <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
-        <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
-    </orientations>
-</iphone>
-<android xmlns:android="http://schemas.android.com/apk/res/android">
-    <tool-api-level>8</tool-api-level>
-    <manifest android:versionCode="8" android:versionName="1.6.0">
-        <supports-screens android:smallScreens="true" android:normalScreens="true" 
-                          android:largeScreens="true" android:anyDensity="true" />
-        <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8"
-                  android:installLocation="preferExternal"/>
-    </manifest>
-</android>
+    <guid>e0134140-a395-46b8-8f20-31172990b391</guid>
+    <iphone>
+        <orientations device="iphone">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
+        </orientations>
+        <orientations device="ipad">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
+            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
+        </orientations>
+    </iphone>
+    <android xmlns:android="http://schemas.android.com/apk/res/android">
+        <tool-api-level>8</tool-api-level>
+        <manifest android:versionCode="8" android:versionName="1.6.0">
+            <supports-screens android:anyDensity="true"
+                android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
+            <uses-sdk android:installLocation="preferExternal" android:minSdkVersion="7"/>
+        </manifest>
+    </android>
 </ti:app>
