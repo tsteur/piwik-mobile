@@ -109,7 +109,7 @@ function window (params) {
     });
 
     request.addEventListener('onload', function (event) {
-
+        
         var site = event.site;
 
         that.titleOptions = {title: event.report ? event.report.name : '',
@@ -131,13 +131,14 @@ function window (params) {
 
         var graph    = null;
         var graphUrl = null;
-        if (event.graphsEnabled && event.report.imageGraphUrl) {
+
+        if (event.graphsEnabled && event.report && event.metadata.imageGraphUrl) {
             // Piwik 1.6 or higher
 
             graph               = Piwik.require('PiwikGraph');
             var accountManager  = Piwik.require('App/Accounts');
             var account         = accountManager.getAccountById(event.site.accountId);
-            graphUrl            = event.report.imageGraphUrl;
+            graphUrl            = event.metadata.imageGraphUrl;
             
             if (event.sortOrderColumn) {
                 graphUrl       += '&filter_sort_column=' + event.sortOrderColumn;
@@ -148,7 +149,7 @@ function window (params) {
             
             tableViewRows.push(graph.getRow());
             
-        } else if (event.graphsEnabled && ('undefined' == typeof(event.report.imageGraphUrl))) {
+        } else if (event.graphsEnabled && ('undefined' == typeof(event.metadata.imageGraphUrl))) {
             // Piwik 1.5 or older
                       
             graph     = Piwik.require('Graph');
