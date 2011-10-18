@@ -143,6 +143,7 @@ Piwik.UI.Refresh = function () {
             if (!this.activityIndicator) {
                 // create the activity indicator if not already created
                 this.activityIndicator = Piwik.require('UI/ActivityIndicator');
+                this.activityIndicator.setParams({window: this.getParam('window')});
             }
 
             this.activityIndicator.style = 'loading';
