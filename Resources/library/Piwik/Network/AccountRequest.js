@@ -153,6 +153,9 @@ Piwik.Network.AccountRequest = function () {
 
             return;
         }
+        
+        // requests won't work if protocol is for example 'Http'
+        account.accessUrl = 'http' + account.accessUrl.substr(4);
 
         if (account && account.anonymous) {
 
@@ -170,10 +173,10 @@ Piwik.Network.AccountRequest = function () {
             account.accessUrl = account.accessUrl + '/';
         }
 
-        var credentials  = {userLogin:   account.username,
-                            md5Password: Ti.Utils.md5HexDigest(account.password)};
+        var credentials   = {userLogin:   account.username,
+                             md5Password: Ti.Utils.md5HexDigest(account.password)};
 
-        var piwikRequest = Piwik.require('Network/PiwikApiRequest');
+        var piwikRequest  = Piwik.require('Network/PiwikApiRequest');
         piwikRequest.setMethod('UsersManager.getTokenAuth');
         piwikRequest.setParameter(credentials);
         piwikRequest.setAccount(account);
