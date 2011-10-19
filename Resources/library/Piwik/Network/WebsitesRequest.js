@@ -138,7 +138,7 @@ Piwik.Network.WebsitesRequest = function () {
 
             // create a request to fetch all sites the user has at least view access
             piwikRequest = Piwik.require('Network/PiwikApiRequest');
-            parameter    = {accountId: this.accounts[index].id, limit: 15};
+            parameter    = {accountId: this.accounts[index].id, limit: 20};
             
             if (params && params.filterName) {
                 parameter.pattern = params.filterName;
