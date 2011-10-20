@@ -91,11 +91,13 @@ Piwik.PiwikGraph = new function () {
             parameter[index] = config.piwik.graph[index];
         }
         
-        if (hires) {
+        if (hires && Piwik.isIos) {
             parameter.fontSize = parameter.fontSize * 2;
             parameter.width    = parameter.width * 2;
             parameter.height   = parameter.height * 2;
-        }
+        } else if (hires && Piwik.isAndroid) {
+            parameter.fontSize = Math.round(parameter.fontSize * 1.5);
+        } 
         
         var requestUrl  = '';
         

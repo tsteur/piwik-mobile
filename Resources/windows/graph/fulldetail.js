@@ -53,8 +53,7 @@ function window (params) {
 
     var pictureWidth   = originalWidth - 20;
     var pictureHeight  = originalHeight - 20;
-    
-
+ 
     var graphRenderedByPiwik = !!(-1 === graphUrl.indexOf('http://chart.apis'));
     
     var graph     = null;
@@ -62,15 +61,16 @@ function window (params) {
     
     if (graphRenderedByPiwik) {
         graph     = Piwik.require('PiwikGraph');
+
         // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
-        graphUrl  = graph.appendSize(graphUrl, pictureWidth, pictureHeight, !Piwik.isAndroid);
+        graphUrl  = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
     
         Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
     
         imageView = Ti.UI.createImageView({width: pictureWidth,
                                            height:  pictureHeight,
-                                           canScale: true,
-                                           hires: true,
+                                           canScale: !Piwik.isAndroid,
+                                           hires: !Piwik.isAndroid,
                                            enableZoomControls: false,
                                            image: graphUrl});
         
