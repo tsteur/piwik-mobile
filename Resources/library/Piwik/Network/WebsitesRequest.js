@@ -25,6 +25,7 @@ Piwik.Network.WebsitesRequest = function () {
      * @param   {Array}     event.sites              See {@link Piwik.Network.WebsitesRequest#sites}.
      * @param   {boolean}   event.showMultiChart     See {@link Piwik.Network.WebsitesRequest#showMultiChart}.
      * @param   {boolean}   event.filterUsed         See {@link Piwik.Network.WebsitesRequest#filterUsed}.
+     * @param   {boolean}   event.achievedSitesLimit See {@link Piwik.Network.WebsitesRequest#achievedSitesLimit}.
      */
 
     /**
@@ -60,6 +61,15 @@ Piwik.Network.WebsitesRequest = function () {
      * @type boolean
      */
     this.filterUsed     = false;
+    
+    /**
+     * True if the number of requestes sites (limit parameter) is achieved. False otherwise.
+     *
+     * @defaults false
+     *
+     * @type boolean
+     */
+    this.achievedSitesLimit = false;
 
     /**
      * @private
@@ -67,6 +77,7 @@ Piwik.Network.WebsitesRequest = function () {
      * @type Piwik.Network.RequestPool|null
      */
     var requestPool     = null;
+    
     /**
      * Initialize / reset all previous defined or fetched values. We have to do this cause it is possible to call the
      * 'send' method multiple times.
@@ -138,7 +149,7 @@ Piwik.Network.WebsitesRequest = function () {
 
             // create a request to fetch all sites the user has at least view access
             piwikRequest = Piwik.require('Network/PiwikApiRequest');
-            parameter    = {accountId: this.accounts[index].id, limit: 20};
+            parameter    = {accountId: this.accounts[index].id, limit: config.piwik.numDisplayedWebsites};
             
             if (params && params.filterName) {
                 parameter.pattern = params.filterName;
@@ -198,6 +209,7 @@ Piwik.Network.WebsitesRequest = function () {
             }
         }
 
+        var numFoundSitesPerAccount = 0;
         for (var sitesIndex = 0; sitesIndex < allowedSites.length; sitesIndex++) {
 
             var site = allowedSites[sitesIndex];
@@ -214,8 +226,14 @@ Piwik.Network.WebsitesRequest = function () {
             }
 
             site.accountId   = parameter.accountId;
+            numFoundSitesPerAccount++;
 
             this.sites.push(site);
+        }
+
+        if (numFoundSitesPerAccount && 
+            config.piwik.numDisplayedWebsites <= numFoundSitesPerAccount) {
+            this.achievedSitesLimit = true;
         }
 
         return;
@@ -238,6 +256,7 @@ Piwik.Network.WebsitesRequest = function () {
         var eventResult = {type: 'onload',
                            sites: this.sites,
                            filterUsed: this.filterUsed,
+                           achievedSitesLimit: this.achievedSitesLimit,
                            showMultiChart: this.showMultiChart};
 
         this.fireEvent('onload', eventResult);

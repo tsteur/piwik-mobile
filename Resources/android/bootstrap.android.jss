@@ -43,6 +43,16 @@
 
 }
 
+.searchHintLabel {
+    font-size: 13;
+    color: '#888888';
+    width: 'auto';
+    left: 10;
+}
+.searchHintTableViewRow {
+    height: 'auto';
+}
+
 #websiteSearchBar {
     showCancel: false;
     barColor: '#B2AEA5';

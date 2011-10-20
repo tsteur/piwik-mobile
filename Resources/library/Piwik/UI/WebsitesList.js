@@ -82,9 +82,14 @@ Piwik.UI.WebsitesList = function () {
             forceRequestReload = false;
             refresh.refresh();
         });
-
+        
         win.addEventListener('blurWindow', function () {
+            searchBar.hide();
             searchBar.blur();
+        });
+
+        win.addEventListener('focusWindow', function () {
+            searchBar.show();
         });
 
         win.add(searchBar);
@@ -161,7 +166,15 @@ Piwik.UI.WebsitesList = function () {
                                                        rightImage: {url: site.sparklineUrl, width: 100, height: 25},
                                                        className: 'websiteTableViewRow'}));
             }
-
+            
+            if (event && event.achievedSitesLimit) {
+                
+                var searchHintRow = Ti.UI.createTableViewRow({className: 'searchHintTableViewRow'});
+                searchHintRow.add(Ti.UI.createLabel({text: _('Mobile_UseSearchBarHint'),
+                                                     className: 'searchHintLabel'}));
+                rows.push(searchHintRow);
+            }
+            
             tableview.setData(rows);
         });
     };

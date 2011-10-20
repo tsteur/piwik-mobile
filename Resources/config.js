@@ -60,6 +60,7 @@ config.piwik = {
     latestServerVersion: '1.5.0',
     graphsEnabled: true,
     trackingEnabled: false,
+    numDisplayedWebsites: 50,
     
     graph: {
           filter_truncate: 4, 
