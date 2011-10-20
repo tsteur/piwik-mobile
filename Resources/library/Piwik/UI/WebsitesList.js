@@ -169,8 +169,11 @@ Piwik.UI.WebsitesList = function () {
             
             if (event && event.achievedSitesLimit) {
                 
-                var searchHintRow = Ti.UI.createTableViewRow({className: 'searchHintTableViewRow'});
-                searchHintRow.add(Ti.UI.createLabel({text: _('Mobile_UseSearchBarHint'),
+                var searchHintRow     = Ti.UI.createTableViewRow({className: 'searchHintTableViewRow'});
+                var searchBarHintText = String.format(_('Mobile_UseSearchBarHint'), 
+                                                      '' + config.piwik.numDisplayedWebsites);
+                
+                searchHintRow.add(Ti.UI.createLabel({text: searchBarHintText,
                                                      className: 'searchHintLabel'}));
                 rows.push(searchHintRow);
             }

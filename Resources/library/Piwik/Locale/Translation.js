@@ -186,7 +186,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_SearchWebsite:                                               'Search websites',
         Mobile_ShowAll:                                                     'Show all',
         Mobile_ShowLess:                                                    'Show less',
-        Mobile_UseSearchBarHint:                                            'Only the first 20 websites are displayed here. Please use the search bar to access your other websites.',
+        Mobile_UseSearchBarHint:                                            'Only the first %s websites are displayed here. Please use the search bar to access your other websites.',
         Mobile_HttpTimeout:                                                 'HTTP Timeout',
         Mobile_HttpTimeoutInfo:                                             'Increase if you receive timeout errors',
         Mobile_VerifyAccount:                                               'Verifying Account',
