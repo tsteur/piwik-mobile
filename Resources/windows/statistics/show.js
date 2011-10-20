@@ -127,7 +127,11 @@ function window (params) {
 
         var tableViewRows = [];
 
-        tableViewRows.push(that.create('TableViewSection', {title: site ? site.name : ''}));
+        if (Piwik.isIpad) {
+            tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
+        } else {
+            tableViewRows.push(that.create('TableViewSection', {title: site ? site.name : ''}));
+        }
 
         var graph    = null;
         var graphUrl = null;
@@ -169,8 +173,11 @@ function window (params) {
         if ('string' === (typeof optionDate).toLowerCase()) {
             optionDate = optionDate.toPiwikDate();
         }
+        
+        if (!Piwik.isIpad) {
+            tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
+        }
 
-        tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
 
         // @see Piwik.Network.StatisticsRequest#report
         var statsticTitleLabel = null;
