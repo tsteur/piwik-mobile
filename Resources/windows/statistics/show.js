@@ -136,7 +136,7 @@ function window (params) {
         var graph    = null;
         var graphUrl = null;
 
-        if (event.graphsEnabled && event.report && event.metadata.imageGraphUrl) {
+        if (event.graphsEnabled && event.metadata && event.metadata.imageGraphUrl) {
             // Piwik 1.6 or higher
 
             graph               = Piwik.require('PiwikGraph');
