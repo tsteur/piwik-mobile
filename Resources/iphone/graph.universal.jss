@@ -17,7 +17,7 @@
 }
 
 .graphTableViewRow {
-    height: 165;
+    height: 181;
     backgroundColor: '#ffffff';
     /** Ti.UI.iPhone.TableViewCellSelectionStyle.NONE **/
     selectionStyle: 0;
@@ -37,7 +37,7 @@
 }
 
 #graphImage {
-    top: 4;
+    top: 12;
     left: 10;
     zIndex: 1;
 }
