@@ -51,11 +51,10 @@ Piwik.PiwikGraph = new function () {
      * @param {Object}      account    The piwik account that will be used to request the graph. 
      *                                 The account contains the piwik accessUrl as well as the authToken.
      * @param {Object}      site       The current selected website. 
-     * @param {Object}      report     The current selected report. 
      *
      * @returns {string}    Url to the graph including the needed size information.
      */
-    this.generateUrl = function (graphUrl, account, site, report) {
+    this.generateUrl = function (graphUrl, account, site) {
         var parameter   = {token_auth: account.tokenAuth,
                            idSite:     site.idsite,
                            language:   locale};
