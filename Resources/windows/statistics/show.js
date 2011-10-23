@@ -50,8 +50,6 @@ function window (params) {
         Piwik.Tracker.setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
     }
 
-    Piwik.Tracker.setCustomVariable(4, 'reportPeriod', params.period ? params.period : 'unknown', 'page');
-
     var request      = Piwik.require('Network/StatisticsRequest');
     var tableView    = Ti.UI.createTableView({id: 'statisticsTableView'});
     var refresh      = this.create('Refresh', {tableView: tableView});
@@ -115,8 +113,6 @@ function window (params) {
         
         var site = event.site;
 
-        that.titleOptions = {title: event.report ? event.report.name : '',
-                             window: that};
         that.menuOptions  = {dayChooser: true,
                              siteChooser: true,
                              optionMenuSettingsChooser: true,
@@ -124,8 +120,7 @@ function window (params) {
                              period: event.period,
                              window: that};
 
-        // update header and menu after each request cause of a possibly period and/or date change.
-        Piwik.UI.layout.header.refresh(that.titleOptions);
+        // update menu after each request cause of a possibly period and/or date change.
         Piwik.UI.layout.menu.refresh(that.menuOptions);
 
         var tableViewRows = [];
