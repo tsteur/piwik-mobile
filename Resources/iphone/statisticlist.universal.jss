@@ -18,7 +18,7 @@
     height: 'auto';
     left: 10;
     right: 87;
-    color: '#336699';
+    color: '#385487';
     top: 13;
     bottom: 10;
     font-size: 13;
@@ -28,7 +28,7 @@
     height: 'auto';
     right: 3;
     width: 87;
-    color: '#336699';
+    color: '#385487';
     top: 13;
     bottom: 10;
     font-size: 13;
@@ -39,7 +39,7 @@
     height: 38;
     left: 10;
     color: '#333333';
-    font-size: 13;
+    font-size: 16;
     right: 10;
     /** Ti.UI.iPhone.TableViewCellSelectionStyle.NONE **/
     selectionStyle: 0;
@@ -69,7 +69,7 @@
     color: '#333333';
     top: 13;
     bottom: 10;
-    font-size: 13;
+    font-size: 16;
 }
 
 .statisticListTitleLabelWithLogo {
@@ -79,18 +79,18 @@
     color: '#333333';
     top: 13;
     bottom: 10;
-    font-size: 13;
+    font-size: 16;
 }
 
 .statisticListValueLabel {
     height: 'auto';
     right: 3;
     width: 87;
-    color: '#333333';
     top: 13;
     bottom: 10;
-    font-size: 13;
+    font-size: 16;
     font-weight: 'bold';
+    color: '#385487';
 }
 
 .statisticListLogoImage {
