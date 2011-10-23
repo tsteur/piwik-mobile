@@ -16,7 +16,7 @@
 }
 
 .graphTableViewRow {
-    height: '165dp';
+    height: 180;
     backgroundColor: '#ffffff';
 }
 
