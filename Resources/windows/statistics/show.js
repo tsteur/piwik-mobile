@@ -61,14 +61,17 @@ function window (params) {
     this.addEventListener('onDateChanged', function (event) {
         // user has changed the date and/or period -> reload statistics using the updated date/period
 
-        Piwik.getTracker().trackEvent({title: 'Date/Period changed', url: '/statistic-change/date-period'});
+        var period = '';
+        if (event && event.period) {
+            period        = event.period;
+            params.period = period;
+        }
+
+        Piwik.getTracker().trackEvent({title: 'Date/Period changed', 
+                                       url: '/statistic-change/date-period/' + period});
 
         if (event && event.date) {
             params.date   = event.date;
-        }
-
-        if (event && event.period) {
-            params.period = event.period;
         }
 
         params.showAll    = false;
