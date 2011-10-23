@@ -61,6 +61,10 @@ Piwik.UI.ActivityIndicator = function () {
      * @type null|Piwik.UI.Window
      */
     this.view        = null;
+    
+    this.init = function () {
+        
+    };
 
     /**
      * Shows an Activity Indicator. To remove the indicator, simply call 'hide' as soon as your script has finished.
@@ -96,6 +100,7 @@ Piwik.UI.ActivityIndicator = function () {
         this.view = this.getParam('window');
             
         if (!this.view) {
+            Piwik.Log.warn('Can not display ActivityIndicator, window is not set', 'ActivityIndicator::show');
             
             return;
         }
@@ -131,7 +136,7 @@ Piwik.UI.ActivityIndicator = function () {
             case 'waiting':
             default:
             
-                var win = this.view.window;
+                var win = this.view;
 
                 if (this.numRequests > 1) {
                     // just update the text cause wait indicator is already visible
@@ -143,8 +148,7 @@ Piwik.UI.ActivityIndicator = function () {
                     return;
                 }
 
-                if (!win
-                    || !win.waitIndicatorImage
+                if (!win.waitIndicatorImage
                     || !win.waitIndicatorImage.show) {
                     // the waitIndicator does not exist, create it
 
@@ -216,7 +220,7 @@ Piwik.UI.ActivityIndicator = function () {
             return;
         }
         
-        var win = this.view.win;
+        var win = this.view;
 
         // remove style 'waiting'
         if (win

@@ -251,13 +251,19 @@ Piwik.UI.createTableViewSection = function (params) {
  *
  * @see Piwik.UI.ActivityIndicator
  *
+ * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Error.
+ *
  * @type Piwik.UI.ActivityIndicator
  *
  * @returns The created activity indicator instance.
  */
-Piwik.UI.createActivityIndicator = function () {
+Piwik.UI.createActivityIndicator = function (params) {
 
-    return Piwik.require('UI/ActivityIndicator');
+    var instance = Piwik.require('UI/ActivityIndicator');
+    instance.setParams(params);
+    instance.init();
+
+    return instance;
 };
 
 /**
