@@ -38,6 +38,8 @@ tableviewrow {
     right: 0;
     font-size: '14dp';
     font-weight: 'bold';
+    ellipsize: true;
+    wordWrap: false;
 }
 
 #tableViewRowTitleLabelWithDescription {
