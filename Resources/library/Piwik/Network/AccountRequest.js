@@ -156,14 +156,7 @@ Piwik.Network.AccountRequest = function () {
         
         // requests won't work if protocol is for example 'Http'
         account.accessUrl = 'http' + account.accessUrl.substr(4);
-
-        if (account && account.anonymous) {
-
-            account.tokenAuth = 'anonymous';
-            
-            return this.verifyAccess(account);
-        }
-
+        
         var lastUrlChar   = account.accessUrl.substr(account.accessUrl.length - 1, 1);
         var last4UrlChars = account.accessUrl.substr(account.accessUrl.length -4, 4).toLowerCase();
 
@@ -171,8 +164,22 @@ Piwik.Network.AccountRequest = function () {
             // append a slash if user entered an url like 'http://demo.piwik.org' . Do not append if user entered an url
             // like 'http://demo.piwik.org/index.php'
             account.accessUrl = account.accessUrl + '/';
+        } 
+        
+        lastUrlChar   = account.accessUrl.substr(account.accessUrl.length - 1, 1);
+        
+        if ('/' === lastUrlChar) {
+            // if url doesn't end with *.php, append index.php automatically. we do not verify whether it ends with
+            // index.php so the user is able to use for example xyz.php
+            account.accessUrl = account.accessUrl + 'index.php';
         }
 
+        if (account && account.anonymous) {
+
+            account.tokenAuth = 'anonymous';
+            
+            return this.verifyAccess(account);
+        }
         var credentials   = {userLogin:   account.username,
                              md5Password: Ti.Utils.md5HexDigest(account.password)};
 
