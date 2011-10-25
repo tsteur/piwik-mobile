@@ -107,15 +107,6 @@ Piwik.Tracker = new function () {
     var baseUrl         = config.tracking.baseUrl;
 
     /**
-     * Holds the number of accounts the user has configured.
-     *
-     * @defaults 0
-     *
-     * @type number
-     */
-    var numAccounts     = 0
-
-    /**
      * These parameters holds all tracking information and will be send to the Piwik Server installation. Will be reset
      * after each tracking.
      *
@@ -128,9 +119,10 @@ Piwik.Tracker = new function () {
      */
     this.init = function () {
 
-        visitCount      = this._getVisitCount();
-        uuid            = this._getUniqueId();
-        numAccounts     = Piwik.require('App/Accounts').getNumAccounts();
+        visitCount = this._getVisitCount();
+        uuid       = this._getUniqueId();
+        
+        this.prepareVisitCustomVariables();
     };
 
     /**
@@ -402,6 +394,34 @@ Piwik.Tracker = new function () {
 
         parameter[key]['' + index] = ['' + name, '' + value];
     };
+    
+    /**
+     * Prepare visit scope custom variables to send them with the next page view.
+     */
+    this.prepareVisitCustomVariables = function()
+    {
+        var session     = Piwik.require('App/Session');
+        var websites    = session.get('piwik_sites_allowed', []);
+        var numWebsites = 0;
+        var numAccounts = Piwik.require('App/Accounts').getNumAccounts();
+        
+        if ((websites instanceof Array) && 'undefined' !== (typeof websites.length)) {
+            numWebsites = websites.length;
+        }
+            
+       this.setCustomVariable(1, 'OS', Ti.Platform.osname + ' ' + Ti.Platform.version, 'visit');
+
+        // Piwik Version
+        this.setCustomVariable(2, 'Piwik Mobile Version', Ti.App.version, 'visit');
+
+        // Locale of the device + configured locale
+        this.setCustomVariable(3, 'Locale', Ti.Platform.locale + '::' + Piwik.Locale.getLocale(), 'visit');
+        this.setCustomVariable(4, 'Num Accounts', numAccounts, 'visit');
+        
+        if (numWebsites) {
+            this.setCustomVariable(5, 'Num Sites', numWebsites, 'visit');
+        }
+    }
 
     /**
      * Detects whether tracking is enabled or disabled. It considers the config as well as whether the user has allowed
@@ -490,16 +510,6 @@ Piwik.Tracker = new function () {
 
         var caps         = Ti.Platform.displayCaps;
         parameter.res    = caps.platformWidth + 'x' + caps.platformHeight;
-
-        this.setCustomVariable(1, 'OS', Ti.Platform.osname + ' ' + Ti.Platform.version, 'visit');
-
-        // Piwik Version
-        this.setCustomVariable(2, 'Piwik Mobile Version', Ti.App.version, 'visit');
-
-        // Locale of the device + configured locale
-        this.setCustomVariable(3, 'Locale', Ti.Platform.locale + '::' + Piwik.Locale.getLocale(), 'visit');
-
-        this.setCustomVariable(4, 'Num Accounts', numAccounts, 'visit');
 
         if (parameter._cvar) {
             parameter._cvar = JSON.stringify(parameter._cvar);

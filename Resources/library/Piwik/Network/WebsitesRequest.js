@@ -236,8 +236,6 @@ Piwik.Network.WebsitesRequest = function () {
             this.achievedSitesLimit = true;
         }
         
-        Piwik.getTracker().setCustomVariable(5, 'Num Sites', this.sites.length, 'visit');
-
         return;
     };
 

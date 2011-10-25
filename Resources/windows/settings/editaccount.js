@@ -306,6 +306,8 @@ function window (params) {
             var trackingUrl = '/account/' + event.action + '/' + (event.success ? 'success' : 'error');
             Piwik.getTracker().trackEvent({title: 'Account ' + event.action, url: trackingUrl});
         }
+        
+        Piwik.getTracker().prepareVisitCustomVariables();
 
         // save and verify account was successful
         var alertDialog = Ti.UI.createAlertDialog({

@@ -42,6 +42,8 @@ function window () {
 
             return;
         }
+        
+        Piwik.getTracker().prepareVisitCustomVariables();
 
         that.create('Window', {url: 'site/index.js',
                                target: 'masterView',
@@ -53,6 +55,8 @@ function window () {
 
             return;
         }
+        
+        Piwik.getTracker().prepareVisitCustomVariables();
         
         // user has access to only one site. jump directly to site view
         // @see http://dev.piwik.org/trac/ticket/2120
