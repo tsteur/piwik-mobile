@@ -235,6 +235,8 @@ Piwik.Network.WebsitesRequest = function () {
             config.piwik.numDisplayedWebsites <= numFoundSitesPerAccount) {
             this.achievedSitesLimit = true;
         }
+        
+        Piwik.getTracker().setCustomVariable(5, 'Num Sites', this.sites.length, 'visit');
 
         return;
     };
