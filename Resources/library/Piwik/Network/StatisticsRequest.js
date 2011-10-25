@@ -209,23 +209,37 @@ Piwik.Network.StatisticsRequest = function () {
     this.send = function (params) {
         this.init();
 
-        var session       = Piwik.require('App/Session');
+        var session          = Piwik.require('App/Session');
 
-        var periodSession = session.get('piwik_parameter_period');
-        var dateSession   = session.get('piwik_parameter_date');
+        var periodSession    = session.get('piwik_parameter_period');
+        var dateSession      = session.get('piwik_parameter_date');
 
-        this.period       = params.period || periodSession;
-        this.date         = params.date || dateSession;
-        this.showAll      = params.showAll || this.showAll;
+        this.period          = params.period || periodSession;
+        this.date            = params.date || dateSession;
+        this.showAll         = params.showAll || this.showAll;
+        this.report          = params.report;
+        this.sortOrderColumn = this._getSortOrder(this.report);
 
-        this.site            = params.site;
+        this.site = params.site;
+
+        if (!this.site) {
+            Piwik.Log.warn('Site is not defined, can not send request', 'Piwik.Network.StatisticsRequest::send');
+            this.loaded();
+            
+            return;
+        }
 
         var accountManager   = Piwik.require('App/Accounts');
         var account          = accountManager.getAccountById(this.site.accountId);
 
-        this.report          = params.report;
-        this.sortOrderColumn = this._getSortOrder(this.report);
-        this.accessUrl       = account.accessUrl;
+        if (!account) {
+            Piwik.Log.warn('Account is not defined, can not send request', 'Piwik.Network.StatisticsRequest::send');
+            this.loaded();
+            
+            return;
+        }
+
+        this.accessUrl = account.accessUrl;
 
         var parameter  = {idSite: this.site.idsite,
                           date: 'today', 

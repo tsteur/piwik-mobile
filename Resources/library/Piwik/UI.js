@@ -259,11 +259,20 @@ Piwik.UI.createTableViewSection = function (params) {
  */
 Piwik.UI.createActivityIndicator = function (params) {
 
-    var instance = Piwik.require('UI/ActivityIndicator');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/ActivityIndicator');
+        instance.setParams(params);
+        instance.init();
+        
+        return instance;
+        
+    } catch (exception) {
+        
+        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCa27'});
+        uiError.showErrorMessageToUser();
+    }
 
-    return instance;
+    return {};
 };
 
 /**
@@ -279,11 +288,18 @@ Piwik.UI.createActivityIndicator = function (params) {
  */
 Piwik.UI.createError = function (params) {
 
-    var instance = Piwik.require('UI/Error');
-    instance.setParams(params);
-    instance.init();
+    try {
+        var instance = Piwik.require('UI/Error');
+        instance.setParams(params);
+        instance.init();
 
-    return instance;
+        return instance;
+        
+    } catch (exception) {
+        Piwik.Log.warn('Failed to create Error UI widget', 'UI::createError');
+    }
+
+    return {showErrorMessageToUser: function () {}};
 };
 
 /**

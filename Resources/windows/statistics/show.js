@@ -151,7 +151,7 @@ function window (params) {
             
             tableViewRows.push(graph.getRow());
             
-        } else if (event.graphsEnabled && ('undefined' == typeof(event.metadata.imageGraphUrl))) {
+        } else if (event.graphsEnabled && (!event.metadata || 'undefined' == typeof(event.metadata.imageGraphUrl))) {
             // Piwik 1.5 or older
                       
             graph     = Piwik.require('Graph');
