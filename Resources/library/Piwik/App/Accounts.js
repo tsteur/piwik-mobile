@@ -293,6 +293,12 @@ Piwik.App.Accounts = function () {
         }
         
         var values                 = this.getAccountById(id);
+        
+        if (!values) {
+            
+            return false;
+        }
+        
         values.changeVersionNumber = Ti.App.version;
 
         var allowedFields          = this.mandatoryFields.concat(this.optionalFields);
