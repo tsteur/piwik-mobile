@@ -48,54 +48,104 @@ function window (params) {
     
     var originalWidth  = this.width;
     var originalHeight = this.height;
-
-    var isPortrait     = (originalWidth < originalHeight);
+    
+    var isLandscape    = (originalWidth > originalHeight);
+    var navBarHeight   = Ti.Platform.displayCaps.platformHeight - originalHeight;
+    
+    if (0 > navBarHeight) {
+        navBarHeight   = 0;
+    }
 
     var pictureWidth   = originalWidth - 20;
     var pictureHeight  = originalHeight - 20;
- 
-    var graphRenderedByPiwik = !!(-1 === graphUrl.indexOf('http://chart.apis'));
     
-    var graph     = null;
-    var imageView = null;
-    
-    if (graphRenderedByPiwik) {
-        graph     = Piwik.require('PiwikGraph');
+    var graph          = Piwik.require('PiwikGraph');
+    var imageView      = null;
 
-        // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
-        graphUrl  = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
-    
-        Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
-    
-        imageView = Ti.UI.createImageView({width: pictureWidth,
-                                           height:  pictureHeight,
-                                           canScale: !Piwik.isAndroid,
-                                           hires: !Piwik.isAndroid,
-                                           enableZoomControls: false,
-                                           image: graphUrl});
-        
-    } else {
-        
-        graph     = Piwik.require('Graph');
-            
-        if (isPortrait) {
-            graphUrl = graph.appendSize(graphUrl, pictureHeight, pictureWidth, true);
-        } else {
-            graphUrl = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
-        }
+    // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
+    graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
 
-        Piwik.Log.debug('graphUrl is ' + graphUrl, 'graph/fulldetail::window');
-    
-        imageView = Ti.UI.createImageView({width: Piwik.isIphone ? pictureWidth : 'auto',
-                                           height:  Piwik.isIphone ? pictureHeight : 'auto',
-                                           canScale: true,
-                                           hires: true,
-                                           enableZoomControls: false,
-                                           image: graphUrl});
-    } 
+    Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
+
+    imageView = Ti.UI.createImageView({width: pictureWidth,
+                                       height:  pictureHeight,
+                                       canScale: !Piwik.isAndroid,
+                                       hires: !Piwik.isAndroid,
+                                       enableZoomControls: false,
+                                       image: graphUrlWithSize});
 
     this.add(imageView);
+    
+    var that = this;
+    
+    function rotateImageOnAndroid (event) {
+        if (!imageView || !that || !event) {
+            
+            return;
+        }
+        
+        try {
+            // we have to detect current width/height after orientation change... that.width/that.height is not correct
+            if (Ti.Gesture.isLandscape(event.orientation)) {
+                if (isLandscape) {
+                    pictureWidth  = originalWidth - 20;
+                    pictureHeight = originalHeight - 20;
+                } else {
+                    pictureWidth  = originalHeight;
+                    pictureHeight = originalWidth - navBarHeight - 40;
+                }
+            } else {
+                if (isLandscape) {
+                    pictureWidth  = originalHeight;
+                    pictureHeight = originalWidth - navBarHeight - 40;
+                } else {
+                    pictureWidth  = originalWidth - 20;
+                    pictureHeight = originalHeight - 20;
+                }
+            }
+            
+            that.remove(imageView);
 
+            graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+            imageView        = Ti.UI.createImageView({width: pictureWidth,
+                                                      height:  pictureHeight,
+                                                      canScale: !Piwik.isAndroid,
+                                                      hires: !Piwik.isAndroid,
+                                                      enableZoomControls: false,
+                                                      image: graphUrlWithSize});
+            that.add(imageView);
+        } catch (e) {
+            Piwik.Log.warn('Failed to update (remove and add) graph', 'graph/fulldetail::window');
+            Piwik.Log.warn(e, 'graph/fulldetail::window');
+        }
+    }
+        
+    function rotateImage (event) {
+        if (!imageView || !that) {
+            
+            return;
+        }
+        
+        pictureWidth     = that.width - 20;
+        pictureHeight    = that.height - 20;
+        
+        imageView.width  = pictureWidth;
+        imageView.height = pictureHeight;
+        graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+    
+        imageView.image  = graphUrlWithSize;
+    }
+    
+    Ti.Gesture.addEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
+    this.addEventListener('blurWindow', function () {
+        try {
+            Ti.Gesture.removeEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
+        } catch (e) {
+            Piwik.Log.warn('Failed to remove orientationchange event listener', 'graph/fulldetail::window');
+            Piwik.Log.warn(e, 'graph/fulldetail::window');
+        }
+    });
+    
     this.open = function () {
     };
 }

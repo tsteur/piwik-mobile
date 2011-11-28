@@ -135,7 +135,6 @@ function window (params) {
         var graphUrl = null;
 
         if (event.graphsEnabled && event.metadata && event.metadata.imageGraphUrl) {
-            // Piwik 1.6 or higher
 
             graph               = Piwik.require('PiwikGraph');
             var accountManager  = Piwik.require('App/Accounts');
@@ -150,20 +149,6 @@ function window (params) {
             graph               = that.create('Graph', {graphUrl: graphUrl, graph: graph});
             
             tableViewRows.push(graph.getRow());
-            
-        } else if (event.graphsEnabled && (!event.metadata || 'undefined' == typeof(event.metadata.imageGraphUrl))) {
-            // Piwik 1.5 or older
-                      
-            graph     = Piwik.require('Graph');
-            graphUrl  = graph.getPieChartUrl(event);
-            
-            if (graphUrl) {
-                
-                graph = that.create('Graph', {graphUrl: graphUrl, graph: graph});
-                
-                tableViewRows.push(graph.getRow());
-            }
-            
         }
 
         // we need a Date object. Convert to date object if a string is given
@@ -175,7 +160,6 @@ function window (params) {
         if (!Piwik.isIpad) {
             tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
         }
-
 
         // @see Piwik.Network.StatisticsRequest#report
         var statsticTitleLabel = null;

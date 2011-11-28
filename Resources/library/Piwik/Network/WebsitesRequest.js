@@ -220,7 +220,7 @@ Piwik.Network.WebsitesRequest = function () {
 
             site.sparklineUrl     = '';
             if (this.showMultiChart) {
-                var graph         = Piwik.require('Graph');
+                var graph         = Piwik.require('PiwikGraph');
                 
                 site.sparklineUrl = graph.getSparklineUrl(site.idsite, account.accessUrl, account.tokenAuth);
             }

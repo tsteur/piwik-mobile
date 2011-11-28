@@ -75,8 +75,6 @@ Piwik.UI.Graph = function () {
         // available height? for example 20% of the available height and min-height: 150
 
         var graphUrl     = this.getParam('graphUrl', '');
-
-        
         var graph        = this.getParam('graph');
         var fullGraphUrl = graph.appendSize(graphUrl, width, height, !Piwik.isAndroid);
         
