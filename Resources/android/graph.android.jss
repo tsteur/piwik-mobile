@@ -35,4 +35,5 @@
 
 #graphImage {
     zIndex: 1;
+    defaultImage: 'images/graphDefault.png';
 }

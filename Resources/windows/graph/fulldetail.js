@@ -72,6 +72,7 @@ function window (params) {
                                        canScale: !Piwik.isAndroid,
                                        hires: !Piwik.isAndroid,
                                        enableZoomControls: false,
+                                       className: 'fullgraphImage',
                                        image: graphUrlWithSize});
 
     this.add(imageView);
@@ -111,6 +112,7 @@ function window (params) {
                                                       height:  pictureHeight,
                                                       canScale: !Piwik.isAndroid,
                                                       hires: !Piwik.isAndroid,
+                                                      defaultImage: 'images/graphDefault.png',
                                                       enableZoomControls: false,
                                                       image: graphUrlWithSize});
             that.add(imageView);

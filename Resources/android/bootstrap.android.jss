@@ -74,6 +74,13 @@
 }
 
 /**
+ * window graph/fulldetail.js
+ */
+.fullgraphImage {
+    defaultImage: 'images/graphDefault.png';
+}
+
+/**
  * window help/about.js
  */
 #aboutPiwikView {
