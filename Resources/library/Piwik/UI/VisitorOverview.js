@@ -43,8 +43,13 @@ Piwik.UI.VisitorOverview = function () {
 
         var visitor   = this.getParam('visitor');
         var accessUrl = this.getParam('accessUrl', '');
+        
+        var rowClass  = 'visitorOverviewTableViewRow';
+        if (visitor && visitor.goalConversions) {
+            rowClass  = 'visitorOverviewAchievedGoalTableViewRow';
+        }
 
-        this.row      = Ti.UI.createTableViewRow({className: 'visitorOverviewTableViewRow'});
+        this.row      = Ti.UI.createTableViewRow({className: rowClass});
 
         if (!visitor) {
             Piwik.Log.warn('Not able to render VisitorOverview. Visitor is not given',

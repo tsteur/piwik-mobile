@@ -12,6 +12,13 @@
     height: 'auto';
 }
 
+.visitorOverviewAchievedGoalTableViewRow {
+    layout: 'vertical';
+    hasChild: true;
+    height: 'auto';
+    backgroundColor: '#f5f5f5';
+}
+
 #visitorOverviewDateView {
     top: 8;
     layout: 'horizontal';

@@ -13,6 +13,14 @@
     focusable: true;
 }
 
+.visitorOverviewAchievedGoalTableViewRow {
+    layout: 'vertical';
+    hasChild: true;
+    height: 'auto';
+    focusable: true;
+    backgroundColor: '#f5f5f5';
+}
+
 #visitorOverviewDateView {
     top: '8dp';
     layout: 'horizontal';
