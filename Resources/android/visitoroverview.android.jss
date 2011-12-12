@@ -18,7 +18,7 @@
     hasChild: true;
     height: 'auto';
     focusable: true;
-    backgroundColor: '#f5f5f5';
+    backgroundColor: '#FFFFC4';
 }
 
 #visitorOverviewDateView {

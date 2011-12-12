@@ -16,7 +16,7 @@
     layout: 'vertical';
     hasChild: true;
     height: 'auto';
-    backgroundColor: '#f5f5f5';
+    backgroundColor: '#FFFFC4';
 }
 
 #visitorOverviewDateView {
