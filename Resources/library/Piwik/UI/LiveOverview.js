@@ -45,7 +45,7 @@ Piwik.UI.LiveOverview = function () {
      *
      * @returns {Piwik.UI.LiveOverview} An instance of the current state.
      */
-    this.init = function () {
+    this.init = function () {
 
         this.row        = Ti.UI.createTableViewRow({className: 'liveOverviewTableViewRow'});
 
@@ -70,7 +70,7 @@ Piwik.UI.LiveOverview = function () {
      */
     this.refresh = function (params) {
 
-        if (params) {
+        if (params) {
             this.setParams(params);
         }
 

@@ -34,7 +34,7 @@ Piwik.UI.TableViewSection = function () {
      *
      * @param    {Object}    See {@link Piwik.UI.TableViewSection}
      */
-    this.init = function (params) {
+    this.init = function (params) {
 
         if (!params) {
             params = {};

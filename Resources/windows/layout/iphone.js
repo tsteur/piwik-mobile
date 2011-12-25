@@ -94,7 +94,7 @@ function window () {
         win.open();
         
         win.add(newWin);
-        win.addEventListener('close', function () {
+        win.addEventListener('close', function () {
             newWin.close();
         });
 

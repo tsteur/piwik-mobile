@@ -104,7 +104,7 @@ function window () {
 
         emailDialog.addEventListener('complete', function (event) {
 
-            if (Piwik.isIos && event && event.result && event.result == emailDialog.SENT) {
+            if (Piwik.isIos && event && event.result && event.result == emailDialog.SENT) {
                 // android doesn't give us useful result codes. it anyway shows a toast.
                 alert(_('Feedback_ThankYou'));
             }
@@ -116,7 +116,7 @@ function window () {
     Piwik.UI.OptionMenu.addItem({title: 'Email us'}, sendEmail);
     this.addEventListener('focusWindow', function () {
 
-        if (Piwik.isIos) {
+        if (Piwik.isIos) {
             var emailus = Ti.UI.createButton({title: 'Email us'});
             emailus.addEventListener('click', sendEmail);
             that.rootWindow.rightNavButton = emailus;
@@ -124,7 +124,7 @@ function window () {
 
     });
 
-    this.open = function () {
+    this.open = function () {
 
     };
 }

@@ -59,7 +59,7 @@ Piwik.UI.WebsitesList = function () {
         var searchBar     = Ti.UI.createSearchBar({id: 'websiteSearchBar',
                                                    hintText: _('Mobile_SearchWebsite')});
 
-        searchBar.addEventListener('return', function (event) {
+        searchBar.addEventListener('return', function (event) {
 
             if (!event) {
 
@@ -74,7 +74,7 @@ Piwik.UI.WebsitesList = function () {
             searchBar.blur();
         });
 
-        searchBar.addEventListener('cancel', function () {
+        searchBar.addEventListener('cancel', function () {
 
             searchBar.value = '';
             searchBar.blur();
@@ -83,12 +83,12 @@ Piwik.UI.WebsitesList = function () {
             refresh.refresh();
         });
         
-        win.addEventListener('blurWindow', function () {
+        win.addEventListener('blurWindow', function () {
             searchBar.hide();
             searchBar.blur();
         });
 
-        win.addEventListener('focusWindow', function () {
+        win.addEventListener('focusWindow', function () {
             searchBar.show();
         });
 
@@ -109,7 +109,7 @@ Piwik.UI.WebsitesList = function () {
 
         refresh = this.create('Refresh', {tableView: tableview});
 
-        refresh.addEventListener('onRefresh', function () {
+        refresh.addEventListener('onRefresh', function () {
 
             // remove all tableview rows. This makes sure there are no rendering issues when setting
             // new rows afterwards.
@@ -129,7 +129,7 @@ Piwik.UI.WebsitesList = function () {
 
             refresh.refreshDone();
 
-            if (!event || !event.sites || !event.sites.length) {
+            if (!event || !event.sites || !event.sites.length) {
 
                 return;
             }
@@ -167,7 +167,7 @@ Piwik.UI.WebsitesList = function () {
                                                        className: 'websiteTableViewRow'}));
             }
             
-            if (event && event.achievedSitesLimit) {
+            if (event && event.achievedSitesLimit) {
                 
                 var searchHintRow     = Ti.UI.createTableViewRow({className: 'searchHintTableViewRow'});
                 var searchBarHintText = String.format(_('Mobile_UseSearchBarHint'), 

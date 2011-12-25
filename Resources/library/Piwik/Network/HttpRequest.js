@@ -223,7 +223,7 @@ Piwik.Network.HttpRequest = function () {
      *
      * @returns   {boolean}   True if there was a pending request which we have aborted. False otherwise.
      */
-    this.abort = function () {
+    this.abort = function () {
 
         if (this.xhr && this.xhr.abort) {
 
@@ -231,7 +231,7 @@ Piwik.Network.HttpRequest = function () {
             this.sendErrors = false;
             
             // make sure no callback method will be called.
-            this.setCallback({}, function () {});
+            this.setCallback({}, function () {});
             
             this.xhr.abort();
 
@@ -443,7 +443,7 @@ Piwik.Network.HttpRequest = function () {
             return false;
         }
 
-        if (this.errorMessageSent) {
+        if (this.errorMessageSent) {
             // an error message was already displayed. Do not display an error again.
 
             return false;
@@ -460,7 +460,7 @@ Piwik.Network.HttpRequest = function () {
     /**
      * The onload method will be called as soon as the load or error event was executed. 
      */
-    this.onload = function () {
+    this.onload = function () {
         // overwrite me
     };
 

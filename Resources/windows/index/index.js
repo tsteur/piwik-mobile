@@ -32,7 +32,7 @@ function window () {
      */
     this.menuOptions  = {};
 
-    if (!Piwik.isIpad) {
+    if (!Piwik.isIpad) {
        // Piwik.Log.warn(this.createCommand('OpenSettingsCommand'), 'f');
         this.menuOptions  = {commands: [this.createCommand('OpenSettingsCommand')]};
     }

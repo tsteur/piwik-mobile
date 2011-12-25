@@ -72,7 +72,7 @@ Piwik.UI.View = function () {
      * @param   {Function}   event      An event object that will be passed to the callback function which was added
      *                                  via addEventListener.
      */
-    this.fireEvent = function (name, event) {
+    this.fireEvent = function (name, event) {
 
         var window = this.getParam('window');
         if (window) {
@@ -98,7 +98,7 @@ Piwik.UI.View = function () {
      * @param   {string}     name       Name of the event you want to listen to.
      * @param   {Function}   callback   Callback function to invoke when the event is fired
      */
-    this.addEventListener = function (name, callback) {
+    this.addEventListener = function (name, callback) {
 
         var window = this.getParam('window');
         if (window) {
@@ -112,7 +112,7 @@ Piwik.UI.View = function () {
      * @param   {string}     name       Name of the event you want to remove.
      * @param   {Function}   callback   Callback function passed in addEventListener.
      */
-    this.removeEventListener = function (name, callback) {
+    this.removeEventListener = function (name, callback) {
 
         var window = this.getParam('window');
         if (window) {

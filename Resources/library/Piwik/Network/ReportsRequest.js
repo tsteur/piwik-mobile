@@ -85,7 +85,7 @@ Piwik.Network.ReportsRequest = function () {
         if (!params.reload
             && cachedReportData
             && (cachedReportData instanceof Array) 
-            && 0 < cachedReportData.length) {
+            && 0 < cachedReportData.length) {
             // we already have a cached result
 
             this.availableReports = cachedReportData;
@@ -134,7 +134,7 @@ Piwik.Network.ReportsRequest = function () {
      *
      * @fires Piwik.Network.ReportsRequest#event:onload
      */
-    this.fire = function () {
+    this.fire = function () {
 
         var eventResult = {type: 'onload',
                            availableReports: this.availableReports,

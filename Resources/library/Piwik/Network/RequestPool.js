@@ -109,7 +109,7 @@ Piwik.Network.RequestPool = function () {
         for (var index = 0; index < this.attachedRequests.length; index++) {
             call = this.attachedRequests[index];
 
-            call.onload = function () {
+            call.onload = function () {
                 that.verifyAllResultsReceived();
             };
 
@@ -125,7 +125,7 @@ Piwik.Network.RequestPool = function () {
                 return false;
             };
 
-            if (call.send) {
+            if (call.send) {
                 call.send();
             } else if (call.handle) {
                 call.handle();
@@ -137,7 +137,7 @@ Piwik.Network.RequestPool = function () {
      * Abort all previous fired requests. Does not execute any callback. Does not send any error message to the user.
      * Does reset the complete RequestPool after aborting each request.
      */
-    this.abort = function () {
+    this.abort = function () {
 
         // make sure no callback method will be executed
         this.context                      = null;

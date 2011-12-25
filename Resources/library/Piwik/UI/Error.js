@@ -66,13 +66,13 @@ Piwik.UI.Error = function () {
         var type        = this.getParam('type', 'unknown');
         var errorCode   = this.getParam('errorCode', '0');
 
-        if (exception && exception instanceof Error) {
+        if (exception && exception instanceof Error) {
 
             if (exception.name) {
                 type = exception.name;
             }
 
-            if (exception.sourceURL) {
+            if (exception.sourceURL) {
                 file = exception.sourceURL;
             }
 

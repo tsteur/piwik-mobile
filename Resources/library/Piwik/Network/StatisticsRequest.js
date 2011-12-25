@@ -215,7 +215,7 @@ Piwik.Network.StatisticsRequest = function () {
         var dateSession      = session.get('piwik_parameter_date');
 
         this.period          = params.period || periodSession;
-        this.date            = params.date || dateSession;
+        this.date            = params.date || dateSession;
         this.showAll         = params.showAll || this.showAll;
         this.report          = params.report;
         this.sortOrderColumn = this._getSortOrder(this.report);
@@ -338,7 +338,7 @@ Piwik.Network.StatisticsRequest = function () {
         if (report && report.metrics) {
             if (!report.metrics[sortOrder]) {
                 // define another sortOrder if our prefered sortOrder is not available
-                for (var metricName in report.metrics) {
+                for (var metricName in report.metrics) {
                     sortOrder = metricName;
                 }
             }
@@ -415,7 +415,7 @@ Piwik.Network.StatisticsRequest = function () {
             for (var key in response.reportData) {
 
                 label = key;
-                if (response.columns && response.columns[key]) {
+                if (response.columns && response.columns[key]) {
                     label = response.columns[key];
                 }
                 

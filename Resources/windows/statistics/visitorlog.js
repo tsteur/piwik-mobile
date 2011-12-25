@@ -44,7 +44,7 @@ function window (params) {
 
     this.add(tableView);
 
-    if (!site || !site.accountId) {
+    if (!site || !site.accountId) {
         //@todo shall we close the window?
         Piwik.Log.warn('Missing site parameter, can not display window', 'statistics/live::window');
 
@@ -76,13 +76,13 @@ function window (params) {
 
     var accessUrl        = ('' + account.accessUrl).formatAccessUrl();
 
-    refresh.addEventListener('onRefresh', function () {
+    refresh.addEventListener('onRefresh', function () {
 
         request.send(params);
     });
 
     tableView.addEventListener('click', function (event) {
-        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
+        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
 
             return;
         }

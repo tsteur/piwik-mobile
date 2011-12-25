@@ -108,7 +108,7 @@ Piwik.UI.OptionMenu = new function () {
 
         var view = Piwik.UI.currentWindow;
 
-        if (!view) {
+        if (!view) {
             Piwik.Log.warn("Can't add item, no window exists", 'Piwik.UI.OptionMenu::addItem');
             // no window exists at this moment
             

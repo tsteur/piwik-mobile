@@ -57,7 +57,7 @@ function window () {
     view.add(piwikDevLink);
     view.add(gplContent);
 
-    this.open = function () {
+    this.open = function () {
 
     };
 }

@@ -133,7 +133,7 @@ Piwik.Network.AccountRequest = function () {
             this.accountId = account.id;
         }
 
-        if (!account || !account.accessUrl || 'http' !== account.accessUrl.substr(0, 4).toLowerCase()) {
+        if (!account || !account.accessUrl || 'http' !== account.accessUrl.substr(0, 4).toLowerCase()) {
 
             this.fireEvent('onInvalidUrl', {type: 'onInvalidUrl', url: account.accessUrl});
 
@@ -168,7 +168,7 @@ Piwik.Network.AccountRequest = function () {
         
         lastUrlChar   = account.accessUrl.substr(account.accessUrl.length - 1, 1);
         
-        if ('/' === lastUrlChar) {
+        if ('/' === lastUrlChar) {
             // if url doesn't end with *.php, append index.php automatically. we do not verify whether it ends with
             // index.php so the user is able to use for example xyz.php
             account.accessUrl = account.accessUrl + 'index.php';

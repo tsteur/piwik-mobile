@@ -58,7 +58,7 @@ Piwik.UI.ModalWindow = function () {
         var that  = this;
         var title = this.getParam('title', '');
 
-        if (Piwik.isIpad) {
+        if (Piwik.isIpad) {
             win                 = this.create('Popover', {width: 320, 
                                                           height: 460, 
                                                           title: title});
@@ -87,7 +87,7 @@ Piwik.UI.ModalWindow = function () {
                 that.modalWindowIsNowClosed();
             });
 
-        } else if (Piwik.isAndroid) {
+        } else if (Piwik.isAndroid) {
 
             var crt  = Ti.UI.currentWindow;
             win      = Ti.UI.createWindow({className: 'modalWindow',
@@ -128,7 +128,7 @@ Piwik.UI.ModalWindow = function () {
         }
         
         win.setRightNavButton(view);
-    }
+    };
     
     /**
      * Get the view where everything shall be rendered into. For example on Android, the content should not directly
@@ -136,9 +136,9 @@ Piwik.UI.ModalWindow = function () {
      * 
      * @returns {Ti.UI.View|Ti.UI.Window}   An instance of the opened window or view.
      */
-    this.getView = function () {
+    this.getView = function () {
         return viewToAddOtherViews;
-    }
+    };
     
     /**
      * Open the modal window or popover. You have to call this. Otherwise the content will not be visible.
@@ -150,13 +150,13 @@ Piwik.UI.ModalWindow = function () {
             return;
         }
        
-        if (this.isAModalWindowOpened() && this.counter < 7) {
+        if (this.isAModalWindowOpened() && this.counter < 7) {
             this.counter++;
             // the app will crash if we open a modal window while another modal window is opened or not completely 
             // closed. So wait another 300 ms. Execute the timeout max 7 times.
             
             var that = this;
-            setTimeout(function () {
+            setTimeout(function () {
                 that.open();
             }, 300);
             
@@ -179,7 +179,7 @@ Piwik.UI.ModalWindow = function () {
         } else {
             win.open({modal: true});
         }
-    }
+    };
     
     /**
      * Detects whether there is currently a modal window opened. Unless a modal window is opened, we should not 
@@ -187,35 +187,35 @@ Piwik.UI.ModalWindow = function () {
      * 
      * @returns {bool} true if there is already a modal window opened, false otherwise.
      */
-    this.isAModalWindowOpened = function () {
+    this.isAModalWindowOpened = function () {
         
-        if (!Piwik.isIphone) {
+        if (!Piwik.isIphone) {
             // we only have to handle this on iPhone
             return false;
         }
         
         return Piwik.require('App/Session').get('modal_window_opened', false);
-    }
+    };
     
     /**
      * Mark that the modal window is no longer opened.
      */
     this.modalWindowIsNowClosed = function () {
-        if (Piwik.isIphone) {
+        if (Piwik.isIphone) {
             
             Piwik.require('App/Session').set('modal_window_opened', false);
         }
-    }
+    };
 
     /**
      * Mark that a modal window is now opened.
      */
     this.modalWindowIsNowOpened = function () {
-        if (Piwik.isIphone) {
+        if (Piwik.isIphone) {
             
             Piwik.require('App/Session').set('modal_window_opened', true);
         }
-    }
+    };
     
     /**
      * Close an already opened window/popover.
@@ -223,17 +223,17 @@ Piwik.UI.ModalWindow = function () {
     this.close = function () {
 
         try {
-            if (win && (Piwik.isAndroid || Piwik.isIphone)) {
+            if (win && (Piwik.isAndroid || Piwik.isIphone)) {
                 // window
                 win.close();
             } else if (win && Piwik.isIpad) {
                 // popover
                 win.hide();
             }
-        } catch (e) {
+        } catch (e) {
             Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.ModalWindow::onChooseSite');
         }
-    }
+    };
 };
 
 /**

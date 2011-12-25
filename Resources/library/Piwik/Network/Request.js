@@ -52,7 +52,7 @@ Piwik.Network.Request = function () {
      * @param   {Function}   event      An event object that will be passed to the callback function which was added
      *                                  via addEventListener.
      */
-    this.fireEvent = function (name, event) {
+    this.fireEvent = function (name, event) {
 
         if (!this.eventPrefix) {
             this.eventPrefix = String(Math.random()).slice(2,8);
@@ -67,4 +67,4 @@ Piwik.Network.Request = function () {
             Ti.App.fireEvent(this.eventPrefix + name, event);
         }
     };
-}
+};

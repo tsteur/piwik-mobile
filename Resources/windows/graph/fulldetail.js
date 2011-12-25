@@ -21,7 +21,7 @@
  */
 function window (params) {
 
-    if (!params) {
+    if (!params) {
 
         return;
     }
@@ -38,7 +38,7 @@ function window (params) {
 
     var graphUrl      = params.graphUrl;
 
-    if (!graphUrl) {
+    if (!graphUrl) {
         // a graphurl is required.
 
         // @todo close this window or display an info message in such a case?
@@ -79,8 +79,8 @@ function window (params) {
     
     var that = this;
     
-    function rotateImageOnAndroid (event) {
-        if (!imageView || !that || !event) {
+    function rotateImageOnAndroid (event) {
+        if (!imageView || !that || !event) {
             
             return;
         }
@@ -88,7 +88,7 @@ function window (params) {
         try {
             // we have to detect current width/height after orientation change... that.width/that.height is not correct
             if (Ti.Gesture.isLandscape(event.orientation)) {
-                if (isLandscape) {
+                if (isLandscape) {
                     pictureWidth  = originalWidth - 20;
                     pictureHeight = originalHeight - 20;
                 } else {
@@ -96,7 +96,7 @@ function window (params) {
                     pictureHeight = originalWidth - navBarHeight - 40;
                 }
             } else {
-                if (isLandscape) {
+                if (isLandscape) {
                     pictureWidth  = originalHeight;
                     pictureHeight = originalWidth - navBarHeight - 40;
                 } else {
@@ -116,14 +116,14 @@ function window (params) {
                                                       enableZoomControls: false,
                                                       image: graphUrlWithSize});
             that.add(imageView);
-        } catch (e) {
+        } catch (e) {
             Piwik.Log.warn('Failed to update (remove and add) graph', 'graph/fulldetail::window');
             Piwik.Log.warn(e, 'graph/fulldetail::window');
         }
     }
         
-    function rotateImage (event) {
-        if (!imageView || !that) {
+    function rotateImage (event) {
+        if (!imageView || !that) {
             
             return;
         }
@@ -139,7 +139,7 @@ function window (params) {
     }
     
     Ti.Gesture.addEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
-    this.addEventListener('blurWindow', function () {
+    this.addEventListener('blurWindow', function () {
         try {
             Ti.Gesture.removeEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
         } catch (e) {

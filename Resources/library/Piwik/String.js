@@ -114,17 +114,17 @@ String.prototype.trim = function () {
  * @returns {string|number}  The converted string on Android, the parsed integer on iOS
  */
 String.prototype.toSizeUnit = function () {
-    if (!Piwik.isAndroid) {
+    if (!Piwik.isAndroid) {
 
         return parseInt(this, 10);
     }
 
-    if (!this) {
+    if (!this) {
 
         return this;
     }
 
-    if (-1 == this.indexOf('dp')) {
+    if (-1 == this.indexOf('dp')) {
 
         return this + 'dp';
     }
@@ -150,12 +150,12 @@ String.prototype.formatAccessUrl = function () {
         return '';
     }
 
-    if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
+    if ('/' == accessUrl.substr(accessUrl.length - 1, 1)) {
 
         return accessUrl;
     }
 
-    if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
+    if ('.php' == accessUrl.substr(accessUrl.length -4, 4).toLowerCase()) {
         var lastSlash = accessUrl.lastIndexOf('/');
         accessUrl     = accessUrl.substr(0, lastSlash + 1);
 

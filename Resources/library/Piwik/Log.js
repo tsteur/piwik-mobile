@@ -33,11 +33,11 @@ Piwik.Log = new function () {
      * 
      * @param {Object}   profiler
      */
-    this.setProfiler = function (profiler) {
-        if (!profiler || !profiler.step) {
+    this.setProfiler = function (profiler) {
+        if (!profiler || !profiler.step) {
             // has the profiler implemented the required method 'step'? Do not accept the logger if not.
 
-            if (this.ENABLED) {
+            if (this.ENABLED) {
                 Ti.API.warn('No valid profiler set', 'Piwik.Log::setProfiler');
             }
 
@@ -78,7 +78,7 @@ Piwik.Log = new function () {
 
         // trigger step() before logging the message. This ensures the profiling output appears in log before the next
         // logging message.
-        if (this.profiler) {
+        if (this.profiler) {
             this.profiler.step();
         }
 
@@ -145,7 +145,7 @@ Piwik.Log = new function () {
 
         logMessage     += this.stringify(message);
 
-        if (this.profiler) {
+        if (this.profiler) {
             this.profiler.step();
         }
 
@@ -178,7 +178,7 @@ Piwik.Log = new function () {
 
         logMessage     += this.stringify(message);
 
-        if (this.profiler) {
+        if (this.profiler) {
             this.profiler.step();
         }
 

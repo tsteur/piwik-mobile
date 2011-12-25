@@ -73,7 +73,7 @@ Piwik.UI.Refresh = function () {
         Piwik.UI.OptionMenu.addItem({title: _('Mobile_Refresh'),
                                      icon: 'images/menu_refresh.png'}, function () {
 
-            if (!that.reloading) {
+            if (!that.reloading) {
 
                 var refreshEvent = {title: 'Refresh Page',
                                     url: '/refresh/android-option-menu'};
@@ -85,7 +85,7 @@ Piwik.UI.Refresh = function () {
 
         this.attachHeaderView();
 
-        if (!Piwik.isIos) {
+        if (!Piwik.isIos) {
             this.refresh();
         }
 
@@ -98,7 +98,7 @@ Piwik.UI.Refresh = function () {
      * 
      * @see Piwik.UI.View#addEventListener
      */
-    this.addEventListener = function (name, callback) {
+    this.addEventListener = function (name, callback) {
 
         var tableView  = this.getParam('tableView');
 
@@ -133,14 +133,14 @@ Piwik.UI.Refresh = function () {
      *
      * @fires Piwik.UI.Refresh#event:onRefresh
      */
-    this.refresh = function () {
-        if (!Piwik.isIos) {
+    this.refresh = function () {
+        if (!Piwik.isIos) {
 
             this.reloading = true;
             
             this.fireEvent('onRefresh', {type: 'onRefresh'});
 
-            if (!this.activityIndicator) {
+            if (!this.activityIndicator) {
                 // create the activity indicator if not already created
                 this.activityIndicator = Piwik.require('UI/ActivityIndicator');
                 this.activityIndicator.setParams({window: this.getParam('window')});
@@ -175,12 +175,12 @@ Piwik.UI.Refresh = function () {
      * we have to execute this synchronous. The event would be executed async and some features would not work like
      * tableview.scrollToTop while setContentInsets is running in parallel.
      */
-    this.refreshDone = function () {
+    this.refreshDone = function () {
         this.reloading = false;
         
-        if (!Piwik.isIos) {
+        if (!Piwik.isIos) {
 
-            if (this.activityIndicator) {
+            if (this.activityIndicator) {
                 this.activityIndicator.hide();
             }
 
@@ -200,7 +200,7 @@ Piwik.UI.Refresh = function () {
      */
     this.attachHeaderView = function () {
 
-        if (!Piwik.isIos) {
+        if (!Piwik.isIos) {
             // this feature is only supported on iOS.
 
             return;
@@ -208,7 +208,7 @@ Piwik.UI.Refresh = function () {
         
         var tableView = this.getParam('tableView');
 
-        if (!tableView) {
+        if (!tableView) {
 
             return;
         }

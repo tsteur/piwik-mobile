@@ -46,7 +46,7 @@ function window (params) {
 
     var site      = params.site;
 
-    if (!site || !site.accountId) {
+    if (!site || !site.accountId) {
         //@todo shall we close the window?
         Piwik.Log.warn('Missing site parameter, can not display window', 'statistics/live::window');
 
@@ -74,7 +74,7 @@ function window (params) {
         account        = accountManager.getAccountById(event.site.accountId);
         latestRequestedTimestamp = 0;
         
-        if (!account) {
+        if (!account) {
             
             return;
         }
@@ -130,7 +130,7 @@ function window (params) {
         });
     }
 
-    refresh.addEventListener('onRefresh', function () {
+    refresh.addEventListener('onRefresh', function () {
         if (that.refreshTimer) {
             // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
             // request in a few seconds again
@@ -139,7 +139,7 @@ function window (params) {
         
         // set the latest requested timestamp to make sure we don't fetch the same users again which are already
         // displayed
-        if (latestRequestedTimestamp) {
+        if (latestRequestedTimestamp) {
             params.minTimestamp = latestRequestedTimestamp;
         }
         
@@ -149,7 +149,7 @@ function window (params) {
     });
 
     tableView.addEventListener('click', function (event) {
-        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
+        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
 
             return;
         }
@@ -178,7 +178,7 @@ function window (params) {
 
         refresh.refreshDone();
 
-        if (!event.details || !event.details.length) {
+        if (!event.details || !event.details.length) {
 
             if (!that.lastMinutes || !that.lastHours) {
                 // make sure at least live overview will be rendered

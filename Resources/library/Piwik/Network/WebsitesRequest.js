@@ -118,7 +118,7 @@ Piwik.Network.WebsitesRequest = function () {
         requestPool      = Piwik.require('Network/RequestPool');
         requestPool.setContext(this);
 
-        if (!this.accounts || !this.accounts.length) {
+        if (!this.accounts || !this.accounts.length) {
             // no accounts configured
             this.loaded();
 
@@ -232,7 +232,7 @@ Piwik.Network.WebsitesRequest = function () {
         }
 
         if (numFoundSitesPerAccount && 
-            config.piwik.numDisplayedWebsites <= numFoundSitesPerAccount) {
+            config.piwik.numDisplayedWebsites <= numFoundSitesPerAccount) {
             this.achievedSitesLimit = true;
         }
         
@@ -245,9 +245,9 @@ Piwik.Network.WebsitesRequest = function () {
      *
      * @fires Piwik.Network.WebsitesRequest#event:onload
      */
-    this.loaded = function () {
+    this.loaded = function () {
 
-        if (!this.filterUsed) {
+        if (!this.filterUsed) {
             // cache only if no filter was used
             var session = Piwik.require('App/Session');
             session.set('piwik_sites_allowed', this.sites);

@@ -43,7 +43,7 @@ Piwik.UI.Visitor = function () {
      *
      * @returns {Piwik.UI.Visitor} An instance of the current state.
      */
-    this.init = function () {
+    this.init = function () {
 
         var visitor   = this.getParam('visitor');
 
@@ -114,7 +114,7 @@ Piwik.UI.Visitor = function () {
                                                         value: visitor.visitIp}));
         }
         
-        if (visitor.visitorType) {
+        if (visitor.visitorType) {
             var visitorTypeText = visitor.visitorType;
             switch (visitor.visitorType) {
                 case 'new':
@@ -125,7 +125,7 @@ Piwik.UI.Visitor = function () {
 
                     visitorTypeText = '' + visitor.visitorType;
 
-                    if (visitor.visitCount) {
+                    if (visitor.visitCount) {
                         var visits = '' + (parseInt(visitor.visitCount, 10));
                         visits     = String.format(_('VisitsSummary_NbVisits'), visits);
 
@@ -189,7 +189,7 @@ Piwik.UI.Visitor = function () {
             this.rows.push(referrerRow);
         }
 
-        if (visitor.country) {
+        if (visitor.country) {
             this.rows.push(this.create('TableViewRow', {title: _('UserCountry_Country'),
                                                         value: visitor.country,
                                                         className: 'visitorTableViewRow'}));
@@ -206,7 +206,7 @@ Piwik.UI.Visitor = function () {
      * $VARNAME     $VARVALUE
      * $VARNAME     $VARVALUE
      */
-    this.createCustomVariables = function () {
+    this.createCustomVariables = function () {
 
         var visitor = this.getParam('visitor', {});
 
@@ -239,7 +239,7 @@ Piwik.UI.Visitor = function () {
      * Resolution   $RESOLUTION
      * Plugins      $PLUGINICONS
      */
-    this.createSystem = function () {
+    this.createSystem = function () {
 
         var visitor   = this.getParam('visitor', {});
         var accessUrl = this.getParam('accessUrl', '');
@@ -253,7 +253,7 @@ Piwik.UI.Visitor = function () {
             // leftImage: {url: accessUrl + visitor.operatingSystemIcon}
         }
 
-        if (visitor.browserName) {
+        if (visitor.browserName) {
             this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnBrowser'),
                                                         className: 'visitorTableViewRow',
                                                         value: visitor.browserName}));
@@ -268,13 +268,13 @@ Piwik.UI.Visitor = function () {
             // accessUrl + visitor.screenTypeIcon
         }
 
-        if (resolution) {
+        if (resolution) {
             this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnResolution'),
                                                         className: 'visitorTableViewRow',
                                                         value: resolution}));
         }
 
-        if (visitor.pluginsIcons && visitor.pluginsIcons.length) {
+        if (visitor.pluginsIcons && visitor.pluginsIcons.length) {
 
             var row = this.create('TableViewRow', {className: 'visitorTableViewRow'});
             row.add(Ti.UI.createLabel({text: _('UserSettings_Plugins'),
@@ -300,10 +300,10 @@ Piwik.UI.Visitor = function () {
     /**
      * Triggers the rendering of several actions.
      */
-    this.createActionDetails = function () {
+    this.createActionDetails = function () {
 
         var visitor = this.getParam('visitor', {});
-        if (!visitor.actionDetails || !visitor.actionDetails.length) {
+        if (!visitor.actionDetails || !visitor.actionDetails.length) {
 
             return;
         }
@@ -316,7 +316,7 @@ Piwik.UI.Visitor = function () {
         for (var index = 0; index < visitor.actionDetails.length; index++) {
             var actionDetail = visitor.actionDetails[index];
 
-            if (!actionDetail) {
+            if (!actionDetail) {
                 continue;
             }
 
@@ -384,7 +384,7 @@ Piwik.UI.Visitor = function () {
 
         var view     = Ti.UI.createView({id: 'visitorActionDefaultHeadlineView'});
 
-        if (accessUrl && actionDetail.icon) {
+        if (accessUrl && actionDetail.icon) {
             view.add(Ti.UI.createImageView({image: accessUrl + actionDetail.icon,
                                             id: 'visitorActionDefaultIconImageView'}));
         }
@@ -436,14 +436,14 @@ Piwik.UI.Visitor = function () {
      *
      * @param {Object} actionDetail
      */
-    this.createEcommerceAction = function (actionDetail) {
+    this.createEcommerceAction = function (actionDetail) {
         var visitor       = this.getParam('visitor', {});
         var accessUrl     = this.getParam('accessUrl', '');
         var row           = Ti.UI.createTableViewRow({className: 'visitorActionEcommerceTableViewRow'});
         var ecommerceView = Ti.UI.createView({id: 'visitorActionEcommerceHeadlineView'});
         var ecommerceText = '';
 
-        switch (actionDetail.type) {
+        switch (actionDetail.type) {
             case 'ecommerceOrder':
                 ecommerceText = _('Goals_EcommerceOrder');
 
@@ -458,7 +458,7 @@ Piwik.UI.Visitor = function () {
                 ecommerceText = _('Goals_Ecommerce');
         }
 
-        if (actionDetail.orderId) {
+        if (actionDetail.orderId) {
             ecommerceText = String.format('%s (%s)', '' + ecommerceText, '' + actionDetail.orderId);
         }
 
@@ -474,8 +474,8 @@ Piwik.UI.Visitor = function () {
 
         var itemDetailsView = Ti.UI.createView({id: 'visitorActionEcommerceDetailsView'});
 
-        if (actionDetail.itemDetails) {
-            for (var index = 0; index < actionDetail.itemDetails.length; index++) {
+        if (actionDetail.itemDetails) {
+            for (var index = 0; index < actionDetail.itemDetails.length; index++) {
                 var item     = actionDetail.itemDetails[index];
                 var itemText = '';
 

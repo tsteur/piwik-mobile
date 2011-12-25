@@ -100,7 +100,7 @@ Piwik.UI.DatePicker = function () {
      *
      * @fires    Piwik.UI.DatePicker#event:onSet
      */
-    this.createIos = function (params) {
+    this.createIos = function (params) {
         
         var win   = this.create('ModalWindow', {title: _('General_ChooseDate'), 
                                                 openView: params.source ? params.source : null});
@@ -140,7 +140,7 @@ Piwik.UI.DatePicker = function () {
                                                bottom: datePicker.height,
                                                data: periods});
 
-        tableView.addEventListener('click', function (event) {
+        tableView.addEventListener('click', function (event) {
            for (var index = 0; index < 4; index++) {
                periods[index].hasCheck = false;
            }
@@ -161,7 +161,7 @@ Piwik.UI.DatePicker = function () {
                 that.fireEvent('onSet', myEvent);
                 
                 win.close();
-            } catch (e) {
+            } catch (e) {
                 Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
             }
         });
@@ -205,7 +205,7 @@ Piwik.UI.DatePicker = function () {
      */
     this._updateDisplayedValues = function () {
 
-        if (!this.dateDialog) {
+        if (!this.dateDialog) {
             Piwik.Log.warn('dateDialog does not exist: ' + Piwik.osName, 'Piwik.UI.DatePicker::updateDisplayedValues');
 
             return;
@@ -325,7 +325,7 @@ Piwik.UI.DatePicker = function () {
      */
     this.addButtons = function (dateDialog) {
 
-        if (!dateDialog) {
+        if (!dateDialog) {
             Piwik.Log.warn('dateDialog does not exist: ' + Piwik.osName, 'Piwik.UI.DatePicker::addButtons');
 
             return;
@@ -338,7 +338,7 @@ Piwik.UI.DatePicker = function () {
 
         dateDialog.addEventListener('click', function (event) {
 
-            if (!event || !event.index) {
+            if (!event || !event.index) {
                 // user pressed cancel button
                 
                 return;

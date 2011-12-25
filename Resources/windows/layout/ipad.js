@@ -172,7 +172,7 @@ function window () {
                     layout._modalWindow = null;
                     modalWin            = null;
                     layout._modalNav    = null;
-                } catch (e) {
+                } catch (e) {
                     Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
                 }
             });
@@ -192,7 +192,7 @@ function window () {
         
         this._modalWindows.push(newWin);
         
-        modalWin.addEventListener('close', function () {
+        modalWin.addEventListener('close', function () {
             // window was closed via navigation group
             if (this.url) {
                 // this == newWin
@@ -224,7 +224,7 @@ function window () {
      * 
      * @private
      */
-    this._addWindowToDetailView = function (newWin) {
+    this._addWindowToDetailView = function (newWin) {
         var currentWindow = this._getCurrentWindow();
         if (currentWindow) {
             
@@ -309,7 +309,7 @@ function window () {
             // remove window from main window so that it will be no longer visible
             piwikWindow.rootWindow.remove(piwikWindow);
             
-        } catch (e) {
+        } catch (e) {
             Piwik.Log.warn('Failed to remove PiwikWin from rootWindow: ' + e, 'iPadLayout::removeWindow');
         }
 

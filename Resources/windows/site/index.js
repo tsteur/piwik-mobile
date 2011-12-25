@@ -97,7 +97,7 @@ function window (params) {
     // we always want to force the reload (do not use a cached result) of the available reports if user presses
     // menu button 'reload', but not if window gets focus again.
     var forceRequestReload = true;
-    refresh.addEventListener('onRefresh', function () {
+    refresh.addEventListener('onRefresh', function () {
 
         // site has changed if the accountId is different or if idsite is different.
         var siteHasChanged = (site &&
@@ -147,13 +147,13 @@ function window (params) {
         }
     });
 
-    this.addEventListener('focusWindow', function () {
+    this.addEventListener('focusWindow', function () {
 
         forceRequestReload = false;
         refresh.refresh();
     });
 
-    request.addEventListener('onload', function (event) {
+    request.addEventListener('onload', function (event) {
 
         tableData          = [];
 

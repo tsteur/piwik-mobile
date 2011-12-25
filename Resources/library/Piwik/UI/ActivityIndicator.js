@@ -111,7 +111,7 @@ Piwik.UI.ActivityIndicator = function () {
                 if (this.numRequests > 1) {
                     // just update the text cause loading message is already visible
                     
-                    if (message && this.view.loadingMessage) {
+                    if (message && this.view.loadingMessage) {
                         this.view.loadingMessage.text = message;
                     } else if (this.view.loadingMessage) {
                         // default message
@@ -141,7 +141,7 @@ Piwik.UI.ActivityIndicator = function () {
                 if (this.numRequests > 1) {
                     // just update the text cause wait indicator is already visible
 
-                    if (win && win.waitIndicatorImage && message) {
+                    if (win && win.waitIndicatorImage && message) {
                         win.waitIndicatorImage.message = message;
                     }
 
@@ -216,7 +216,7 @@ Piwik.UI.ActivityIndicator = function () {
         
         this.view = this.getParam('window');
         
-        if (!this.view) {
+        if (!this.view) {
             return;
         }
         

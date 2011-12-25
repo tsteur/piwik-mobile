@@ -67,7 +67,7 @@ Piwik.UI.Header = function () {
      *
      * @returns {Titanium.UI.View|null} Returns null on iOS. The header view on all other platforms.
      */
-    this.getHeaderView = function () {
+    this.getHeaderView = function () {
         
         return this.headerView;  
     };

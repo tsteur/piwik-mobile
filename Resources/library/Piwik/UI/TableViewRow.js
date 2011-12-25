@@ -42,7 +42,7 @@ Piwik.UI.TableViewRow = function () {
      * 
      * @param    {Object}    See {@link Piwik.UI.TableViewRow}
      */
-    this.init = function (params) {
+    this.init = function (params) {
         
         if (!params) {
             params = {};
@@ -115,7 +115,7 @@ Piwik.UI.TableViewRow = function () {
         /** @memberOf Titanium.UI.TableViewRow */
         row.changeValue = function (value) {
 
-            if (!this.valueLabel && (value || '' === value || 0 === value)) {
+            if (!this.valueLabel && (value || '' === value || 0 === value)) {
 
                 this.valueLabel = Ti.UI.createLabel({
                     text: value,
@@ -124,7 +124,7 @@ Piwik.UI.TableViewRow = function () {
 
                 this.add(this.valueLabel);
 
-            } else if (this.valueLabel && (value || '' === value || 0 === value)) {
+            } else if (this.valueLabel && (value || '' === value || 0 === value)) {
 
                 this.valueLabel.text = value;
 

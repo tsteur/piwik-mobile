@@ -153,7 +153,7 @@ Piwik.Network.PiwikApiRequest = function () {
             parameter.format     = this.format;
         }
 
-        if (!parameter.method) {
+        if (!parameter.method) {
             parameter.method     = this.method;
         }
 

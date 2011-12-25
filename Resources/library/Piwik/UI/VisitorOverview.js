@@ -39,7 +39,7 @@ Piwik.UI.VisitorOverview = function () {
      *
      * @returns {Piwik.UI.LiveOverview} An instance of the current state.
      */
-    this.init = function () {
+    this.init = function () {
 
         var visitor   = this.getParam('visitor');
         var accessUrl = this.getParam('accessUrl', '');

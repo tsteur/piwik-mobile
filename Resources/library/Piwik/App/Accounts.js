@@ -294,7 +294,7 @@ Piwik.App.Accounts = function () {
         
         var values                 = this.getAccountById(id);
         
-        if (!values) {
+        if (!values) {
             
             return false;
         }

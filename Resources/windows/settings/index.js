@@ -387,7 +387,7 @@ function window () {
      * set in the open method, we have the opportunity to call the open method again and can therefore easily reload
      * the view. For example after changing the language.
      */
-    this.open = function () {
+    this.open = function () {
 
         var settings    = Piwik.require('App/Settings');
         var translation = Piwik.require('Locale/Translation');

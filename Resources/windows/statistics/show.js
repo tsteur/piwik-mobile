@@ -101,7 +101,7 @@ function window (params) {
         refresh.refresh();
     });
 
-    refresh.addEventListener('onRefresh', function () {
+    refresh.addEventListener('onRefresh', function () {
         // simple refresh using the same params
 
         tableView.setData([]);
@@ -111,7 +111,7 @@ function window (params) {
 
     request.addEventListener('onload', function (event) {
         
-        if (!event) {
+        if (!event) {
             return;
         }
         
@@ -143,7 +143,7 @@ function window (params) {
             var account         = accountManager.getAccountById(event.site.accountId);
             graphUrl            = event.metadata.imageGraphUrl;
             
-            if (event.sortOrderColumn) {
+            if (event.sortOrderColumn) {
                 graphUrl       += '&filter_sort_column=' + event.sortOrderColumn;
             }
             
@@ -159,7 +159,7 @@ function window (params) {
             optionDate = optionDate.toPiwikDate();
         }
         
-        if (!Piwik.isIpad) {
+        if (!Piwik.isIpad) {
             tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
         }
 

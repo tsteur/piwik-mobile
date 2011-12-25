@@ -107,7 +107,7 @@ Piwik.UI.createWindow = function (params) {
         // extend newWin
         Piwik.UI.Window.apply(newWin, []);
 
-        if (params.closeWindow) {
+        if (params.closeWindow) {
             params.closeWindow.close(true);
         }
 
@@ -268,7 +268,7 @@ Piwik.UI.createActivityIndicator = function (params) {
         
         return instance;
         
-    } catch (exception) {
+    } catch (exception) {
         
         var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCa27'});
         uiError.showErrorMessageToUser();
@@ -297,11 +297,11 @@ Piwik.UI.createError = function (params) {
 
         return instance;
         
-    } catch (exception) {
+    } catch (exception) {
         Piwik.Log.warn('Failed to create Error UI widget', 'UI::createError');
     }
 
-    return {showErrorMessageToUser: function () {}};
+    return {showErrorMessageToUser: function () {}};
 };
 
 /**

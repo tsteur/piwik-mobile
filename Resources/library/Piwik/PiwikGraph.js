@@ -107,7 +107,7 @@ Piwik.PiwikGraph = new function () {
         graphUrl        = graphUrl + '&' + requestUrl.encodeUrlParams();
         
         return graphUrl;
-    }
+    };
     
     /**
      * Exceptionally, the piwik api can be used to display sparklines. It automatically displays sparklines of the

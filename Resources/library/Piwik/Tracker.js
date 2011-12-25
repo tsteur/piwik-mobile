@@ -117,7 +117,7 @@ Piwik.Tracker = new function () {
     /**
      * Initializes the tracker.
      */
-    this.init = function () {
+    this.init = function () {
 
         visitCount = this._getVisitCount();
         uuid       = this._getUniqueId();
@@ -160,7 +160,7 @@ Piwik.Tracker = new function () {
      */
     this._getUniqueId = function () {
 
-        if (uuid) {
+        if (uuid) {
 
             return uuid;
         }
@@ -169,7 +169,7 @@ Piwik.Tracker = new function () {
         var cache      = Piwik.require('App/Cache');
         var cachedUUid = cache.get('tracking_visitor_uuid');
 
-        if (cachedUUid && cache.KEY_NOT_FOUND !== cachedUUid) {
+        if (cachedUUid && cache.KEY_NOT_FOUND !== cachedUUid) {
 
             uuid  = cachedUUid;
 
@@ -188,7 +188,7 @@ Piwik.Tracker = new function () {
      *
      * @type string
      */
-    this._generateUniqueId = function () {
+    this._generateUniqueId = function () {
 
         var now   = new Date();
         var nowTs = Math.round(now.getTime() / 1000);
@@ -213,7 +213,7 @@ Piwik.Tracker = new function () {
      *
      * @type number
      */
-    this._getVisitCount = function () {
+    this._getVisitCount = function () {
 
         if (visitCount) {
 
@@ -224,7 +224,7 @@ Piwik.Tracker = new function () {
         var cache            = Piwik.require('App/Cache');
         var cachedVisitCount = cache.get('tracking_visit_count');
 
-        if (cachedVisitCount && cache.KEY_NOT_FOUND !== cachedVisitCount) {
+        if (cachedVisitCount && cache.KEY_NOT_FOUND !== cachedVisitCount) {
 
             visitCount = cachedVisitCount;
 
@@ -232,7 +232,7 @@ Piwik.Tracker = new function () {
         }
 
         // first visit
-        if (!visitCount) {
+        if (!visitCount) {
 
             visitCount = 1;
         }
@@ -405,7 +405,7 @@ Piwik.Tracker = new function () {
         var numWebsites = 0;
         var numAccounts = Piwik.require('App/Accounts').getNumAccounts();
         
-        if ((websites instanceof Array) && 'undefined' !== (typeof websites.length)) {
+        if ((websites instanceof Array) && 'undefined' !== (typeof websites.length)) {
             numWebsites = websites.length;
         }
             
@@ -418,10 +418,10 @@ Piwik.Tracker = new function () {
         this.setCustomVariable(3, 'Locale', Ti.Platform.locale + '::' + Piwik.Locale.getLocale(), 'visit');
         this.setCustomVariable(4, 'Num Accounts', numAccounts, 'visit');
         
-        if (numWebsites) {
+        if (numWebsites) {
             this.setCustomVariable(5, 'Num Sites', numWebsites, 'visit');
         }
-    }
+    };
 
     /**
      * Detects whether tracking is enabled or disabled. It considers the config as well as whether the user has allowed
@@ -457,7 +457,7 @@ Piwik.Tracker = new function () {
             numTracksToday = 0;
         }
 
-        if (config.tracking.maxTracksPerDay && config.tracking.maxTracksPerDay <= numTracksToday) {
+        if (config.tracking.maxTracksPerDay && config.tracking.maxTracksPerDay <= numTracksToday) {
             // set maxTracksPerDay to 0 for unlimited tracks per day
             // otherwise do not track more than configured
 
@@ -480,7 +480,7 @@ Piwik.Tracker = new function () {
      * Mixin all required default parameter needed to execute a tracking request. For example siteId, custom variables
      * with visit scope, resolution, uuid, visitcount and so on.
      */
-    this._mixinDefaultParameter = function () {
+    this._mixinDefaultParameter = function () {
 
         if (!parameter) {
             parameter = {};
@@ -527,7 +527,7 @@ Piwik.Tracker = new function () {
      */
     this.askForPermission = function () {
 
-        if (!config.tracking.enabled) {
+        if (!config.tracking.enabled) {
 
             return;
         }
@@ -542,7 +542,7 @@ Piwik.Tracker = new function () {
 
         alertDialog.addEventListener('click', function (event) {
 
-            if (!event) {
+            if (!event) {
 
                 return;
             }

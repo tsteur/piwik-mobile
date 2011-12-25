@@ -91,7 +91,7 @@ Piwik.UI.Graph = function () {
 
         view.add(graphImage);
         
-        if (!Piwik.isIpad) {
+        if (!Piwik.isIpad) {
             
             var showDetailImage = Ti.UI.createImageView({className: 'graphShowDetailImage'});
             

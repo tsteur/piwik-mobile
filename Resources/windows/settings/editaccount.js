@@ -133,7 +133,7 @@ function window (params) {
         piwikUrl.blur();
         piwikPassword.blur();
 
-        if (piwikUrl.value && 'http://' === piwikUrl.value.substr(0, 7)) {
+        if (piwikUrl.value && 'http://' === piwikUrl.value.substr(0, 7)) {
 
             var alertDialog = Ti.UI.createAlertDialog({
                 message: _("Mobile_HttpIsNotSecureWarning"),
@@ -146,7 +146,7 @@ function window (params) {
             alertDialog.addEventListener('click', function (event) {
 
                 // has the user clicked the OK button?
-                if (event && event.index) {
+                if (event && event.index) {
                     
                     saveAccount();
 
@@ -176,7 +176,7 @@ function window (params) {
     if (Piwik.isIos) {
         // on Android the user removes/hides the keyboard by pressing the hardware return button.
         // on iOS we have to handle that ourselves when the user presses outside of the current keyboard
-        scrollView.addEventListener('singletap', function () {
+        scrollView.addEventListener('singletap', function () {
             piwikUrl.blur();
             piwikUser.blur();
             piwikPassword.blur();
@@ -320,7 +320,7 @@ function window (params) {
 
         alertDialog.addEventListener('click', function () {
 
-            if (Piwik.isIpad) {
+            if (Piwik.isIpad) {
                 
                 // update list of available websites and close currentwindow
                 that.create('Window', {url: 'index/index.js',
@@ -350,7 +350,7 @@ function window (params) {
      */
     this.open = function (params) {
 
-        if (!params || !params.accountId) {
+        if (!params || !params.accountId) {
 
             return;
         }
