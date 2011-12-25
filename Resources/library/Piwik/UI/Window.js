@@ -94,11 +94,24 @@ Piwik.UI.Window = function () {
             params = {};
         }
         
-        if (!params.window) {
+        if (!params.window) {
             params.window = that;
         }
         
         return Piwik.UI['create' + widget](params);
+    };
+    
+    this.createCommand = function (commandName, params) {
+        
+        if (!params) {
+            params = {};
+        }
+        
+        if (!params.window) {
+            params.window = that;
+        }
+        
+        return Piwik.Command.create(commandName, params);
     };
 
     /**

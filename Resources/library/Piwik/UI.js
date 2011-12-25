@@ -116,6 +116,8 @@ Piwik.UI.createWindow = function (params) {
 
         // extend newWin again and render the requested template
         winTemplate.apply(newWin, [params]);
+        
+        newWin.fireEvent('beforeOpen', {});
 
         // open the new window. At this moment, the basic window is rendered and we just have to request the data
         // (async if possible).

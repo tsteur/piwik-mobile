@@ -26,7 +26,7 @@ function window () {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {addAccountChooser: true};
+    this.menuOptions  = {commands: [this.createCommand('AddAccountCommand')]};
 
     var that          = this;
     

@@ -26,11 +26,16 @@ function window () {
      * right.
      */
     this.titleOptions = {title: 'Piwik Mobile '};
-
+            
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {settingsChooser: !Piwik.isIpad};
+    this.menuOptions  = {};
+
+    if (!Piwik.isIpad) {
+       // Piwik.Log.warn(this.createCommand('OpenSettingsCommand'), 'f');
+        this.menuOptions  = {commands: [this.createCommand('OpenSettingsCommand')]};
+    }
 
     var that          = this;
 

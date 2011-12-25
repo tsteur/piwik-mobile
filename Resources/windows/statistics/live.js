@@ -30,7 +30,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {siteChooser: true};
+    this.menuOptions  = {commands: [this.createCommand('ChooseSiteCommand')]};
 
     this.refreshTimer = null;
 

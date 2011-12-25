@@ -24,7 +24,7 @@ function window () {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {optionMenuAddAccountChooser: true};
+    this.menuOptions  = {};
 
     var that          = this;
     var tableview     = Ti.UI.createTableView({id: 'settingsTableView'});

@@ -29,7 +29,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {siteChooser: true};
+    this.menuOptions  = {commands: [this.createCommand('ChooseSiteCommand')]};
     
     var that          = this;
 

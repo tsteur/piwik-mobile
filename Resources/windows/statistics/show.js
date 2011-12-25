@@ -111,14 +111,16 @@ function window (params) {
 
     request.addEventListener('onload', function (event) {
         
+        if (!event) {
+            return;
+        }
+        
         var site = event.site;
-
-        that.menuOptions  = {dayChooser: true,
-                             siteChooser: true,
-                             optionMenuSettingsChooser: true,
-                             date: event.date,
-                             period: event.period,
-                             window: that};
+        
+        var dateCommand  = that.createCommand('ChooseDateCommand', {date: event.date, period: event.period});
+        var siteCommand  = that.createCommand('ChooseSiteCommand');
+        
+        that.menuOptions = {commands: [dateCommand, siteCommand], window: that};
 
         // update menu after each request cause of a possibly period and/or date change.
         Piwik.UI.layout.menu.refresh(that.menuOptions);

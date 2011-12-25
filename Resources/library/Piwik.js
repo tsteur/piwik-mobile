@@ -151,7 +151,7 @@ Piwik.require = function (module) {
 
     var modules = module.split('/');
     var target  = Piwik;
-
+    
     for (var index = 0; index < modules.length; index++) {
         target  = target[modules[index]];
     }
@@ -215,10 +215,11 @@ Piwik.include('/library/Piwik/Log.js',
               '/library/Piwik/String.js',
               '/library/Piwik/Locale.js',
               '/library/Piwik/UI.js',
+              '/library/Piwik/Command.js',
               '/library/Piwik/UI/OptionMenu.js',
               '/library/Piwik/Tracker.js');
 
-if (Piwik.Profiler.ENABLED) {
+if (Piwik.Profiler.ENABLED) {
     Piwik.Log.setProfiler(Piwik.Profiler);
 }
 
@@ -227,7 +228,7 @@ if (Piwik.Profiler.ENABLED) {
  *
  * @type Piwik.Tracker
  */
-Piwik.getTracker = function () {
+Piwik.getTracker = function () {
 
     return Piwik.Tracker;
 };

@@ -42,13 +42,15 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {optionMenuSettingsChooser: true};
+    this.menuOptions  = {};
 
     if (1 == Piwik.UI.layout.windows.length) {
         // show settingschooser only if this is the first window. ensures user can open settings screen if this
         // is the first screen. It is the first window if the user has configured has access to only one website.
-        this.menuOptions = {optionMenuSettingsChooser: true,
-                            settingsChooser: !Piwik.isIpad};
+        
+        if (!Piwik.isIpad) {
+            this.menuOptions = {commands: [this.createCommand('OpenSettingsCommand')]};
+        }
     }
 
     var request   = Piwik.require('Network/ReportsRequest');

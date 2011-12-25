@@ -89,9 +89,12 @@ function window () {
         if (currentWindow) {
             currentWindow.fireEvent('blurWindow', {});
         }
-
-        newWin.fireEvent('focusWindow', {});
-
+        
+        // wait till template and menuOptions are initialized, than fire focusWindow event.
+        newWin.addEventListener('beforeOpen', function () {
+            this.fireEvent('focusWindow', {});
+        });
+        
         newWin.rootWindow      = rootWindow;
 
         Piwik.UI.currentWindow = newWin;
@@ -167,7 +170,7 @@ function window () {
         this.header = Piwik.UI.createHeader({title: 'Piwik Mobile'});
         this.menu   = Piwik.UI.createMenu({menuView: this.header.getHeaderView()});
 
-        Ti.Gesture.addEventListener('orientationchange', function (event) {
+        Ti.Gesture.addEventListener('orientationchange', function (event) {
 
             return;
         });
