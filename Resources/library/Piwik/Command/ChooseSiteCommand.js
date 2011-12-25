@@ -90,7 +90,9 @@ Piwik.Command.ChooseSiteCommand = function () {
     };
     
     /**
-     * Execute the command.
+     * Execute the command. Opens a dialog where the user can choose another website.  
+     * 
+     * @fires Piwik.Command.ChooseSiteCommand#event:onSiteChanged 
      */
     this.execute = function (params) {
                 

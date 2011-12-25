@@ -82,7 +82,7 @@ Piwik.Command.AddAccountCommand = function () {
     };
     
     /**
-     * Execute the command.
+     * Execute the command. Opens the 'add a new account' window.
      */
     this.execute = function () {
         this.create('Window', {url: 'settings/editaccount.js', target: 'modal'});

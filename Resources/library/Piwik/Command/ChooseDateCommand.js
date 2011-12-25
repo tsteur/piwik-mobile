@@ -8,6 +8,12 @@
 
 /**
  * @class   Choose a date and a period command.
+ * 
+ * @param {Object}       [params]                   See {@link Piwik.UI.View#setParams} 
+ * @param {string}       [params.period="day"]      Optional. The current active period. 
+ * @param {Date|string}  [params.date]              Optional. The current selected date. Can be either a Date 
+ *                                                  object or string in the following Format 
+ *                                                  "YYYY-MM-DD". Defaults to the current date (now). 
  *
  * @augments Piwik.UI.View
  */
@@ -109,7 +115,8 @@ Piwik.Command.ChooseDateCommand = function () {
     };
     
     /**
-     * Execute the command.
+     * Execute the command. Opens a dialog where the user can choose another date/period. The date and the period 
+     * parameter has to be set in order to execute this action. 
      */
     this.execute = function (params) {
         

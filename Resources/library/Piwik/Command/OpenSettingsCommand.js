@@ -82,7 +82,7 @@ Piwik.Command.OpenSettingsCommand = function () {
     };
     
     /**
-     * Execute the command.
+     * Execute the command. Opens the 'Settings' window.
      */
     this.execute = function () {
         this.create('Window', {url: 'settings/index.js'}); 
