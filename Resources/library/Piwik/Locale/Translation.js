@@ -169,6 +169,7 @@ Piwik.Locale.Translation = new function () {
         Mobile_AccessUrlLabel:                                              'Piwik Access Url',
         Mobile_AskForAnonymousTrackingPermission:                           'When enabled, Piwik Mobile will send anonymous usage data to piwik.org. The intent is to use this data to help Piwik Mobile developers better understand how the app is used. Information sent is: menus and settings clicked on, OS name and version, any error displayed in Piwik Mobile. We will NOT track any of your analytics data. This anonymous data will never be made public. You can disable/enable anonymous tracking in Settings at any time.',
         Mobile_ChooseHttpTimeout:                                           'Choose HTTP timeout value',
+        Mobile_ChooseMetric:                                                'Choose Metric',
         Mobile_DefaultReportDate:                                           'Report date',
         Mobile_EnableGraphsLabel:                                           'Display graphs',
         Mobile_HelpUsToImprovePiwikMobile:                                  'Would you like to enable anonymous usage tracking in Piwik Mobile?',

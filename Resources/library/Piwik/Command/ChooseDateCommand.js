@@ -174,7 +174,7 @@ Piwik.Command.ChooseDateCommand = function () {
      * @param   {Date}   changedDate    The selected/changed date.
      * @param   {string} period         The selected/changed period.
      *
-     * @fires   Piwik.UI.Menu#event:onDateChanged
+     * @fires   Piwik.Command.ChooseDateCommand#event:onDateChanged
      */
     this.changeDate   = function (changedDate, period) {
         this.changePeriod(period);
