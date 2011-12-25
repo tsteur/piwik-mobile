@@ -15,6 +15,8 @@
  * @param  {Object}   [params]                    See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
  * @param  {string}   [params.value]              Optional. Displays a value within the row.
  * @param  {string}   [params.description]        Optional. Displays a description within the row.
+ * @param  {Object}   [params.command]            Optional. An instance of a command. Will be executed as soon as the 
+ *                                                user clicks the row.
  * @param  {string}   [params.layout]             Optional. 'vertical' if a vertical layout shall be used. Use it only
  *                                                if you don't set a value.
  * @param  {Object}   [params.rightImage]         Optional. An image to render in the right image area of the row cell.
@@ -52,6 +54,7 @@ Piwik.UI.TableViewRow = function () {
         var value       = params.value || null;
         var description = params.description || null;
         var rightImage  = params.rightImage || null;
+        var command     = params.command || null;
 
         // we handle those parameters ourselves... therefore we delete them and don't pass them to TableViewRow creation
         delete params.title;
@@ -60,6 +63,12 @@ Piwik.UI.TableViewRow = function () {
         delete params.rightImage;
 
         var row = Ti.UI.createTableViewRow(params);
+        
+        if (command) {
+            row.addEventListener('click', function () {
+                command.execute();
+            });
+        }
 
         /** @memberOf Titanium.UI.TableViewRow */
         row.changeTitle = function (title) {

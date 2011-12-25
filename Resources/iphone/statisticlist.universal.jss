@@ -45,16 +45,8 @@
     selectionStyle: 0;
 }
 
-.statisticListTableViewRowOdd {
+.statisticListTableViewRow {
     backgroundColor: '#ffffff';
-    height: 'auto';
-    left: 0;
-    right: 0;
-    /** Ti.UI.iPhone.TableViewCellSelectionStyle.NONE **/
-    selectionStyle: 0;
-}
-.statisticListTableViewRowEven {
-    backgroundColor: '#f5f5f5';
     height: 'auto';
     left: 0;
     right: 0;

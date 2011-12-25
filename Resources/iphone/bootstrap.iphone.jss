@@ -251,7 +251,6 @@
  */
 #statisticsTableView {
     maxRowHeight: 300;
-    separatorColor: '#B8B4AB';
 }
 
 /**

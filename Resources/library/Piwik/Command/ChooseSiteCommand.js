@@ -50,11 +50,7 @@ Piwik.Command.ChooseSiteCommand = function () {
      * 
      * @returns {Object}   The button label of the command.
      */
-    this.getButtonLabel = function () {
-        return {image: 'images/header_globe.png',
-                command: this,
-                width: 37};
-    };
+    this.getButtonLabel = function () {};
     
     /**
      * Get the Android OptionMenu item definition for this command.
@@ -81,9 +77,7 @@ Piwik.Command.ChooseSiteCommand = function () {
      * 
      * @type Object
      */
-    this.getMenuIcon = function () {
-        return {id: 'menuSiteChooserIcon'};
-    };
+    this.getMenuIcon = function () {};
 
     /**
      * Defines the url and title that will be tracked as soon as the user taps on the menu icon.

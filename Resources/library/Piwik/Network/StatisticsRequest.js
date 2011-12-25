@@ -218,7 +218,7 @@ Piwik.Network.StatisticsRequest = function () {
         this.date            = params.date || dateSession;
         this.showAll         = params.showAll || this.showAll;
         this.report          = params.report;
-        this.sortOrderColumn = this._getSortOrder(this.report);
+        this.sortOrderColumn = params.metric ? params.metric : this._getSortOrder(this.report);
 
         this.site = params.site;
 

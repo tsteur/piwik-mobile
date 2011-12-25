@@ -42,6 +42,10 @@ function window (params) {
      */
     this.menuOptions  = {};
     
+    if (this.rootWindow) {
+        this.rootWindow.backButtonTitle = _('General_Reports');
+    }
+    
     var that          = this;
 
     if (params.report) {
@@ -88,6 +92,17 @@ function window (params) {
         refresh.refresh();
     });
 
+    this.addEventListener('onMetricChanged', function (event) {
+        // user has changed the site -> load statistics of the new site
+
+        Piwik.getTracker().trackEvent({title: 'Metric changed', url: '/statistic-change/metric'});
+
+        params.metric  = event.metric;
+        params.showAll = false;
+
+        refresh.refresh();
+    });
+
     this.addEventListener('onPaginatorChanged', function (event) {
 
         if (event.showAll) {
@@ -117,10 +132,11 @@ function window (params) {
         
         var site = event.site;
         
-        var dateCommand  = that.createCommand('ChooseDateCommand', {date: event.date, period: event.period});
-        var siteCommand  = that.createCommand('ChooseSiteCommand');
+        var dateCommand   = that.createCommand('ChooseDateCommand', {date: event.date, period: event.period});
+        var siteCommand   = that.createCommand('ChooseSiteCommand');
+        var metricCommand = that.createCommand('ChooseMetricCommand', {metrics: event.metadata.metrics});
         
-        that.menuOptions = {commands: [dateCommand, siteCommand], window: that};
+        that.menuOptions  = {commands: [dateCommand, siteCommand], window: that};
 
         // update menu after each request cause of a possibly period and/or date change.
         Piwik.UI.layout.menu.refresh(that.menuOptions);
@@ -130,7 +146,10 @@ function window (params) {
         if (Piwik.isIpad) {
             tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
         } else {
-            tableViewRows.push(that.create('TableViewSection', {title: site ? site.name : ''}));
+            tableViewRows.push(that.create('TableViewRow', {title: site ? site.name : '', 
+                                                            hasChild: true, 
+                                                            backgroundColor: '#f5f5f5',
+                                                            command: siteCommand}));
         }
 
         var graph    = null;
@@ -144,7 +163,7 @@ function window (params) {
             graphUrl            = event.metadata.imageGraphUrl;
             
             if (event.sortOrderColumn) {
-                graphUrl       += '&filter_sort_column=' + event.sortOrderColumn;
+                graphUrl       += '&filter_sort_column=' + event.sortOrderColumn + '&column=' + event.sortOrderColumn;
             }
             
             graphUrl            = graph.generateUrl(graphUrl, account, event.site, event.report);
@@ -160,18 +179,21 @@ function window (params) {
         }
         
         if (!Piwik.isIpad) {
-            tableViewRows.push(that.create('TableViewSection', {title:  event.reportDate}));
+            tableViewRows.push(that.create('TableViewRow', {title:  event.reportDate, 
+                                                            hasChild: true,
+                                                            backgroundColor: '#f5f5f5',
+                                                            command: dateCommand}));
         }
 
         // @see Piwik.Network.StatisticsRequest#report
-        var statsticTitleLabel = null;
+        var hasTitle = false;
         if (event.report && event.report.dimension) {
-            statsticTitleLabel = event.report.dimension;
+            hasTitle = true;
         }
 
         if (event.columns && event.columns.label) {
             // @see Piwik.Network.StatisticsRequest#columns
-            statsticTitleLabel = event.columns.label;
+            hasTitle = true;
         }
 
         var statsticValueLabel = '';
@@ -183,16 +205,18 @@ function window (params) {
             statsticValueLabel = _('General_Value');
         }
 
-        var headlineStats = null;
-        if (statsticTitleLabel && statsticValueLabel) {
+        if (hasTitle && statsticValueLabel) {
             // do not display headline for reports with no dimensions like 'VisitsSummary.get'
-            headlineStats = {title: statsticTitleLabel,
-                             value: statsticValueLabel};
+
+            var headlineRow = that.create('TableViewRow', {title: statsticValueLabel,
+                                                           command:  metricCommand,
+                                                           backgroundColor: '#f5f5f5',
+                                                           hasChild: true});
+            tableViewRows.push(headlineRow);
         }
 
         var visitorStats  = that.create('StatisticList', {values:   event.reportData,
-                                                          showAll:  event.showAll,
-                                                          headline: headlineStats});
+                                                          showAll:  event.showAll});
 
         tableViewRows     = tableViewRows.concat(visitorStats.getRows());
 

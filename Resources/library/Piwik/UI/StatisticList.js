@@ -25,10 +25,6 @@
  *                                                             [logo]  => []
  *                                                          )
  *                                              )
- * @property {Object}       [params.headline]         Optional. It is possible to set a headline for each column.
- *                                                    That is for the labels and for the value column.
- * @property {string}       [params.headline.title]   Optional. The headline for the label column.
- * @property {string}       [params.headline.value]   Optional. The headline for the value column.
  * @property {boolean}      [params.showAll]          Optional. Whether show all results is activated or not
  * 
  * @augments Piwik.UI.View
@@ -65,7 +61,6 @@ Piwik.UI.StatisticList = function () {
 
         this.rows = [];
 
-        this.renderHeadline();
         this.renderList();
         this.renderPaginator();
         
@@ -81,39 +76,6 @@ Piwik.UI.StatisticList = function () {
     this.getRows = function () {
     
         return this.rows;
-    };
-
-    /**
-     * Adds the headline to the list if one is given.
-     *
-     * @type void
-     */
-    this.renderHeadline = function () {
-    
-        if (!this.getParam('headline', null)) {
-           // add headline only if given
-         
-           return;
-        }
-        
-        var headline    = this.getParam('headline', {});
-        
-        var headlineRow = Ti.UI.createTableViewRow({className: 'statisticListHeadlineTableViewRow'});
-
-        var titleLabel  = Ti.UI.createLabel({
-            text: headline.title ? headline.title : ' - ',
-            id: 'statisticListHeadlineTitleLabel'
-        });
-        
-        var valueLabel  = Ti.UI.createLabel({
-            text: headline.value ?  headline.value : ' - ',
-            id: 'statisticListHeadlineValueLabel'
-        });
-        
-        headlineRow.add(titleLabel);
-        headlineRow.add(valueLabel);
-        
-        this.rows.push(headlineRow);
     };
 
     /**
@@ -135,10 +97,6 @@ Piwik.UI.StatisticList = function () {
          
            return;
         }
-        
-        // needed for odd/even detection
-        var counter           = 0;
-        var classNameAppendix = 'even';
 
         for (var index = 0; index < values.length; index++) {
             var statistic = values[index];
@@ -147,13 +105,7 @@ Piwik.UI.StatisticList = function () {
                 continue;
             }
 
-            // append something to className. That allows us to style even and odd rows differently.
-            classNameAppendix = 'Even';
-            if (counter % 2 == 1) {
-                classNameAppendix = 'Odd';
-            }
-        
-            var statRow  = Ti.UI.createTableViewRow({className: 'statisticListTableViewRow' + classNameAppendix});
+            var statRow  = Ti.UI.createTableViewRow({className: 'statisticListTableViewRow'});
 
             var title    = String(statistic.title).trim();
             var value    = statistic.value;
@@ -191,8 +143,6 @@ Piwik.UI.StatisticList = function () {
                 
                 statRow.add(imageView);
             }
-            
-            counter++;
             
             this.rows.push(statRow);
         }
