@@ -66,7 +66,7 @@ Piwik.UI.TableViewRow = function () {
         
         if (command) {
             row.addEventListener('click', function () {
-                command.execute();
+                command.execute({source: row.titleLabel});
             });
         }
 

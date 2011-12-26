@@ -29,7 +29,11 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {commands: [this.createCommand('ChooseSiteCommand')]};
+    this.menuOptions  = {};
+        
+    if (this.rootWindow) {
+        this.rootWindow.backButtonTitle = _('General_Reports');
+    }
     
     var that          = this;
 
@@ -57,6 +61,7 @@ function window (params) {
         Piwik.getTracker().trackEvent({title: 'Site changed', url: '/statistic-change/site'});
 
         params.site              = event.site;
+        site                     = event.site;
         latestRequestedTimestamp = null;
         oldestVisitId            = null;
         usedMaxVisitIds          = [];
@@ -93,6 +98,7 @@ function window (params) {
                                 openView: event.row.popoverView});
     });
 
+    var siteCommand = this.createCommand('ChooseSiteCommand');
     request.addEventListener('onload', function (event) {
 
         refresh.refreshDone();
@@ -105,6 +111,12 @@ function window (params) {
         var visitorOverview = null;
         var visitorRow      = null;
         var visitor         = null;
+        
+        var websiteRow      = that.create('TableViewRow', {title: site ? site.name : '', 
+                                                           hasChild: true, 
+                                                           backgroundColor: '#f5f5f5',
+                                                           command: siteCommand});
+        visitorRows.push(websiteRow);
 
         var nextPagerRow    = Ti.UI.createTableViewRow({title: _('General_Next'),
                                                         className: 'visitorlogPagerTableViewRow'});

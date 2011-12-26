@@ -65,7 +65,7 @@ config.piwik = {
     graph: {
           filter_truncate: 4, 
           fontSize: 9,
-          showMetricTitle: 1,
+          showMetricTitle: 0,
           aliasedGraph: 1
     }
 };

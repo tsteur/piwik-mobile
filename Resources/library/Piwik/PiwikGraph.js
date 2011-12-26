@@ -69,6 +69,38 @@ Piwik.PiwikGraph = new function () {
         
         return graphUrl;
     };
+    
+    /**
+     * Adds one or multiple url params to the given graph url.
+     * 
+     * @param   {string}    graphUrl    A Piwik graph url.
+     * @param   {Object}    params      An object containing key/value pairs.
+     *
+     * @returns {string}    The updated Piwik graph url which now includes the given parameters
+     */
+    this.setParams = function (graphUrl, params) {
+        
+        var urlGetParams      = '';
+        for (var paramName in params) {
+            if (urlGetParams) {
+                urlGetParams += '&';
+            }
+            
+            urlGetParams     += paramName + '=' + params[paramName];
+        }
+        // urlGetParams is for example 'a=b&c=d&e=f'
+        
+        var separator = '&';
+        var lastChar  = graphUrl.substr(graphUrl.length -1, 1);
+        
+        if ('&' == lastChar) {
+            separator = '';
+        }
+        
+        graphUrl = graphUrl + separator + urlGetParams.encodeUrlParams();
+        
+        return graphUrl;
+    };
 
     /**
      * Appends the size string and more styling parameter to the given graphUrl. 
@@ -84,7 +116,7 @@ Piwik.PiwikGraph = new function () {
      */
     this.appendSize = function (graphUrl, width, height, hires) {
 
-        var parameter    = {width: width, height: height};
+        var parameter = {width: width, height: height};
         
         for (var index in config.piwik.graph) {
             parameter[index] = config.piwik.graph[index];
@@ -98,13 +130,7 @@ Piwik.PiwikGraph = new function () {
             parameter.fontSize = Math.round(parameter.fontSize * 1.5);
         } 
         
-        var requestUrl  = '';
-        
-        for (var paramName in parameter) {
-            requestUrl += paramName + '=' + parameter[paramName] + '&';
-        }
-        
-        graphUrl        = graphUrl + '&' + requestUrl.encodeUrlParams();
+        graphUrl = this.setParams(graphUrl, parameter);
         
         return graphUrl;
     };

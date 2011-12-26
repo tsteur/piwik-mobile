@@ -64,6 +64,7 @@ function window (params) {
 
     // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
     graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+    graphUrlWithSize   = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
 
     Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
 
@@ -108,6 +109,7 @@ function window (params) {
             that.remove(imageView);
 
             graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+            graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
             imageView        = Ti.UI.createImageView({width: pictureWidth,
                                                       height:  pictureHeight,
                                                       canScale: !Piwik.isAndroid,
@@ -134,6 +136,7 @@ function window (params) {
         imageView.width  = pictureWidth;
         imageView.height = pictureHeight;
         graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+        graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
     
         imageView.image  = graphUrlWithSize;
     }

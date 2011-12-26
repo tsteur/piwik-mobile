@@ -30,7 +30,11 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {commands: [this.createCommand('ChooseSiteCommand')]};
+    this.menuOptions  = {};
+    
+    if (this.rootWindow) {
+        this.rootWindow.backButtonTitle = _('General_Reports');
+    }
 
     this.refreshTimer = null;
 
@@ -71,6 +75,7 @@ function window (params) {
         Piwik.getTracker().trackEvent({title: 'Site changed', url: '/statistic-change/site'});
 
         params.site    = event.site;
+        site           = event.site;
         account        = accountManager.getAccountById(event.site.accountId);
         latestRequestedTimestamp = 0;
         
@@ -171,8 +176,10 @@ function window (params) {
      * @type Array
      * @private
      */
-    var visitors = [];
+    var visitors    = [];
     var visitorRows = [];
+    
+    var siteCommand = this.createCommand('ChooseSiteCommand');
 
     request.addEventListener('onload', function (event) {
 
@@ -206,6 +213,11 @@ function window (params) {
 
         that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
         that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
+        
+        var websiteRow   = that.create('TableViewRow', {title: site ? site.name : '', 
+                                                        hasChild: true, 
+                                                        backgroundColor: '#f5f5f5',
+                                                        command: siteCommand});
 
         /**
          * Holds all rows that shall be rendered
@@ -213,7 +225,8 @@ function window (params) {
          * @type Array
          * @private
          */
-        var visitorRows  = [that.lastMinutes.getRow(),
+        var visitorRows  = [websiteRow,
+                            that.lastMinutes.getRow(),
                             that.lastHours.getRow(),
                             that.create('TableViewSection', {title: _('General_Visitors')})];
 

@@ -134,9 +134,9 @@ Piwik.Command.ChooseMetricCommand = function () {
      *
      * @fires   Piwik.Command.ChooseMetricCommand#event:onMetricChanged
      */
-    this.changeMetric   = function (metric) {
+    this.changeMetric = function (metric) {
             
-        this.metric   = metric;
+        this.metric = metric;
         
         this.fireEvent('onMetricChanged', {metric: metric, type: 'onMetricChanged'});
     };
