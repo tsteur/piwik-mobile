@@ -50,20 +50,15 @@ config.debugging      = false;
  */
 config.piwik = {
     timeout: 60000,
-    /**
-     * default row to be used in all statistics
-     */
-    usedRow: 'nb_visits',
+    preferredMetrics: ['nb_hits', 'nb_visits', 'nb_pageviews', 'nb_uniq_pageviews', 'nb_actions'],
     defaultReportDate: 'day##yesterday',
     filterLimit: 30,
     multiChartEnabled: false,
-    latestServerVersion: '1.5.0',
+    latestServerVersion: '1.7.0',
     graphsEnabled: true,
     trackingEnabled: false,
     numDisplayedWebsites: 50,
-    
     graph: {
-          filter_truncate: 4, 
           fontSize: 9,
           showMetricTitle: 0,
           aliasedGraph: 1

@@ -66,7 +66,7 @@ function window (params) {
     graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
     graphUrlWithSize   = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
 
-    Piwik.Log.debug('piwik graphUrl is ' + graphUrl, 'graph/fulldetail::window');
+    Piwik.Log.debug('piwik graphUrl is ' + graphUrlWithSize, 'graph/fulldetail::window');
 
     imageView = Ti.UI.createImageView({width: pictureWidth,
                                        height:  pictureHeight,

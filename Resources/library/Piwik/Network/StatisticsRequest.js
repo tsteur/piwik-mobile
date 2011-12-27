@@ -332,15 +332,26 @@ Piwik.Network.StatisticsRequest = function () {
      * @returns {string}   The name of the default sort order column depending on the given report.
      */
     this._getSortOrder = function (report) {
-    
-        var sortOrder  = config.piwik.usedRow;
+        var preferredRows = config.piwik.preferredMetrics;
+        var sortOrder     = preferredRows[0];
         
         if (report && report.metrics) {
-            if (!report.metrics[sortOrder]) {
-                // define another sortOrder if our prefered sortOrder is not available
-                for (var metricName in report.metrics) {
-                    sortOrder = metricName;
+            
+            var preferredRow = null;
+            
+            // find out whether one of our preferred metric is available
+            for (var index = 0; index < preferredRows.length; index++) {
+                preferredRow = preferredRows[index];
+                
+                if (report.metrics[preferredRow]) {
+                    
+                    return preferredRow;
                 }
+            }
+            
+            // define another sortOrder if none of our preferred sortOrder is available
+            for (var metricName in report.metrics) {
+                sortOrder = metricName;
             }
         }
         
