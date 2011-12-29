@@ -33,49 +33,84 @@ function window (params) {
     // we'll display an activity indicator while verifying the entered account url+credentials.
     var activityIndicator = this.create('ActivityIndicator');
     var request           = Piwik.require('Network/AccountRequest');
-    var scrollView        = Ti.UI.createScrollView({id: 'editAccountScrollView'});
-
-    this.add(scrollView);
     
-    var labelUrl = Ti.UI.createLabel({text: _('Mobile_AccessUrlLabel'), className: 'editAccountLabel'});
-    var piwikUrl = Ti.UI.createTextField({
+    var tableView = Ti.UI.createTableView({id: 'editAccountTableView'});
+    var tableData = [];
+    
+    var piwikUrl  = Ti.UI.createTextField({
         className: 'editAccountTextField',
         value: '',
         hintText: _('General_ForExampleShort') + ' http(s)://demo.piwik.org/',
         keyboardType: Ti.UI.KEYBOARD_URL,
         returnKeyType: Ti.UI.RETURNKEY_NEXT,
         autocorrect: false,
-        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+        borderStyle: Ti.UI.INPUT_BORDERSTYLE_NONE,
         autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
     });
 
-    var labelAnonymous = Ti.UI.createLabel({text: _('Mobile_AnonymousAccess'), className: 'editAccountLabel'});
     var piwikAnonymous = Ti.UI.createSwitch({value: false, className: 'editAccountSwitch'});
 
-    var labelUser = Ti.UI.createLabel({text: _('Login_Login'), className: 'editAccountLabel'});
     var piwikUser = Ti.UI.createTextField({
         className: 'editAccountTextField',
         value: '',
         autocorrect: false,
+        hintText: _('Login_Login'),
         keyboardType: Piwik.isAndroid ? Ti.UI.KEYBOARD_URL : Ti.UI.KEYBOARD_DEFAULT,
         returnKeyType: Ti.UI.RETURNKEY_NEXT,
-        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+        borderStyle: Ti.UI.INPUT_BORDERSTYLE_NONE,
         autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
     });
     // use keyboard url above on android, otherwise it is not possible to deactivate autocorrect,
     // that's a bug in Titanium
 
-    var labelPassword = Ti.UI.createLabel({text: _('Login_Password'), className: 'editAccountLabel'});
     var piwikPassword = Ti.UI.createTextField({
         className: 'editAccountTextField',
         value: '',
         passwordMask: true,
         autocorrect: false,
+        hintText: _('Login_Password'),
         keyboardType: Ti.UI.KEYBOARD_DEFAULT,
         returnKeyType: Ti.UI.RETURNKEY_DONE,
-        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+        borderStyle: Ti.UI.INPUT_BORDERSTYLE_NONE,
         autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
     });
+    
+    tableData.push(this.create('TableViewSection', {title: _('Mobile_AccessUrlLabel'), 
+                                                    style: 'native'}));
+                                                    
+    var row = Ti.UI.createTableViewRow({className: 'editAccountControlRow1',
+                                        id: 'editAccountControlRow'});
+    row.add(piwikUrl);
+    tableData.push(row);
+    
+    tableData.push(this.create('TableViewSection', {title: _('Mobile_AnonymousAccess'), 
+                                                    style: 'native'}));
+
+    var row = Ti.UI.createTableViewRow({className: 'editAccountControlRow2',
+                                        id: 'editAccountControlRow'});
+    row.add(piwikAnonymous);
+    tableData.push(row);
+    
+    var credentialsSection = this.create('TableViewSection', {title: _('Mobile_LoginCredentials'), 
+                                                              style: 'native'});
+
+    tableData.push(credentialsSection);
+
+    var piwikUserRow       = Ti.UI.createTableViewRow({className: 'editAccountControlRow3',
+                                                       id: 'editAccountControlRow'});
+    piwikUserRow.add(piwikUser);
+    tableData.push(piwikUserRow);
+    
+    var piwikPasswordRow   = Ti.UI.createTableViewRow({className: 'editAccountControlRow4',
+                                                       id: 'editAccountControlRow'});
+    piwikPasswordRow.add(piwikPassword);
+    tableData.push(piwikPasswordRow);
+    
+    var footerView       = Ti.UI.createView({className: 'editAccountTableFooterView'});
+    var save             = Ti.UI.createButton({title:  _('General_Save'), 
+                                               className: 'editAccountSaveButton'});
+    footerView.add(save);
+    tableView.footerView = footerView;
 
     piwikAnonymous.addEventListener('change', function (event) {
 
@@ -92,8 +127,17 @@ function window (params) {
 
         if (event.value) {
             // anonymous was activated and is deactivated now
-            piwikUser.value        = '';
-            piwikPassword.value    = '';
+            piwikUser.value                  = '';
+            piwikPassword.value              = '';
+        }
+        
+        // we need to visualize that textfields are enbabled/disabled on iOS. On Android this happens automatically.
+        if (event.value && Piwik.isIos) {
+            piwikUserRow.backgroundColor     = '#dddddd';
+            piwikPasswordRow.backgroundColor = '#dddddd';
+        } else if (Piwik.isIos) {
+           piwikUserRow.backgroundColor      = '#ffffff';
+           piwikPasswordRow.backgroundColor  = '#ffffff';
         }
 
         // turn textfields on/off
@@ -102,6 +146,16 @@ function window (params) {
         piwikPassword.enabled  = !event.value;
         piwikPassword.editable = !event.value;
     });
+    
+    if (Piwik.isIos) {
+        // on Android the user removes/hides the keyboard by pressing the hardware return button.
+        // on iOS we have to handle that ourselves when the user presses outside of the current keyboard
+        this.addEventListener('click', function () {
+            piwikUrl.blur();
+            piwikUser.blur();
+            piwikPassword.blur();
+        });
+    }
 
     /**
      * Tries to save the account using the previous entered values. Triggers the activityIndicator show method.
@@ -123,8 +177,6 @@ function window (params) {
         // send the request to verify the entered account values.
         request.send({account: account});
     };
-
-    var save = Ti.UI.createButton({title:  _('General_Save'), className: 'editAccountSaveButton'});
 
     save.addEventListener('click', function ()
     {
@@ -162,26 +214,6 @@ function window (params) {
         // save directly without confirmation if user entered a https address
         saveAccount();
     });
-
-    scrollView.add(labelUrl);
-    scrollView.add(piwikUrl);
-    scrollView.add(labelAnonymous);
-    scrollView.add(piwikAnonymous);
-    scrollView.add(labelUser);
-    scrollView.add(piwikUser);
-    scrollView.add(labelPassword);
-    scrollView.add(piwikPassword);
-    scrollView.add(save);
-
-    if (Piwik.isIos) {
-        // on Android the user removes/hides the keyboard by pressing the hardware return button.
-        // on iOS we have to handle that ourselves when the user presses outside of the current keyboard
-        scrollView.addEventListener('singletap', function () {
-            piwikUrl.blur();
-            piwikUser.blur();
-            piwikPassword.blur();
-        });
-    }
 
     piwikUrl.addEventListener('return', function(event) {
         if (piwikAnonymous.value) {
@@ -341,6 +373,10 @@ function window (params) {
 
         alertDialog.show();
     });
+
+    this.add(tableView);
+    
+    tableView.setData(tableData);
 
     /**
      * Pre fill previous created text fields with values if accountId is given and if this account exists.

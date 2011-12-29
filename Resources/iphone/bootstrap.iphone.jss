@@ -201,23 +201,19 @@
 /**
  * window settings/editaccount.js
  */
-#editAccountScrollView {
-    contentWidth: 'auto';
-    contentHeight: 'auto';
-    layout: 'vertical';
-    top: 0;
-    left: 0;
-    showVerticalScrollIndicator: false;
-    showHorizontalScrollIndicator: false;
+#editAccountTableView {
+    style: 1;
 }
 
-.editAccountLabel {
-    height: 22;
-    left: 10;
-    top: 10;
-    right: 10;
-    color: '#336699';
-    font-size: 16;
+.editAccountTableFooterView {
+    height: 'auto';
+    width: 'auto';
+    left: 0;
+}
+
+#editAccountControlRow {
+    /* 0 == Ti.UI.iPhone.TableViewCellSelectionStyle.NONE*/
+    selectionStyle: 0;
 }
 
 .editAccountSaveButton {
@@ -232,7 +228,7 @@
     focusable: true;
     color: '#333333';
     height: 40;
-    top: 4;
+    top: 2;
     left: 10;
     right: 10;
     clearButtonMode: 1;
@@ -240,9 +236,10 @@
 }
 
 .editAccountSwitch {
-    top:  6;
     height: 30;
     left: 10;
+    top: 7;
+    bottom: 7;
     focusable: true;
 }
 

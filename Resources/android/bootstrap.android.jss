@@ -204,44 +204,42 @@
 /**
  * window settings/editaccount.js
  */
-#editAccountScrollView {
-    contentWidth: 'auto';
-    contentHeight: 'auto';
-    layout: 'vertical';
-    showVerticalScrollIndicator: false;
-    showHorizontalScrollIndicator: false;
+#manageAccountsTableView {
 }
 
-.editAccountLabel {
+.editAccountTableFooterView {
     height: 'auto';
-    font-size: '16dp';
-    left: '10dp';
-    top: '10dp';
-    right: '10dp';
-    color: '#336699';
-    font-family: 'Arial';
+    width: 'auto';
+    left: 0;
+}
+
+#editAccountControlRow {
+    /* 0 == Ti.UI.iPhone.TableViewCellSelectionStyle.NONE*/
+    selectionStyle: 0;
+    focusable: false;
 }
 
 .editAccountSaveButton {
-    height: 'auto';
-    width: '205dp';
+    height: '45dp';
     left: '10dp';
     right: '10dp';
-    top: '13dp';
     focusable: true;
+    top: '8dp';
 }
 
 .editAccountTextField {
     focusable: true;
     color: '#333333';
     height: 'auto';
-    top: '4dp';
+    top: '8dp';
+    bottom: '5dp';
     left: '10dp';
     right: '10dp';
 }
 
 .editAccountSwitch {
-    top: '6dp';
+    top: '8dp';
+    bottom: '5dp';
     height: 'auto';
     left: '10dp';
     focusable: true;

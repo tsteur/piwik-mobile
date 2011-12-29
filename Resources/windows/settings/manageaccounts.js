@@ -156,7 +156,13 @@ function window () {
         }
 
         var tableData  = [];
-
+        
+        if (Piwik.isIos) {
+            tableData.push(that.create('TableViewSection', {title: _('Mobile_Accounts'), 
+                                                            style: 'native',
+                                                            footerTitle: _('Mobile_HowtoDeleteAnAccountOniOS')}));
+        }
+        
         var account    = null;
         for (var index = 0; index < event.accounts.length; index++) {
             account    = event.accounts[index];
