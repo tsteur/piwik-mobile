@@ -187,6 +187,9 @@
 .settingsTableViewRowHasChild {
     hasChild: true;
 }
+.settingsTableViewRowHasDetail {
+    hasChild: true;
+}
 
 .settingsTableViewRowHasCheck{
 

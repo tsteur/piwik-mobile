@@ -184,7 +184,11 @@
 
 }
 
-.settingsTableViewRowHasCheck{
+.settingsTableViewRowHasDetail {
+
+}
+
+.settingsTableViewRowHasCheck {
 
 }
 

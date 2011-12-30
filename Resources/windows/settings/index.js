@@ -325,10 +325,10 @@ function window () {
             that.create('Window', {url: 'help/feedback.js', target: 'modal'});
         };
 
-        var tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
+        var tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
                                                       title: _('UsersManager_ManageAccess'),
                                                       onClick: onManageAccess,
-                                                      hasChild: true}),
+                                                      hasDetail: true}),
                          that.create('TableViewSection', {title: _('General_GeneralSettings'), 
                                                           style: 'native'}),
                          that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
@@ -364,15 +364,15 @@ function window () {
                                                       value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
                          that.create('TableViewSection', {title: _('General_Help'), 
                                                           style: 'native'}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
                                                       title: String.format(_('General_AboutPiwikX'), 'Mobile'),
                                                       onClick: onShowHelpAbout,
                                                       hasDetail: true}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
                                                       title: _('General_GiveUsYourFeedback'),
                                                       onClick: onShowHelpFeedback,
                                                       hasDetail: true}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
                                                       title: _('General_Faq'),
                                                       command: this.createCommand('OpenFaqCommand'),
                                                       hasDetail: true})];
