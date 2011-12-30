@@ -72,14 +72,14 @@ Piwik.UI.Menu = function () {
                 var command     = commands[index];
                 var buttonLabel = command.getButtonLabel();
 
-                if (!buttonLabel) {
+                if (!buttonLabel) {
                     continue;
                 }
                 
                 labels.push(buttonLabel);
             }
             
-            if (this.toolBar) {
+            if (this.toolBar) {
                 this.toolBar.hide();
                 
                 if (rootWindow) {
@@ -88,7 +88,7 @@ Piwik.UI.Menu = function () {
             }
 
             // always reset left nav button, but not in iPad devices
-            if (!Piwik.isIpad && rootWindow) {
+            if (!Piwik.isIpad && rootWindow) {
                 rootWindow.leftNavButton = null;
             }
 
@@ -99,7 +99,7 @@ Piwik.UI.Menu = function () {
                 rootWindow.rightNavButton = this.toolBar;
 
                 this.toolBar.addEventListener('click', function (event) {
-                    if (!event || !event.source) {
+                    if (!event || !event.source) {
 
                         return;
                     }
@@ -127,7 +127,7 @@ Piwik.UI.Menu = function () {
                     this.menuView.remove(availableCommand);
                 } catch (e){ 
                     Piwik.Log.warn('Failed to remove a command from menuView: ' + e, 'Piwik.UI.Menu::refresh');
-                } 
+                }
             }
             
             this.availableCommands = {};
@@ -136,7 +136,7 @@ Piwik.UI.Menu = function () {
                 var command  = commands[index];
                 var menuIcon = command.getMenuIcon();
                 
-                if (!menuIcon) {
+                if (!menuIcon) {
                     continue;
                 }
 
@@ -146,14 +146,14 @@ Piwik.UI.Menu = function () {
                 
                 icon.addEventListener('click', (function (command) {
                 
-                    return function () {
+                    return function () {
                         var menuEvent = command.getMenuTrackingEvent();
-                        if (menuEvent) {
+                        if (menuEvent) {
                             Piwik.getTracker().trackEvent(menuEvent);
                         }
         
                         command.execute();
-                    }
+                    };
                 })(command));
                 
                 this.availableCommands[command.getId()] = icon;
@@ -173,7 +173,7 @@ Piwik.UI.Menu = function () {
             var command        = commands[index];
             var optionMenuItem = command.getOptionMenuItem();
             
-            if (!optionMenuItem) {
+            if (!optionMenuItem) {
                 continue;
             }
             
@@ -181,12 +181,12 @@ Piwik.UI.Menu = function () {
 
                 return function () {
                     var menuEvent = command.getOptionMenuTrackingEvent();
-                    if (menuEvent) {
+                    if (menuEvent) {
                         Piwik.getTracker().trackEvent(menuEvent);
                     }
                     
                     command.execute();
-                }
+                };
                 
             })(command));
         }
