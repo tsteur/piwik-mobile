@@ -16,24 +16,13 @@
     height: '40dp';
 }
 
-#menuSiteChooserIcon {
-    image: 'images/header_globe.png';
+#menuHelpIcon {
+    image: 'images/header_help.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
     top: 0;
     right: 0;
-    width: '47dp';
-    height: '40dp';
-}
-
-#menuDayChooserIcon {
-    image: 'images/header_calendar.png';
-    backgroundSelectedColor: '#FFC700';
-    backgroundFocusedColor: '#FFC700';
-    focusable: true;
-    top: 0;
-    right: '47dp';
     width: '47dp';
     height: '40dp';
 }

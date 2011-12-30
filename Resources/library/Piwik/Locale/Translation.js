@@ -85,6 +85,7 @@ Piwik.Locale.Translation = new function () {
         General_Delete:                                                     'Delete',
         General_Edit:                                                       'Edit',
         General_ErrorRequest:                                               'Oops... problem during the request, please try again.',
+        General_Faq:                                                        'FAQ',
         General_ForExampleShort:                                            'eg.',
         General_FromReferrer:                                               'From',
         General_GiveUsYourFeedback:                                         'Give us Feedback!',

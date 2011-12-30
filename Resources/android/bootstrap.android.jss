@@ -81,6 +81,13 @@
 }
 
 /**
+ * window help/faq.js
+ */
+#faqPageWebView {
+    scalesPageToFit: false;
+}
+
+/**
  * window help/about.js
  */
 #aboutPiwikView {

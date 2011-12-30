@@ -26,7 +26,7 @@ function window (params) {
     /**
      * @see Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
+    this.menuOptions  = {commands: [this.createCommand('OpenFaqCommand')]};
     
     var that          = this;
 
@@ -385,7 +385,6 @@ function window (params) {
      * @param {string}    [params.accountId]     Optional accountId in case of edit an account.
      */
     this.open = function (params) {
-
         if (!params || !params.accountId) {
 
             return;

@@ -371,6 +371,10 @@ function window () {
                          that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
                                                       title: _('General_GiveUsYourFeedback'),
                                                       onClick: onShowHelpFeedback,
+                                                      hasDetail: true}),
+                         that.create('TableViewRow', {className: 'settingsTableViewRowHasChild',
+                                                      title: _('General_Faq'),
+                                                      command: this.createCommand('OpenFaqCommand'),
                                                       hasDetail: true})];
 
         tableview.setData(tableData);

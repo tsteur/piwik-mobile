@@ -77,6 +77,12 @@
 }
 
 /**
+ * window help/faq.js
+ */
+#faqPageWebView {
+}
+
+/**
  * window help/about.js
  */
 #aboutPiwikView {
