@@ -208,31 +208,6 @@ Piwik.requireWindow = function (file) {
     return function () {};
 };
 
-/**
- * Mixin all given objects into one object. Second object overwrites parameters from the first object if they have
- * the same paramater.
- * 
- * @returns {Object} The merged object
- */
-Piwik.mixin = function (obj1, obj2, obj3) {
-    var objects = arguments;
-    var base    = {};
-    
-    for (var index = 0; index < objects.length; index++) {
-        var objToMixin = objects[index];
-        
-        if (!objToMixin) {
-            continue;
-        }
-        
-        for (propertyName in objToMixin) {
-            base[propertyName] = objToMixin[propertyName];
-        }
-    }
-    
-    return base;
-};
-
 // these files are required by the library
 Piwik.include('/library/Piwik/Log.js',
               '/library/Piwik/Profiler.js',

@@ -133,8 +133,8 @@ function window (params) {
         var site = event.site;
         
         var metrics = {};
-        if (event.metadata) {
-            metrics = Piwik.mixin(event.metadata.metrics, event.metadata.processedMetrics);
+        if (event.columns) {
+            metrics = event.columns;
         }
         
         var dateCommand   = that.createCommand('ChooseDateCommand', {date: event.date, period: event.period});

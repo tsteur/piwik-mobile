@@ -83,16 +83,21 @@ Piwik.Command.ChooseMetricCommand = function () {
     this.execute = function () {
         
         var metrics = this.getParam('metrics');
-        
+
         if (!metrics) {
             return;
         }
         
-        var options       = [];
-        var internalNames = [];
+        var options           = [];
+        var internalNames     = [];
+        var metricDisplayName = null;
         
         for (var metricInternalName in metrics) {
-            var metricDisplayName = metrics[metricInternalName];
+            if ('label' == metricInternalName) {
+                continue;
+            }
+            
+            metricDisplayName = metrics[metricInternalName];
             
             options.push(String(metricDisplayName));
             internalNames.push(String(metricInternalName));
