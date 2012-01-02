@@ -13,7 +13,7 @@
  *
  * @static
  */
-Piwik.App.Settings = new function () {
+Piwik.App.Settings = function () {
 
     /**
      * Sets (overwrites) the current language.
@@ -309,3 +309,5 @@ Piwik.App.Settings = new function () {
         return 'setting_' + key;
     };
 };
+
+Piwik.App.Settings = new Piwik.App.Settings();

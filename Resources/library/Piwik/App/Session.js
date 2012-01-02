@@ -24,7 +24,7 @@
  * @static
  * @todo rename to something like SessionCache?
  */
-Piwik.App.Session = new function () {
+Piwik.App.Session = function () {
 
     /**
      * All current available values will be stored in this object under the regarding key.
@@ -125,3 +125,5 @@ Piwik.App.Session = new function () {
         return false;
     };
 };
+
+Piwik.App.Session = new Piwik.App.Session();

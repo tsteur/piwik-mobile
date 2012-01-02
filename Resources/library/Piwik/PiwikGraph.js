@@ -35,7 +35,7 @@
  *
  * @static
  */
-Piwik.PiwikGraph = new function () {
+Piwik.PiwikGraph = function () {
 
     /**
      * The locale.
@@ -152,3 +152,5 @@ Piwik.PiwikGraph = new function () {
         return accessUrl + url.encodeUrlParams();
     };
 };
+
+Piwik.PiwikGraph = new Piwik.PiwikGraph();

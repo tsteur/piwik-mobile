@@ -11,7 +11,7 @@
  * 
  * @static
  */
-Piwik.Locale = new function () {
+Piwik.Locale = function () {
 
     /**
      * Returns the chosen locale or the platform locale if not already one chosen.
@@ -60,3 +60,5 @@ Piwik.Locale = new function () {
         return 'en';
     };
 };
+
+Piwik.Locale = new Piwik.Locale();

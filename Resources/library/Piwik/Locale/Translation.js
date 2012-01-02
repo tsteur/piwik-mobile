@@ -15,7 +15,7 @@
  *
  * @static
  */
-Piwik.Locale.Translation = new function () {
+Piwik.Locale.Translation = function () {
 
     /**
      * This event will be fired as soon as the user changes the language and the translations of the changed selected
@@ -326,7 +326,10 @@ Piwik.Locale.Translation = new function () {
 
         return this.AVAILABLE_LANGUAGES;
     };
+    
 };
+
+Piwik.Locale.Translation = new Piwik.Locale.Translation();
 
 /**
  * Translation wrapper. Use this method if you want to translate any text within the application.

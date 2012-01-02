@@ -11,7 +11,7 @@
  *          via Titanium Developer. Uses the Titanium.API module to log messages.
  * @static
  */
-Piwik.Log = new function () {
+Piwik.Log = function () {
 
     /**
      * True if logging is enabled, false otherwise. Should be disabled in a production release.
@@ -187,3 +187,5 @@ Piwik.Log = new function () {
         logMessage      = null;
     };
 };
+
+Piwik.Log = new Piwik.Log();

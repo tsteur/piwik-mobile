@@ -15,7 +15,7 @@
  *
  * @static
  */
-Piwik.UI.OptionMenu = new function () {
+Piwik.UI.OptionMenu = function () {
 
     /**
      * Holds an instance of the Android Option Menu @link http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object
@@ -195,6 +195,8 @@ Piwik.UI.OptionMenu = new function () {
         };
     };
 };
+
+Piwik.UI.OptionMenu = new Piwik.UI.OptionMenu();
 
 if (Piwik.isAndroid) {
     // enable option menu for android

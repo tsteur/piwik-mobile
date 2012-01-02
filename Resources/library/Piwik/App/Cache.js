@@ -22,7 +22,7 @@
  *
  * @todo rename to something like storage? or storageCache?
  */
-Piwik.App.Cache = new function () {
+Piwik.App.Cache = function () {
 
     /**
      * A constant which can be used to verify a cache entry. The getter method returns this value if the given key
@@ -168,3 +168,5 @@ Piwik.App.Cache = new function () {
         }
     };
 };
+
+Piwik.App.Cache = new Piwik.App.Cache();

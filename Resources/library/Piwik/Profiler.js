@@ -11,7 +11,7 @@
  *          which is accessible for example in Titanium Developer.
  * @static
  */
-Piwik.Profiler = new function ()  {
+Piwik.Profiler = function ()  {
 
     /**
      * Enables/disables profiling. If enabled, it logs the elapsed time in ms between two logging calls and the current
@@ -116,3 +116,5 @@ Piwik.Profiler = new function ()  {
         Ti.API.warn('' + key + ' Now free mem: ' + Ti.Platform.availableMemory + 'b');
     };
 };
+
+Piwik.Profiler = new Piwik.Profiler();

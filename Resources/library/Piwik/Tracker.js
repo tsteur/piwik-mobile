@@ -15,7 +15,7 @@
  *
  * @static
  */
-Piwik.Tracker = new function () {
+Piwik.Tracker = function () {
 
     /**
      * The siteId of the Piwik Server installation. It'll track everything into this site.
@@ -570,3 +570,5 @@ Piwik.Tracker = new function () {
 
     this.init();
 };
+
+Piwik.Tracker = new Piwik.Tracker();
