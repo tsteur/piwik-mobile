@@ -65,7 +65,7 @@ config.piwik = {
     }
 };
 
-config.faqUrl = 'http://piwik.org/mobile/#toc-more-information';
+config.faqUrl = 'http://piwik.org/mobile/faq';
 
 /**
  * Tracking related settings.
