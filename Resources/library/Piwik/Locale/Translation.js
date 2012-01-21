@@ -81,6 +81,7 @@ function Translation () {
         es:         'Español',
         et:         'Eesti keel',
         eu:         'Euskara',
+        fa:         '\u0641\u0627\u0631\u0633\u06cc',
         fi:         'Suomi',
         fr:         'Français',
         gl:         'Galego',
