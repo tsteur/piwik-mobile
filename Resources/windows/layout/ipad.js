@@ -8,17 +8,24 @@
  * @fileOverview layout 'layout/ipad.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class iPad specific Piwik Mobile layout. Handles how header, menu and the content will be displayed. 
- *        How new windows will be removed or added and so on.
+ * @class    iPad specific Piwik Mobile layout. Handles how header, menu and the content will be displayed. 
+ *           How new windows will be removed or added and so on.
+ * 
+ * @exports  layout as LayoutIpad
  */
-function window () {
+function layout () {
 
     /**
      * An array holding all current opened windows within the detail view. Each new created window will be pushed to 
      * this array. On the contrary we have to pop a window from this array as soon as we close/remove it.
      *
-     * @type Array
+     * @type  Array
      */
     this.windows  = [];
     
@@ -26,7 +33,7 @@ function window () {
      * An array holding all current opened modal windows. Each new created modal window will be pushed to this array.
      * On the contrary we have to pop a window from this array as soon as we close/remove it.
      *
-     * @type Array
+     * @type  Array
      */
     this._modalWindows  = [];
     
@@ -34,36 +41,36 @@ function window () {
      * zIndex counter. Will be increased by one for each new created window. This ensures a new created window will be
      * displayed in front of another window.
      *
-     * @default "0"
+     * @default  "0"
      *
-     * @type Number
+     * @type     Number
      */
     this.zIndex   = 0;
 
     /**
      * A reference to the layout header.
      *
-     * @default null
+     * @default  null
      *
-     * @type Piwik.UI.Header
+     * @type     Piwik.UI.Header
      */
     this.header   = null;
 
     /**
      * A reference to the layout menu.
      *
-     * @default null
+     * @default  null
      *
-     * @type Piwik.UI.Menu
+     * @type     Piwik.UI.Menu
      */
     this.menu     = null;
 
     /**
      * An instance of the master window which is displayed within the split window - master view.
      *
-     * @default null
+     * @default  null
      *
-     * @type null|Ti.UI.Window
+     * @type     null|Ti.UI.Window
      * 
      * @private
      */
@@ -72,9 +79,9 @@ function window () {
     /**
      * An instance of the modal window. Is only set if at least one modal window is currently displayed.
      *
-     * @default null
+     * @default  null
      *
-     * @type null|Ti.UI.Window
+     * @type     null|Ti.UI.Window
      * 
      * @private
      */
@@ -83,9 +90,9 @@ function window () {
     /**
      * An instance of the modal navigation group. Is only set if at least one modal window is currently displayed.
      *
-     * @default null
+     * @default  null
      *
-     * @type null|Ti.UI.iPhone.NavigationGroup
+     * @type     null|Ti.UI.iPhone.NavigationGroup
      * 
      * @private
      */
@@ -99,18 +106,19 @@ function window () {
     /**
      * Retrieve the current displayed window.
      *
-     * @returns {void|Piwik.UI.Window}  The current displayed window or void if no window is opened.
+     * @returns  {void|Piwik.UI.Window}  The current displayed window or void if no window is opened.
      * 
      * @private
      */
     this._getCurrentWindow = function () {
-        return Piwik.UI.currentWindow;
+
+        return Piwik.getUI().currentWindow;
     };
     
     /**
      * Adds a new window to the master view of the split window. The master view is the left view of the split window.
      *
-     * @param  {Piwik.UI.Window}  newWin   The window that shall be added.
+     * @param  {Piwik.UI.Window}  newWin  The window that shall be added.
      * 
      * @private
      */
@@ -145,7 +153,7 @@ function window () {
     /**
      * Displays the newWin within a modal window. If no modal window exists, it creates one.
      * 
-     * @param  {Piwik.UI.Window}  newWin   The window that shall be added.
+     * @param  {Piwik.UI.Window}  newWin  The window that shall be added.
      * 
      * @private
      */
@@ -173,7 +181,7 @@ function window () {
                     modalWin            = null;
                     layout._modalNav    = null;
                 } catch (e) {
-                    Piwik.Log.warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
+                    Piwik.getLog().warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
                 }
             });
             
@@ -209,7 +217,7 @@ function window () {
                 try {
                     layout._modalNav.close(this.rootWindow);
                 } catch (e) {
-                    Piwik.Log.warn('Failed to remove rootWin from Navigation', 'iPadLayout::_addWindowToModal');
+                    Piwik.getLog().warn('Failed to remove rootWin from Navigation', 'iPadLayout::_addWindowToModal');
                 }
             }
         });
@@ -220,7 +228,7 @@ function window () {
     /**
      * Adds a new window to the detail view of the split window. The detail view is the right view of the split window.
      *
-     * @param  {Piwik.UI.Window}  newWin   The window that shall be added.
+     * @param  {Piwik.UI.Window}  newWin  The window that shall be added.
      * 
      * @private
      */
@@ -232,13 +240,13 @@ function window () {
                 currentWindow.fireEvent('blurWindow', {});
                 currentWindow.close();
             } catch (e) {
-                Piwik.Log.warn('Failed to close current window: ' + e, 'iPadLayout::addWindowToDetailView');
+                Piwik.getLog().warn('Failed to close current window: ' + e, 'iPadLayout::addWindowToDetailView');
             }
         }
 
         newWin.fireEvent('focusWindow', {});
 
-        Piwik.UI.currentWindow = newWin;
+        Piwik.getUI().currentWindow = newWin;
 
         this.windows.push(newWin);
 
@@ -251,9 +259,9 @@ function window () {
      * Add a new window to the layout so that it will be visible afterwards. Does also add a property named
      * "rootWindow" to the newWin object which references to the root window (Ti.UI.Window) of the view.
      *
-     * @param    {Piwik.UI.Window}    newWin   The window that shall be added to the layout.
-     *                                         The window will be visible afterwards.
-     * @param    {string}     [newWin.target]  Either 'masterView', 'modal' or 'detailView'
+     * @param  {Piwik.UI.Window}  newWin           The window that shall be added to the layout.
+     *                                             The window will be visible afterwards.
+     * @param  {string}           [newWin.target]  Either 'masterView', 'modal' or 'detailView'.
      */
     this.addWindow = function (newWin) {
 
@@ -277,18 +285,18 @@ function window () {
     /**
      * Remove a window from the layout so that it will be no longer visible.
      *
-     * @param    {Piwik.UI.Window}  piwikWindow           The window that shall be removed from the layout. The
-     *                                                    current implementation requires that the given window,
-     *                                                    which shall be removed, is the current displayed window.
-     * @param    {boolean}          newWindowWillFollow   True if a new window will follow afterwards (via addWindow),
-     *                                                    false otherwise. 
+     * @param  {Piwik.UI.Window}  piwikWindow          The window that shall be removed from the layout. The
+     *                                                 current implementation requires that the given window,
+     *                                                 which shall be removed, is the current displayed window.
+     * @param  {boolean}          newWindowWillFollow  True if a new window will follow afterwards (via addWindow),
+     *                                                 false otherwise. 
      */
     this.removeWindow = function (piwikWindow, newWindowWillFollow) {
 
         try {
             
             if (!piwikWindow || !piwikWindow.rootWindow) {
-                Piwik.Log.warn('No window or rootWindow given', 'iPadLayout::removeWindow');
+                Piwik.getLog().warn('No window or rootWindow given', 'iPadLayout::removeWindow');
                 
                 return;
             }
@@ -310,7 +318,7 @@ function window () {
             piwikWindow.rootWindow.remove(piwikWindow);
             
         } catch (e) {
-            Piwik.Log.warn('Failed to remove PiwikWin from rootWindow: ' + e, 'iPadLayout::removeWindow');
+            Piwik.getLog().warn('Failed to remove PiwikWin from rootWindow: ' + e, 'iPadLayout::removeWindow');
         }
 
         piwikWindow = null;
@@ -330,7 +338,7 @@ function window () {
                                                  width: 37});
 
         settingsButton.addEventListener('click', function () {
-            Piwik.UI.createWindow({url: 'settings/index.js', target: 'modal'});
+            Piwik.getUI().createWindow({url: 'settings/index', target: 'modal'});
         });
         
         this._masterWin.leftNavButton = settingsButton;
@@ -339,8 +347,8 @@ function window () {
             window: Ti.UI.currentWindow
         });
         
-        this.header     = Piwik.UI.createHeader({title: 'Piwik Mobile'});
-        this.menu       = Piwik.UI.createMenu({menuView: this.header.getHeaderView()});
+        this.header     = Piwik.getUI().createHeader({title: 'Piwik Mobile'});
+        this.menu       = Piwik.getUI().createMenu({menuView: this.header.getHeaderView()});
         
         var navMaster   = Ti.UI.iPhone.createNavigationGroup({
             window: this._masterWin
@@ -355,3 +363,5 @@ function window () {
         splitwin.open();
     };
 }
+
+module.exports = layout;

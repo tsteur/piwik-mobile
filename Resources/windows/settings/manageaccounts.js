@@ -8,23 +8,29 @@
  * @fileOverview window 'settings/manageaccounts.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Provides the ability to manage all existing accounts. The user has the ability to delete or to select an
- *        existing account on iOS. On Android the user is able to delete, activate, deactivate or to select an existing
- *        account by pressing the row for at least about a second (onShowOptionMenu).
+ * @class     Provides the ability to manage all existing accounts. The user has the ability to delete or to select an
+ *            existing account on iOS. On Android the user is able to delete, activate, deactivate or to select an
+ *            existing account by pressing the row for at least about a second (onShowOptionMenu).
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowIndexManageaccounts
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('UsersManager_ManageAccess')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {commands: [this.createCommand('AddAccountCommand')]};
 
@@ -32,12 +38,13 @@ function window () {
     
     var onUpdateAccount = function () {
         // will be executed in row context, therefore this == Piwik.UI.TableViewRow
-        that.create('Window', {url: 'settings/editaccount.js',
+        that.create('Window', {url: 'settings/editaccount',
                                target: 'modal',
                                accountId: this.accountId});
     };
     
     var onShowOptionMenu = function (event) {
+        // will be executed in row context, therefore this == Piwik.UI.TableViewRow
 
         if (this.optionMenuOpened) {
             // make sure the option menu will not be opened more than once at the same time. Value will be set to false
@@ -126,11 +133,11 @@ function window () {
     // user has selected an account
     tableview.addEventListener('click', function (event) {
 
-        if (!event || !event.rowData || !event.rowData.onClick) {
+        if (!event || !event.row || !event.row.onClick) {
             return;
         }
 
-        event.rowData.onClick.apply(event.row, [event]);
+        event.row.onClick.apply(event.row, [event]);
     });
 
     // delete an account
@@ -141,7 +148,7 @@ function window () {
         var accountManager = Piwik.require('App/Accounts');
         accountManager.deleteAccount(event.row.accountId);
 
-        if (Piwik.isAndroid) {
+        if (Piwik.getPlatform().isAndroid) {
             // row will be automatically removed from tableview on iOS, not on android. therefore make a simple reload
             that.open();
         }
@@ -157,7 +164,7 @@ function window () {
 
         var tableData  = [];
         
-        if (Piwik.isIos) {
+        if (Piwik.getPlatform().isIos) {
             tableData.push(that.create('TableViewSection', {title: _('Mobile_Accounts'), 
                                                             style: 'native',
                                                             footerTitle: _('Mobile_HowtoDeleteAnAccountOniOS')}));
@@ -180,7 +187,7 @@ function window () {
 
         tableview.setData(tableData);
 
-        if (Piwik.isIos && tableview.scrollToTop) {
+        if (Piwik.getPlatform().isIos && tableview.scrollToTop) {
             // make sure the first row is visible on iPad
             tableview.scrollToTop(1);
         }
@@ -211,3 +218,5 @@ function window () {
         this.fireEvent('onopen', eventResult);
     };
 }
+
+module.exports = window;

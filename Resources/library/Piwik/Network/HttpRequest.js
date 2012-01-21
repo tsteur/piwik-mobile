@@ -6,9 +6,14 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik   = require('library/Piwik');
+/** @private */
+var _       = require('library/underscore');
+
 /**
- * @class   Can be used to send a GET http request to any url. Attend that synchronous requests are not supported at the
- *          moment.
+ * @class    Can be used to send a GET http request to any url. Attend that synchronous requests are not supported at 
+ *           the moment.
  *
  * @example
  * var request = Piwik.require('Network/HttpRequest');
@@ -16,15 +21,17 @@
  * request.setParameter({siteId: 5});
  * request.setCallback(anyContext, function (response, parameters) {});
  * request.handle();
+ * 
+ * @exports  HttpRequest as Piwik.Network.HttpRequest
  */
-Piwik.Network.HttpRequest = function () {
+function HttpRequest () {
     
     /**
      * Holds the base url.
      * 
-     * @type String
+     * @type  String
      *
-     * @see Piwik.Network.HttpRequest#setBaseUrl
+     * @see   Piwik.Network.HttpRequest#setBaseUrl
      * 
      * @private
      */
@@ -34,9 +41,9 @@ Piwik.Network.HttpRequest = function () {
      * A given callback method will be executed in this context. This means you can access the properties of the context
      * object within the callback using 'this'. 
      *
-     * @see Piwik.Network.HttpRequest#setCallback
+     * @see   Piwik.Network.HttpRequest#setCallback
      * 
-     * @type Object
+     * @type  Object
      */
     this.context          = null;
 
@@ -45,9 +52,9 @@ Piwik.Network.HttpRequest = function () {
      * inform the user if the request timed out or the url does not exist. This property is set to true as soon as an
      * error message was sent to the user. We do not want to inform the user more than once if an error occurs.
      * 
-     * @default "false"
+     * @default  "false"
      *
-     * @type boolean
+     * @type     boolean
      */
     this.errorMessageSent = false;
     
@@ -56,9 +63,9 @@ Piwik.Network.HttpRequest = function () {
      * unimportant and does not effect the app. This is important because Apple requires to inform the user if 
      * no network connection is available.
      * 
-     * @default "true"
+     * @default  "true"
      *
-     * @type boolean
+     * @type     boolean
      */
     this.sendErrors       = true;
     
@@ -66,18 +73,18 @@ Piwik.Network.HttpRequest = function () {
      * The handleAs parameter specifices how to parse the received data before the callback method is called.
      * Supported values are 'json', 'xml' and 'text'.
      * 
-     * @default "text"
+     * @default  "text"
      *
-     * @type string
+     * @type     string
      */
     this.handleAs         = 'text';
 
     /**
      * An object containing key/value pairs. These are used as GET parameters when executing the request.
      *
-     * @see Piwik.Network.HttpRequest#setParameters
+     * @see   Piwik.Network.HttpRequest#setParameter
      *
-     * @type Object|null
+     * @type  Object|null
      */
     this.parameter        = null;
 
@@ -86,9 +93,9 @@ Piwik.Network.HttpRequest = function () {
      * in context of {@link Piwik.Network.HttpRequest#context}. The callback method will be executed on a valid result
      * and on any error. If an error occurred, it does not pass the result to the callback method.
      *
-     * @see Piwik.Network.HttpRequest#setCallback
+     * @see   Piwik.Network.HttpRequest#setCallback
      *
-     * @type Function|null
+     * @type  Function|null
      */
     this.callback         = null;
 
@@ -96,384 +103,385 @@ Piwik.Network.HttpRequest = function () {
      * An instance of the Titanium HTTP Client instance we have used to send the request. Is only set if the request is
      * currently in progress.
      *
-     * @type Titanium.Network.HTTPClient
+     * @type  Titanium.Network.HTTPClient
      */
     this.xhr              = null;
+}
 
-    /**
-     * Sets (overwrites) the base url.
-     * 
-     * @param {string} baseUrl   An url without any GET parameter/Query. For example: 'http://domain.tld/dir/ectory'.
-     *                           Do not include GET parameter like this 'http://domain.tld/dir/ectory?' or 
-     *                           'http://domain.tld/dir/ectory?key=1&key2=2'. Use {@link Piwk.Network.HttpRequest#setParameter}
-     *                           instead.
-     * 
-     * @type null
-     */
-    this.setBaseUrl  = function (baseUrl) {
+/**
+ * Sets (overwrites) the base url.
+ * 
+ * @param  {string}  baseUrl  An url without any GET parameter/Query. For example: 'http://domain.tld/dir/ectory'.
+ *                            Do not include GET parameter like this 'http://domain.tld/dir/ectory?' or 
+ *                            'http://domain.tld/dir/ectory?key=1&key2=2'. 
+ *                            Use {@link Piwk.Network.HttpRequest#setParameter} instead.
+ * 
+ * @type   null
+ */
+HttpRequest.prototype.setBaseUrl = function (baseUrl) {
+
+    if (baseUrl && 'string' === (typeof baseUrl).toLowerCase() && 4 < baseUrl.length) {
+        this.baseUrl = baseUrl;
+    }
+};
+
+/**
+ * Sets (overwrites) the GET parameters.
+ *
+ * @param  {Object}  parameter  An object containing key/value pairs, see {@link Piwik.Network.HttpRequest#parameter}
+ *
+ * @type   null
+ */
+HttpRequest.prototype.setParameter = function (parameter) {
+    this.parameter = parameter;
+};
+
+/**
+ * Sets (overwrites) the callback method and the context. The context object defines in which context the callback
+ * method will be executed.
+ *
+ * @param  {Object}    context     A given callback method will be executed in this context. This means you
+ *                                 can access the properties of the context object within the callback
+ *                                 using 'this'. See {@link Piwik.Network.HttpRequest#context}
+ * @param  {Function}  [callback]  Optional. The callback is called as soon as the response is received.
+ *                                 The callback is called even on any error. Possible errors are:
+ *                                 Network is not available, no base url is given, timeout, ...
+ *                                 In such a case the callback method does not receive the response as an
+ *                                 argument. Ensure that your callback method is able to handle such a case.
+ *                                 The first argument the method does receive is the response, the second is
+ *                                 the used parameters. See {@link Piwik.Network.HttpRequest#callback}
+ */
+HttpRequest.prototype.setCallback = function (context, callback) {
+    this.context  = context;
+    this.callback = callback;
+};
+
+/**
+ * Fires a single http request. Fires a callback method as soon as the response is received. Make sure to set
+ * all data needed to handle the request before calling this method.
+ */
+HttpRequest.prototype.handle = function () {
+
+    var parameter    = this.parameter;
+
+    if (!parameter) {
+        parameter    = {};
+    }
     
-        if (baseUrl && 'string' === (typeof baseUrl).toLowerCase() && 4 < baseUrl.length) {
-            this.baseUrl = baseUrl;
-        }
-    };
+    if (!this.context) {
+        this.context = {};
+    }
 
-    /**
-     * Sets (overwrites) the GET parameters.
-     *
-     * @param {Object} parameter  An object containing key/value pairs, see {@link Piwik.Network.HttpRequest#parameter}
-     *
-     * @type null
-     */
-    this.setParameter  = function (parameter) {
-        this.parameter = parameter;
-    };
+    if (!this.baseUrl) {
 
-    /**
-     * Sets (overwrites) the callback method and the context. The context object defines in which context the callback
-     * method will be executed.
-     *
-     * @param   {Object}     context        A given callback method will be executed in this context. This means you
-     *                                      can access the properties of the context object within the callback
-     *                                      using 'this'. See {@link Piwik.Network.HttpRequest#context}
-     * @param   {Function}   [callback]     Optional. The callback is called as soon as the response is received.
-     *                                      The callback is called even on any error. Possible errors are:
-     *                                      Network is not available, no base url is given, timeout, ...
-     *                                      In such a case the callback method does not receive the response as an
-     *                                      argument. Ensure that your callback method is able to handle such a case.
-     *                                      The first argument the method does receive is the response, the second is
-     *                                      the used parameters.
-     *                                      See {@link Piwik.Network.HttpRequest#callback}
-     */
-    this.setCallback  = function (context, callback) {
-        this.context  = context;
-        this.callback = callback;
-    };
-
-    /**
-     * Fires a single http request. Fires a callback method as soon as the response is received. Make sure to set
-     * all data needed to handle the request before calling this method.
-     */
-    this.handle = function () {
-
-        var parameter    = this.parameter;
-
-        if (!parameter) {
-            parameter    = {};
-        }
+        this.error({error: 'Missing base url'});
         
-        if (!this.context) {
-            this.context = {};
+        return;
+    }
+
+    if (!Ti.Network || !Ti.Network.online) {
+        
+        this.error({error: 'No connection'});
+
+        return;
+    }
+
+    var requestUrl  = '';
+    
+    if (parameter) {
+        
+        requestUrl += '?';
+        for (var paramName in parameter) {
+            requestUrl += paramName + '=' + parameter[paramName] + '&';
+        }
+    }
+   
+    requestUrl       = this.baseUrl + Piwik.getNetwork().encodeUrlParams(requestUrl);
+    
+    Piwik.getLog().debug('RequestUrl is ' + requestUrl, 'Piwik.Network.HttpRequest::handle');
+    
+    this.xhr         = Ti.Network.createHTTPClient({validatesSecureCertificate: false, enableKeepAlive: false});
+    var that         = this;
+    
+    this.xhr.onload  = function () { that.load(this); };
+    this.xhr.onerror = function () { that.error({error: 'Timeout'}); };
+
+    var settings     = Piwik.require('App/Settings');
+    
+    // override the iPhone default timeout -> this timeout should never occur since we have implemented our own
+    // timeout which is lower than this timeout.
+    var timeoutValue = parseInt(settings.getHttpTimeout(), 10);
+    this.xhr.timeout = timeoutValue;
+    this.xhr.setTimeout(timeoutValue);
+
+    this.xhr.open("GET", requestUrl);
+
+    if (Piwik.getPlatform().isAndroid && Ti.userAgent) {
+        this.xhr.setRequestHeader('User-Agent', Ti.userAgent);
+    }
+
+    this.xhr.send({});
+};
+
+/**
+ * Abort a pending request. Does not send any error to the user about this report. Does not call any callback
+ * method.
+ *
+ * @returns  {boolean}  True if there was a pending request which we have aborted. False otherwise.
+ */
+HttpRequest.prototype.abort = function () {
+
+    if (this.xhr && this.xhr.abort) {
+
+        // make sure not to notify the user about this abort
+        this.sendErrors = false;
+        
+        // make sure no callback method will be called.
+        this.setCallback({}, function () {});
+        
+        this.xhr.abort();
+
+        return true;
+    }
+
+    return false;
+};
+
+/**
+ * This method will be executed as soon as the response is received. Parses the response, validates it and calls
+ * the callback method on success.
+ *
+ * @param  {Titanium.Network.HTTPClient}  xhr  The used xhr request which contains the received response.
+ */
+HttpRequest.prototype.load = function (xhr) {
+
+    Piwik.getLog().debug('Received response ' + xhr.responseText, 'Piwik.Network.HttpRequest::load');
+
+    try {
+        // parse response
+        var response;
+
+        if ('json' === this.handleAs) {
+
+            response = JSON.parse(xhr.responseText);
+
+        } else if ('text' === this.handleAs) {
+
+            response = xhr.responseText;
+
+        } else if ('xml' === this.handleAs) {
+
+            response = xhr.responseXML;
         }
 
-        if (!this.baseUrl) {
+    } catch (exception) {
 
-            this.error({error: 'Missing base url'});
-            
-            return;
+        Piwik.getUI().createError({exception: exception, errorCode: 'PiHrLo26'});
+
+        this.error({error: 'Failed to parse response'});
+
+        return;
+    }
+
+    // validate response
+    var isValidResponse = this.isValidResponse(response);
+
+    if (!isValidResponse) {
+
+        this.error({error: 'Invalid response'});
+
+        return;
+    }
+
+    var callback = this.callback;
+    if (!callback) {
+        callback = new Function();
+    }
+
+    var parameter = this.parameter;
+
+    try {
+        // execute callback in defined context
+        callback.apply(this.context, [response, parameter]);
+    } catch (e) {
+        Piwik.getLog().warn('Failed to call callback method: ' + e.message, 
+                            'Piwik.Network.HttpRequest::load#callback');
+
+        var uiError = Piwik.getUI().createError({exception: e, errorCode: 'PiHrLo29'});
+        uiError.showErrorMessageToUser();
+    }
+
+    // onload hook
+    if (this.onload) {
+        this.onload();
+    }
+
+    this.xhr = null;
+    callback = null;
+    response = null;
+};
+
+/**
+ * This method will be executed on any error. Displays a notification about the occurred error, if sendErrors is
+ * enabled and if no error message was already sent. Executes the previous defined callback method afterwards.
+ *
+ * @param  {Object}  e  An Error Object that contains at least a property named error.
+ */
+HttpRequest.prototype.error = function (e) {
+
+    Piwik.getLog().warn(e, 'Piwik.Network.HttpRequest::error');
+
+    if (e && e.error && '' !== e.error && this.displayErrorAllowed()) {
+
+        if ('Host is unresolved' == e.error.substr(0, 18)) {
+            // convert error message "Host is unresolved: notExistingDomain.org:80" to: "Host is unresolved"
+
+            e.error = 'Host is unresolved';
         }
 
-        if (!Ti.Network || !Ti.Network.online) {
-            
-            this.error({error: 'No connection'});
+        // @todo translation keys for all error messages
+        switch (e.error) {
 
-            return;
+            case 'No connection':
+
+                // apple requires that we inform the user if no network connection is available
+                this.errorMessageSent = true;
+
+                var alertDialog = Ti.UI.createAlertDialog({
+                    title: _('Mobile_NetworkNotReachable'),
+                    message: _('Mobile_YouAreOffline'),
+                    buttonNames: [_('General_Ok')]
+                });
+
+                alertDialog.show();
+
+                break;
+
+            case 'Request aborted':
+            case 'Timeout':
+            case 'Chunked stream ended unexpectedly':
+
+                this.errorMessageSent = true;
+
+                var alertDialog = Ti.UI.createAlertDialog({
+                    title: _('General_Error'),
+                    message: String.format(_('General_RequestTimedOut'), '' + this.baseUrl),
+                    buttonNames: [_('General_Ok')]
+                });
+
+                alertDialog.show();
+
+                break;
+
+            case 'Host is unresolved':
+            case 'Not Found':
+
+                this.errorMessageSent = true;
+
+                var alertDialog = Ti.UI.createAlertDialog({
+                    title: _('General_Error'),
+                    message: String.format(_('General_NotValid'), '' + this.baseUrl),
+                    buttonNames: [_('General_Ok')]
+                });
+
+                // @todo go directly to settings after user has confirmed the ok button?
+
+                alertDialog.show();
+
+                break;
+
+            case 'Missing base url':
+
+                // ignore this error, user has not already set up the app
+                break;
+
+            default:
+                /**
+                 * further known error codes:
+                 * 'Failed to parse response' -> we set this error if we were not able to parse the response
+                 * 'Manager is shut down.'    -> don't know what this exactly means
+                 * 'No wrapped connection'    -> don't know what this exactly means
+                 * 'Adapter is detached'      -> don't know what this exactly means
+                 */
+                if (!e.error) {
+                    e.error = 'Unknown';
+                }
+
+                Piwik.getUI().createError({exception: e, type: e.error,
+                                      file: 'Piwik/Network/HttpRequest.js', errorCode: 'PiHrLe39'});
+                    
+                this.errorMessageSent = true;
+
+                var alertDialog = Ti.UI.createAlertDialog({
+                    title: _('General_Error'),
+                    message: _('General_ErrorRequest') + ' Error Code: ' + e.error,
+                    buttonNames: [_('General_Ok')]
+                });
+
+                alertDialog.show();
         }
+    }
 
-        var requestUrl  = '';
-        
-        if (parameter) {
-            
-            requestUrl += '?';
-            
-            for (var paramName in parameter) {
-                requestUrl += paramName + '=' + parameter[paramName] + '&';
-            }
-        }
-        
-        requestUrl   = this.baseUrl + requestUrl.encodeUrlParams();
-        
-        Piwik.Log.debug('RequestUrl is ' + requestUrl, 'Piwik.Network.HttpRequest::handle');
-        
-        this.xhr      = Ti.Network.createHTTPClient({validatesSecureCertificate: false, enableKeepAlive: false});
-        var that      = this;
-        
-        this.xhr.onload   = function () { that.load(this); };
-        this.xhr.onerror  = function () { that.error({error: 'Timeout'}); };
+    var callback  = this.callback;
+    if (!callback) {
+        callback  = function () {};
+    }
 
-        var settings = Piwik.require('App/Settings');
-        
-        // override the iPhone default timeout -> this timeout should never occur since we have implemented our own
-        // timeout which is lower than this timeout.
-        var timeoutValue = parseInt(settings.getHttpTimeout(), 10);
-        this.xhr.timeout      = timeoutValue;
-        this.xhr.setTimeout(timeoutValue);
+    callback.apply(this.context, []);
 
-        this.xhr.open("GET", requestUrl);
+    this.xhr      = null;
+    callback      = null;
 
-        if (Piwik.isAndroid && Ti.userAgent) {
-            this.xhr.setRequestHeader('User-Agent', Ti.userAgent);
-        }
+    // onload hook
+    if (this.onload) {
+        this.onload();
+    }
+};
 
-        this.xhr.send({});
-    };
-
-    /**
-     * Abort a pending request. Does not send any error to the user about this report. Does not call any callback
-     * method.
-     *
-     * @returns   {boolean}   True if there was a pending request which we have aborted. False otherwise.
-     */
-    this.abort = function () {
-
-        if (this.xhr && this.xhr.abort) {
-
-            // make sure not to notify the user about this abort
-            this.sendErrors = false;
-            
-            // make sure no callback method will be called.
-            this.setCallback({}, function () {});
-            
-            this.xhr.abort();
-
-            return true;
-        }
+/**
+ * Detects whether it is ok to display an error message. 
+ *
+ * @returns  {boolean}  true if we are allowed to display an error message, false otherwise.
+ */
+HttpRequest.prototype.displayErrorAllowed = function () {
+    if (!this.sendErrors) {
+        // displaying errors are not allowed for this request
 
         return false;
-    };
+    }
 
-    /**
-     * This method will be executed as soon as the response is received. Parses the response, validates it and calls
-     * the callback method on success.
-     *
-     * @param   {Titanium.Network.HTTPClient}   xhr    The used xhr request which contains the received response.
-     */
-    this.load = function (xhr) {
+    if (this.errorMessageSent) {
+        // an error message was already displayed. Do not display an error again.
 
-        Piwik.Log.debug('Received response ' + xhr.responseText, 'Piwik.Network.HttpRequest::load');
+        return false;
+    }
 
-        try {
-            // parse response
-            var response;
+    if (this.onDisplayErrorAllowed) {
 
-            if ('json' === this.handleAs) {
+        return this.onDisplayErrorAllowed();
+    }
 
-                response = JSON.parse(xhr.responseText);
-
-            } else if ('text' === this.handleAs) {
-
-                response = xhr.responseText;
-
-            } else if ('xml' === this.handleAs) {
-
-                response = xhr.responseXML;
-            }
-
-        } catch (exception) {
-
-            Piwik.UI.createError({exception: exception, errorCode: 'PiHrLo26'});
-
-            this.error({error: 'Failed to parse response'});
-
-            return;
-        }
-
-        // validate response
-        var isValidResponse = this.isValidResponse(response);
-
-        if (!isValidResponse) {
-
-            this.error({error: 'Invalid response'});
-
-            return;
-        }
-
-        var callback  = this.callback;
-        if (!callback) {
-            callback  = function () {};
-        }
-
-        var parameter = this.parameter;
-
-        try {
-            // execute callback in defined context
-            callback.apply(this.context, [response, parameter]);
-        } catch (e) {
-            Piwik.Log.warn('Failed to call callback method: ' + e.message, 'Piwik.Network.HttpRequest::load#callback');
-
-            var uiError = Piwik.UI.createError({exception: e, errorCode: 'PiHrLo29'});
-            uiError.showErrorMessageToUser();
-        }
-
-        // onload hook
-        if (this.onload) {
-            this.onload();
-        }
-
-        this.xhr = null;
-        callback = null;
-        response = null;
-    };
-
-    /**
-     * This method will be executed on any error. Displays a notification about the occurred error, if sendErrors is
-     * enabled and if no error message was already sent. Executes the previous defined callback method afterwards.
-     *
-     * @param   {Object}    e    An Error Object that contains at least a property named error.
-     */
-    this.error = function (e) {
-
-        Piwik.Log.warn(e, 'Piwik.Network.HttpRequest::error');
-
-        if (e && e.error && '' !== e.error && this.displayErrorAllowed()) {
-
-            if ('Host is unresolved' == e.error.substr(0, 18)) {
-                // convert error message "Host is unresolved: notExistingDomain.org:80" to: "Host is unresolved"
-
-                e.error = 'Host is unresolved';
-            }
-
-            // @todo translation keys for all error messages
-            switch (e.error) {
-
-                case 'No connection':
-
-                    // apple requires that we inform the user if no network connection is available
-                    this.errorMessageSent = true;
-
-                    var alertDialog = Ti.UI.createAlertDialog({
-                        title: _('Mobile_NetworkNotReachable'),
-                        message: _('Mobile_YouAreOffline'),
-                        buttonNames: [_('General_Ok')]
-                    });
-
-                    alertDialog.show();
-
-                    break;
-
-                case 'Request aborted':
-                case 'Timeout':
-                case 'Chunked stream ended unexpectedly':
-
-                    this.errorMessageSent = true;
-
-                    var alertDialog = Ti.UI.createAlertDialog({
-                        title: _('General_Error'),
-                        message: String.format(_('General_RequestTimedOut'), '' + this.baseUrl),
-                        buttonNames: [_('General_Ok')]
-                    });
-
-                    alertDialog.show();
-
-                    break;
-
-                case 'Host is unresolved':
-                case 'Not Found':
-
-                    this.errorMessageSent = true;
-
-                    var alertDialog = Ti.UI.createAlertDialog({
-                        title: _('General_Error'),
-                        message: String.format(_('General_NotValid'), '' + this.baseUrl),
-                        buttonNames: [_('General_Ok')]
-                    });
-
-                    // @todo go directly to settings after user has confirmed the ok button?
-
-                    alertDialog.show();
-
-                    break;
-
-                case 'Missing base url':
-
-                    // ignore this error, user has not already set up the app
-                    break;
-
-                default:
-                    /**
-                     * further known error codes:
-                     * 'Failed to parse response' -> we set this error if we were not able to parse the response
-                     * 'Manager is shut down.'    -> don't know what this exactly means
-                     * 'No wrapped connection'    -> don't know what this exactly means
-                     * 'Adapter is detached'      -> don't know what this exactly means
-                     */
-                    if (!e.error) {
-                        e.error = 'Unknown';
-                    }
-
-                    Piwik.UI.createError({exception: e, type: e.error,
-                                          file: 'Piwik/Network/HttpRequest.js', errorCode: 'PiHrLe39'});
-                        
-                    this.errorMessageSent = true;
-
-                    var alertDialog = Ti.UI.createAlertDialog({
-                        title: _('General_Error'),
-                        message: _('General_ErrorRequest') + ' Error Code: ' + e.error,
-                        buttonNames: [_('General_Ok')]
-                    });
-
-                    alertDialog.show();
-            }
-        }
-
-        var callback  = this.callback;
-        if (!callback) {
-            callback  = function () {};
-        }
-
-        callback.apply(this.context, []);
-
-        this.xhr      = null;
-        callback      = null;
-
-        // onload hook
-        if (this.onload) {
-            this.onload();
-        }
-    };
-
-    /**
-     * Detects whether it is ok to display an error message. 
-     *
-     * @returns {boolean} true if we are allowed to display an error message, false otherwise.
-     */
-    this.displayErrorAllowed = function () {
-        if (!this.sendErrors) {
-            // displaying errors are not allowed for this request
-
-            return false;
-        }
-
-        if (this.errorMessageSent) {
-            // an error message was already displayed. Do not display an error again.
-
-            return false;
-        }
-
-        if (this.onDisplayErrorAllowed) {
-
-            return this.onDisplayErrorAllowed();
-        }
-
-        return true;
-    };
-
-    /**
-     * The onload method will be called as soon as the load or error event was executed. 
-     */
-    this.onload = function () {
-        // overwrite me
-    };
-
-    /**
-     * Is called to validate the response before the success callback method will be called. If the response is not
-     * valid, the errorHandler will be triggered which notifies the user about an error.
-     * 
-     * @param   {Object|null} The received response.
-     * 
-     * @returns {boolean} true if the response is valid, false otherwise.
-     */
-    this.isValidResponse = function (response) {
-        
-        return true;
-    };
+    return true;
 };
+
+/**
+ * The onload method will be called as soon as the load or error event was executed. 
+ */
+HttpRequest.prototype.onload = function () {
+    // overwrite me
+};
+
+/**
+ * Is called to validate the response before the success callback method will be called. If the response is not
+ * valid, the errorHandler will be triggered which notifies the user about an error.
+ * 
+ * @param    {Object|null}  response  The received response.
+ * 
+ * @returns  {boolean}      true if the response is valid, false otherwise.
+ */
+HttpRequest.prototype.isValidResponse = function (response) {
+    
+    return true;
+};
+
+module.exports = HttpRequest;

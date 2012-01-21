@@ -8,19 +8,25 @@
  * @fileOverview window 'index/index.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Displays a list of all available websites where the user has at least view access. The user is able to select
- *        a website which opens a new window.
+ * @class     Displays a list of all available websites where the user has at least view access. The user is able to
+ *            select a website which opens a new window.
  *
- * @todo sort websites by accountId
+ * @exports   window as WindowIndexIndex
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @todo      sort websites by accountId
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      * 
      * The last whitespace forces an redraw of the title on the iPad. Without this redraw the title will be aligned
      * right.
@@ -28,18 +34,17 @@ function window () {
     this.titleOptions = {title: 'Piwik Mobile '};
             
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
-    if (!Piwik.isIpad) {
-       // Piwik.Log.warn(this.createCommand('OpenSettingsCommand'), 'f');
+    if (!Piwik.getPlatform().isIpad) {
         this.menuOptions  = {commands: [this.createCommand('OpenSettingsCommand')]};
     }
 
     var that          = this;
 
-    var websitesList  = this.create('WebsitesList', {handleOnlyOneSiteAvailableEvent: !Piwik.isIpad,
+    var websitesList  = this.create('WebsitesList', {handleOnlyOneSiteAvailableEvent: !Piwik.getPlatform().isIpad,
                                                      view: this});
 
     websitesList.addEventListener('onChooseSite', function (event) {
@@ -50,7 +55,7 @@ function window () {
         
         Piwik.getTracker().prepareVisitCustomVariables();
 
-        that.create('Window', {url: 'site/index.js',
+        that.create('Window', {url: 'site/index',
                                target: 'masterView',
                                site: event.site});
     });
@@ -65,7 +70,7 @@ function window () {
         
         // user has access to only one site. jump directly to site view
         // @see http://dev.piwik.org/trac/ticket/2120
-        that.create('Window', {url: 'site/index.js',
+        that.create('Window', {url: 'site/index',
                                closeWindow: that,
                                target: 'masterView',
                                site: event.site});
@@ -78,3 +83,5 @@ function window () {
         websitesList.request();
     };
 }
+
+module.exports = window;

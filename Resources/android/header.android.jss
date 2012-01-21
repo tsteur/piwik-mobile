@@ -11,7 +11,7 @@
     left: 0;
     right: 0;
     zIndex: 500;
-    backgroundImage: 'images/headerBackground.png';
+    backgroundImage: '/images/headerBackground.png';
 }
 
 #headerTitleLabel {
@@ -22,6 +22,6 @@
     wordWrap: false;
     color: '#ffffff';
     minimumFontSize: '12dp';
-    font-size: '21dp';
+    font-size: '21sp';
     font-family: 'Arial';
 }

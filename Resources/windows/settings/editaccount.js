@@ -8,23 +8,29 @@
  * @fileOverview window 'settings/editaccount.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Provides the ability to add a new account or edit an already existing Piwik account. The user has to enter
- *        the website url of the Piwik server installation as well as the credentials in order to add or edit an
- *        account.
+ * @class     Provides the ability to add a new account or edit an already existing Piwik account. The user has to enter
+ *            the website url of the Piwik server installation as well as the credentials in order to add or edit an
+ *            account.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowSettingsEditaccount
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window (params) {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('UsersManager_ManageAccess')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {commands: [this.createCommand('OpenFaqCommand')]};
     
@@ -55,7 +61,7 @@ function window (params) {
         value: '',
         autocorrect: false,
         hintText: _('Login_Login'),
-        keyboardType: Piwik.isAndroid ? Ti.UI.KEYBOARD_URL : Ti.UI.KEYBOARD_DEFAULT,
+        keyboardType: Piwik.getPlatform().isAndroid ? Ti.UI.KEYBOARD_URL : Ti.UI.KEYBOARD_DEFAULT,
         returnKeyType: Ti.UI.RETURNKEY_NEXT,
         borderStyle: Ti.UI.INPUT_BORDERSTYLE_NONE,
         autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
@@ -115,7 +121,7 @@ function window (params) {
     piwikAnonymous.addEventListener('change', function (event) {
 
         if (!event) {
-            Piwik.Log.warn('Missing piwikAnonymous change event', 'settings/editaccount::change');
+            Piwik.getLog().warn('Missing piwikAnonymous change event', 'settings/editaccount::change');
 
             return;
         }
@@ -132,10 +138,10 @@ function window (params) {
         }
         
         // we need to visualize that textfields are enbabled/disabled on iOS. On Android this happens automatically.
-        if (event.value && Piwik.isIos) {
+        if (event.value && Piwik.getPlatform().isIos) {
             piwikUserRow.backgroundColor     = '#dddddd';
             piwikPasswordRow.backgroundColor = '#dddddd';
-        } else if (Piwik.isIos) {
+        } else if (Piwik.getPlatform().isIos) {
            piwikUserRow.backgroundColor      = '#ffffff';
            piwikPasswordRow.backgroundColor  = '#ffffff';
         }
@@ -147,7 +153,7 @@ function window (params) {
         piwikPassword.editable = !event.value;
     });
     
-    if (Piwik.isIos) {
+    if (Piwik.getPlatform().isIos) {
         // on Android the user removes/hides the keyboard by pressing the hardware return button.
         // on iOS we have to handle that ourselves when the user presses outside of the current keyboard
         this.addEventListener('click', function () {
@@ -352,16 +358,16 @@ function window (params) {
 
         alertDialog.addEventListener('click', function () {
 
-            if (Piwik.isIpad) {
+            if (Piwik.getPlatform().isIpad) {
                 
                 // update list of available websites and close currentwindow
-                that.create('Window', {url: 'index/index.js',
+                that.create('Window', {url: 'index/index',
                                        closeWindow: that});
                                        
-            } else if (1 === Piwik.UI.layout.windows.length) {
+            } else if (1 === Piwik.getUI().layout.windows.length) {
                 // this screen is the first Piwik window (in most cases the user started the app the first time),
                 // open websites overview instead of closing this window.
-                that.create('Window', {url: 'index/index.js',
+                that.create('Window', {url: 'index/index',
                                        closeWindow: that});
             } else {
 
@@ -381,8 +387,8 @@ function window (params) {
     /**
      * Pre fill previous created text fields with values if accountId is given and if this account exists.
      *
-     * @param {Object}    params
-     * @param {string}    [params.accountId]     Optional accountId in case of edit an account.
+     * @param  {Object}  params
+     * @param  {string}  [params.accountId]  Optional accountId in case of edit an account.
      */
     this.open = function (params) {
         if (!params || !params.accountId) {
@@ -416,3 +422,5 @@ function window (params) {
         }
     };
 }
+
+module.exports = window;

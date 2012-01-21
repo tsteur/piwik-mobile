@@ -6,42 +6,48 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+
 /**
- * @class   The top level Command module. The module contains methods to create commands.
+ * @class    The top level Command module. The module contains methods to create commands.
  *
+ * @exports  Command as Piwik.Command
  * @static
  */
-Piwik.Command = {};
+var Command = {};
 
 /**
  * Creates an instance of the given command and automatically sets the given parameters.
  * 
- * @param {string}  commandName   The name of the command, such a command has to exist within the library/Piwik/Command
- *                                folder. For example 'AddAccountCommand'.
- * @param {Object}  params        Optional parameters which will be automatically set.
+ * @param    {string}       commandName  The name of the command, such a command has to exist within the 
+ *                                       library/Piwik/Command folder. For example 'AddAccountCommand'.
+ * @param    {Object}       params       Optional parameters which will be automatically set.
  *
- * @returns {null|Object}         An instance of the created command or null if there was any error.
+ * @returns  {null|Object}  An instance of the created command or null if there was any error.
  */
-Piwik.Command.create = function (commandName, params) {
+Command.create = function (commandName, params) {
         
     if (!params) {
         params = {};
     }
     
     try {
-        var command = Piwik.require('Command/' + commandName);
+        var commandInstance = Piwik.require('Command/' + commandName);
         
-        if (!command) {
+        if (!commandInstance) {
             return;
         }
         
-        command.setParams(params);
+        commandInstance.setParams(params);
         
     } catch (e) {
-        Piwik.Log.warn('Failed to create command: ' + e, 'Piwik.UI.Window::createCommand');
+        Piwik.getLog().warn('Failed to create command: ' + e, 'Piwik.UI.Window::createCommand');
         
         return;
     }
     
-    return command;
+    return commandInstance;
 };
+
+module.exports = Command;

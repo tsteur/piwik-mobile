@@ -6,38 +6,39 @@
  * @version $Id$
  */
 
+/** @private */
+var _ = require('library/underscore');
+
 /**
- * Builtin object.
- * @class
- * @name Date
+ * @class    DateUtils
+ * 
+ * @exports  DateUtils as Piwik.Utils.Date
+ * @static
  */
- 
-/**#@+
- * Extension to builtin date.
- * @memberOf Date
- * @method
- */
- 
+function DateUtils () {
+}
+
 /**
  * Creates a date range which is similar to the used date range on the website. This date range can be used to fetch 
  * statistics depending on the given period within this date range.
  *
- * @param   {string}  period     The period eg. 'week' or 'day'.
+ * @param    {Date}         dateObject
+ * @param    {string}       period  The period eg. 'week' or 'day'.
  *
- * @returns {Object|void}  Returns an object containing a property 'from' and a property 'to'. Both are instances of
- *                         the Date object.
+ * @returns  {Object|void}  Returns an object containing a property 'from' and a property 'to'. Both are instances
+ *                          of the Date object.
  */
-Date.prototype.getPiwikDateRange = function (period) {
+DateUtils.prototype.getPiwikDateRange = function (dateObject, period) {
     
-    if (!period) {
+    if (!period || !dateObject) {
         
         return;
     }
 
-    var from = new Date(this.getTime());
-    var to   = new Date(this.getTime());
+    var from = new Date(dateObject.getTime());
+    var to   = new Date(dateObject.getTime());
     
-    switch(period) {
+    switch (period) {
     
         case 'day':
             break;
@@ -50,7 +51,6 @@ Date.prototype.getPiwikDateRange = function (period) {
             }
             
             from.setDate(from.getDate() - from.getDay() + 1);
-            
             to.setDate(to.getDate() + (7 - to.getDay()));
         
             break;
@@ -91,37 +91,38 @@ Date.prototype.getPiwikDateRange = function (period) {
  *
  * @example
  * var now = new Date();
- * now.toPiwikDateRangeString('week');
+ * Piwik.require('Utils/Date').toPiwikDateRangeString(now, 'week');
  *
- * @param   {string}  period     The period eg. 'week' or 'day'.
+ * @param    {Date}         dateObject
+ * @param    {string}       period  The period eg. 'week' or 'day'.
  *
- * @returns {string|void}  Return the date portion as a string, using locale conventions.
+ * @returns  {string|void}  Return the date portion as a string, using locale conventions.
  */
-Date.prototype.toPiwikDateRangeString = function (period) {
+DateUtils.prototype.toPiwikDateRangeString = function (dateObject, period) {
     
-    if (!period) {
+    if (!period || !dateObject) {
         
         return;
     }
     
     if ('day' == period) {
     
-        return this.toLocaleDateString();
+        return dateObject.toLocaleDateString();
     }
     
     if ('year' == period) {
         
-        return (this.getYear() + 1900) + '';
+        return (dateObject.getYear() + 1900) + '';
     }
     
     if ('month' == period) {
     
-        var translationKeyMonth = 'General_LongMonth_' + (this.getMonth() + 1);
+        var translationKeyMonth = 'General_LongMonth_' + (dateObject.getMonth() + 1);
         
-        return _(translationKeyMonth) + ' ' + (this.getYear() + 1900);
+        return _(translationKeyMonth) + ' ' + (dateObject.getYear() + 1900);
     }
     
-    var format = this.getPiwikDateRange(period);
+    var format = this.getPiwikDateRange(dateObject, period);
     
     format     = format.from.toLocaleDateString() + ' - ' + format.to.toLocaleDateString();
     
@@ -131,27 +132,43 @@ Date.prototype.toPiwikDateRangeString = function (period) {
 /**
  * Formats a string which can be used within the url query part of an piwik api request.
  *
+ * @param    {Date}    dateObject
+ * 
  * @example
  * var now = new Date(2010, 05, 31);
- * now.toPiwikQueryString(); // outputs '2010-05-31'
+ * Piwik.require('Utils/Date').toPiwikQueryString(now); // outputs '2010-05-31'
  *
- * @returns {string}  The in piwik api required date format.
+ * @returns  {string}  The in piwik api required date format.
  */
-Date.prototype.toPiwikQueryString = function () {
+DateUtils.prototype.toPiwikQueryString = function (dateObject) {
+    
+    if (!dateObject) {
+        
+        return '';
+    }
 
-    var month = this.getMonth() + 1;
-    var year  = this.getYear() + 1900;
-    var day   = this.getDate();
+    var month = dateObject.getMonth() + 1;
+    var year  = dateObject.getYear() + 1900;
+    var day   = dateObject.getDate();
     
     return String(year) + '-' + String(month) + '-' + String(day);
 };
 
 /**
  * Convert date to a locale time format.
+ * 
+ * @param    {Date}    dateObject
  *
- * @returns {string}  A string containing only the time. Time should be localized. 
+ * @returns  {string}  A string containing only the time. Time should be localized. 
  */
-Date.prototype.toLocaleTime = function () {
-
-    return this.toLocaleTimeString().split('GMT')[0];
+DateUtils.prototype.toLocaleTime = function (dateObject) {
+    
+    if (!dateObject || !dateObject.toLocaleTimeString) {
+        
+        return '';
+    }
+    
+    return dateObject.toLocaleTimeString().split('GMT')[0];
 };
+
+module.exports = new DateUtils();

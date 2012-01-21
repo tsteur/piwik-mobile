@@ -8,37 +8,45 @@
  * @fileOverview window 'statistics/show.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Display statistics depending on the given site and period. The user is able to change period, date and site.
+ * @class     Display statistics depending on the given site and period. The user is able to change period, date and 
+ *            site.
  *
- * @param {Object}      params
- * @param {Object}      params.site         The current selected site.
- * @param {Object}      params.report       Report information. Object looks like:
- *                                          {"category":"Actions",
- *                                           "name":"Downloads",
- *                                           "module":"Actions",
- *                                           "action":"getDownloads",
- *                                           "dimension":"Download URL",
- *                                           "metrics":{"nb_hits":"Pageviews","nb_visits":"Visits"},
- *                                           "uniqueId":"Actions_getDownloads"},
- * @param {string|Date} [params.date]       Optional. The current selected date. Can be either a Date object
- *                                          or string in the following format "YYYY-MM-DD". Defaults to now.
- * @param {string}      [params.period]     Optional. The current selected period. For example 'day' or 'week'.
- * @param {boolean}     [params.showAll]    Optional. True if all (is slow), false if only the top most (paging)
- *                                          statistics shall be fetched.
+ * @param     {Object}       params
+ * @param     {Object}       params.site       The current selected site.
+ * @param     {Object}       params.report     Report information. Object looks like:
+ *                                             {"category":"Actions",
+ *                                              "name":"Downloads",
+ *                                              "module":"Actions",
+ *                                              "action":"getDownloads",
+ *                                              "dimension":"Download URL",
+ *                                              "metrics":{"nb_hits":"Pageviews","nb_visits":"Visits"},
+ *                                              "uniqueId":"Actions_getDownloads"},
+ * @param     {string|Date}  [params.date]     Optional. The current selected date. Can be either a Date object
+ *                                             or string in the following format "YYYY-MM-DD". Defaults to now.
+ * @param     {string}       [params.period]   Optional. The current selected period. For example 'day' or 'week'.
+ * @param     {string}       [params.metric]   Optional. The current selected metric. For example 'nb_visits'.
+ * @param     {boolean}      [params.showAll]  Optional. True if all (is slow), false if only the top most (paging)
+ *                                             statistics shall be fetched.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowStatisticsShow
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window (params) {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: params.report ? params.report.name : ''};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
     
@@ -49,9 +57,9 @@ function window (params) {
     var that          = this;
 
     if (params.report) {
-        Piwik.Tracker.setCustomVariable(1, 'reportModule', params.report.module, 'page');
-        Piwik.Tracker.setCustomVariable(2, 'reportAction', params.report.action, 'page');
-        Piwik.Tracker.setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
+        Piwik.getTracker().setCustomVariable(1, 'reportModule', params.report.module, 'page');
+        Piwik.getTracker().setCustomVariable(2, 'reportAction', params.report.action, 'page');
+        Piwik.getTracker().setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
     }
 
     var request      = Piwik.require('Network/StatisticsRequest');
@@ -144,7 +152,7 @@ function window (params) {
         that.menuOptions  = {commands: [dateCommand, siteCommand], window: that};
 
         // update menu after each request cause of a possibly period and/or date change.
-        Piwik.UI.layout.menu.refresh(that.menuOptions);
+        Piwik.getUI().layout.menu.refresh(that.menuOptions);
 
         var tableViewRows = [];
 
@@ -201,12 +209,6 @@ function window (params) {
             tableViewRows.push(headlineRow);
         }
 
-        // we need a Date object. Convert to date object if a string is given
-        var optionDate = event.date ? event.date : new Date();
-        if ('string' === (typeof optionDate).toLowerCase()) {
-            optionDate = optionDate.toPiwikDate();
-        }
-        
         tableViewRows.push(that.create('TableViewRow', {title:  event.reportDate, 
                                                         hasChild: true,
                                                         backgroundColor: '#f5f5f5',
@@ -224,9 +226,11 @@ function window (params) {
     /**
      * Request statistics async.
      *
-     * @param  {object} params 
+     * @param  {object}  params 
      */
     this.open = function (params) {
         request.send(params);
     };
 }
+
+module.exports = window;

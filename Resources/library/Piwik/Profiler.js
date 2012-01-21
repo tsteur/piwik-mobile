@@ -5,26 +5,33 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
+
+/** @private */
+var Piwik  = require('library/Piwik');
+/** @private */
+var config = require('config');
  
 /**
- * @class   Provides a simple profiler. The profiler logs all profiling information to the standard iOS/Android SDK log
- *          which is accessible for example in Titanium Developer.
+ * @class    Provides a simple profiler. The profiler logs all profiling information to the standard iOS/Android SDK log
+ *           which is accessible for example in Titanium Developer.
+ * 
+ * @exports  Profiler as Piwik.Profiler
  * @static
  */
-Piwik.Profiler = function ()  {
+function Profiler () {
 
     /**
      * Enables/disables profiling. If enabled, it logs the elapsed time in ms between two logging calls and the current
      * available memory. Should be disabled in a production release (for performance reasons).
      *
-     * @type boolean
+     * @type  boolean
      */
     this.ENABLED = config.profileEnabled;
 
     /**
      * Holds the number of milliseconds since 1/1/1970. Will be updated on each step() call if profiling is enabled.
      *
-     * @type null|int
+     * @type  null|int
      */
     this.time    = null;
 
@@ -32,10 +39,8 @@ Piwik.Profiler = function ()  {
      * Logs the elapsed time since the last step() call as well as the current available free memory if profiling is
      * enabled.
      *
-     * @type void
-     *
-     * @todo instead of simply logging the 'now available memory' we could additionally log the used memory since
-     * the start call. 
+     * @todo  instead of simply logging the 'now available memory' we could additionally log the used memory since
+     *        the start call. 
      */
     this.step = function () {
         if (!this.ENABLED) {
@@ -49,7 +54,7 @@ Piwik.Profiler = function ()  {
             return;
         }
 
-        var now = new Date().getTime();
+        var now   = new Date().getTime();
 
         Ti.API.debug("Time: " + (now - this.time) + 'ms');
         Ti.API.debug("Free mem: " + (Ti.Platform.availableMemory / 1000) + 'kb');
@@ -68,9 +73,7 @@ Piwik.Profiler = function ()  {
      * Piwik.Profiler.end('renderHeaderRow');
      * Piwik.Profiler.end('renderStatisticList');
      *
-     * @param {string}  key    A key which describes the current profiling
-     *
-     * @type void
+     * @param  {string}  key  A key which describes the current profiling
      */
     this.start = function (key) {
         if (!this.ENABLED) {
@@ -78,19 +81,17 @@ Piwik.Profiler = function ()  {
             return;
         }
 
-        Piwik.Profiler['profilingMem' + key]  = '' + Ti.Platform.availableMemory;
-        Piwik.Profiler['profilingDate' + key] = new Date().getTime();
+        this['profilingMem' + key]  = '' + Ti.Platform.availableMemory;
+        this['profilingDate' + key] = new Date().getTime();
     };
 
     /**
      * Finishes a previous started profiling. Logs needed time in ms and currently available free memory to console
      * using warning level.
      *
-     * @see Piwik.Profiler#start
+     * @see    Piwik.Profiler#start
      *
-     * @param {string}  key    A key which describes the current profiling and which was used in the start method.
-     *
-     * @type void
+     * @param  {string}  key  A key which describes the current profiling and which was used in the start method.
      */
     this.end = function (key) {
         if (!this.ENABLED) {
@@ -100,21 +101,21 @@ Piwik.Profiler = function ()  {
         
         var now = new Date().getTime();
 
-        if ('undefined' === (typeof Piwik.Profiler['profilingDate' + key]) || !Piwik.Profiler['profilingDate' + key]) {
+        if ('undefined' === (typeof this['profilingDate' + key]) || !this['profilingDate' + key]) {
             Ti.API.warn('You have to call this.start("' + key + '")');
 
             return;
         }
 
-        var startTime = Piwik.Profiler['profilingDate' + key];
-        var startMem  = Piwik.Profiler['profilingMem' + key];
+        var startTime = this['profilingDate' + key];
+        var startMem  = this['profilingMem' + key];
 
-        delete Piwik.Profiler['profilingDate' + key];
+        delete this['profilingDate' + key];
 
         Ti.API.warn('' + key + ': ' + (now - startTime) + 'ms');
         Ti.API.warn('' + key + ' Start free mem: ' + startMem + 'b');
         Ti.API.warn('' + key + ' Now free mem: ' + Ti.Platform.availableMemory + 'b');
     };
-};
+}
 
-Piwik.Profiler = new Piwik.Profiler();
+module.exports = new Profiler();

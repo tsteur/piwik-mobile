@@ -9,38 +9,34 @@
  *               Every variable defined in this file is a global variable and available in each file and context.
  *               Be careful defining variables therefore.
  */
-Ti.include('/config.js',
-           '/library/Piwik.js');
+
+var Piwik = require('library/Piwik');
 
 // do not close a Ti.UI.Window when user presses the hardware back button, remove our own windows. only android
 Ti.UI.currentWindow.addEventListener('android:back', function () {
-    Piwik.Log.debug('android:back event', 'bootstrap.js');
+    Piwik.getLog().debug('android:back event', 'bootstrap.js');
 
-    if (Piwik.UI.currentWindow) {
-        Piwik.UI.currentWindow.close();
+    if (Piwik.getUI().currentWindow) {
+        Piwik.getUI().currentWindow.close();
     }
 });
 
-// activate and initialize translations
-Piwik.require('Locale/Translation').load();
-
 // save default period and date in session on app start. so we only have to work with session when we want to access
 // chosen period/date values.
-var bootstrapSession  = Piwik.require('App/Session');
-var bootstrapSettings = Piwik.require('App/Settings');
-bootstrapSession.set('piwik_parameter_period', bootstrapSettings.getPiwikDefaultPeriod());
-bootstrapSession.set('piwik_parameter_date', bootstrapSettings.getPiwikDefaultDate());
-// reset vars, otherwise they will be available in global context
-bootstrapSession      = undefined;
-bootstrapSettings     = undefined;
+(function () {
+    var session  = Piwik.require('App/Session');
+    var settings = Piwik.require('App/Settings');
+    session.set('piwik_parameter_period', settings.getPiwikDefaultPeriod());
+    session.set('piwik_parameter_date', settings.getPiwikDefaultDate());
+})();
 
 // bootstrap layout
-if (Piwik.isIpad) {
-    Piwik.UI.bootstrap({layoutUrl: 'layout/ipad.js'});
-} else if (Piwik.isIphone) {
-    Piwik.UI.bootstrap({layoutUrl: 'layout/iphone.js'});
+if (Piwik.getPlatform().isIpad) {
+    Piwik.getUI().bootstrap({layoutUrl: 'layout/ipad'});
+} else if (Piwik.getPlatform().isIphone) {
+    Piwik.getUI().bootstrap({layoutUrl: 'layout/iphone'});
 } else {
-    Piwik.UI.bootstrap({layoutUrl: 'layout/android.js'});
+    Piwik.getUI().bootstrap({layoutUrl: 'layout/android'});
 }
 
 var bootstrapAccounts   = Piwik.require('App/Accounts');
@@ -50,12 +46,12 @@ bootstrapAccounts       = undefined;
 
 if (hasActivatedAccount) {
     // open our welcome window
-    Piwik.UI.createWindow({url: 'index/index.js'});
+    Piwik.getUI().createWindow({url: 'index/index'});
 
 } else {
     // user has not already created an (active) account. directly show create account window. user has to create at
     // least one account
-    Piwik.UI.createWindow({url: 'settings/editaccount.js'});
+    Piwik.getUI().createWindow({url: 'settings/editaccount'});
 }
 
 // initialization available since Piwik Mobile 1.6.0. Execute if property not exists (fresh install or if initialization

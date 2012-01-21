@@ -6,7 +6,7 @@
  * @version $Id$
  */
 #menuSettingsIcon {
-    image: 'images/header_settings.png';
+    image: '/images/header_settings.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
@@ -17,7 +17,7 @@
 }
 
 #menuHelpIcon {
-    image: 'images/header_help.png';
+    image: '/images/header_help.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
@@ -28,7 +28,7 @@
 }
 
 #menuAddAccountIcon {
-    image: 'images/header_add.png';
+    image: '/images/header_add.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;

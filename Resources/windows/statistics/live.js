@@ -8,27 +8,33 @@
  * @fileOverview window 'statistics/live.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Displays an overview of visitors in real time. It currently displays the latest 10 visitors on window open.
- *        If auto refresh is enabled, it will automatically request new visitors. The list does not display more than
- *        30 visitors cause of performance/memory impacts (especially on older/slower devices).
+ * @class     Displays an overview of visitors in real time. It currently displays the latest 10 visitors on window 
+ *            open. If auto refresh is enabled, it will automatically request new visitors. The list does not display 
+ *            more than 30 visitors cause of performance/memory impacts (especially on older/slower devices).
  *
- * @param    {Object}      params
- * @param    {Object}      params.site           The current selected site.
- * @param    {boolean}     params.autoRefresh    True if the window shall refresh the visitors in real time.
+ * @param     {Object}   params
+ * @param     {Object}   params.site         The current selected site.
+ * @param     {boolean}  params.autoRefresh  True if the window shall refresh the visitors in real time.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowStatisticsLive
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window (params) {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('Live_VisitorsInRealTime')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
     
@@ -52,7 +58,7 @@ function window (params) {
 
     if (!site || !site.accountId) {
         //@todo shall we close the window?
-        Piwik.Log.warn('Missing site parameter, can not display window', 'statistics/live::window');
+        Piwik.getLog().warn('Missing site parameter, can not display window', 'statistics/live::window');
 
         return;
     }
@@ -62,12 +68,12 @@ function window (params) {
 
     if (!account) {
         //@todo shall we close the window?
-        Piwik.Log.warn('Account not exists, can not display window', 'statistics/live::window');
+        Piwik.getLog().warn('Account not exists, can not display window', 'statistics/live::window');
 
         return;
     }
 
-    var accessUrl        = ('' + account.accessUrl).formatAccessUrl();
+    var accessUrl      = Piwik.getNetwork().getBasePath('' + account.accessUrl);
 
     this.addEventListener('onSiteChanged', function (event) {
         // user has changed the site
@@ -84,7 +90,7 @@ function window (params) {
             return;
         }
         
-        accessUrl        = ('' + account.accessUrl).formatAccessUrl();
+        accessUrl      = Piwik.getNetwork().getBasePath('' + account.accessUrl);
 
         refresh.refresh();
     });
@@ -106,14 +112,18 @@ function window (params) {
     this.addEventListener('focusWindow', function () {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
             // start auto refresh again if user returns to this window from a previous displayed window
-            refresh.refresh();
+            that.refreshTimer = setTimeout(function () {
+                refresh.refresh();
+            }, 20000);
         }
     });
     
     Ti.App.addEventListener('resume', function () {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
             // start auto refresh again if user returns to this window from a previous displayed window
-            refresh.refresh();
+            that.refreshTimer = setTimeout(function () {
+                refresh.refresh();
+            }, 3000);
         }
     });
 
@@ -131,7 +141,7 @@ function window (params) {
                 clearTimeout(that.refreshTimer);
             }
 
-            // start auto refresh again on resume event?
+            // @todo start auto refresh again on resume event?
         });
     }
 
@@ -154,14 +164,15 @@ function window (params) {
     });
 
     tableView.addEventListener('click', function (event) {
-        if (!event || !event.rowData || !event.rowData.visitor || !event.row) {
+
+        if (!event || !event.row || !event.row.visitor) {
 
             return;
         }
 
         // open a new window to displayed detailed information about the visitor
         that.create('Visitor', {accessUrl: accessUrl,
-                                visitor: event.rowData.visitor,
+                                visitor: event.row.visitor,
                                 openView: event.row.popoverView});
     });
 
@@ -173,7 +184,7 @@ function window (params) {
      *    [int] => [Object Visitor]
      * )
      *
-     * @type Array
+     * @type  Array
      * @private
      */
     var visitors    = [];
@@ -184,7 +195,12 @@ function window (params) {
     request.addEventListener('onload', function (event) {
 
         refresh.refreshDone();
-
+        
+        if (!tableView || !tableView.setData || !that) {
+            
+            return;
+        }
+        
         if (!event.details || !event.details.length) {
 
             if (!that.lastMinutes || !that.lastHours) {
@@ -222,7 +238,7 @@ function window (params) {
         /**
          * Holds all rows that shall be rendered
          *
-         * @type Array
+         * @type  Array
          * @private
          */
         var visitorRows  = [websiteRow,
@@ -297,10 +313,12 @@ function window (params) {
     /**
      * Request real time visitors async.
      *
-     * @param  {object} params
+     * @param  {object}  params
      */
     this.open = function (params) {
         params.fetchLiveOverview = true;
         request.send(params);
     };
 }
+
+module.exports = window;

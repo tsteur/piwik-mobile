@@ -6,541 +6,554 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class    A visitor is created by the method Piwik.UI.createVisitor. The visitor UI widget displays detailed
- *           information of a single visitor. Like visit date/time, referrer, actions, duration, custom
- *           variables, plugins, screen and more. The visitor information will be displayed within a window. 
+ * @class     A visitor is created by the method Piwik.UI.createVisitor. The visitor UI widget displays detailed
+ *            information of a single visitor. Like visit date/time, referrer, actions, duration, custom
+ *            variables, plugins, screen and more. The visitor information will be displayed within a window. 
  *
- * @param {Object}   params             See {@link Piwik.UI.View#setParams}
- * @param {Object}   params.visitor     An object containing all available visitor information. As returned by the
- *                                      method 'Live.getgetLastVisitsDetails'.
- * @param {string}   params.accessUrl   The url to the piwik installation (to the piwik installation the visit
- *                                      belongs to) containing a trailing slash. For example 'http://demo.piwik.org/'
- * @param {string}   params.openView    An instance of a Titanium UI widget. This is needed for the PopOver creation.
- *                                      The arrow of the PopOver (iPad) will point to this view. If this view is not
- *                                      given, the visitor will not be opened on iPad or crash.
+ * @param     {Object}  params            See {@link Piwik.UI.View#setParams}
+ * @param     {Object}  params.visitor    An object containing all available visitor information. As returned by the
+ *                                        method 'Live.getgetLastVisitsDetails'.
+ * @param     {string}  params.accessUrl  The url to the piwik installation (to the piwik installation the visit
+ *                                        belongs to) containing a trailing slash. For example 'http://demo.piwik.org/'
+ * @param     {string}  params.openView   An instance of a Titanium UI widget. This is needed for the PopOver creation.
+ *                                        The arrow of the PopOver (iPad) will point to this view. If this view is not
+ *                                        given, the visitor will not be opened on iPad or crash.
  *
  * @example
- * var visit = Piwik.UI.createVisitor({visitor: visitor, accessUrl: accessUrl, openView: tableViewRow});
+ * var visit = Piwik.getUI().createVisitor({visitor: visitor, accessUrl: accessUrl, openView: tableViewRow});
  *
- * @augments Piwik.UI.View
+ * @exports   Visitor as Piwik.UI.Visitor
+ * @augments  Piwik.UI.View
  */
-Piwik.UI.Visitor = function () {
+function Visitor () {
 
     /**
      * Holds an array of rendered rows. These rows are accessible via {@link Piwik.UI.Visitor#getRows}
      *
-     * @type Array
+     * @type  Array
      *
      * Array (
      *    [int] => [Ti.UI.TableViewRow]
      * )
+     * 
+     * @private
      */
-    this.rows = [];
+    this._rows = [];
+}
 
-    /**
-     * Initializes and triggers several methods to render the content.
-     *
-     * @returns {Piwik.UI.Visitor} An instance of the current state.
-     */
-    this.init = function () {
+/**
+ * Extend Piwik.UI.View
+ */
+Visitor.prototype = Piwik.require('UI/View');
 
-        var visitor   = this.getParam('visitor');
+/**
+ * Initializes and triggers several methods to render the content.
+ *
+ * @returns  {Piwik.UI.Visitor}  An instance of the current state.
+ */
+Visitor.prototype.init = function () {
 
-        if (!visitor) {
-            Piwik.Log.warn('visitor is not given', 'Piwik.UI.Visitor::init');
-            
-            return this;
-        }
+    var visitor   = this.getParam('visitor');
 
-        this.createOverview();
-        this.createCustomVariables();
-        this.createSystem();
-        this.createActionDetails();
-        
-        var win       = this.create('ModalWindow', {title: _('General_Visitor'),
-                                                    openView: this.getParam('openView')});
-   
-        var tableView = Ti.UI.createTableView({id: 'visitorTableView'});
-    
-        win.add(tableView);
-        
-        tableView.setData(this.getRows());
-        win.open();
-
-        Piwik.getTracker().trackEvent({title: 'View Visitor', url: '/visitor/open'});
+    if (!visitor) {
+        Piwik.getLog().warn('visitor is not given', 'Piwik.UI.Visitor::init');
         
         return this;
-    };
+    }
 
-    /**
-     * Get the list of rendered content/rows. See {@link Piwik.UI.Visitor#rows}
-     *
-     * @type Array
-     */
-    this.getRows = function () {
+    this.createOverview();
+    this.createCustomVariables();
+    this.createSystem();
+    this.createActionDetails();
+    
+    var win       = this.create('ModalWindow', {title: _('General_Visitor'),
+                                                openView: this.getParam('openView')});
+   
+    var tableView = Ti.UI.createTableView({id: 'visitorTableView'});
 
-        return this.rows;
-    };
+    win.add(tableView);
+    
+    tableView.setData(this.getRows());
+    win.open();
 
-    /**
-     * Creates an overview of the visitor.
-     * Output looks like:
-     *
-     * $VISITDATE
-     * Visitor IP        $IP
-     * Visitor Type      $TYPE
-     * From              $REFERRER
-     * $REFERRERURL
-     * Number of Visits  $VISITCOUNT
-     * Visit converted   $VISITCONVERTEDVALUE
-     * Goals converted   $GOALCONVERSIONS
-     * Country           $COUNTRY $COUNTRYFLAGICON
-     */
-    this.createOverview = function () {
-        var visitor   = this.getParam('visitor', {});
-        var accessUrl = this.getParam('accessUrl', '');
+    Piwik.getTracker().trackEvent({title: 'View Visitor', url: '/visitor/open'});
+    
+    return this;
+};
 
-        var visitDateLabel = String.format('%s - %s (%s)', '' + visitor.serverDatePretty,
-                                                           '' + visitor.serverTimePretty,
-                                                           '' + visitor.visitDurationPretty);
+/**
+ * Get the list of rendered content/rows. See {@link Piwik.UI.Visitor#rows}
+ *
+ * @type  Array
+ */
+Visitor.prototype.getRows = function () {
 
-        this.rows.push(this.create('TableViewRow', {title: visitDateLabel,
-                                                    className: 'visitorTableViewRow'}));
+    return this._rows;
+};
 
-        if (visitor.visitIp) {
-            this.rows.push(this.create('TableViewRow', {title: _('General_VisitorIP'),
-                                                        className: 'visitorTableViewRow',
-                                                        value: visitor.visitIp}));
-        }
+/**
+ * Creates an overview of the visitor.
+ * Output looks like:
+ * <br />
+ * $VISITDATE<br />
+ * Visitor IP        $IP<br />
+ * Visitor Type      $TYPE<br />
+ * From              $REFERRER<br />
+ * $REFERRERURL<br />
+ * Number of Visits  $VISITCOUNT<br />
+ * Visit converted   $VISITCONVERTEDVALUE<br />
+ * Goals converted   $GOALCONVERSIONS<br />
+ * Country           $COUNTRY $COUNTRYFLAGICON<br />
+ */
+Visitor.prototype.createOverview = function () {
+    var visitor   = this.getParam('visitor', {});
+    var accessUrl = this.getParam('accessUrl', '');
+
+    var visitDateLabel = String.format('%s - %s (%s)', '' + visitor.serverDatePretty,
+                                                       '' + visitor.serverTimePretty,
+                                                       '' + visitor.visitDurationPretty);
+
+    this._rows.push(this.create('TableViewRow', {title: visitDateLabel,
+                                                 className: 'visitorTableViewRow'}));
+
+    if (visitor.visitIp) {
+        this._rows.push(this.create('TableViewRow', {title: _('General_VisitorIP'),
+                                                     className: 'visitorTableViewRow',
+                                                     value: visitor.visitIp}));
+    }
+    
+    if (visitor.visitorType) {
+        var visitorTypeText = visitor.visitorType;
         
-        if (visitor.visitorType) {
-            var visitorTypeText = visitor.visitorType;
-            switch (visitor.visitorType) {
-                case 'new':
-                    visitorTypeText = _('General_NewVisitor');
-                    break;
+        switch (visitorTypeText) {
+            case 'new':
+                visitorTypeText = _('General_NewVisitor');
+                break;
 
-                case 'returning':
+            case 'returning':
 
-                    visitorTypeText = '' + visitor.visitorType;
+                visitorTypeText = '' + visitor.visitorType;
 
-                    if (visitor.visitCount) {
-                        var visits = '' + (parseInt(visitor.visitCount, 10));
-                        visits     = String.format(_('VisitsSummary_NbVisits'), visits);
+                if (visitor.visitCount) {
+                    var visits = '' + (parseInt(visitor.visitCount, 10));
+                    visits     = String.format(_('VisitsSummary_NbVisits'), visits);
 
-                        visitorTypeText += String.format(' (%s)', visits);
-                    }
-                    break;
+                    visitorTypeText += String.format(' (%s)', visits);
+                }
+                break;
+        }
+
+        this._rows.push(this.create('TableViewRow', {title: _('General_VisitType'),
+                                                     className: 'visitorTableViewRow',
+                                                     value: visitorTypeText}));
+    }
+
+    if (visitor.goalConversions) {
+        var goalConversionsText = String.format(_('General_VisitConvertedNGoals'),
+                                                '' + parseInt(visitor.goalConversions, 10));
+        this._rows.push(this.create('TableViewRow', {title: goalConversionsText,
+                                                     className: 'visitorTableViewRow'}));
+    }
+
+    // @todo display more information about the referrer
+    var referrerValue = visitor.referrerName ? visitor.referrerName : visitor.referrerTypeName;
+
+    if (referrerValue) {
+        var referrerParams = {title: _('General_FromReferrer'),
+                              className: 'visitorTableViewRow'};
+
+        if (visitor.referrerUrl) {
+
+            if (100 < visitor.referrerUrl.length) {
+                referrerParams.description = visitor.referrerUrl.substr(0, 100) + '...';
+            } else {
+                referrerParams.description = visitor.referrerUrl;
             }
 
-            this.rows.push(this.create('TableViewRow', {title: _('General_VisitType'),
-                                                        className: 'visitorTableViewRow',
-                                                        value: visitorTypeText}));
+            // use vertical layout. Otherwise a long title will overlap the description (url).
+            referrerParams.layout    = 'vertical';
+
+            referrerParams.title    += ' ' + referrerValue;
+            referrerParams.focusable = true;
+
+        } else {
+             // use value to display referrerValue if no url is given
+             referrerParams.value = referrerValue;
         }
 
-        if (visitor.goalConversions) {
-            var goalConversionsText = String.format(_('General_VisitConvertedNGoals'),
-                                                    '' + parseInt(visitor.goalConversions, 10));
-            this.rows.push(this.create('TableViewRow', {title: goalConversionsText,
-                                                        className: 'visitorTableViewRow'}));
+        if (visitor.referrerKeyword) {
+            referrerParams.title += String.format(": '%s'", '' + visitor.referrerKeyword);
         }
 
-        // @todo display more information about the referrer
-        var referrerValue = visitor.referrerName ? visitor.referrerName : visitor.referrerTypeName;
+        var referrerRow = this.create('TableViewRow', referrerParams);
 
-        if (referrerValue) {
-            var referrerParams = {title: _('General_FromReferrer'),
-                                  className: 'visitorTableViewRow'};
-
+        referrerRow.addEventListener('click', function () {
             if (visitor.referrerUrl) {
 
-                if (100 < visitor.referrerUrl.length) {
-                    referrerParams.description = visitor.referrerUrl.substr(0, 100) + '...';
-                } else {
-                    referrerParams.description = visitor.referrerUrl;
-                }
-
-                // use vertical layout. Otherwise a long title will overlap the description (url).
-                referrerParams.layout    = 'vertical';
-
-                referrerParams.title    += ' ' + referrerValue;
-                referrerParams.focusable = true;
-
-            } else {
-                 // use value to display referrerValue if no url is given
-                 referrerParams.value = referrerValue;
+                Piwik.getTracker().trackLink('/visitor/referrer-url', 'link');
+                Titanium.Platform.openURL(visitor.referrerUrl);
             }
+        });
 
-            if (visitor.referrerKeyword) {
-                referrerParams.title += String.format(": '%s'", '' + visitor.referrerKeyword);
-            }
+        this._rows.push(referrerRow);
+    }
 
-            var referrerRow = this.create('TableViewRow', referrerParams);
+    if (visitor.country) {
+        this._rows.push(this.create('TableViewRow', {title: _('UserCountry_Country'),
+                                                     value: visitor.country,
+                                                     className: 'visitorTableViewRow'}));
+        // leftImage: {url: accessUrl + visitor.countryFlag}
+    }
+};
 
-            referrerRow.addEventListener('click', function () {
-                if (visitor.referrerUrl) {
+/**
+ * Displays all custom variables of the user.
+ * Output looks like:
+ * <br />
+ * Custom Variables<br />
+ * $VARNAME     $VARVALUE<br />
+ * $VARNAME     $VARVALUE<br />
+ * $VARNAME     $VARVALUE<br />
+ */
+Visitor.prototype.createCustomVariables = function () {
 
-                    Piwik.getTracker().trackLink('/visitor/referrer-url', 'link');
-                    Titanium.Platform.openURL(visitor.referrerUrl);
-                }
-            });
+    var visitor = this.getParam('visitor', {});
 
-            this.rows.push(referrerRow);
-        }
+    if (!visitor.customVariables) {
 
-        if (visitor.country) {
-            this.rows.push(this.create('TableViewRow', {title: _('UserCountry_Country'),
-                                                        value: visitor.country,
-                                                        className: 'visitorTableViewRow'}));
-            // leftImage: {url: accessUrl + visitor.countryFlag}
-        }
-    };
+        return;
+    }
 
-    /**
-     * Displays all custom variables of the user.
-     * Output looks like:
-     *
-     * Custom Variables
-     * $VARNAME     $VARVALUE
-     * $VARNAME     $VARVALUE
-     * $VARNAME     $VARVALUE
-     */
-    this.createCustomVariables = function () {
+    this._rows.push(this.create('TableViewSection', {title: _('CustomVariables_CustomVariables')}));
 
-        var visitor = this.getParam('visitor', {});
+    for (var customVariableIndex in visitor.customVariables) {
 
-        if (!visitor.customVariables) {
+        var customVariable      = visitor.customVariables[customVariableIndex];
+        var customVariableName  = customVariable['customVariableName' + customVariableIndex];
+        var customVariableValue = customVariable['customVariableValue' + customVariableIndex];
 
-            return;
-        }
+        this._rows.push(this.create('TableViewRow', {title: customVariableName,
+                                                     className: 'visitorTableViewRow',
+                                                     value: customVariableValue}));
+    }
+};
 
-        this.rows.push(this.create('TableViewSection', {title: _('CustomVariables_CustomVariables')}));
+/**
+ * Creates system information.
+ * Output looks like:
+ * <br />
+ * System<br />
+ * OS           $OPERATINGSYSTEM $OPERATINGSYSTEMICON<br />
+ * Browser      $BROWSERNAME ($SCREENTYPE) $BROWSERICON<br />
+ * Resolution   $RESOLUTION<br />
+ * Plugins      $PLUGINICONS<br />
+ */
+Visitor.prototype.createSystem = function () {
 
-        for (var customVariableIndex in visitor.customVariables) {
+    var visitor   = this.getParam('visitor', {});
+    var accessUrl = this.getParam('accessUrl', '');
+    
+    this._rows.push(this.create('TableViewSection', {title: _('UserSettings_VisitorSettings')}));
 
-            var customVariable      = visitor.customVariables[customVariableIndex];
-            var customVariableName  = customVariable['customVariableName' + customVariableIndex];
-            var customVariableValue = customVariable['customVariableValue' + customVariableIndex];
+    if (visitor.operatingSystem) {
+        this._rows.push(this.create('TableViewRow', {title: 'OS',
+                                                     className: 'visitorTableViewRow',
+                                                     value: visitor.operatingSystem}));
+        // leftImage: {url: accessUrl + visitor.operatingSystemIcon}
+    }
 
-            this.rows.push(this.create('TableViewRow', {title: customVariableName,
-                                                        className: 'visitorTableViewRow',
-                                                        value: customVariableValue}));
-        }
-    };
+    if (visitor.browserName) {
+        this._rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnBrowser'),
+                                                     className: 'visitorTableViewRow',
+                                                     value: visitor.browserName}));
+        // leftImage: {url: accessUrl + visitor.browserIcon}
+    }
+    
+    var resolution = visitor.resolution;
+    if (resolution &&
+        visitor.screenType &&
+        'normal' != ('' + visitor.screenType).toLowerCase()) {
+        resolution += String.format(' (%s)', ''+ visitor.screenType);
+        // accessUrl + visitor.screenTypeIcon
+    }
 
-    /**
-     * Creates system information.
-     * Output looks like:
-     *
-     * System
-     * OS           $OPERATINGSYSTEM $OPERATINGSYSTEMICON
-     * Browser      $BROWSERNAME ($SCREENTYPE) $BROWSERICON
-     * Resolution   $RESOLUTION
-     * Plugins      $PLUGINICONS
-     */
-    this.createSystem = function () {
+    if (resolution) {
+        this._rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnResolution'),
+                                                     className: 'visitorTableViewRow',
+                                                     value: resolution}));
+    }
 
-        var visitor   = this.getParam('visitor', {});
-        var accessUrl = this.getParam('accessUrl', '');
+    if (visitor.pluginsIcons && visitor.pluginsIcons.length && accessUrl) {
+
+        var row = this.create('TableViewRow', {className: 'visitorTableViewRow'});
+        row.add(Ti.UI.createLabel({text: _('UserSettings_Plugins'),
+                                   id: 'tableViewRowTitleLabel'}));
         
-        this.rows.push(this.create('TableViewSection', {title: _('UserSettings_VisitorSettings')}));
+        var right = 10;
+        for (var index = 0; index < visitor.pluginsIcons.length; index++) {
+            var pluginIcon = visitor.pluginsIcons[index];
 
-        if (visitor.operatingSystem) {
-            this.rows.push(this.create('TableViewRow', {title: 'OS',
-                                                        className: 'visitorTableViewRow',
-                                                        value: visitor.operatingSystem}));
-            // leftImage: {url: accessUrl + visitor.operatingSystemIcon}
-        }
-
-        if (visitor.browserName) {
-            this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnBrowser'),
-                                                        className: 'visitorTableViewRow',
-                                                        value: visitor.browserName}));
-            // leftImage: {url: accessUrl + visitor.browserIcon}
-        }
-        
-        var resolution = visitor.resolution;
-        if (resolution &&
-            visitor.screenType &&
-            'normal' != ('' + visitor.screenType).toLowerCase()) {
-            resolution += String.format(' (%s)', ''+ visitor.screenType);
-            // accessUrl + visitor.screenTypeIcon
-        }
-
-        if (resolution) {
-            this.rows.push(this.create('TableViewRow', {title: _('UserSettings_ColumnResolution'),
-                                                        className: 'visitorTableViewRow',
-                                                        value: resolution}));
-        }
-
-        if (visitor.pluginsIcons && visitor.pluginsIcons.length) {
-
-            var row = this.create('TableViewRow', {className: 'visitorTableViewRow'});
-            row.add(Ti.UI.createLabel({text: _('UserSettings_Plugins'),
-                                       id: 'tableViewRowTitleLabel'}));
-            
-            var right = 10;
-            for (var index = 0; index < visitor.pluginsIcons.length; index++) {
-                var pluginIcon = visitor.pluginsIcons[index];
-
-                // @todo not all icons are 18x18
+            // @todo not all icons are 18x18
+            if (pluginIcon.pluginIcon) {
                 row.add(Ti.UI.createImageView({image: accessUrl + pluginIcon.pluginIcon,
                                                right: right,
                                                width: 14,
                                                height: 14,
                                                className: 'pluginIcon'}));
-                right +=28;
             }
 
-            this.rows.push(row);
-        }
-    };
-
-    /**
-     * Triggers the rendering of several actions.
-     */
-    this.createActionDetails = function () {
-
-        var visitor = this.getParam('visitor', {});
-        if (!visitor.actionDetails || !visitor.actionDetails.length) {
-
-            return;
+            right +=28;
         }
 
-        var numActions = parseInt(visitor.actions, 10);
-        
-        this.rows.push(this.create('TableViewSection', {title: String.format(_('VisitsSummary_NbActions'),
-                                                                             '' + numActions)}));
-
-        for (var index = 0; index < visitor.actionDetails.length; index++) {
-            var actionDetail = visitor.actionDetails[index];
-
-            if (!actionDetail) {
-                continue;
-            }
-
-            switch (actionDetail.type) {
-                case 'action':
-                    this.createActionAction(actionDetail, visitor);
-                    break;
-
-                case 'ecommerceOrder':
-                case 'ecommerceAbandonedCart':
-                    this.createEcommerceAction(actionDetail, visitor);
-                    break;
-
-                default:
-                    this.createDefaultAction(actionDetail, visitor);
-                    break;
-            }
-        }
-    };
-
-    /**
-     * Renders the 'action' action.
-     * Output looks like:
-     * 
-     * $PAGETITLE
-     * $URL
-     * $SERVERTIMEPRETTY
-     *
-     * @param {Object} actionDetail
-     */
-    this.createActionAction = function (actionDetail) {
-
-        var row = Ti.UI.createTableViewRow({className: 'visitorActionActionTableViewRow'});
-
-        if (actionDetail.pageTitle) {
-            row.add(Ti.UI.createLabel({text: '' + actionDetail.pageTitle,
-                                       id: 'visitorActionActionPageTitleLabel'}));
-        }
-        if (actionDetail.url) {
-            row.add(Ti.UI.createLabel({text: actionDetail.url,
-                                       id: 'visitorActionActionUrlLabel'}));
-        }
-        if (actionDetail.serverTimePretty) {
-            row.add(Ti.UI.createLabel({text: actionDetail.serverTimePretty,
-                                       id: 'visitorActionActionServerTimeLabel'}));
-        }
-
-        this.rows.push(row);
-    };
-
-    /**
-     * Renders the 'default' action. For example 'outlink', 'goal' or 'download'.
-     * Output looks like:
-     *
-     * $ICON $TYPE
-     * $URL
-     *
-     * @param {Object} actionDetail
-     */
-    this.createDefaultAction = function (actionDetail) {
-
-        var accessUrl = this.getParam('accessUrl', '');
-        
-        var row      = Ti.UI.createTableViewRow({className: 'visitorActionDefaultTableViewRow'});
-
-        var view     = Ti.UI.createView({id: 'visitorActionDefaultHeadlineView'});
-
-        if (accessUrl && actionDetail.icon) {
-            view.add(Ti.UI.createImageView({image: accessUrl + actionDetail.icon,
-                                            id: 'visitorActionDefaultIconImageView'}));
-        }
-
-        if (actionDetail.type) {
-
-            var title = '' + actionDetail.type;
-
-            switch (actionDetail.type) {
-                case 'goal':
-                    title = _('General_Goal');
-                    break;
-                
-                case 'download':
-                    title = _('General_Download');
-                    break;
-
-                case 'outlink':
-                    title = _('General_Outlink');
-                    break;
-            }
-
-
-            view.add(Ti.UI.createLabel({text: title,
-                                        id: 'visitorActionDefaultTypeLabel'}));
-        }
-
-        row.add(view);
-
-        if (actionDetail.url) {
-            row.add(Ti.UI.createLabel({text: '' + actionDetail.url,
-                                       id: 'visitorActionDefaultUrlLabel'}));
-        }
-
-        this.rows.push(row);
-    };
-
-    /**
-     * Renders the 'default' action. For example 'outlink' or 'download'.
-     * Output looks like:
-     *
-     * $ICON Ecommerce Order/Abandoned art ($ORDERID)
-     * Revenue: $X $CURRENCY, Subtotal: $Y $CURRENCY, $ETC.
-     * List of Products (Quantity: $QUANTITY):
-     * * $PRODUCT NAME ($PRODUCT SKU), $PRODUCT_CATEGORY
-     * $PRICE $CURRENCY - Quantity: $QTY
-     * Product 2
-     * Product 3 etc.
-     *
-     * @param {Object} actionDetail
-     */
-    this.createEcommerceAction = function (actionDetail) {
-        var visitor       = this.getParam('visitor', {});
-        var accessUrl     = this.getParam('accessUrl', '');
-        var row           = Ti.UI.createTableViewRow({className: 'visitorActionEcommerceTableViewRow'});
-        var ecommerceView = Ti.UI.createView({id: 'visitorActionEcommerceHeadlineView'});
-        var ecommerceText = '';
-
-        switch (actionDetail.type) {
-            case 'ecommerceOrder':
-                ecommerceText = _('Goals_EcommerceOrder');
-
-                break;
-
-            case 'ecommerceAbandonedCart':
-                ecommerceText = _('Goals_AbandonedCart');
-
-                break;
-
-            default:
-                ecommerceText = _('Goals_Ecommerce');
-        }
-
-        if (actionDetail.orderId) {
-            ecommerceText = String.format('%s (%s)', '' + ecommerceText, '' + actionDetail.orderId);
-        }
-
-        if (accessUrl && actionDetail.icon) {
-            ecommerceView.add(Ti.UI.createImageView({image: accessUrl + actionDetail.icon,
-                                                     id: 'visitorActionEcommerceIconImageView'}));
-        }
-
-        if (ecommerceText) {
-            ecommerceView.add(Ti.UI.createLabel({text: ecommerceText,
-                                                 id: 'visitorActionEcommerceTypeLabel'}));
-        }
-
-        var itemDetailsView = Ti.UI.createView({id: 'visitorActionEcommerceDetailsView'});
-
-        if (actionDetail.itemDetails) {
-            for (var index = 0; index < actionDetail.itemDetails.length; index++) {
-                var item     = actionDetail.itemDetails[index];
-                var itemText = '';
-
-                if (item.itemName) {
-                    itemText += item.itemName + ' ';
-                }
-
-                itemText += String.format('(%s)', '' + item.itemSKU);
-
-                if (item.itemCategory) {
-                    itemText += ', ' + item.itemCategory;
-                }
-
-                var itemView = Ti.UI.createView({id: 'visitorActionEcommerceDetailsItemView'});
-
-                itemView.add(Ti.UI.createLabel({text: ' * ',
-                                                id: 'visitorActionEcommerceDetailsItemStarLabel'}));
-                itemView.add(Ti.UI.createLabel({text: itemText,
-                                                id: 'visitorActionEcommerceDetailsItemNameLabel'}));
-                itemDetailsView.add(itemView);
-
-                var priceText = '';
-
-                if (item.price) {
-                    priceText += item.price + ' ' + visitor.siteCurrency;
-                }
-
-                if (item.price && item.quantity) {
-                    priceText += ' - ';
-                }
-
-                if (item.quantity) {
-                    priceText += 'Quantity: ' + item.quantity;
-                }
-
-                itemDetailsView.add(Ti.UI.createLabel({text: priceText,
-                                                       id: 'visitorActionEcommerceDetailsPriceLabel'}));
-            }
-        }
-
-        var revenueText = String.format('%s: %s %s', _('Live_GoalRevenue'),
-                                                     '' +  actionDetail.revenue,
-                                                     '' + visitor.siteCurrency);
-        
-        if (actionDetail.revenueSubTotal) {
-            revenueText += String.format(', %s: %s %s', _('General_Subtotal'),
-                                                        '' + actionDetail.revenueSubTotal,
-                                                        '' + visitor.siteCurrency);
-        }
-
-        var listOfProductsText = String.format('List of Products (Quantity: %s)',
-                                               '' + parseInt(actionDetail.items, 10));
-
-        row.add(ecommerceView);
-        row.add(Ti.UI.createLabel({text: revenueText,
-                                   id: 'visitorActionEcommerceRevenueLabel'}));
-        row.add(Ti.UI.createLabel({text: listOfProductsText,
-                                   id: 'visitorActionEcommerceDetailsListLabel'}));
-        row.add(itemDetailsView);
-
-        this.rows.push(row);
-    };
+        this._rows.push(row);
+    }
 };
 
 /**
- * Extend Piwik.UI.View
+ * Triggers the rendering of several actions.
  */
-Piwik.UI.Visitor.prototype = Piwik.require('UI/View');
+Visitor.prototype.createActionDetails = function () {
+
+    var visitor = this.getParam('visitor', {});
+    if (!visitor.actionDetails || !visitor.actionDetails.length) {
+
+        return;
+    }
+
+    var numActions = parseInt(visitor.actions, 10);
+    
+    this._rows.push(this.create('TableViewSection', {title: String.format(_('VisitsSummary_NbActions'),
+                                                                          '' + numActions)}));
+
+    for (var index = 0; index < visitor.actionDetails.length; index++) {
+        var actionDetail = visitor.actionDetails[index];
+
+        if (!actionDetail) {
+            continue;
+        }
+
+        switch (actionDetail.type) {
+            case 'action':
+                this.createActionAction(actionDetail, visitor);
+                break;
+
+            case 'ecommerceOrder':
+            case 'ecommerceAbandonedCart':
+                this.createEcommerceAction(actionDetail, visitor);
+                break;
+
+            default:
+                this.createDefaultAction(actionDetail, visitor);
+                break;
+        }
+    }
+};
+
+/**
+ * Renders the 'action' action.
+ * Output looks like:
+ * <br />
+ * $PAGETITLE<br />
+ * $URL<br />
+ * $SERVERTIMEPRETTY<br />
+ *
+ * @param  {Object}  actionDetail
+ */
+Visitor.prototype.createActionAction = function (actionDetail) {
+
+    var row = Ti.UI.createTableViewRow({className: 'visitorActionActionTableViewRow'});
+
+    if (actionDetail.pageTitle) {
+        row.add(Ti.UI.createLabel({text: '' + actionDetail.pageTitle,
+                                   id: 'visitorActionActionPageTitleLabel'}));
+    }
+    if (actionDetail.url) {
+        row.add(Ti.UI.createLabel({text: actionDetail.url,
+                                   id: 'visitorActionActionUrlLabel'}));
+    }
+    if (actionDetail.serverTimePretty) {
+        row.add(Ti.UI.createLabel({text: actionDetail.serverTimePretty,
+                                   id: 'visitorActionActionServerTimeLabel'}));
+    }
+
+    this._rows.push(row);
+};
+
+/**
+ * Renders the 'default' action. For example 'outlink', 'goal' or 'download'.
+ * Output looks like:
+ * <br />
+ * $ICON $TYPE<br />
+ * $URL<br />
+ *
+ * @param  {Object}  actionDetail
+ */
+Visitor.prototype.createDefaultAction = function (actionDetail) {
+
+    var accessUrl = this.getParam('accessUrl', '');
+    
+    var row       = Ti.UI.createTableViewRow({className: 'visitorActionDefaultTableViewRow'});
+
+    var view      = Ti.UI.createView({id: 'visitorActionDefaultHeadlineView'});
+
+    if (accessUrl && actionDetail.icon) {
+        view.add(Ti.UI.createImageView({image: accessUrl + actionDetail.icon,
+                                        id: 'visitorActionDefaultIconImageView'}));
+    }
+
+    if (actionDetail.type) {
+
+        var title = '' + actionDetail.type;
+
+        switch (actionDetail.type) {
+            case 'goal':
+                title = _('General_Goal');
+                break;
+            
+            case 'download':
+                title = _('General_Download');
+                break;
+
+            case 'outlink':
+                title = _('General_Outlink');
+                break;
+        }
+
+        view.add(Ti.UI.createLabel({text: title,
+                                    id: 'visitorActionDefaultTypeLabel'}));
+    }
+
+    row.add(view);
+
+    if (actionDetail.url) {
+        row.add(Ti.UI.createLabel({text: '' + actionDetail.url,
+                                   id: 'visitorActionDefaultUrlLabel'}));
+    }
+
+    this._rows.push(row);
+};
+
+/**
+ * Renders the 'default' action. For example 'outlink' or 'download'.
+ * Output looks like:
+ * <br />
+ * $ICON Ecommerce Order/Abandoned art ($ORDERID)<br />
+ * Revenue: $X $CURRENCY, Subtotal: $Y $CURRENCY, $ETC.<br />
+ * List of Products (Quantity: $QUANTITY):<br />
+ * * $PRODUCT NAME ($PRODUCT SKU), $PRODUCT_CATEGORY<br />
+ * $PRICE $CURRENCY - Quantity: $QTY<br />
+ * Product 2<br />
+ * Product 3 etc.<br />
+ *
+ * @param  {Object}  actionDetail
+ */
+Visitor.prototype.createEcommerceAction = function (actionDetail) {
+    var visitor       = this.getParam('visitor', {});
+    var accessUrl     = this.getParam('accessUrl', '');
+    var row           = Ti.UI.createTableViewRow({className: 'visitorActionEcommerceTableViewRow'});
+    var ecommerceView = Ti.UI.createView({id: 'visitorActionEcommerceHeadlineView'});
+    var ecommerceText = '';
+
+    switch (actionDetail.type) {
+        case 'ecommerceOrder':
+            ecommerceText = _('Goals_EcommerceOrder');
+
+            break;
+
+        case 'ecommerceAbandonedCart':
+            ecommerceText = _('Goals_AbandonedCart');
+
+            break;
+
+        default:
+            ecommerceText = _('Goals_Ecommerce');
+    }
+
+    if (actionDetail.orderId) {
+        ecommerceText = String.format('%s (%s)', '' + ecommerceText, '' + actionDetail.orderId);
+    }
+
+    if (accessUrl && actionDetail.icon) {
+        ecommerceView.add(Ti.UI.createImageView({image: accessUrl + actionDetail.icon,
+                                                 id: 'visitorActionEcommerceIconImageView'}));
+    }
+
+    if (ecommerceText) {
+        ecommerceView.add(Ti.UI.createLabel({text: ecommerceText,
+                                             id: 'visitorActionEcommerceTypeLabel'}));
+    }
+
+    var itemDetailsView = Ti.UI.createView({id: 'visitorActionEcommerceDetailsView'});
+
+    if (actionDetail.itemDetails) {
+        for (var index = 0; index < actionDetail.itemDetails.length; index++) {
+            var item     = actionDetail.itemDetails[index];
+            var itemText = '';
+
+            if (item.itemName) {
+                itemText += item.itemName + ' ';
+            }
+
+            itemText += String.format('(%s)', '' + item.itemSKU);
+
+            if (item.itemCategory) {
+                itemText += ', ' + item.itemCategory;
+            }
+
+            var itemView = Ti.UI.createView({id: 'visitorActionEcommerceDetailsItemView'});
+
+            itemView.add(Ti.UI.createLabel({text: ' * ',
+                                            id: 'visitorActionEcommerceDetailsItemStarLabel'}));
+            itemView.add(Ti.UI.createLabel({text: itemText,
+                                            id: 'visitorActionEcommerceDetailsItemNameLabel'}));
+            itemDetailsView.add(itemView);
+
+            var priceText = '';
+
+            if (item.price) {
+                priceText += item.price + ' ' + visitor.siteCurrency;
+            }
+
+            if (item.price && item.quantity) {
+                priceText += ' - ';
+            }
+
+            if (item.quantity) {
+                priceText += 'Quantity: ' + item.quantity;
+            }
+
+            itemDetailsView.add(Ti.UI.createLabel({text: priceText,
+                                                   id: 'visitorActionEcommerceDetailsPriceLabel'}));
+        }
+    }
+
+    var revenueText = String.format('%s: %s %s', _('Live_GoalRevenue'),
+                                                 '' +  actionDetail.revenue,
+                                                 '' + visitor.siteCurrency);
+    
+    if (actionDetail.revenueSubTotal) {
+        revenueText += String.format(', %s: %s %s', _('General_Subtotal'),
+                                                    '' + actionDetail.revenueSubTotal,
+                                                    '' + visitor.siteCurrency);
+    }
+
+    var listOfProductsText = String.format('List of Products (Quantity: %s)',
+                                           '' + parseInt(actionDetail.items, 10));
+
+    row.add(ecommerceView);
+    row.add(Ti.UI.createLabel({text: revenueText,
+                               id: 'visitorActionEcommerceRevenueLabel'}));
+    row.add(Ti.UI.createLabel({text: listOfProductsText,
+                               id: 'visitorActionEcommerceDetailsListLabel'}));
+    row.add(itemDetailsView);
+
+    this._rows.push(row);
+};
+
+module.exports = Visitor;

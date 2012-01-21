@@ -15,7 +15,7 @@ tableview {
 tableviewrow {
     color: '#333333';
     font-family: 'Arial';
-    font-size: '18dp';
+    font-size: '18sp';
     font-weight: 'normal';
     left: 0;
     width: '100%';
@@ -36,7 +36,7 @@ tableviewrow {
     color: '#ffffff';
     left: '5dp';
     right: 0;
-    font-size: '14dp';
+    font-size: '14sp';
     font-weight: 'bold';
     ellipsize: true;
     wordWrap: false;
@@ -52,7 +52,7 @@ tableviewrow {
     color: '#333333';
     ellipsize: true;
     wordWrap: false;
-    font-size: '16dp';
+    font-size: '16sp';
     font-weight: 'normal';
 }
 
@@ -67,12 +67,12 @@ tableviewrow {
     color: '#333333';
     ellipsize: true;
     wordWrap: false;
-    font-size: '16dp';
+    font-size: '16sp';
     font-weight: 'normal';
 }
 
 #tableViewRowDescriptionLabel {
-    font-size: '12dp';
+    font-size: '12sp';
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
@@ -85,7 +85,7 @@ tableviewrow {
 }
 
 #tableViewRowDescriptionLabelvertical {
-    font-size: '12dp';
+    font-size: '12sp';
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
@@ -99,7 +99,7 @@ tableviewrow {
 
 #tableViewRowValueLabel {
     right: '5dp';
-    font-size: '16dp';
+    font-size: '16sp';
     font-weight: 'normal';
     textAlign: 'right';
     width: 'auto';

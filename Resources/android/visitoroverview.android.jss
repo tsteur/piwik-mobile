@@ -30,7 +30,7 @@
 }
 
 #visitorOverviewReferrerLabel {
-    font-size: '13dp';
+    font-size: '13sp';
     top: '3dp';
     width: 'auto';
     left: '5dp';
@@ -40,7 +40,7 @@
 }
 
 #visitorOverviewPageviewsLabel {
-    font-size: '13dp';
+    font-size: '13sp';
     top: '4dp';
     width: 'auto';
     left: '5dp';
@@ -50,7 +50,7 @@
 }
 
 #visitorOverviewConvertedGoalsLabel {
-    font-size: '13dp';
+    font-size: '13sp';
     top: '4dp';
     width:'auto';
     left: '5dp';
@@ -60,7 +60,7 @@
 }
 
 #visitorOverviewDateTimeLabel {
-    font-size: '14dp';
+    font-size: '14sp';
     font-weight: 'bold';
     left: '5dp';
     textAlign: 'left';

@@ -11,7 +11,7 @@
     left: '10dp';
     color: '#333333';
     font-family: 'Arial';
-    font-size: '12dp';
+    font-size: '12sp';
     right: '10dp';
 }
 
@@ -21,7 +21,7 @@
 }
 
 .graphShowDetailImage {
-    image: 'images/chart_detail.png';
+    image: '/images/chart_detail.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     backgroundColor: '#ffffff';
@@ -35,5 +35,5 @@
 
 #graphImage {
     zIndex: 1;
-    defaultImage: 'images/graphDefault.png';
+    defaultImage: '/images/graphDefault.png';
 }

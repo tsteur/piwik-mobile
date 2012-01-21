@@ -5,22 +5,27 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
+
+/** @private */
+var Piwik = require('library/Piwik');
  
 /**
- * @class   Creates an Android specific option menu which is accessible on each screen via the hardware menu button.
- *          You can add items to the menu from any context by using the addItem method.
- *          The item will only be added if the current platform is Android at the moment. There is no equivalent on iOS.
+ * @class    Creates an Android specific option menu which is accessible on each screen via the hardware menu button.
+ *           You can add items to the menu from any context by using the addItem method.
+ *           The item will only be added if the current platform is Android at the moment. There is no equivalent on
+ *           iOS.
  *
- * @see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object">Option Menu Module API description</a>
+ * @see      <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object">Option Menu Module API description</a>
  *
+ * @exports  OptionMenu as Piwik.UI.OptionMenu
  * @static
  */
-Piwik.UI.OptionMenu = function () {
+function OptionMenu () {
 
     /**
-     * Holds an instance of the Android Option Menu @link http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object
+     * Holds an instance of the Android Option Menu. See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Menu-object">Option Menu Module API description</a>
      * 
-     * @type Titanium.Android.Menu
+     * @type  Titanium.Android.Menu
      */
     this.menu    = null;
 
@@ -29,14 +34,12 @@ Piwik.UI.OptionMenu = function () {
      * 
      * @default false
      *
-     * @type boolean
+     * @type  boolean
      */
     this.hasMenu = false;
 
     /**
      * Builds the menu depending on the current displayed window.
-     *
-     * @type void
      */
     this.build = function () {
         if (!this.hasMenu || !this.menu) {
@@ -49,10 +52,10 @@ Piwik.UI.OptionMenu = function () {
         // remove all previous added menu items cause we are going to rebuild the menu.
         menu.clear();
 
-        var view = Piwik.UI.currentWindow;
+        var view = Piwik.getUI().currentWindow;
         
         if (!view || !view.menuItems) {
-            Piwik.Log.warn('cant build menu, no zIndex', 'Piwik.UI.OptionMenu::build');
+            Piwik.getLog().warn('cant build menu, no zIndex', 'Piwik.UI.OptionMenu::build');
 
             return;
         }
@@ -60,7 +63,7 @@ Piwik.UI.OptionMenu = function () {
         var menuItems = view.menuItems;
 
         if (!menuItems || !menuItems.length) {
-            Piwik.Log.warn('cant build menu, no menu items', 'Piwik.UI.OptionMenu::build');
+            Piwik.getLog().warn('cant build menu, no menu items', 'Piwik.UI.OptionMenu::build');
 
             return;
         }
@@ -94,34 +97,31 @@ Piwik.UI.OptionMenu = function () {
     /**
      * Adds an item to the current menu. 
      *
-     * @param   {Object}    options  Options which shall be used to create the menu item, like title, icon, and so on.
-     *                               Have a look here for a list of all available options: {@link http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Android.OptionMenu.MenuItem-object.html}
-     * @param   {Function}  onClick  An onclick callback function which will be executed as soon as the user selects
-     *                               the menu item.
-     *
-     * @type void
+     * @param  {Object}    options  Options which shall be used to create the menu item, like title, icon, and so on.
+     *                              Have a look here for a list of all available options: <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Android.OptionMenu.MenuItem-object.html">Menu Item Module API Description</a>
+     * @param  {Function}  onClick  An onclick callback function which will be executed as soon as the user selects
+     *                              the menu item.
      */
     this.addItem = function (options, onClick) {
         if (!this.hasMenu) {
             return;
         }
 
-        var view = Piwik.UI.currentWindow;
+        var view = Piwik.getUI().currentWindow;
 
         if (!view) {
-            Piwik.Log.warn("Can't add item, no window exists", 'Piwik.UI.OptionMenu::addItem');
+            Piwik.getLog().warn("Can't add item, no window exists", 'Piwik.UI.OptionMenu::addItem');
             // no window exists at this moment
             
             return;
         }
 
-        var menuItems = view.menuItems;
+        var menuItems  = view.menuItems;
         // Titanium has issues with view.menuItems.push(); on Android
         // but menuItems = view.menuItems;menuItems.push();view.menuItems = menuItems works
 
         if (!view.menuItems) {
-
-            menuItems = [];
+            menuItems  = [];
         }
 
         menuItems.push({options: options, onClick: onClick});
@@ -131,9 +131,7 @@ Piwik.UI.OptionMenu = function () {
     /**
      * Cleanup a previous stored menu as soon as the view will be closed.
      *
-     * @param   {Piwik.UI.Window}    view  An instance of the window which will be currently closed.
-     *
-     * @type void
+     * @param  {Piwik.UI.Window}  view  An instance of the window which will be currently closed.
      */
     this.cleanupMenu = function (view) {
         if (!this.hasMenu) {
@@ -151,8 +149,6 @@ Piwik.UI.OptionMenu = function () {
     
     /**
      * Activates the usage of the option menu and initializes the menu.
-     * 
-     * @type void
      */
     this.init = function () {
 
@@ -185,7 +181,7 @@ Piwik.UI.OptionMenu = function () {
             }
 
             if (!event || !event.menu) {
-                Piwik.Log.debug('No event given in OnCreateOptionsMenu', 'Piwik.UI.OptionMenu::onPrepareOptionsMenu');
+                Piwik.getLog().debug('No event given in OnCreateOptionsMenu', 'Piwik.UI.OptionMenu::onPrepareOptionsMenu');
                 
                 return;
             }
@@ -194,11 +190,11 @@ Piwik.UI.OptionMenu = function () {
             that.build();
         };
     };
-};
+}
 
-Piwik.UI.OptionMenu = new Piwik.UI.OptionMenu();
+module.exports = new OptionMenu();
 
-if (Piwik.isAndroid) {
+if (Piwik.getPlatform().isAndroid) {
     // enable option menu for android
-    Piwik.UI.OptionMenu.init();
+    module.exports.init();
 }

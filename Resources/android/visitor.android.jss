@@ -29,7 +29,7 @@
 
 #visitorActionActionPageTitleLabel {
     left: '5dp';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '5dp';
     width: 'auto';
     height: 'auto';
@@ -40,7 +40,7 @@
 #visitorActionActionUrlLabel {
     left: '5dp';
     color: '#808080';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '3dp';
     width: 'auto';
     height: 'auto';
@@ -50,7 +50,7 @@
     bottom: '5dp';
     top: '3dp';
     left: '5dp';
-    font-size: '13dp';
+    font-size: '13sp';
     width: 'auto';
     height: 'auto';
     color: '#000000';
@@ -82,7 +82,7 @@
 
 #visitorActionDefaultTypeLabel {
     left: '5dp';
-    font-size: '13dp';
+    font-size: '13sp';
     width: 'auto';
     height: 'auto';
     font-weight: 'bold';
@@ -94,7 +94,7 @@
     bottom: '5dp';
     left: '5dp';
     top: '4dp';
-    font-size: '13dp';
+    font-size: '13sp';
     width: 'auto';
     height: 'auto';
 }
@@ -125,7 +125,7 @@
 
 #visitorActionEcommerceTypeLabel {
     left: '10dp';
-    font-size: '13dp';
+    font-size: '13sp';
     width: 'auto';
     height: 'auto';
     font-weight: 'bold';
@@ -151,7 +151,7 @@
 #visitorActionEcommerceDetailsItemStarLabel {
     left: '0dp';
     color: '#808080';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '3dp';
     width: '15dp';
     height: 'auto';
@@ -163,7 +163,7 @@
 #visitorActionEcommerceDetailsItemNameLabel {
     left: '5dp';
     color: '#808080';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '3dp';
     width: 'auto';
     height: 'auto';
@@ -174,7 +174,7 @@
 
 #visitorActionEcommerceRevenueLabel {
     left: '5dp';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '4dp';
     width: 'auto';
     height: 'auto';
@@ -186,7 +186,7 @@
 
 #visitorActionEcommerceDetailsListLabel {
     left: '5dp';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '4dp';
     width: 'auto';
     height: 'auto';
@@ -199,7 +199,7 @@
 #visitorActionEcommerceDetailsPriceLabel {
     left: '25dp';
     color: '#808080';
-    font-size: '13dp';
+    font-size: '13sp';
     top: '4dp';
     width: 'auto';
     height: 'auto';

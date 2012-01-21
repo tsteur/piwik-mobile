@@ -20,7 +20,7 @@
     color: '#000000';
     height: 'auto';
     width:'auto';
-    font-size: '14dp';
+    font-size: '14sp';
 }
 
 #liveOverviewValueLabel {
@@ -30,5 +30,5 @@
     bottom: '8dp';
     width:'100%';
     color: '#385487';
-    font-size: '18dp';
+    font-size: '18sp';
 }

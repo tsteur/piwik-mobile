@@ -8,22 +8,30 @@
  * @fileOverview window 'help/faq.js' .
  */
 
+/** @private */
+var Piwik  = require('library/Piwik');
+/** @private */
+var _      = require('library/underscore');
+/** @private */
+var config = require('config');
+
 /**
- * @class Displays the Piwik Mobile FAQ page within a webview. The url to the 
- *        FAQ page is defined in config.
+ * @class     Displays the Piwik Mobile FAQ page within a webview. The url to the 
+ *            FAQ page is defined in config.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowHelpFaq
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('General_Faq')};
     
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
@@ -34,3 +42,5 @@ function window () {
 
     this.open = function () {};
 }
+
+module.exports = window;

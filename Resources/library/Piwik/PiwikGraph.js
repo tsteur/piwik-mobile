@@ -5,10 +5,15 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
+
+/** @private */
+var Piwik   = require('library/Piwik');
+/** @private */
+var config  = require('config');
  
 /**
- * @class   This graph object provides some useful methods to assemble Piwik graph urls which can be displayed using a
- *          Titanium.UI.ImageView. To accomplish this, it prepares and finalizes the graph url defined by the metadata.
+ * @class    This graph object provides some useful methods to assemble Piwik graph urls which can be displayed using a
+ *           Titanium.UI.ImageView. To accomplish this, it prepares and finalizes the graph url defined by the metadata.
  *
  * Valid URL Parameters
  *  idSite: piwik
@@ -33,26 +38,29 @@
  *      color for the fifth pie-value
  *      color for the lines separating the pie-values
  *
+ * @exports  PiwikGraph as Piwik.PiwikGraph
  * @static
  */
-Piwik.PiwikGraph = function () {
+function PiwikGraph () {
 
     /**
      * The locale.
      *
-     * @type string
+     * @type  string
+     * 
+     * @private
      */
     var locale = Piwik.require('Locale').getLocale();
     
     /**
      * Appends the size string to a given graphUrl. This defines how height the chart will be rendered. 
      *
-     * @param {string}      graphUrl   A Piwik graph url.
-     * @param {Object}      account    The piwik account that will be used to request the graph. 
-     *                                 The account contains the piwik accessUrl as well as the authToken.
-     * @param {Object}      site       The current selected website. 
+     * @param    {string}  graphUrl  A Piwik graph url.
+     * @param    {Object}  account   The piwik account that will be used to request the graph. 
+     *                               The account contains the piwik accessUrl as well as the authToken.
+     * @param    {Object}  site      The current selected website. 
      *
-     * @returns {string}    Url to the graph including the needed size information.
+     * @returns  {string}  Url to the graph including the needed size information.
      */
     this.generateUrl = function (graphUrl, account, site) {
         var parameter   = {token_auth: account.tokenAuth,
@@ -64,8 +72,8 @@ Piwik.PiwikGraph = function () {
             requestUrl += paramName + '=' + parameter[paramName] + '&';
         }
         
-        graphUrl        = graphUrl + '&' + requestUrl.encodeUrlParams();
-        graphUrl        = ('' + account.accessUrl).formatAccessUrl() + graphUrl;
+        graphUrl        = graphUrl + '&' + Piwik.getNetwork().encodeUrlParams(requestUrl);
+        graphUrl        = Piwik.getNetwork().getBasePath('' + account.accessUrl) + graphUrl;
         
         return graphUrl;
     };
@@ -73,10 +81,10 @@ Piwik.PiwikGraph = function () {
     /**
      * Adds one or multiple url params to the given graph url.
      * 
-     * @param   {string}    graphUrl    A Piwik graph url.
-     * @param   {Object}    params      An object containing key/value pairs.
+     * @param    {string}  graphUrl  A Piwik graph url.
+     * @param    {Object}  params    An object containing key/value pairs.
      *
-     * @returns {string}    The updated Piwik graph url which now includes the given parameters
+     * @returns  {string}  The updated Piwik graph url which now includes the given parameters
      */
     this.setParams = function (graphUrl, params) {
         
@@ -97,7 +105,7 @@ Piwik.PiwikGraph = function () {
             separator = '';
         }
         
-        graphUrl = graphUrl + separator + urlGetParams.encodeUrlParams();
+        graphUrl      = graphUrl + separator + Piwik.getNetwork().encodeUrlParams(urlGetParams);
         
         return graphUrl;
     };
@@ -106,13 +114,13 @@ Piwik.PiwikGraph = function () {
      * Appends the size string and more styling parameter to the given graphUrl. 
      * This defines how height the chart will be rendered. 
      *
-     * @param {string}      graphUrl  A Piwik graph url.
-     * @param {string|Int}  width     The width of the chart in pixel.
-     * @param {string|Int}  height    The height of the chart in pixel.
-     * @param {boolean}     hires     Whether the graph shall be generated for a hires device (iOS). In such a case
-     *                                it renders the graph twice as high.
+     * @param    {string}      graphUrl  A Piwik graph url.
+     * @param    {string|Int}  width     The width of the chart in pixel.
+     * @param    {string|Int}  height    The height of the chart in pixel.
+     * @param    {boolean}     hires     Whether the graph shall be generated for a hires device (iOS). In such a case
+     *                                   it renders the graph twice as high.
      *
-     * @returns {string}    Url to the graph including the needed size and styling information.
+     * @returns  {string}      Url to the graph including the needed size and styling information.
      */
     this.appendSize = function (graphUrl, width, height, hires) {
 
@@ -122,11 +130,11 @@ Piwik.PiwikGraph = function () {
             parameter[index] = config.piwik.graph[index];
         }
         
-        if (hires && Piwik.isIos) {
+        if (hires && Piwik.getPlatform().isIos) {
             parameter.fontSize = parameter.fontSize * 2;
             parameter.width    = parameter.width * 2;
             parameter.height   = parameter.height * 2;
-        } else if (hires && Piwik.isAndroid) {
+        } else if (hires && Piwik.getPlatform().isAndroid) {
             parameter.fontSize = Math.round(parameter.fontSize * 1.5);
         } 
         
@@ -139,18 +147,18 @@ Piwik.PiwikGraph = function () {
      * Exceptionally, the piwik api can be used to display sparklines. It automatically displays sparklines of the
      * last30 days from now on.
      *
-     * @param {Int}      siteId      The id of a piwik site.
-     * @param {string}   accessUrl   The access URL of a piwik site.
-     * @param {string}   tokenAuth   The regarding auth_token of a piwik site.
+     * @param    {Int}     siteId     The id of a piwik site.
+     * @param    {string}  accessUrl  The access URL of a piwik site.
+     * @param    {string}  tokenAuth  The regarding auth_token of a piwik site.
      *
-     * @returns String   The generated url to display a sparkline url.
+     * @returns  {string}  The generated url to display a sparkline url.
      */
     this.getSparklineUrl = function (siteId, accessUrl, tokenAuth) {
 
         var url = '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + tokenAuth;
 
-        return accessUrl + url.encodeUrlParams();
+        return accessUrl + Piwik.getNetwork().encodeUrlParams(url);
     };
-};
+}
 
-Piwik.PiwikGraph = new Piwik.PiwikGraph();
+module.exports = new PiwikGraph();

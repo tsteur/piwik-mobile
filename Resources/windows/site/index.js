@@ -8,12 +8,19 @@
  * @fileOverview window 'site/index.js' .
  */
 
+/** @private */
+var Piwik  = require('library/Piwik');
+/** @private */
+var _      = require('library/underscore');
+/** @private */
+var config = require('config');
+
 /**
- * @class Display a list of all available reports depending on the given site. The list of all available reports for the
- *        given site will be fetched via metadata api.
+ * @class     Display a list of all available reports depending on the given site. The list of all available reports 
+ *            for the  given site will be fetched via metadata api.
  *
- * @param {Object}    params
- * @param {Object}    params.site    The current selected website. The object looks for example like follows:
+ * @param     {Object}  params
+ * @param     {Object}  params.site  The current selected website. The object looks for example like follows:
  *                                   {"idsite":"3",
  *                                    "name":"virtual-drums.com",
  *                                    "main_url":"http:\/\/www.virtual-drums.com",
@@ -25,8 +32,9 @@
  *                                    "feedburnerName":"Piwik",
  *                                    "group":""}
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowSiteIndex
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window (params) {
 
@@ -35,20 +43,20 @@ function window (params) {
     var currentRequestedSite = {idsite: null, accountId: null};
     
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: '' + (site ? site.name : '')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
-    if (1 == Piwik.UI.layout.windows.length) {
+    if (1 == Piwik.getUI().layout.windows.length) {
         // show settingschooser only if this is the first window. ensures user can open settings screen if this
         // is the first screen. It is the first window if the user has configured has access to only one website.
         
-        if (!Piwik.isIpad) {
+        if (!Piwik.getPlatform().isIpad) {
             this.menuOptions = {commands: [this.createCommand('OpenSettingsCommand')]};
         }
     }
@@ -64,19 +72,19 @@ function window (params) {
 
     tableview.addEventListener('click', function (event) {
 
-        if (event && event.rowData && event.rowData.action) {
+        if (event && event.row && event.row.action) {
 
-            switch (event.rowData.action) {
+            switch (event.row.action) {
                 case 'live':
                         
-                    that.create('Window', {url: 'statistics/live.js',
+                    that.create('Window', {url: 'statistics/live',
                                            site: site,
                                            autoRefresh: true});
                     break;
                 
                 case 'visitorlog':
 
-                    that.create('Window', {url: 'statistics/visitorlog.js',
+                    that.create('Window', {url: 'statistics/visitorlog',
                                            site: site});
 
                 break;
@@ -86,9 +94,9 @@ function window (params) {
             return;
         }
 
-        if (event && event.rowData && event.rowData.report) {
-            that.create('Window', {url: 'statistics/show.js',
-                                   report: event.rowData.report,
+        if (event && event.row && event.row.report) {
+            that.create('Window', {url: 'statistics/show',
+                                   report: event.row.report,
                                    site: site});
         }
 
@@ -135,12 +143,12 @@ function window (params) {
         site              = event.site;
         that.titleOptions = {title: '' + event.site.name};
         
-        if (Piwik.isIpad) {
+        if (Piwik.getPlatform().isIpad) {
             
             that.titleOptions = {title: '' + (site ? site.name : ''),
                                  window: that};
 
-            Piwik.UI.layout.header.refresh(that.titleOptions);
+            Piwik.getUI().layout.header.refresh(that.titleOptions);
             
             forceRequestReload = false;
             refresh.refresh();
@@ -210,7 +218,7 @@ function window (params) {
 
         tableview.setData(tableData);
 
-        if (Piwik.isIos && tableview.scrollToTop) {
+        if (Piwik.getPlatform().isIos && tableview.scrollToTop) {
             tableview.scrollToTop(1);
         }
     });
@@ -226,4 +234,6 @@ function window (params) {
 
         request.send({site: site});
     };
-};
+}
+
+module.exports = window;

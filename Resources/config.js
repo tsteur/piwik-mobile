@@ -83,3 +83,5 @@ config.tracking = {
      */
     maxTracksPerDay: 200
 };
+
+module.exports = config;

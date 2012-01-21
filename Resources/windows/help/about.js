@@ -8,22 +8,28 @@
  * @fileOverview window 'help/about.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Displays an 'About Piwik' window containing links to source and Piwik project website.
- *        Also displays Piwik Mobile license information.
+ * @class     Displays an 'About Piwik' window containing links to source and Piwik project website.
+ *            Also displays Piwik Mobile license information.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowHelpAbout
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: String.format(_('General_AboutPiwikX'), 'Mobile')};
     
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
@@ -50,7 +56,7 @@ function window () {
         Ti.Platform.openURL('http://dev.piwik.org/svn/mobile');
     });
 
-    var gplContent    = Ti.UI.createWebView({url: 'license.html',
+    var gplContent    = Ti.UI.createWebView({url: '/license.html',
                                              id: 'aboutPiwikLicenseWebView'});
 
     view.add(piwikOrgLink);
@@ -61,3 +67,5 @@ function window () {
 
     };
 }
+
+module.exports = window;

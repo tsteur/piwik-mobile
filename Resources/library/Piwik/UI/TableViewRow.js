@@ -5,166 +5,187 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
+
+/** @private */
+var Piwik       = require('library/Piwik');
+/** @private */
+var stringUtils = Piwik.require('Utils/String');
  
 /** 
- * Creates and returns an instance of a Titanium TableViewRow. It does automatically set theme related settings and 
- * handles os specific differences. Extends the default row to set a value and description. Always use this function if
- * you need a table row. This ensures the same look and feel in each table view without the need of handling os
- * differences.
+ * @class    Creates and returns an instance of a Titanium TableViewRow. It does automatically set theme related 
+ *           settings and handles os specific differences. Extends the default row to set a value and description. 
+ *           Always use this function if you need a table row. This ensures the same look and feel in each table view 
+ *           without the need of handling os differences.
  *
- * @param  {Object}   [params]                    See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
- * @param  {string}   [params.value]              Optional. Displays a value within the row.
- * @param  {string}   [params.description]        Optional. Displays a description within the row.
- * @param  {Object}   [params.command]            Optional. An instance of a command. Will be executed as soon as the 
- *                                                user clicks the row.
- * @param  {string}   [params.layout]             Optional. 'vertical' if a vertical layout shall be used. Use it only
- *                                                if you don't set a value.
- * @param  {Object}   [params.rightImage]         Optional. An image to render in the right image area of the row cell.
- * @param  {string}   [params.rightImage.url]     The url (local or remote) to the right image.
- * @param  {number}   [params.rightImage.width]   The width of the right image.
- * @param  {number}   [params.rightImage.height]  The height of the right image.
+ * @param    {Object}  [params]                    See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
+ * @param    {string}  [params.value]              Optional. Displays a value within the row.
+ * @param    {string}  [params.description]        Optional. Displays a description within the row.
+ * @param    {Object}  [params.command]            Optional. An instance of a command. Will be executed as soon as the 
+ *                                                 user clicks the row.
+ * @param    {string}  [params.layout]             Optional. 'vertical' if a vertical layout shall be used. Use it only
+ *                                                 if you don't set a value.
+ * @param    {Object}  [params.rightImage]         Optional. An image to render in the right image area of the row cell.
+ * @param    {string}  [params.rightImage.url]     The url (local or remote) to the right image.
+ * @param    {number}  [params.rightImage.width]   The width of the right image.
+ * @param    {number}  [params.rightImage.height]  The height of the right image.
  *
  * @example
- * var row = Piwik.Ui.createTableViewRow({title: 'Language',
- *                                        hasCheck: true,
- *                                        value: 'English'}); // creates an instance of the row
- * row.changeValue('German');                                 // changes the value of the row afterwards
- * row.changeTitle('Foobar');                                 // changes the title of the row afterwards
- * row.changeDescription('Foobar');                           // changes the description of the row afterwards
+ * var row = Piwik.getUI().createTableViewRow({title: 'Language',
+ *                                             hasCheck: true,
+ *                                             value: 'English'}); // creates an instance of the row
+ * row.changeValue('German');                                      // changes the value of the row afterwards
+ * row.changeTitle('Foobar');                                      // changes the title of the row afterwards
+ * row.changeDescription('Foobar');                                // changes the description of the row afterwards
  *
- * @returns {Titanium.UI.TableViewRow} A table view row instance extended by the methods 'changeTitle' and 
- *                                     'changeValue'. ChangeValue lets you change the value whereas changeTitle lets you
- *                                     change the title. Please, do not set row.title directly as we use a custom title
- *                                     label to display the title.
+ * @exports  TableViewRow as Piwik.UI.TableViewRow
  */
-Piwik.UI.TableViewRow = function () {
+function TableViewRow () {
+}
 
-    /**
-     * Create and render the TableViewRow depending on the defined parameters.
-     * 
-     * @param    {Object}    See {@link Piwik.UI.TableViewRow}
+/**
+ * Create and render the TableViewRow depending on the defined parameters.
+ * 
+ * @param    {Object}  See {@link Piwik.UI.TableViewRow}
+ * 
+ * @returns  {Titanium.UI.TableViewRow}  A table view row instance extended by the methods 'changeTitle' and 
+ *                                       'changeValue'. ChangeValue lets you change the value whereas changeTitle lets
+ *                                       you change the title. Please, do not set row.title directly as we use a 
+ *                                       custom title label to display the title.
+ * 
+ */
+TableViewRow.prototype.init = function (params) {
+    
+    if (!params) {
+        params = {};
+    }
+
+    var title       = params.title || null;
+    var value       = params.value || null;
+    var description = params.description || null;
+    var rightImage  = params.rightImage || null;
+    var command     = params.command || null;
+
+    // we handle those parameters ourselves... therefore we delete them and don't pass them to TableViewRow creation
+    delete params.title;
+    delete params.value;
+    delete params.description;
+    delete params.rightImage;
+
+    var row = Ti.UI.createTableViewRow(params);
+    
+    if (command) {
+        row.addEventListener('click', function () {
+            command.execute({source: row.titleLabel});
+        });
+    }
+    
+    /** 
+     * @memberOf  Piwik.UI.TableViewRow
+     * @function 
      */
-    this.init = function (params) {
-        
-        if (!params) {
-            params = {};
-        }
+    var changeTitle = function (title) {
 
-        var title       = params.title || null;
-        var value       = params.value || null;
-        var description = params.description || null;
-        var rightImage  = params.rightImage || null;
-        var command     = params.command || null;
+        if (!this.titleLabel && (title || '' === title)) {
+            // no title label already exists
 
-        // we handle those parameters ourselves... therefore we delete them and don't pass them to TableViewRow creation
-        delete params.title;
-        delete params.value;
-        delete params.description;
-        delete params.rightImage;
-
-        var row = Ti.UI.createTableViewRow(params);
-        
-        if (command) {
-            row.addEventListener('click', function () {
-                command.execute({source: row.titleLabel});
+            this.titleLabel = Ti.UI.createLabel({
+                text: title,
+                id: 'tableViewRowTitleLabel' + (description ? 'WithDescription' : '')
             });
+
+            this.add(this.titleLabel);
         }
 
-        /** @memberOf Titanium.UI.TableViewRow */
-        row.changeTitle = function (title) {
+        if (this.titleLabel && (title || '' === title)) {
+            // title label already exists, we can simply overwrite the title
 
-            if (!this.titleLabel && (title || '' === title)) {
-                // no title label already exists
+            this.titleLabel.text = title;
 
-                this.titleLabel = Ti.UI.createLabel({
-                    text: title,
-                    id: 'tableViewRowTitleLabel' + (description ? 'WithDescription' : '')
-                });
+        } else if (this.titleLabel && !title) {
+            // we have to remove the title label cause title is empty
 
-                this.add(this.titleLabel);
-            }
-
-            if (this.titleLabel && (title || '' === title)) {
-                // title label already exists, we can simply overwrite the title
-
-                this.titleLabel.text = title;
-
-            } else if (this.titleLabel && !title) {
-                // we have to remove the title label cause title is empty
-
-                this.remove(this.titleLabel);
-                this.titleLabel = null;
-            }
-        };
-
-        /** @memberOf Ti.UI.TableViewRow */
-        row.changeDescription = function (description) {
-
-            if (!this.descriptionLabel && (description || '' === description)) {
-
-                this.descriptionLabel = Ti.UI.createLabel({
-                    text: description,
-                    id: 'tableViewRowDescriptionLabel' + (params.layout ? params.layout : '')
-                });
-
-                this.add(this.descriptionLabel);
-            }
-
-            if (this.descriptionLabel && (description || '' === description)) {
-
-                this.descriptionLabel.text = description;
-
-            } else if (this.descriptionLabel && !description) {
-
-                this.remove(this.descriptionLabel);
-                this.descriptionLabel = null;
-            }
-        };
-
-        /** @memberOf Titanium.UI.TableViewRow */
-        row.changeValue = function (value) {
-
-            if (!this.valueLabel && (value || '' === value || 0 === value)) {
-
-                this.valueLabel = Ti.UI.createLabel({
-                    text: value,
-                    id: 'tableViewRowValueLabel'
-                });
-
-                this.add(this.valueLabel);
-
-            } else if (this.valueLabel && (value || '' === value || 0 === value)) {
-
-                this.valueLabel.text = value;
-
-            } else if (this.valueLabel && !value) {
-
-                this.remove(this.valueLabel);
-                this.valueLabel = null;
-            }
-        };
-
-        row.changeTitle(title);
-        row.changeValue(value);
-        row.changeDescription(description);
-
-        if (params.onShowOptionMenu && Piwik.isAndroid) {
-            // there is no native event 'onShowOptionMenu' available in Titanium, therefore we 'fake' it
-            row.addEventListener('longpress', function (event) {
-
-                params.onShowOptionMenu.apply(row, [event]);
-            });
-        } 
-
-        if (rightImage && rightImage.url) {
-
-            var rowRightImage = Ti.UI.createImageView({width: ('' + rightImage.width).toSizeUnit(),
-                                                       height: ('' + rightImage.height).toSizeUnit(),
-                                                       image: rightImage.url,
-                                                       id: 'tableViewRowRightImage'});
-            row.add(rowRightImage);
+            this.remove(this.titleLabel);
+            this.titleLabel = null;
         }
-
-        return row;
     };
+
+    /** 
+     * @memberOf  Piwik.UI.TableViewRow
+     * @function 
+     */
+    var changeDescription = function (description) {
+
+        if (!this.descriptionLabel && (description || '' === description)) {
+
+            this.descriptionLabel = Ti.UI.createLabel({
+                text: description,
+                id: 'tableViewRowDescriptionLabel' + (params.layout ? params.layout : '')
+            });
+
+            this.add(this.descriptionLabel);
+        }
+
+        if (this.descriptionLabel && (description || '' === description)) {
+
+            this.descriptionLabel.text = description;
+
+        } else if (this.descriptionLabel && !description) {
+
+            this.remove(this.descriptionLabel);
+            this.descriptionLabel = null;
+        }
+    };
+    
+    /** 
+     * @memberOf  Piwik.UI.TableViewRow
+     * @function 
+     */
+    var changeValue = function (value) {
+
+        if (!this.valueLabel && (value || '' === value || 0 === value)) {
+
+            this.valueLabel = Ti.UI.createLabel({
+                text: value,
+                id: 'tableViewRowValueLabel'
+            });
+
+            this.add(this.valueLabel);
+
+        } else if (this.valueLabel && (value || '' === value || 0 === value)) {
+
+            this.valueLabel.text = value;
+
+        } else if (this.valueLabel && !value) {
+
+            this.remove(this.valueLabel);
+            this.valueLabel = null;
+        }
+    };
+
+    row.changeTitle       = changeTitle;
+    row.changeDescription = changeDescription;
+    row.changeValue       = changeValue;
+
+    row.changeTitle(title);
+    row.changeValue(value);
+    row.changeDescription(description);
+
+    if (params.onShowOptionMenu && Piwik.getPlatform().isAndroid) {
+        row.addEventListener('longclick', function (event) {
+            params.onShowOptionMenu.apply(row, [event]);
+        });
+    } 
+
+    if (rightImage && rightImage.url) {
+
+        var rowRightImage = Ti.UI.createImageView({width:  stringUtils.toSizeUnit('' + rightImage.width),
+                                                   height: stringUtils.toSizeUnit('' + rightImage.height),
+                                                   image:  rightImage.url,
+                                                   id:     'tableViewRowRightImage'});
+        row.add(rowRightImage);
+    }
+
+    return row;
 };
+
+module.exports = TableViewRow;

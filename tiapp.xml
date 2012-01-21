@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
+    <property name="ti.android.runtime">v8</property>
+    <sdk-version>1.8.0.1</sdk-version>
     <deployment-targets>
-        <target device="mobileweb">false</target>
+        <target device="mobileweb">true</target>
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
@@ -43,7 +45,7 @@
             android:versionCode="11" android:versionName="1.7.0">
             <supports-screens android:anyDensity="true"
                 android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
-            <uses-sdk android:installLocation="preferExternal" android:minSdkVersion="7"/>
+            <uses-sdk android:installLocation="preferExternal" android:minSdkVersion="8"/>
         </manifest>
     </android>
 </ti:app>

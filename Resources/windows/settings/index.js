@@ -8,21 +8,27 @@
  * @fileOverview window 'settings/index.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Lets the user change the settings like language, default report date and so on.
+ * @class     Lets the user change the settings like language, default report date and so on.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowSettingsIndex
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('General_Settings')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
@@ -31,11 +37,11 @@ function window () {
 
     tableview.addEventListener('click', function (event) {
 
-        if (!event || !event.rowData || !event.rowData.onClick) {
+        if (!event || !event.row || !event.row.onClick) {
             return;
         }
         
-        event.rowData.onClick.apply(event.row, [event]);
+        event.row.onClick.apply(event.row, [event]);
     });
     
     this.add(tableview);
@@ -278,7 +284,7 @@ function window () {
         };
 
         var onManageAccess = function () {
-            that.create('Window', {url: 'settings/manageaccounts.js', target: 'modal'});
+            that.create('Window', {url: 'settings/manageaccounts', target: 'modal'});
         };
 
         var onChangeHttpTimeout = function () {
@@ -318,11 +324,11 @@ function window () {
         };
 
         var onShowHelpAbout = function () {
-            that.create('Window', {url: 'help/about.js', target: 'modal'});
+            that.create('Window', {url: 'help/about', target: 'modal'});
         };
 
         var onShowHelpFeedback = function () {
-            that.create('Window', {url: 'help/feedback.js', target: 'modal'});
+            that.create('Window', {url: 'help/feedback', target: 'modal'});
         };
 
         var tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
@@ -331,16 +337,16 @@ function window () {
                                                       hasDetail: true}),
                          that.create('TableViewSection', {title: _('General_GeneralSettings'), 
                                                           style: 'native'}),
-                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('General_Language'),
                                                       onClick: onChangeLanguage,
                                                       value: currentLanguage,
-                                                      hasChild: Piwik.isIos}),
-                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                                                      hasChild: Piwik.getPlatform().isIos}),
+                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('Mobile_DefaultReportDate'),
                                                       onClick: onChangeDefaultReportDate,
                                                       value: defaultReportDateLabel,
-                                                      hasChild: Piwik.isIos}),
+                                                      hasChild: Piwik.getPlatform().isIos}),
                          that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
                                                       title: _('Mobile_AnonymousTracking'),
                                                       onClick: onChangeAnonymousTracking,
@@ -356,10 +362,10 @@ function window () {
                                                       hasCheck: Boolean(indexEvent.graphsEnabled)}),
                          that.create('TableViewSection', {title: _('Mobile_Advanced'), 
                                                           style: 'native'}),
-                         that.create('TableViewRow', {className: Piwik.isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
                                                       title: _('Mobile_HttpTimeout'),
                                                       description: _('Mobile_HttpTimeoutInfo'),
-                                                      hasChild: Piwik.isIos,
+                                                      hasChild: Piwik.getPlatform().isIos,
                                                       onClick: onChangeHttpTimeout,
                                                       value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
                          that.create('TableViewSection', {title: _('General_Help'), 
@@ -379,7 +385,7 @@ function window () {
 
         tableview.setData(tableData);
         
-        if (Piwik.isIos && tableview.scrollToTop) {
+        if (Piwik.getPlatform().isIos && tableview.scrollToTop) {
             // make sure the first row will be visible on ipad
             tableview.scrollToTop(1);
         }
@@ -407,3 +413,5 @@ function window () {
         this.fireEvent('onopen', eventResult);
     };
 }
+
+module.exports = window;

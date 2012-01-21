@@ -6,37 +6,41 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+
 /**
- * @class   The top level UI module. The module contains methods to create UI widgets and to handle the layout as well
- *          as the current window.
+ * @class    The top level UI module. The module contains methods to create UI widgets and to handle the layout as well
+ *           as the current window.
  *
+ * @exports  UI as Piwik.UI
  * @static
  */
-Piwik.UI = {};
+var UI = {};
 
 /**
  * Points to the current opened Piwik window if one is opened. Null otherwise.
  *
- * @type null|Piwik.UI.Window
+ * @type  null|Piwik.UI.Window
  */
-Piwik.UI.currentWindow = null;
+UI.currentWindow = null;
 
 /**
  * Points to the application layout. The layout can be bootstrapped via the bootstrap() method. Is null if no layout
  * was previously bootstrapped.
  *
- * @type null|Object
+ * @type  null|Object
  */
-Piwik.UI.layout = null;
+UI.layout        = null;
 
 /**
  * Bootstrap the UI / Layout.
  *
- * @param   {Object}   [options]
- * @param   {Object}   [options.layoutUrl]      Optional. Absolute url to the Piwik layout. If given, it immediately
- *                                              initializes the layout.
+ * @param  {Object}  [options]
+ * @param  {Object}  [options.layoutUrl]  Optional. Absolute url to the Piwik layout. If given, it immediately
+ *                                        initializes the layout.
  */
-Piwik.UI.bootstrap = function (options) {
+UI.bootstrap = function (options) {
 
     if (options && options.layoutUrl) {
         
@@ -55,28 +59,29 @@ Piwik.UI.bootstrap = function (options) {
  * windows has there own JavaScript subcontext. It is much faster to just work with one context. The disadvantage is
  * that we have to care a bit more about leaks and so on.
  *
- * @param {Object}    params                             All needed params to display the window and process the request.
- * @param {string}    params.url                         The url to the window with the windows instructions. The url
- *                                                       has to be relative to the 'Resources/windows' directory.
- * @param {string}    [params.exitOnClose=false]         if true, it makes sure android exits the app when this
- *                                                       window is closed and no other activity (window) is running
- * @param {string}    [params.target]                    Only for iPad. Defines whether the window shall be placed in
- *                                                       'detailView', 'masterView' or 'modal' window.
- * @param {Piwik.UI.Window} [params.closeWindow]         If true, it closes the given window.
- * @param {*}         params.*                           You can pass other parameters as you need it. The created
- *                                                       controller and view can access those values. You can use
- *                                                       this for example if you want to pass a site, date, period
- *                                                       parameter or something else. You can also use all
- *                                                       'Titanium.UI.Window' parameters.
+ * @param  {Object}           params                      All needed params to display the window and process the 
+ *                                                        request.
+ * @param  {string}           params.url                  The url to the window with the windows instructions. The url
+ *                                                        has to be relative to the 'Resources/windows' directory.
+ * @param  {string}           [params.exitOnClose=false]  if true, it makes sure android exits the app when this
+ *                                                        window is closed and no other activity (window) is running
+ * @param  {string}           [params.target]             Only for iPad. Defines whether the window shall be placed in
+ *                                                        'detailView', 'masterView' or 'modal' window.
+ * @param  {Piwik.UI.Window}  [params.closeWindow]        If true, it closes the given window.
+ * @param  {*}                params.*                    You can pass other parameters as you need it. The created
+ *                                                        controller and view can access those values. You can use
+ *                                                        this for example if you want to pass a site, date, period
+ *                                                        parameter or something else. You can also use all
+ *                                                        'Titanium.UI.Window' parameters.
  *
  *
- * @see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Window-object">Titanium.UI.Window</a>
+ * @see      <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Window-object">Titanium.UI.Window</a>
  *
- * @type Piwik.UI.Window
+ * @type     Piwik.UI.Window
  * 
- * @returns The created window instance.
+ * @returns  The created window instance.
  */
-Piwik.UI.createWindow = function (params) {
+UI.createWindow = function (params) {
 
     if (!params) {
         params = {};
@@ -86,26 +91,26 @@ Piwik.UI.createWindow = function (params) {
     delete params.rootWindow;
 
     try {
-        var url                = params.url;
+        var url            = params.url;
 
         // increase the zIndex, ensures the next window will be displayed in front of the current window
-        this.layout.zIndex     = this.layout.zIndex + 1;
-        params.zIndex          = this.layout.zIndex;
-        params.className       = 'piwikWindow';
+        this.layout.zIndex = this.layout.zIndex + 1;
+        params.zIndex      = this.layout.zIndex;
+        params.className   = 'piwikWindow';
 
         // newWin is the view we will render everything into
-        var newWin             = Ti.UI.createView(params);
+        var newWin         = Ti.UI.createView(params);
 
         // delete params.className cause we just need it for view creation.
         delete params.className;
 
         // load the requested template
-        var winTemplate        = Piwik.requireWindow(url);
+        var winTemplate    = Piwik.requireWindow(url);
 
-        Piwik.include('library/Piwik/UI/Window.js');
-        
+        var window         = require('library/Piwik/UI/Window');
+     
         // extend newWin
-        Piwik.UI.Window.apply(newWin, []);
+        window.apply(newWin, []);
 
         if (params.closeWindow) {
             params.closeWindow.close(true);
@@ -129,7 +134,7 @@ Piwik.UI.createWindow = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCw12'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiCw12'});
         uiError.showErrorMessageToUser();
     }
 
@@ -139,27 +144,26 @@ Piwik.UI.createWindow = function (params) {
 /**
  * Creates a new modal window instance.
  *
- * @see Piwik.UI.ModalWindow
+ * @see      Piwik.UI.ModalWindow
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.ModalWindow.
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.ModalWindow.
  *
- * @type Piwik.UI.ModalWindow
+ * @type     Piwik.UI.ModalWindow
  *
- * @returns The created modal window instance.
+ * @returns  The created modal window instance.
  */
-Piwik.UI.createModalWindow = function (params) {
+UI.createModalWindow = function (params) {
 
     try {
         var instance = Piwik.require('UI/ModalWindow');
         instance.setParams(params);
-
         instance.init();
         
         return instance;
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiMw17'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiMw17'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -167,15 +171,15 @@ Piwik.UI.createModalWindow = function (params) {
 /**
  * Creates a new date picker instance.
  *
- * @see Piwik.UI.DatePicker
+ * @see      Piwik.UI.DatePicker
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.DatePicker.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.DatePicker.
  *
- * @type Piwik.UI.DatePicker
+ * @type     Piwik.UI.DatePicker
  *
- * @returns The created date picker instance.
+ * @returns  The created date picker instance.
  */
-Piwik.UI.createDatePicker = function (params) {
+UI.createDatePicker = function (params) {
 
     if (!params) {
         params  = {};
@@ -193,7 +197,7 @@ Piwik.UI.createDatePicker = function (params) {
         
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiDp16'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiDp16'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -201,15 +205,15 @@ Piwik.UI.createDatePicker = function (params) {
 /**
  * Creates a new TableViewRow.
  *
- * @see Piwik.UI.TableViewRow
+ * @see      Piwik.UI.TableViewRow
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.TableViewRow.
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.TableViewRow.
  *
- * @type Titanium.UI.TableViewRow
+ * @type     Titanium.UI.TableViewRow
  *
- * @returns The created row.
+ * @returns  The created row.
  */
-Piwik.UI.createTableViewRow = function (params) {
+UI.createTableViewRow = function (params) {
 
     try {
         var instance = Piwik.require('UI/TableViewRow');
@@ -218,7 +222,7 @@ Piwik.UI.createTableViewRow = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiTr11'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiTr11'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -226,15 +230,15 @@ Piwik.UI.createTableViewRow = function (params) {
 /**
  * Creates a new TableViewSection.
  *
- * @see Piwik.UI.TableViewSection
+ * @see      Piwik.UI.TableViewSection
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.TableViewSection.
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.TableViewSection.
  *
- * @type Titanium.UI.TableViewSection
+ * @type     Titanium.UI.TableViewSection
  *
- * @returns The created section.
+ * @returns  The created section.
  */
-Piwik.UI.createTableViewSection = function (params) {
+UI.createTableViewSection = function (params) {
 
     try {
         var instance = Piwik.require('UI/TableViewSection');
@@ -243,7 +247,7 @@ Piwik.UI.createTableViewSection = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiTs21'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiTs21'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -251,15 +255,15 @@ Piwik.UI.createTableViewSection = function (params) {
 /**
  * Creates a new activity indicator instance.
  *
- * @see Piwik.UI.ActivityIndicator
+ * @see      Piwik.UI.ActivityIndicator
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Error.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Error.
  *
- * @type Piwik.UI.ActivityIndicator
+ * @type     Piwik.UI.ActivityIndicator
  *
- * @returns The created activity indicator instance.
+ * @returns  The created activity indicator instance.
  */
-Piwik.UI.createActivityIndicator = function (params) {
+UI.createActivityIndicator = function (params) {
 
     try {
         var instance = Piwik.require('UI/ActivityIndicator');
@@ -270,7 +274,7 @@ Piwik.UI.createActivityIndicator = function (params) {
         
     } catch (exception) {
         
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCa27'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiCa27'});
         uiError.showErrorMessageToUser();
     }
 
@@ -280,15 +284,15 @@ Piwik.UI.createActivityIndicator = function (params) {
 /**
  * Creates a new UI error instance.
  *
- * @see Piwik.UI.Error
+ * @see      Piwik.UI.Error
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Error.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Error.
  *
- * @type Piwik.UI.Error
+ * @type     Piwik.UI.Error
  *
- * @returns The created UI error instance.
+ * @returns  The created UI error instance.
  */
-Piwik.UI.createError = function (params) {
+UI.createError = function (params) {
 
     try {
         var instance = Piwik.require('UI/Error');
@@ -298,7 +302,7 @@ Piwik.UI.createError = function (params) {
         return instance;
         
     } catch (exception) {
-        Piwik.Log.warn('Failed to create Error UI widget', 'UI::createError');
+        Piwik.getLog().warn('Failed to create Error UI widget', 'UI::createError');
     }
 
     return {showErrorMessageToUser: function () {}};
@@ -307,15 +311,15 @@ Piwik.UI.createError = function (params) {
 /**
  * Creates a new graph instance.
  *
- * @see Piwik.UI.Graph
+ * @see      Piwik.UI.Graph
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Graph.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Graph.
  *
- * @type Piwik.UI.Graph
+ * @type     Piwik.UI.Graph
  *
- * @returns The created graph instance.
+ * @returns  The created graph instance.
  */
-Piwik.UI.createGraph = function (params) {
+UI.createGraph = function (params) {
 
     try {
         var instance = Piwik.require('UI/Graph');
@@ -326,7 +330,7 @@ Piwik.UI.createGraph = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCg27'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiCg27'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -334,15 +338,15 @@ Piwik.UI.createGraph = function (params) {
 /**
  * Creates a new statistic list instance.
  *
- * @see Piwik.UI.StatisticList
+ * @see      Piwik.UI.StatisticList
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.StatisticList.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.StatisticList.
  *
- * @type Piwik.UI.StatisticList
+ * @type     Piwik.UI.StatisticList
  *
- * @returns The created statistic list instance.
+ * @returns  The created statistic list instance.
  */
-Piwik.UI.createStatisticList = function (params) {
+UI.createStatisticList = function (params) {
 
     try {
         var instance = Piwik.require('UI/StatisticList');
@@ -353,7 +357,7 @@ Piwik.UI.createStatisticList = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiSl30'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiSl30'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -361,18 +365,18 @@ Piwik.UI.createStatisticList = function (params) {
 /**
  * Creates a new header instance.
  *
- * @see Piwik.UI.Header
+ * @see      Piwik.UI.Header
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Header.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Header.
  *
- * @type Piwik.UI.Header
+ * @type     Piwik.UI.Header
  *
- * @returns The created header instance.
+ * @returns  The created header instance.
  */
-Piwik.UI.createHeader = function (params) {
+UI.createHeader = function (params) {
 
     try {
-        var header = Piwik.require('UI/Header');
+        var header  = Piwik.require('UI/Header');
         header.setParams(params);
         header.init();
 
@@ -380,7 +384,7 @@ Piwik.UI.createHeader = function (params) {
         
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCh33'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiCh33'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -388,15 +392,15 @@ Piwik.UI.createHeader = function (params) {
 /**
  * Creates a new menu instance.
  *
- * @see Piwik.UI.Menu
+ * @see      Piwik.UI.Menu
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Menu.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Menu.
  *
- * @type Piwik.UI.Menu
+ * @type     Piwik.UI.Menu
  *
- * @returns The created menu instance.
+ * @returns  The created menu instance.
  */
-Piwik.UI.createMenu = function (params) {
+UI.createMenu = function (params) {
 
     try {
         var menu = Piwik.require('UI/Menu');
@@ -407,7 +411,7 @@ Piwik.UI.createMenu = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCm35'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiCm35'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -415,15 +419,15 @@ Piwik.UI.createMenu = function (params) {
 /**
  * Creates a new refresh instance.
  *
- * @see Piwik.UI.Refresh
+ * @see      Piwik.UI.Refresh
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Refresh.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Refresh.
  *
- * @type Piwik.UI.Refresh
+ * @type     Piwik.UI.Refresh
  *
- * @returns The created refresh instance.
+ * @returns  The created refresh instance.
  */
-Piwik.UI.createRefresh = function (params) {
+UI.createRefresh = function (params) {
 
     try {
         var instance = Piwik.require('UI/Refresh');
@@ -434,7 +438,7 @@ Piwik.UI.createRefresh = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCr38'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiCr38'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -442,15 +446,15 @@ Piwik.UI.createRefresh = function (params) {
 /**
  * Creates a new visitor overview instance.
  *
- * @see Piwik.UI.VisitorOverview
+ * @see      Piwik.UI.VisitorOverview
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.VisitorOverview.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.VisitorOverview.
  *
- * @type Piwik.UI.VisitorOverview
+ * @type     Piwik.UI.VisitorOverview
  *
- * @returns The created visitor overview instance.
+ * @returns  The created visitor overview instance.
  */
-Piwik.UI.createVisitorOverview = function (params) {
+UI.createVisitorOverview = function (params) {
 
     try {
         var instance = Piwik.require('UI/VisitorOverview');
@@ -461,7 +465,7 @@ Piwik.UI.createVisitorOverview = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiVo41'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiVo41'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -469,15 +473,15 @@ Piwik.UI.createVisitorOverview = function (params) {
 /**
  * Creates a new visitor instance.
  *
- * @see Piwik.UI.Visitor
+ * @see      Piwik.UI.Visitor
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.Visitor.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.Visitor.
  *
- * @type Piwik.UI.Visitor
+ * @type     Piwik.UI.Visitor
  *
- * @returns The created visitor instance.
+ * @returns  The created visitor instance.
  */
-Piwik.UI.createVisitor = function (params) {
+ UI.createVisitor = function (params) {
 
     try {
         var instance = Piwik.require('UI/Visitor');
@@ -488,7 +492,7 @@ Piwik.UI.createVisitor = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiCv43'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiCv43'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -496,15 +500,15 @@ Piwik.UI.createVisitor = function (params) {
 /**
  * Creates a new live overview instance.
  *
- * @see Piwik.UI.LiveOverview
+ * @see      Piwik.UI.LiveOverview
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.LiveOverview.
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.LiveOverview.
  *
- * @type Piwik.UI.LiveOverview
+ * @type     Piwik.UI.LiveOverview
  *
- * @returns The created live overview instance.
+ * @returns  The created live overview instance.
  */
-Piwik.UI.createLiveOverview = function (params) {
+UI.createLiveOverview = function (params) {
 
     try {
         var instance = Piwik.require('UI/LiveOverview');
@@ -515,7 +519,7 @@ Piwik.UI.createLiveOverview = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiLo46'});
+        var uiError =  UI.createError({exception: exception, errorCode: 'PiUiLo46'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -523,15 +527,15 @@ Piwik.UI.createLiveOverview = function (params) {
 /**
  * Creates a new website list instance.
  *
- * @see Piwik.UI.WebsiteList
+ * @see      Piwik.UI.WebsiteList
  *
- * @param   {Object} params      A dictionary object properties defined in Piwik.UI.WebsiteList.
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.WebsiteList.
  *
- * @type Piwik.UI.WebsiteList
+ * @type     Piwik.UI.WebsiteList
  *
- * @returns The created website list instance.
+ * @returns  The created website list instance.
  */
-Piwik.UI.createWebsitesList = function (params) {
+UI.createWebsitesList = function (params) {
 
     try {
         var instance = Piwik.require('UI/WebsitesList');
@@ -542,7 +546,7 @@ Piwik.UI.createWebsitesList = function (params) {
 
     } catch (exception) {
 
-        var uiError = Piwik.UI.createError({exception: exception, errorCode: 'PiUiWl48'});
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiWl48'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -550,13 +554,13 @@ Piwik.UI.createWebsitesList = function (params) {
 /**
  * Creates a new iPad Popover widget.
  *
- * @param   {Object} params      A dictionary object properties defined in Titanium.UI.iPad.Popover.
+ * @param    {Object}  params  A dictionary object properties defined in Titanium.UI.iPad.Popover.
  *
- * @type Titanium.UI.iPad.Popover
+ * @type     Titanium.UI.iPad.Popover
  *
- * @returns The created popover instance.
+ * @returns  The created popover instance.
  */
-Piwik.UI.createPopover = function (params) {
+UI.createPopover = function (params) {
     if (this.popover && this.popover.hide) {
         this.popover.hide();
     }
@@ -565,3 +569,5 @@ Piwik.UI.createPopover = function (params) {
     
     return this.popover;
 };
+
+module.exports = UI;

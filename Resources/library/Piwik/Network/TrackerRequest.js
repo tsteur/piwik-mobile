@@ -6,35 +6,41 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik  = require('library/Piwik');
+/** @private */
+var config = require('config');
+
 /**
- * @class    Sends tracking requests to a piwik instance. The piwik instance can be configured within the config.
+ * @class     Sends tracking requests to a piwik instance. The piwik instance can be configured within the config.
  *
- * @augments Piwik.Network.HttpRequest
+ * @exports   TrackerRequest as Piwik.Network.TrackerRequest
+ * @augments  Piwik.Network.HttpRequest
  */
-Piwik.Network.TrackerRequest = function () {
+function TrackerRequest () {
 
     this.baseUrl    = config.tracking.piwikServerUrl;
     
     this.sendErrors = false;
-    
-    /**
-     * Sends the tracking request.
-     *
-     * @type void
-     */
-    this.send = function () {
-
-        if (!this.parameter) {
-            this.parameter = {};
-        }
-
-        this.handle();
-        
-        return;
-    };
-};
+}
 
 /**
  * Extend Piwik.Network.HttpRequest.
  */
-Piwik.Network.TrackerRequest.prototype = Piwik.require('Network/HttpRequest');
+TrackerRequest.prototype = Piwik.require('Network/HttpRequest');
+
+/**
+ * Sends the tracking request.
+ */
+TrackerRequest.prototype.send = function () {
+
+    if (!this.parameter) {
+        this.parameter = {};
+    }
+
+    this.handle();
+    
+    return;
+};
+
+module.exports = TrackerRequest;

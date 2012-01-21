@@ -8,16 +8,20 @@
  * @fileOverview window 'graph/fulldetail.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Displays the current graph in full screen on the device.
+ * @class     Displays the current graph in full screen on the device.
  *
- * @property {Object}    params
- * @property {string}    params.graphUrl     The graph url without any size parameters
+ * @property  {Object}  params
+ * @property  {string}  params.graphUrl  The graph url without any size parameters
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
- * 
- * @todo support orientationchange while this window is opened
+ * @exports   window as WindowGraphFulldetail
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window (params) {
 
@@ -27,12 +31,12 @@ function window (params) {
     }
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('General_Details')};
     
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
 
@@ -66,12 +70,12 @@ function window (params) {
     graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
     graphUrlWithSize   = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
 
-    Piwik.Log.debug('piwik graphUrl is ' + graphUrlWithSize, 'graph/fulldetail::window');
+    Piwik.getLog().debug('piwik graphUrl is ' + graphUrlWithSize, 'graph/fulldetail::window');
 
     imageView = Ti.UI.createImageView({width: pictureWidth,
                                        height:  pictureHeight,
-                                       canScale: !Piwik.isAndroid,
-                                       hires: !Piwik.isAndroid,
+                                       canScale: !Piwik.getPlatform().isAndroid,
+                                       hires: !Piwik.getPlatform().isAndroid,
                                        enableZoomControls: false,
                                        className: 'fullgraphImage',
                                        image: graphUrlWithSize});
@@ -112,15 +116,15 @@ function window (params) {
             graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
             imageView        = Ti.UI.createImageView({width: pictureWidth,
                                                       height:  pictureHeight,
-                                                      canScale: !Piwik.isAndroid,
-                                                      hires: !Piwik.isAndroid,
-                                                      defaultImage: 'images/graphDefault.png',
+                                                      canScale: !Piwik.getPlatform().isAndroid,
+                                                      hires: !Piwik.getPlatform().isAndroid,
+                                                      defaultImage: '/images/graphDefault.png',
                                                       enableZoomControls: false,
                                                       image: graphUrlWithSize});
             that.add(imageView);
         } catch (e) {
-            Piwik.Log.warn('Failed to update (remove and add) graph', 'graph/fulldetail::window');
-            Piwik.Log.warn(e, 'graph/fulldetail::window');
+            Piwik.getLog().warn('Failed to update (remove and add) graph', 'graph/fulldetail::window');
+            Piwik.getLog().warn(e, 'graph/fulldetail::window');
         }
     }
         
@@ -141,16 +145,18 @@ function window (params) {
         imageView.image  = graphUrlWithSize;
     }
     
-    Ti.Gesture.addEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
+    Ti.Gesture.addEventListener('orientationchange', Piwik.getPlatform().isAndroid ? rotateImageOnAndroid : rotateImage);
     this.addEventListener('blurWindow', function () {
         try {
-            Ti.Gesture.removeEventListener('orientationchange', Piwik.isAndroid ? rotateImageOnAndroid : rotateImage);
+            Ti.Gesture.removeEventListener('orientationchange', Piwik.getPlatform().isAndroid ? rotateImageOnAndroid : rotateImage);
         } catch (e) {
-            Piwik.Log.warn('Failed to remove orientationchange event listener', 'graph/fulldetail::window');
-            Piwik.Log.warn(e, 'graph/fulldetail::window');
+            Piwik.getLog().warn('Failed to remove orientationchange event listener', 'graph/fulldetail::window');
+            Piwik.getLog().warn(e, 'graph/fulldetail::window');
         }
     });
     
     this.open = function () {
     };
 }
+
+module.exports = window;

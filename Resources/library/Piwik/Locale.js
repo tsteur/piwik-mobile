@@ -6,12 +6,16 @@
  * @version $Id$
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+
 /**
- * @class   The top level Locale module. The module contains a few methods for querying device locale information.
+ * @class    The top level Locale module. The module contains a few methods for querying device locale information.
  * 
+ * @exports  Locale as Piwik.Locale
  * @static
  */
-Piwik.Locale = function () {
+function Locale () {
 
     /**
      * Returns the chosen locale or the platform locale if not already one chosen.
@@ -21,7 +25,6 @@ Piwik.Locale = function () {
     this.getLocale = function () {
 
         var settings = Piwik.require('App/Settings');
-
         var locale   = settings.getLanguage();
 
         if (locale) {
@@ -59,6 +62,6 @@ Piwik.Locale = function () {
 
         return 'en';
     };
-};
+}
 
-Piwik.Locale = new Piwik.Locale();
+module.exports = new Locale();

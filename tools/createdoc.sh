@@ -14,4 +14,4 @@ fi
 
 DOC_OUTPUT_PATH=$1
 
-java -jar jsdoc-toolkit/jsrun.jar jsdoc-toolkit/app/run.js -r=5 ../Resources -t=jsdoc-toolkit/templates/jsdoc -p -d=$DOC_OUTPUT_PATH --encoding=UTF-8
+java -jar jsdoc-toolkit/jsrun.jar jsdoc-toolkit/app/run.js -r=5 ../Resources -t=jsdoc-toolkit/templates/jsdoc -d=$DOC_OUTPUT_PATH --encoding=UTF-8 -v

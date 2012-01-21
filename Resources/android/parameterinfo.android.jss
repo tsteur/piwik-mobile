@@ -15,7 +15,7 @@
     left: '5dp';
     width: 'auto';
     color: '#996600';
-    font-size: '12dp';
+    font-size: '12sp';
     font-weight: 'bold';
     font-family: 'Arial';
     zIndex: 6;
@@ -29,7 +29,7 @@
     color: '#996600';
     textAlign: 'right';
     width: 'auto';
-    font-size: '12dp';
+    font-size: '12sp';
     font-weight: 'bold';
     font-family: 'Arial';
     zIndex: 10;

@@ -19,7 +19,7 @@
     color: '#385487';
     top: '10dp';
     bottom: '10dp';
-    font-size: '13dp';
+    font-size: '13sp';
     font-family: 'Arial';
 }
 #statisticListHeadlineValueLabel {
@@ -29,7 +29,7 @@
     color: '#385487';
     top: '10dp';
     bottom: '10dp';
-    font-size: '13dp';
+    font-size: '13sp';
     font-family: 'Arial';
     font-weight: 'bold';
 }
@@ -38,7 +38,7 @@
     height: '38dp';
     left: '10dp';
     color: '#333333';
-    font-size: '16dp';
+    font-size: '16sp';
     font-family: 'Arial';
     right: '10dp';
 }
@@ -57,7 +57,7 @@
     color: '#333333';
     top: '10dp';
     bottom: '10dp';
-    font-size: '16dp';
+    font-size: '16sp';
     font-family: 'Arial';
 }
 
@@ -79,7 +79,7 @@
     color: '#385487';
     top: '10dp';
     bottom: '10dp';
-    font-size: '16dp';
+    font-size: '16sp';
     font-family: 'Arial';
     font-weight: 'bold';
 }

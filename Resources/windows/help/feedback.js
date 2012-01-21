@@ -8,21 +8,27 @@
  * @fileOverview window 'help/feedback.js' .
  */
 
+/** @private */
+var Piwik = require('library/Piwik');
+/** @private */
+var _     = require('library/underscore');
+
 /**
- * @class Displays a 'Give us feedback' window containing information about the users device and platform.
+ * @class     Displays a 'Give us feedback' window containing information about the users device and platform.
  *
- * @this     {Piwik.UI.Window}
- * @augments {Piwik.UI.Window}
+ * @exports   window as WindowHelpFeedback
+ * @this      Piwik.UI.Window
+ * @augments  Piwik.UI.Window
  */
 function window () {
 
     /**
-     * @see Piwik.UI.Window#titleOptions
+     * @see  Piwik.UI.Window#titleOptions
      */
     this.titleOptions = {title: _('General_GiveUsYourFeedback')};
 
     /**
-     * @see Piwik.UI.Window#menuOptions
+     * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
     
@@ -104,7 +110,7 @@ function window () {
 
         emailDialog.addEventListener('complete', function (event) {
 
-            if (Piwik.isIos && event && event.result && event.result == emailDialog.SENT) {
+            if (Piwik.getPlatform().isIos && event && event.result && event.result == emailDialog.SENT) {
                 // android doesn't give us useful result codes. it anyway shows a toast.
                 alert(_('Feedback_ThankYou'));
             }
@@ -113,10 +119,12 @@ function window () {
         emailDialog.open();
     };
     
-    Piwik.UI.OptionMenu.addItem({title: 'Email us'}, sendEmail);
+    var optionMenu = Piwik.require('UI/OptionMenu');
+            
+    optionMenu.addItem({title: 'Email us'}, sendEmail);
     this.addEventListener('focusWindow', function () {
 
-        if (Piwik.isIos) {
+        if (Piwik.getPlatform().isIos) {
             var emailus = Ti.UI.createButton({title: 'Email us'});
             emailus.addEventListener('click', sendEmail);
             that.rootWindow.rightNavButton = emailus;
@@ -128,3 +136,5 @@ function window () {
 
     };
 }
+
+module.exports = window;

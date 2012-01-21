@@ -173,7 +173,7 @@ for lang in lang_array:
         if translation['label'] in valid_translations:
             result[translation['label']] = translation['value']
 
-    result_content = 'Piwik.Locale.Translation.translations = ' + json.dumps(result) + ';'
+    result_content = 'module.exports = ' + json.dumps(result) + ';'
     file = open('../Resources/i18n/' + lang + '.js', 'w')
     file.write(result_content)
     file.close()
