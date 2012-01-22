@@ -6,7 +6,7 @@
  * @version $Id$
  */
 #headerView {
-    height: '40dp';
+    height: '48dp';
     top: 0;
     left: 0;
     right: 0;
@@ -15,13 +15,13 @@
 }
 
 #headerTitleLabel {
-    height: '30dp';
-    left: '10dp';
-    top: '5dp';
+    height: '38dp';
+    left: '8dp';
+    top: '6dp';
     ellipsize: true;
     wordWrap: false;
     color: '#ffffff';
     minimumFontSize: '12dp';
-    font-size: '21sp';
-    font-family: 'Arial';
+    font-size: '18sp';
+    font-weight: 'bold';
 }

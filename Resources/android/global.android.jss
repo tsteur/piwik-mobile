@@ -9,7 +9,6 @@
 @import "android/menu.android.jss";
 @import "android/tableview.android.jss";
 @import "android/graph.android.jss";
-@import "android/parameterinfo.android.jss";
 @import "android/statisticlist.android.jss";
 @import "android/datepicker.android.jss";
 @import "android/liveoverview.android.jss";
@@ -31,7 +30,7 @@
 
 .piwikWindow {
     backgroundColor: '#ffffff';
-    top: '40dp';
+    top: '48dp';
 }
 
 /**
@@ -99,7 +98,7 @@
 #aboutPiwikLinkToPiwiwkLabel {
      focusable: true;
      top: '5dp';
-     left: '5dp';
+     left: '8dp';
      right: '5dp';
      text-align: 'left';
      height: 'auto';
@@ -109,7 +108,7 @@
 #aboutPiwikLinkToSvnLabel {
     focusable: true;
     top: '5dp';
-    left: '5dp';
+    left: '8dp';
     right: '5dp';
     text-align: 'left';
     height: 'auto';
@@ -138,7 +137,7 @@
 #giveFeedbackBugOrFeatureLabel {
     color: '#333333';
     top: '5dp';
-    left: '5dp';
+    left: '8dp';
     right: '5dp';
     text-align: 'left';
     height: 'auto';
@@ -149,7 +148,7 @@
 #giveFeedbackReportBugInfoLabel {
     color: '#333333';
     top: '5dp';
-    left: '5dp';
+    left: '8dp';
     right: '5dp';
     bottom: '12dp';
     height: 'auto';
@@ -161,7 +160,7 @@
 .giveFeedbackDeviceInfoLabel {
     color: '#333333';
     top: '3dp';
-    left: '5dp';
+    left: '8dp';
     right: '5dp';
     height: 'auto';
     text-align: 'left';
@@ -171,7 +170,7 @@
 #giveFeedbackMadeByCommunityLabel {
     color: '#333333';
     top: '15dp';
-    left: '5dp';
+    left: '8dp';
     right: '5dp';
     text-align: 'left';
     height: 'auto';
@@ -233,8 +232,8 @@
 
 .editAccountSaveButton {
     height: '45dp';
-    left: '10dp';
-    right: '10dp';
+    left: '8dp';
+    right: '8dp';
     focusable: true;
     top: '8dp';
 }
@@ -245,15 +244,15 @@
     height: 'auto';
     top: '8dp';
     bottom: '5dp';
-    left: '10dp';
-    right: '10dp';
+    left: '8dp';
+    right: '8dp';
 }
 
 .editAccountSwitch {
     top: '8dp';
     bottom: '5dp';
     height: 'auto';
-    left: '10dp';
+    left: '8dp';
     focusable: true;
 }
 
@@ -280,5 +279,5 @@
 
 .visitorlogPagerTableViewRow {
     color: '#336699';
-    left: 10;
+    left: '8dp';
 }

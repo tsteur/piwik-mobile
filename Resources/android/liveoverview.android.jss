@@ -15,7 +15,7 @@
 }
 
 #liveOverviewTitleLabel {
-    left: '5dp';
+    left: '8dp';
     top: '8dp';
     color: '#000000';
     height: 'auto';
@@ -25,7 +25,7 @@
 
 #liveOverviewValueLabel {
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
     top: '3dp';
     bottom: '8dp';
     width:'100%';

@@ -8,7 +8,6 @@
 
 @import "iphone/tableview.universal.jss";
 @import "iphone/graph.universal.jss";
-@import "iphone/parameterinfo.universal.jss";
 @import "iphone/statisticlist.universal.jss";
 @import "iphone/refresh.universal.jss";
 @import "iphone/datepicker.universal.jss";

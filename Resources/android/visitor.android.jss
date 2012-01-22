@@ -28,7 +28,7 @@
 }
 
 #visitorActionActionPageTitleLabel {
-    left: '5dp';
+    left: '8dp';
     font-size: '13sp';
     top: '5dp';
     width: 'auto';
@@ -38,7 +38,7 @@
 }
 
 #visitorActionActionUrlLabel {
-    left: '5dp';
+    left: '8dp';
     color: '#808080';
     font-size: '13sp';
     top: '3dp';
@@ -49,7 +49,7 @@
 #visitorActionActionServerTimeLabel {
     bottom: '5dp';
     top: '3dp';
-    left: '5dp';
+    left: '8dp';
     font-size: '13sp';
     width: 'auto';
     height: 'auto';
@@ -65,7 +65,7 @@
 
 #visitorActionDefaultHeadlineView {
     layout: 'horizontal';
-    left: '5dp';
+    left: '8dp';
     top: '5dp';
     height: 'auto';
     width: 'auto';
@@ -81,7 +81,7 @@
 }
 
 #visitorActionDefaultTypeLabel {
-    left: '5dp';
+    left: '8dp';
     font-size: '13sp';
     width: 'auto';
     height: 'auto';
@@ -92,7 +92,7 @@
 #visitorActionDefaultUrlLabel {
     color: '#808080';
     bottom: '5dp';
-    left: '5dp';
+    left: '8dp';
     top: '4dp';
     font-size: '13sp';
     width: 'auto';
@@ -108,7 +108,7 @@
 
 #visitorActionEcommerceHeadlineView {
     layout: 'horizontal';
-    left: '5dp';
+    left: '8dp';
     top: '5dp';
     height: 'auto';
     width:'auto';
@@ -145,7 +145,7 @@
     layout: 'horizontal';
     width: 'auto';
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
 }
 
 #visitorActionEcommerceDetailsItemStarLabel {
@@ -161,7 +161,7 @@
 }
 
 #visitorActionEcommerceDetailsItemNameLabel {
-    left: '5dp';
+    left: '8dp';
     color: '#808080';
     font-size: '13sp';
     top: '3dp';
@@ -173,7 +173,7 @@
 }
 
 #visitorActionEcommerceRevenueLabel {
-    left: '5dp';
+    left: '8dp';
     font-size: '13sp';
     top: '4dp';
     width: 'auto';
@@ -185,7 +185,7 @@
 }
 
 #visitorActionEcommerceDetailsListLabel {
-    left: '5dp';
+    left: '8dp';
     font-size: '13sp';
     top: '4dp';
     width: 'auto';

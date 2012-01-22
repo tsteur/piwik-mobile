@@ -14,7 +14,6 @@ tableview {
 
 tableviewrow {
     color: '#333333';
-    font-family: 'Arial';
     font-size: '18sp';
     font-weight: 'normal';
     left: 0;
@@ -24,7 +23,7 @@ tableviewrow {
 .tableViewSection {
     backgroundColor: '#B2AEA5';
     selectedBackgroundColor: '#B2AEA5';
-    height: '22dp';
+    height: '24dp';
     focusable: false;
     left: 0;
     width: '100%';
@@ -34,7 +33,7 @@ tableviewrow {
     width: '100%';
     textAlign: 'left';
     color: '#ffffff';
-    left: '5dp';
+    left: '8dp';
     right: 0;
     font-size: '14sp';
     font-weight: 'bold';
@@ -46,7 +45,7 @@ tableviewrow {
     textAlign: 'left';
     width: '100%';
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
     right: 0;
     top: '10dp';
     color: '#333333';
@@ -60,7 +59,7 @@ tableviewrow {
     textAlign: 'left';
     width: '100%';
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
     right: 0;
     top: '10dp';
     bottom: '10dp';
@@ -76,7 +75,7 @@ tableviewrow {
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
     top: '34dp';
     bottom: '10dp';
     color: '#808080';
@@ -89,7 +88,7 @@ tableviewrow {
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
-    left: '5dp';
+    left: '8dp';
     top: '4dp';
     bottom: '10dp';
     color: '#808080';

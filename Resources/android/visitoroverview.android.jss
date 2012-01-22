@@ -33,7 +33,7 @@
     font-size: '13sp';
     top: '3dp';
     width: 'auto';
-    left: '5dp';
+    left: '8dp';
     text-align: 'left';
     height: 'auto';
     color: '#333333';
@@ -43,7 +43,7 @@
     font-size: '13sp';
     top: '4dp';
     width: 'auto';
-    left: '5dp';
+    left: '8dp';
     text-align: 'left';
     height: 'auto';
     color: '#333333';
@@ -53,7 +53,7 @@
     font-size: '13sp';
     top: '4dp';
     width:'auto';
-    left: '5dp';
+    left: '8dp';
     textAlign: 'left';
     height: 'auto';
     color: '#333333';
@@ -62,7 +62,7 @@
 #visitorOverviewDateTimeLabel {
     font-size: '14sp';
     font-weight: 'bold';
-    left: '5dp';
+    left: '8dp';
     textAlign: 'left';
     color: '#333';
     width:'auto';

@@ -8,10 +8,9 @@
 
 .noDataForGraphTableViewRow {
     height: '40dp';
-    left: '10dp';
+    left: '8dp';
     color: '#333333';
-    font-family: 'Arial';
-    font-size: '12sp';
+    font-size: '14sp';
     right: '10dp';
 }
 

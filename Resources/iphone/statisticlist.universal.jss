@@ -14,27 +14,6 @@
     selectionStyle: 0;
 }
 
-#statisticListHeadlineTitleLabel {
-    height: 'auto';
-    left: 10;
-    right: 87;
-    color: '#385487';
-    top: 13;
-    bottom: 10;
-    font-size: 13;
-}
-
-#statisticListHeadlineValueLabel {
-    height: 'auto';
-    right: 3;
-    width: 87;
-    color: '#385487';
-    top: 13;
-    bottom: 10;
-    font-size: 13;
-    font-weight: 'bold';
-}
-
 .statisticListNoDataTableViewRow {
     height: 38;
     left: 10;

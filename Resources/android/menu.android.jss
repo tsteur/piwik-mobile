@@ -10,7 +10,7 @@
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
-    top: 0;
+    top: '4dp';
     right: 0;
     width: '47dp';
     height: '40dp';
@@ -21,7 +21,7 @@
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
-    top: 0;
+    top: '4dp';
     right: 0;
     width: '47dp';
     height: '40dp';
@@ -32,7 +32,7 @@
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     focusable: true;
-    top: 0;
+    top: '4dp';
     right: 0;
     width: '47dp';
     height: '40dp';
