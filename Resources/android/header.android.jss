@@ -11,7 +11,7 @@
     left: 0;
     right: 0;
     zIndex: 500;
-    backgroundImage: '/images/headerBackground.png';
+    backgroundColor: '#8a8780'
 }
 
 #headerTitleLabel {

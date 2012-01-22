@@ -120,7 +120,7 @@ function window (params) {
         
         var websiteRow      = that.create('TableViewRow', {title: site ? site.name : '', 
                                                            hasChild: true, 
-                                                           backgroundColor: '#f5f5f5',
+                                                           className: 'tableViewRowSelectable',
                                                            command: siteCommand});
         visitorRows.push(websiteRow);
 

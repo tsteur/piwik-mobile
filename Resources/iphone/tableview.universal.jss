@@ -25,6 +25,10 @@ tableviewrow {
     opacity: 0.95;
 }
 
+.tableViewRowSelectable {
+    backgroundColor: '#f5f5f5';
+}
+
 #tableViewSectionHeaderLabel {
     height: 'auto';
     top: 3;

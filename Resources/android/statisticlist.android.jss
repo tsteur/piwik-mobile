@@ -5,12 +5,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
-.statisticListHeadlineTableViewRow {
-    left: 0;
-    right: 0;
-    backgroundColor: '#E4E2D7';
-    height: 'auto';
-}
 
 .statisticListNoDataTableViewRow {
     height: '38dp';
@@ -51,7 +45,7 @@
     height: 'auto';
     right: '3dp';
     width: '87dp';
-    color: '#385487';
+    color: '#0099CC';
     top: '10dp';
     bottom: '10dp';
     font-size: '16sp';

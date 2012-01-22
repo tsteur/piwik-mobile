@@ -29,6 +29,6 @@
     top: '3dp';
     bottom: '8dp';
     width:'100%';
-    color: '#385487';
+    color: '#0099CC';
     font-size: '18sp';
 }

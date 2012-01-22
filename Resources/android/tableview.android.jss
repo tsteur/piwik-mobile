@@ -21,12 +21,16 @@ tableviewrow {
 }
 
 .tableViewSection {
-    backgroundColor: '#B2AEA5';
-    selectedBackgroundColor: '#B2AEA5';
+    backgroundColor: '#B5B0A7';
+    selectedBackgroundColor: '#B5B0A7';
     height: '24dp';
     focusable: false;
     left: 0;
     width: '100%';
+}
+
+.tableViewRowSelectable {
+    backgroundColor: '#eae4d9';
 }
 
 #tableViewSectionHeaderLabel {
@@ -103,7 +107,7 @@ tableviewrow {
     textAlign: 'right';
     width: 'auto';
     height: 'auto';
-    color: '#385487';
+    color: '#0099CC';
 }
 
 #tableViewRowRightImage {

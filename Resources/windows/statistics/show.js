@@ -158,7 +158,7 @@ function window (params) {
 
         tableViewRows.push(that.create('TableViewRow', {title: site ? site.name : '', 
                                                         hasChild: true, 
-                                                        backgroundColor: '#f5f5f5',
+                                                        className: 'tableViewRowSelectable',
                                                         command: siteCommand}));
 
         var graph    = null;
@@ -204,14 +204,14 @@ function window (params) {
 
             var headlineRow = that.create('TableViewRow', {title: statsticValueLabel,
                                                            command:  metricCommand,
-                                                           backgroundColor: '#f5f5f5',
+                                                           className: 'tableViewRowSelectable',
                                                            hasChild: true});
             tableViewRows.push(headlineRow);
         }
 
         tableViewRows.push(that.create('TableViewRow', {title:  event.reportDate, 
                                                         hasChild: true,
-                                                        backgroundColor: '#f5f5f5',
+                                                        className: 'tableViewRowSelectable',
                                                         command: dateCommand}));
 
         var visitorStats  = that.create('StatisticList', {values:   event.reportData,

@@ -5,14 +5,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
-.statisticListHeadlineTableViewRow {
-    left: 0;
-    right: 0;
-    backgroundColor: '#E4E2D7';
-    height: 'auto';
-    /** Ti.UI.iPhone.TableViewCellSelectionStyle.NONE **/
-    selectionStyle: 0;
-}
 
 .statisticListNoDataTableViewRow {
     height: 38;
