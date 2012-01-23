@@ -48,7 +48,8 @@
     font-size: 13;
     color: '#888888';
     width: 'auto';
-    left: 10;
+    left: '16dp';
+    right: '16dp';
 }
 .searchHintTableViewRow {
     height: 'auto';
@@ -98,7 +99,7 @@
 #aboutPiwikLinkToPiwiwkLabel {
      focusable: true;
      top: '5dp';
-     left: '8dp';
+     left: '16dp';
      right: '5dp';
      text-align: 'left';
      height: 'auto';
@@ -108,7 +109,7 @@
 #aboutPiwikLinkToSvnLabel {
     focusable: true;
     top: '5dp';
-    left: '8dp';
+    left: '16dp';
     right: '5dp';
     text-align: 'left';
     height: 'auto';
@@ -119,8 +120,8 @@
     scalesPageToFit: false;
     touchEnabled: true;
     top: '8dp';
-    left: 0;
-    right: 0;
+    left: '10dp';
+    right: '16dp';
 }
 
 /**
@@ -137,8 +138,8 @@
 #giveFeedbackBugOrFeatureLabel {
     color: '#333333';
     top: '5dp';
-    left: '8dp';
-    right: '5dp';
+    left: '16dp';
+    right: '16dp';
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
@@ -148,8 +149,8 @@
 #giveFeedbackReportBugInfoLabel {
     color: '#333333';
     top: '5dp';
-    left: '8dp';
-    right: '5dp';
+    left: '16dp';
+    right: '16dp';
     bottom: '12dp';
     height: 'auto';
     text-align: 'left';
@@ -160,8 +161,8 @@
 .giveFeedbackDeviceInfoLabel {
     color: '#333333';
     top: '3dp';
-    left: '8dp';
-    right: '5dp';
+    left: '16dp';
+    right: '16dp';
     height: 'auto';
     text-align: 'left';
     font-size: '14sp';
@@ -170,8 +171,8 @@
 #giveFeedbackMadeByCommunityLabel {
     color: '#333333';
     top: '15dp';
-    left: '8dp';
-    right: '5dp';
+    left: '16dp';
+    right: '16dp';
     text-align: 'left';
     height: 'auto';
     font-weight: 'bold';
@@ -232,8 +233,8 @@
 
 .editAccountSaveButton {
     height: '45dp';
-    left: '8dp';
-    right: '8dp';
+    left: '16dp';
+    right: '16dp';
     focusable: true;
     top: '8dp';
 }
@@ -244,15 +245,15 @@
     height: 'auto';
     top: '8dp';
     bottom: '5dp';
-    left: '8dp';
-    right: '8dp';
+    left: '16dp';
+    right: '16dp';
 }
 
 .editAccountSwitch {
     top: '8dp';
     bottom: '5dp';
     height: 'auto';
-    left: '8dp';
+    left: '16dp';
     focusable: true;
 }
 
@@ -279,5 +280,5 @@
 
 .visitorlogPagerTableViewRow {
     color: '#336699';
-    left: '8dp';
+    left: '16dp';
 }

@@ -8,7 +8,7 @@
 
 .noDataForGraphTableViewRow {
     height: '40dp';
-    left: '8dp';
+    left: '16dp';
     color: '#333333';
     font-size: '14sp';
     right: '10dp';

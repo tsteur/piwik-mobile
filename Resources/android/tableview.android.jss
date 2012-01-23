@@ -34,11 +34,10 @@ tableviewrow {
 }
 
 #tableViewSectionHeaderLabel {
-    width: '100%';
     textAlign: 'left';
     color: '#ffffff';
-    left: '8dp';
-    right: 0;
+    left: '16dp';
+    right: '16dp';
     font-size: '14sp';
     font-weight: 'bold';
     ellipsize: true;
@@ -47,10 +46,9 @@ tableviewrow {
 
 #tableViewRowTitleLabelWithDescription {
     textAlign: 'left';
-    width: '100%';
     height: 'auto';
-    left: '8dp';
-    right: 0;
+    left: '16dp';
+    right: '16dp';
     top: '10dp';
     color: '#333333';
     ellipsize: true;
@@ -61,10 +59,9 @@ tableviewrow {
 
 #tableViewRowTitleLabel {
     textAlign: 'left';
-    width: '100%';
     height: 'auto';
-    left: '8dp';
-    right: 0;
+    left: '16dp';
+    right: '16dp';
     top: '10dp';
     bottom: '10dp';
     color: '#333333';
@@ -79,12 +76,13 @@ tableviewrow {
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
-    left: '8dp';
+    left: '16dp';
+    right: '16dp';
     top: '34dp';
     bottom: '10dp';
     color: '#808080';
-    ellipsize: true;
-    wordWrap: false;
+    ellipsize: false;
+    wordWrap: true;
 }
 
 #tableViewRowDescriptionLabelvertical {
@@ -92,7 +90,8 @@ tableviewrow {
     textAlign: 'left';
     width: 'auto';
     height: 'auto';
-    left: '8dp';
+    left: '16dp';
+    right: '16dp';
     top: '4dp';
     bottom: '10dp';
     color: '#808080';
@@ -101,7 +100,7 @@ tableviewrow {
 }
 
 #tableViewRowValueLabel {
-    right: '5dp';
+    right: '16dp';
     font-size: '16sp';
     font-weight: 'normal';
     textAlign: 'right';

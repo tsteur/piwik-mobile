@@ -8,7 +8,7 @@
 
 .statisticListNoDataTableViewRow {
     height: '38dp';
-    left: '8dp';
+    left: '16dp';
     color: '#333333';
     font-size: '16sp';
     right: '10dp';
@@ -23,7 +23,7 @@
 
 .statisticListTitleLabel {
     height: 'auto';
-    left: '8dp';
+    left: '16dp';
     right: '95dp';
     color: '#333333';
     top: '10dp';
@@ -43,8 +43,8 @@
 
 .statisticListValueLabel {
     height: 'auto';
-    right: '3dp';
-    width: '87dp';
+    right: '16dp';
+    width: '70dp';
     color: '#0099CC';
     top: '10dp';
     bottom: '10dp';
@@ -58,7 +58,7 @@
 
 .statisticListPaginatorTableViewRow {
     height: 'auto';
-    left: '8dp';
+    left: '16dp';
     right: 0;
     color: '#336699';
     font-weight: 'bold';

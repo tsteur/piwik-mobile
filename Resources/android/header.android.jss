@@ -11,12 +11,13 @@
     left: 0;
     right: 0;
     zIndex: 500;
-    backgroundColor: '#8a8780'
+    backgroundColor: '#8a8780';
 }
 
 #headerTitleLabel {
     height: '38dp';
-    left: '8dp';
+    left: '16dp';
+    right: '16dp';
     top: '6dp';
     ellipsize: true;
     wordWrap: false;
