@@ -8,10 +8,6 @@
 
 /** @private */
 var Piwik  = require('library/Piwik');
-/** @private */
-var _      = require('library/underscore');
-/** @private */
-var config = require('config');
 
 /**
  * @class     Validates, verifies and saves given account information. Use this class if you want to add or update
@@ -331,6 +327,8 @@ AccountRequest.prototype.requestVersion = function () {
 
         if (!that.latestVersion) {
             // we define a default value if we are not able to fetch the latest available version.
+
+            var config         = require('config');
             that.latestVersion = config.piwik.latestServerVersion;
         }
 
@@ -391,7 +389,7 @@ AccountRequest.prototype.requestVersion = function () {
             Piwik.getLog().debug('Version is out of date: ' + version,
                             'Piwik.Network.AccountRequest::requestVersion#version');
 
-            // @todo create translation key
+            var _           = require('library/underscore');
             var alertDialog = Ti.UI.createAlertDialog({
                 title: _('General_PleaseUpdatePiwik'),
                 message: String.format(_('General_PiwikXIsAvailablePleaseNotifyPiwikAdmin'), '' + that.latestVersion),

@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     Choose another metric command.
@@ -50,6 +48,9 @@ ChooseMetricCommand.prototype.getId = function () {
  * @returns  {string}  The label of the command.
  */
 ChooseMetricCommand.prototype.getLabel = function () {
+    
+    var _  = require('library/underscore');
+    
     return _('Mobile_ChooseMetric');
 };
 
@@ -113,6 +114,8 @@ ChooseMetricCommand.prototype.execute = function () {
         options.push(String(metricDisplayName));
         internalNames.push(String(metricInternalName));
     }
+    
+    var _  = require('library/underscore');
     
     options.push(_('SitesManager_Cancel_js'));
     

@@ -8,12 +8,6 @@
 
 /** @private */
 var Piwik       = require('library/Piwik');
-/** @private */
-var _           = require('library/underscore');
-/** @private */
-var dateUtils   = Piwik.require('Utils/Date');
-/** @private */
-var stringUtils = Piwik.require('Utils/String');
 
 /**
  * @class     Choose a date and a period command.
@@ -83,6 +77,9 @@ ChooseDateCommand.prototype.getId = function () {
  * @returns  {string}  The label of the command.
  */
 ChooseDateCommand.prototype.getLabel = function () {
+
+    var _  = require('library/underscore');
+    
     return _('General_ChooseDate');
 };
 
@@ -140,9 +137,10 @@ ChooseDateCommand.prototype.execute = function (params) {
     var optionDate = this.getParam('date', new Date());
  
     if ('string' === (typeof optionDate).toLowerCase()) {
-        this.date  = stringUtils.toPiwikDate(optionDate);
+        var stringUtils = Piwik.require('Utils/String');
+        this.date       = stringUtils.toPiwikDate(optionDate);
     } else {
-        this.date  = optionDate;
+        this.date       = optionDate;
     }
     
     var max     = new Date();
@@ -199,7 +197,8 @@ ChooseDateCommand.prototype.changeDate   = function (changedDate, period) {
     this.changePeriod(period);
         
     this.date     = changedDate;
-    
+
+    var dateUtils = Piwik.require('Utils/Date');
     var dateQuery = dateUtils.toPiwikQueryString(this.date);
 
     var session   = Piwik.require('App/Session');

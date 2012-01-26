@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik       = require('library/Piwik');
-/** @private */
-var stringUtils = Piwik.require('Utils/String');
 
 /**
  * @class     A menu is created by the method Piwik.UI.createMenu. Therefore, the menu adds buttons, icons, option menus
@@ -127,6 +125,8 @@ Menu.prototype.refresh = function (params) {
         } 
 
     } else if (this.menuView) {
+
+        var stringUtils = Piwik.require('Utils/String');
         
         // android
         var right = 0;

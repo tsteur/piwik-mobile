@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     Provides the ability to make an authenticated call using the piwik rest api. The data are requested
@@ -207,6 +205,8 @@ PiwikApiRequest.prototype.isValidResponse = function (response) {
         }
         
         this.errorMessageSent = true;
+
+        var _       = require('library/underscore');
         
         var message = _('General_InvalidResponse');
         if (response.message) {

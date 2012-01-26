@@ -10,8 +10,6 @@
 var Piwik  = require('library/Piwik');
 /** @private */
 var _      = require('library/underscore');
-/** @private */
-var config = require('config');
 
 /**
  * @class     A websites list is created by the method Piwik.UI.createWebsiteList. It displays a list of all available
@@ -180,7 +178,8 @@ WebsitesList.prototype.init = function () {
         }
         
         if (event && event.achievedSitesLimit) {
-            
+
+            var config            = require('config');
             var searchHintRow     = Ti.UI.createTableViewRow({className: 'searchHintTableViewRow'});
             var searchBarHintText = String.format(_('Mobile_UseSearchBarHint'), 
                                                   '' + config.piwik.numDisplayedWebsites);

@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     Choose another website command.
@@ -54,6 +52,9 @@ ChooseSiteCommand.prototype.getId = function () {
  * @returns  {string}  The label of the command.
  */
 ChooseSiteCommand.prototype.getLabel = function () {
+
+    var _ = require('library/underscore');
+
     return _('General_ChooseWebsite');
 };
 
@@ -109,6 +110,7 @@ ChooseSiteCommand.prototype.execute = function (params) {
     }
 
     var that = this;
+    var _    = require('library/underscore');
     
     var win  = this.create('ModalWindow', {openView: params.source ? params.source : null, 
                                            title: _('General_ChooseWebsite')});

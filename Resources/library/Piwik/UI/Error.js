@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik  = require('library/Piwik');
-/** @private */
-var config = require('config');
 
 /**
  * @class     An error UI widget is created by the method Piwik.UI.createError. The error UI widget is intended to
@@ -57,7 +55,8 @@ UiError.prototype = Piwik.require('UI/View');
 UiError.prototype.init = function () {
 
     var exception = this.getParam('exception');
-
+    var config    = require('config');
+    
     if (config.debugging && exception && 'object' == (typeof exception).toLowerCase()) {
         throw exception;
     }

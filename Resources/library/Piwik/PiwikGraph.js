@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik   = require('library/Piwik');
-/** @private */
-var config  = require('config');
  
 /**
  * @class    This graph object provides some useful methods to assemble Piwik graph urls which can be displayed using a
@@ -125,6 +123,7 @@ function PiwikGraph () {
     this.appendSize = function (graphUrl, width, height, hires) {
 
         var parameter = {width: width, height: height};
+        var config    = require('config');
         
         for (var index in config.piwik.graph) {
             parameter[index] = config.piwik.graph[index];

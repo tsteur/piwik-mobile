@@ -1,4 +1,4 @@
-/*
+/**
  * Piwik - Web Analytics
  *
  * @link http://piwik.org
@@ -10,10 +10,6 @@
 var Piwik       = require('library/Piwik');
 /** @private */
 var config      = require('config');
-/** @private */
-var dateUtils   = Piwik.require('Utils/Date');
-/** @private */
-var stringUtils = Piwik.require('Utils/String');
 
 /**
  * @class     Fetches statistics using the 'metadata' api. See <a href="http://piwik.org/docs/analytics-api/metadata/#toc-listing-all-the-metadata-api-functions">Metadata API</a>
@@ -285,12 +281,16 @@ StatisticsRequest.prototype.send = function (params) {
     }
     
     if ('string' === (typeof parameter.date).toLowerCase()) {
+
+        var dateUtils   = Piwik.require('Utils/Date');
+        var stringUtils = Piwik.require('Utils/String');
+        
         // I think we can optimize this... we want to convert 'yesterday' to a date in the format 'YYYY-MM-DD'
-        parameter.date = stringUtils.toPiwikDate(parameter.date);
-        parameter.date = dateUtils.toPiwikQueryString(parameter.date);
+        parameter.date  = stringUtils.toPiwikDate(parameter.date);
+        parameter.date  = dateUtils.toPiwikQueryString(parameter.date);
     }
 
-    var statsRequest   = Piwik.require('Network/PiwikApiRequest');
+    var statsRequest    = Piwik.require('Network/PiwikApiRequest');
     statsRequest.setMethod('API.getProcessedReport');
     statsRequest.setParameter(parameter);
     statsRequest.setAccount(account);

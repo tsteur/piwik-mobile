@@ -1,4 +1,4 @@
-/*
+/**
  * Piwik - Web Analytics
  *
  * @link http://piwik.org
@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik  = require('library/Piwik');
-/** @private */
-var _      = require('library/underscore');
 /** @private */
 var config = require('config');
  
@@ -555,6 +553,8 @@ function Tracker () {
 
             return;
         }
+
+        var _ = require('library/underscore');
 
         // uuid does not exist, this means user starts the app the first time.
         // ask user whether he wants to enable or disable tracking

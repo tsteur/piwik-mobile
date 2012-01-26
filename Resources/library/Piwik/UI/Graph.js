@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     A graph is created by the method Piwik.UI.createGraph. The graph UI widget displays a rendered graph.
@@ -46,7 +44,8 @@ Graph.prototype.init = function () {
     
     if (!graphUrl) {
         Piwik.getLog().debug('No graphUrl given', 'Piwik.UI.Graph::init');
- 
+
+        var _    = require('library/underscore');
         this.row = Ti.UI.createTableViewRow({className: 'noDataForGraphTableViewRow',
                                              title: _('General_NoDataForGraph')});
         

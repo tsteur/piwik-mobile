@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     Add a Piwik account command.
@@ -40,6 +38,9 @@ AddAccountCommand.prototype.getId = function () {
  * @returns  {string}  The label of the command.
  */
 AddAccountCommand.prototype.getLabel = function () {
+
+    var _ = require('library/underscore');
+
     return _('Mobile_AddAccount');
 };
 

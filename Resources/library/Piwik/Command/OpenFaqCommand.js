@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     Open FAQ command.
@@ -40,6 +38,9 @@ OpenFaqCommand.prototype.getId = function () {
  * @returns  {string}  The label of the command.
  */
 OpenFaqCommand.prototype.getLabel = function () {
+    
+    var _ = require('library/underscore');
+
     return _('General_Faq');
 };
 

@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik   = require('library/Piwik');
-/** @private */
-var _       = require('library/underscore');
 
 /**
  * @class    Can be used to send a GET http request to any url. Attend that synchronous requests are not supported at 
@@ -338,6 +336,8 @@ HttpRequest.prototype.error = function (e) {
 
             e.error = 'Host is unresolved';
         }
+
+        var _ = require('library/underscore');
 
         // @todo translation keys for all error messages
         switch (e.error) {

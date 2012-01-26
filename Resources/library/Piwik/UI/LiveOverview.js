@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     A live overview is created by the method Piwik.UI.createLiveOverview. The live overview UI widget displays
@@ -85,6 +83,8 @@ LiveOverview.prototype.refresh = function (params) {
     if (params) {
         this.setParams(params);
     }
+
+    var _     = require('library/underscore');
 
     var value = String.format('%s %s, %s %s',
                               '' + this.getParam('visits', '-'),

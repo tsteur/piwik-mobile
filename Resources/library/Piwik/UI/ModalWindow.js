@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     A modal window is created by the method Piwik.UI.createModalWindow. The modal window UI widget
@@ -88,6 +86,7 @@ ModalWindow.prototype.init = function () {
                                    
         this.viewToAddOtherViews = win;
 
+        var _             = require('library/underscore');
         var cancelButton  = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
                                                 style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
 

@@ -10,8 +10,6 @@
 var Piwik     = require('library/Piwik');
 /** @private */
 var _         = require('library/underscore');
-/** @private */
-var dateUtils = Piwik.require('Utils/Date');
 
 /**
  * @class     A refresh UI widget is created by the method Piwik.UI.createRefresh. The refresh widget adds the
@@ -177,6 +175,8 @@ Refresh.prototype.refresh = function () {
     tableView.setContentInsets({top: 60});
 
     var now                      = new Date();
+    var dateUtils                = Piwik.require('Utils/Date');
+    
     this.lastUpdatedLabel.text   = String.format(_('Mobile_LastUpdated'), dateUtils.toLocaleTime(now));
     this.statusLabel.text        = _('Mobile_Reloading');
     

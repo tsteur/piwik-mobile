@@ -6,9 +6,6 @@
  * @version $Id$
  */
 
-/** @private */
-var _ = require('library/underscore');
-
 /**
  * @class    DateUtils
  * 
@@ -118,6 +115,8 @@ DateUtils.prototype.toPiwikDateRangeString = function (dateObject, period) {
     if ('month' == period) {
     
         var translationKeyMonth = 'General_LongMonth_' + (dateObject.getMonth() + 1);
+ 
+        var _                   = require('library/underscore');
         
         return _(translationKeyMonth) + ' ' + (dateObject.getYear() + 1900);
     }

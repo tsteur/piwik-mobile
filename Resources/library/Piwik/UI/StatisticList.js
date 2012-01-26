@@ -9,10 +9,6 @@
 /** @private */
 var Piwik       = require('library/Piwik');
 /** @private */
-var _           = require('library/underscore');
-/** @private */
-var config      = require('config');
-/** @private */
 var stringUtils = Piwik.require('Utils/String');
 
 /**
@@ -103,7 +99,8 @@ StatisticList.prototype.renderList = function () {
 
     if (!values || !Piwik.isArray(values) || 0 === values.length) {
         // no values defined, display at least an information about this
-        
+
+        var _   = require('library/underscore');
         var row = Ti.UI.createTableViewRow({className: 'statisticListNoDataTableViewRow',
                                             title: _('CoreHome_TableNoData')});
 
@@ -171,6 +168,8 @@ StatisticList.prototype.renderList = function () {
  */
 StatisticList.prototype.renderPaginator = function () {
 
+    var config       = require('config');
+
     if (config.piwik.filterLimit > this.rows.length) {
         // a show all or show less button only makes sense if there are more or equal results than the used
         // filter limit value...
@@ -178,6 +177,7 @@ StatisticList.prototype.renderPaginator = function () {
         return;
     }
     
+    var _            = require('library/underscore');
     var showAll      = this.getParam('showAll', false);
     
     var paginatorRow = Ti.UI.createTableViewRow({

@@ -8,8 +8,6 @@
 
 /** @private */
 var Piwik = require('library/Piwik');
-/** @private */
-var _     = require('library/underscore');
 
 /**
  * @class     An Activity Indicator is created by the method Piwik.UI.createActivityIndicator. An activity indicator can
@@ -119,6 +117,8 @@ ActivityIndicator.prototype.show = function (message) {
 
     switch (this.style) {
         case 'loading':
+
+            var _  = require('library/underscore');
 
             if (this._numRequests > 1) {
                 // just update the text cause loading message is already visible

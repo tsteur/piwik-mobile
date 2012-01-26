@@ -10,8 +10,6 @@
 var Piwik       = require('library/Piwik');
 /** @private */
 var _           = require('library/underscore');
-/** @private */
-var dateUtils   = Piwik.require('Utils/Date');
  
 /**
  * @class     A date picker is created by the method Piwik.UI.createDatePicker. A date picker can be used to select a
@@ -245,7 +243,9 @@ DatePicker.prototype._updateDisplayedValues = function () {
             period = _('CoreHome_PeriodYear');
             break;
     }
-    
+
+    var dateUtils          = Piwik.require('Utils/Date');
+
     this._dateDialog.title = period + ', ' + dateUtils.toPiwikDateRangeString(this.value, this.period);
 };
 
