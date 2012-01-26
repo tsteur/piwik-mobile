@@ -38,6 +38,7 @@
  */
 #websitesTableView
 {
+    separatorColor: '#eeedeb';
 }
 
 .websiteTableViewRow {
@@ -69,6 +70,7 @@
  */
 #reportsTableView {
     zIndex: 2;
+    separatorColor: '#eeedeb';
 }
 
 .reportTableViewRow {
@@ -183,7 +185,7 @@
  * window settings/index.js
  */
 #settingsTableView {
-
+    separatorColor: '#eeedeb';
 }
 
 .settingsTableViewRowHasChild {
@@ -205,7 +207,8 @@
  * window settings/manageaccount.js
  */
 #manageAccountsTableView {
-   touchEnabled: false;
+    touchEnabled: false;
+    separatorColor: '#eeedeb';
 }
 
 .manageAccountsRow {
@@ -216,7 +219,8 @@
 /**
  * window settings/editaccount.js
  */
-#manageAccountsTableView {
+#editAccountTableView {
+    separatorColor: '#eeedeb';
 }
 
 .editAccountTableFooterView {
@@ -269,13 +273,14 @@
  * window statistics/live.js
  */
 #liveTableView {
+    separatorColor: '#eeedeb';
 }
 
 /**
  * window statistics/visitorlog.js
  */
 #visitorLogTableView {
-
+    separatorColor: '#eeedeb';
 }
 
 .visitorlogPagerTableViewRow {
