@@ -97,15 +97,12 @@ WebsitesList.prototype.init = function () {
         refresh.refresh();
     });
     
-    win.addEventListener('blurWindow', function () {
+    if (Piwik.getPlatform().isAndroid) {
+        // this should prevent that keyboard is displayed after app is started on android. 
+        // @todo verify whether we still need this workaround
         searchBar.hide();
-        searchBar.blur();
-    });
-
-    win.addEventListener('focusWindow', function () {
-        searchBar.show();
-    });
-
+    }
+    
     win.add(searchBar);
 
     var tableview = Ti.UI.createTableView({id: 'websitesTableView', top: searchBar.height});
@@ -140,7 +137,10 @@ WebsitesList.prototype.init = function () {
     });
 
     this.websitesRequest.addEventListener('onload', function (event) {
-
+        if (Piwik.getPlatform().isAndroid) {
+            searchBar.show();
+        } 
+    
         refresh.refreshDone();
 
         if (!event || !event.sites || !event.sites.length) {
