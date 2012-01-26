@@ -143,7 +143,9 @@ function window () {
     // delete an account
     tableview.addEventListener('delete', function (event) {
 
-        if (!event || !event.row || !event.row.accountId) {}
+        if (!event || !event.row || !event.row.accountId) {
+            return;
+        }
 
         var accountManager = Piwik.require('App/Accounts');
         accountManager.deleteAccount(event.row.accountId);
