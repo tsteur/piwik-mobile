@@ -334,7 +334,7 @@ function layout () {
         this._masterWin     = Ti.UI.createWindow({barColor: '#B2AEA5', title: _('General_Reports')});
         this._masterWin.open();
 
-        var settingsButton = Ti.UI.createButton({image: 'images/header_settings.png',
+        var settingsButton = Ti.UI.createButton({image: 'images/ic_action_settings.png',
                                                  width: 37});
 
         settingsButton.addEventListener('click', function () {
