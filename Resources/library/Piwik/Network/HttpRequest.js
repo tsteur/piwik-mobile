@@ -339,7 +339,6 @@ HttpRequest.prototype.error = function (e) {
 
         var _ = require('library/underscore');
 
-        // @todo translation keys for all error messages
         switch (e.error) {
 
             case 'No connection':

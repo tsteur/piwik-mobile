@@ -83,25 +83,18 @@ Refresh.prototype = Piwik.require('UI/View');
  */
 Refresh.prototype.init = function () {
 
-    var that       = this;
-    var optionMenu = Piwik.require('UI/OptionMenu');
-        
-    optionMenu.addItem({title: _('Mobile_Refresh'),
-                        icon: 'images/menu_refresh.png'}, function () {
-    
-        if (!that.reloading) {
-    
-            var refreshEvent = {title: 'Refresh Page',
-                                url: '/refresh/android-option-menu'};
-            Piwik.getTracker().trackEvent(refreshEvent);
-    
-            that.refresh();
-        }
-    });
-
     this.attachHeaderView();
 
     if (!Piwik.getPlatform().isIos) {
+        var that = this;
+        this.getParam('window').addEventListener('fireRefresh', function () {
+
+            if (that && !that.reloading) {
+                that.refresh();
+            }
+            
+        });
+        
         this.refresh();
     }
 

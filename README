@@ -11,33 +11,23 @@ Piwik aims to be an open source alternative to Google Analytics.
 
 These reports are accessible by using this mobile client.
 
-Changelog
-=========
-See http://dev.piwik.org/trac/wiki/PiwikMobile/Changelog
+Mission statement
+=================
+« To create, as a community, the leading international open source 
+  web analytics application, providing access to all functionality 
+  through open components and open APIs. » 
+
+License
+=======
+Piwik Mobile is released under the GPL v3 license, see Resources/license.html 
 
 Install
 =======
 See http://dev.piwik.org/trac/wiki/PiwikMobile
 
-Third-Party Components
-=======
-Name: Resources/images/icon/pull_arrow.png  
-Link: https://github.com/andmej/PullToRefresh
-License: https://github.com/andmej/PullToRefresh/blob/master/LICENSE
-
-Thanks to Champi which allowed us to use and change his great sets of Android Icons as long as Piwik Mobile is available 
-for free:
-Name: chart_detail.png
-Name: header_settings.png
-Name: header_help.png
-Name: menu_choosedate.png
-Name: menu_chooseDown.png
-Name: menu_refresh.png
-Name: menu_settings.png
-Link: http://champi-design.deviantart.com/
-Link: http://champi-design.deviantart.com/art/Android-Mega-Pack-176417901?q=gallery%3Achampi-design&qo=7
-Link: http://champi-design.deviantart.com/art/Android-icons-174812881?q=gallery%3Achampi-design&qo=8
-Its free for personnal use, not for commercial 
+Changelog
+=========
+See http://piwik.org/blog/category/piwik-mobile-changelog/
 
 Contact
 =======

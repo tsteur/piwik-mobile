@@ -30,9 +30,7 @@ function window () {
     /**
      * @see  Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
-    
-    var that          = this;
+    this.menuOptions  = {commands: [this.createCommand('SendFeedbackCommand')]};
 
     var scrollView    = Ti.UI.createScrollView({id: 'giveFeedbackScrollView'});
     
@@ -74,7 +72,6 @@ function window () {
     var network  = Ti.UI.createLabel({text: String.format("Network: %s", '' + Ti.Network.networkTypeName),
                                       className: 'giveFeedbackDeviceInfoLabel'});
 
-
     var work     = Ti.UI.createLabel({text: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik. Please contact us.',
                                       id: 'giveFeedbackMadeByCommunityLabel'});
 
@@ -87,50 +84,6 @@ function window () {
     scrollView.add(locale);
     scrollView.add(network);
     scrollView.add(work);
-
-    var sendEmail = function () {
-        var emailDialog = Ti.UI.createEmailDialog();
-        emailDialog.setSubject("Feedback Piwik Mobile");
-        emailDialog.setToRecipients(['mobile@piwik.org']);
-
-        if (emailDialog.setBarColor) {
-            emailDialog.setBarColor('#B2AEA5');
-        }
-
-        if (!emailDialog.isSupported()) {
-
-            return;
-        }
-
-        var message = 'Your Message: \n\n\nYour Device: \n' + platform.text + '\n';
-        message    += version.text + '\n' + memory.text + '\n';
-        message    += resolution.text + '\n' + locale.text + '\n' + network.text;
-
-        emailDialog.setMessageBody(message);
-
-        emailDialog.addEventListener('complete', function (event) {
-
-            if (Piwik.getPlatform().isIos && event && event.result && event.result == emailDialog.SENT) {
-                // android doesn't give us useful result codes. it anyway shows a toast.
-                alert(_('Feedback_ThankYou'));
-            }
-        });
-
-        emailDialog.open();
-    };
-    
-    var optionMenu = Piwik.require('UI/OptionMenu');
-            
-    optionMenu.addItem({title: 'Email us'}, sendEmail);
-    this.addEventListener('focusWindow', function () {
-
-        if (Piwik.getPlatform().isIos) {
-            var emailus = Ti.UI.createButton({title: 'Email us'});
-            emailus.addEventListener('click', sendEmail);
-            that.rootWindow.rightNavButton = emailus;
-        }
-
-    });
 
     this.open = function () {
 

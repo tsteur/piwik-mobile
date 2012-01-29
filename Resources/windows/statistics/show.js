@@ -132,6 +132,7 @@ function window (params) {
         request.send(params);
     });
 
+    var refreshCommand = this.createCommand('RefreshCommand');
     request.addEventListener('onload', function (event) {
 
         if (!event) {
@@ -149,7 +150,7 @@ function window (params) {
         var siteCommand   = that.createCommand('ChooseSiteCommand');
         var metricCommand = that.createCommand('ChooseMetricCommand', {metrics: metrics});
         
-        that.menuOptions  = {commands: [dateCommand, siteCommand], window: that};
+        that.menuOptions  = {commands: [dateCommand, siteCommand, refreshCommand], window: that};
 
         // update menu after each request cause of a possibly period and/or date change.
         Piwik.getUI().layout.menu.refresh(that.menuOptions);

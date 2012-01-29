@@ -66,22 +66,6 @@ ChooseSiteCommand.prototype.getLabel = function () {
 ChooseSiteCommand.prototype.getButtonLabel = function () {};
 
 /**
- * Get the Android OptionMenu item definition for this command.
- * 
- * @type  Object
- */
-ChooseSiteCommand.prototype.getOptionMenuItem = function () {
-};
-
-/**
- * Defines the url and title that will be tracked as soon as the user chooses the option.
- * 
- * @type  Object
- */
-ChooseSiteCommand.prototype.getOptionMenuTrackingEvent = function () {
-};
-
-/**
  * Get the menu icon definitions for this command.
  * 
  * @type  Object

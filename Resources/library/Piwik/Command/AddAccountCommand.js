@@ -56,26 +56,6 @@ AddAccountCommand.prototype.getButtonLabel = function () {
 };
 
 /**
- * Get the Android OptionMenu item definition for this command.
- * 
- * @type  Object
- */
-AddAccountCommand.prototype.getOptionMenuItem = function () {
-    return {title: this.getLabel(),
-            icon: 'images/menu_add.png'};
-};
-
-/**
- * Defines the url and title that will be tracked as soon as the user chooses the option.
- * 
- * @type  Object
- */
-AddAccountCommand.prototype.getOptionMenuTrackingEvent = function () {
-    return {title: 'Option Menu Add Account',
-            url: '/android-option-menu/add-account'};
-};
-
-/**
  * Get the menu icon definitions for this command.
  * 
  * @type  Object

@@ -50,29 +50,15 @@ OpenSettingsCommand.prototype.getLabel = function () {
  * @returns  {Object}  The button label of the command.
  */
 OpenSettingsCommand.prototype.getButtonLabel = function () {
-    return {image: 'images/header_settings.png',
+    
+    if (Piwik.getPlatform().isIpad) {
+        
+        return;
+    }
+    
+    return {image: 'images/ic_action_settings.png',
             command: this,
             width: 37};
-};
-
-/**
- * Get the Android OptionMenu item definition for this command.
- * 
- * @type Object
- */
-OpenSettingsCommand.prototype.getOptionMenuItem = function () {
-    return {title: this.getLabel(),
-            icon: 'images/menu_settings.png'};
-};
-
-/**
- * Defines the url and title that will be tracked as soon as the user chooses the option.
- * 
- * @type  Object
- */
-OpenSettingsCommand.prototype.getOptionMenuTrackingEvent = function () {
-    return {title: 'Option Menu Open Settings',
-            url: '/android-option-menu/open-settings'};
 };
 
 /**

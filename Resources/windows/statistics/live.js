@@ -36,7 +36,7 @@ function window (params) {
     /**
      * @see  Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
+    this.menuOptions  = {commands: [this.createCommand('RefreshCommand')]};
     
     if (this.rootWindow) {
         this.rootWindow.backButtonTitle = _('General_Reports');

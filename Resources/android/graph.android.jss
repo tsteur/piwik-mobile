@@ -20,15 +20,15 @@
 }
 
 .graphShowDetailImage {
-    image: '/images/chart_detail.png';
+    image: '/images/ic_action_search.png';
     backgroundSelectedColor: '#FFC700';
     backgroundFocusedColor: '#FFC700';
     backgroundColor: '#ffffff';
     focusable: true;
     bottom: '8dp';
     right: '8dp';
-    width: '29dp';
-    height: '29dp';
+    width: '32dp';
+    height: '32dp';
     zIndex: 2;
 }
 

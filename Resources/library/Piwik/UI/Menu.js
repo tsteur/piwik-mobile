@@ -130,6 +130,7 @@ Menu.prototype.refresh = function (params) {
         
         // android
         var right = 0;
+        
         // remove previous added menu items
         for (var commandId in this.availableCommands) {
             var availableCommand = this.availableCommands[commandId];
@@ -151,6 +152,9 @@ Menu.prototype.refresh = function (params) {
             if (!menuIcon) {
                 continue;
             }
+            
+            // spacing should be always 8
+            right      = right + 8;
 
             var icon   = Ti.UI.createImageView(menuIcon);
             icon.right = stringUtils.toSizeUnit('' + right);
@@ -178,31 +182,6 @@ Menu.prototype.refresh = function (params) {
         if (layout && layout.header && layout.header.titleLabel) {
             layout.header.titleLabel.right = stringUtils.toSizeUnit('' + right);
         }
-    }
-
-    var optionMenu = Piwik.require('UI/OptionMenu');
-    
-    // add android option menu items
-    for (var index = 0; index < commands.length; index++) {
-        var command        = commands[index];
-        var optionMenuItem = command.getOptionMenuItem();
-        
-        if (!optionMenuItem) {
-            continue;
-        }
-        
-        optionMenu.addItem(optionMenuItem, (function (command) {
-
-            return function () {
-                var menuEvent = command.getOptionMenuTrackingEvent();
-                if (menuEvent) {
-                    Piwik.getTracker().trackEvent(menuEvent);
-                }
-                
-                command.execute();
-            };
-            
-        })(command));
     }
 };
 

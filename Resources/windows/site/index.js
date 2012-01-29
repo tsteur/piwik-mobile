@@ -47,19 +47,18 @@ function window (params) {
      */
     this.titleOptions = {title: '' + (site ? site.name : '')};
 
-    /**
-     * @see  Piwik.UI.Window#menuOptions
-     */
-    this.menuOptions  = {};
+    var menuOptions   = {commands: [this.createCommand('RefreshCommand')]};
 
     if (1 == Piwik.getUI().layout.windows.length) {
         // show settingschooser only if this is the first window. ensures user can open settings screen if this
         // is the first screen. It is the first window if the user has configured has access to only one website.
-        
-        if (!Piwik.getPlatform().isIpad) {
-            this.menuOptions = {commands: [this.createCommand('OpenSettingsCommand')]};
-        }
+        menuOptions.commands.push(this.createCommand('OpenSettingsCommand'));
     }
+
+    /**
+     * @see  Piwik.UI.Window#menuOptions
+     */
+    this.menuOptions = menuOptions;
 
     var request   = Piwik.require('Network/ReportsRequest');
     var that      = this;

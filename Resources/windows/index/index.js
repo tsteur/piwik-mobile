@@ -32,15 +32,12 @@ function window () {
      * right.
      */
     this.titleOptions = {title: 'Piwik Mobile '};
-            
+    
     /**
      * @see  Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {};
-
-    if (!Piwik.getPlatform().isIpad) {
-        this.menuOptions  = {commands: [this.createCommand('OpenSettingsCommand')]};
-    }
+    this.menuOptions  = {commands: [this.createCommand('OpenSettingsCommand'), 
+                                    this.createCommand('RefreshCommand')]};
 
     var that          = this;
 

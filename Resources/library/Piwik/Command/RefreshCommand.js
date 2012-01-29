@@ -10,26 +10,26 @@
 var Piwik = require('library/Piwik');
 
 /**
- * @class     Open FAQ command.
+ * @class     Refresh command.
  *
- * @exports   OpenFaqCommand as Piwik.Command.OpenFaqCommand
+ * @exports   RefreshCommand as Piwik.Command.RefreshCommand
  * @augments  Piwik.UI.View
  */
-function OpenFaqCommand () {
+function RefreshCommand () {
 }
 
 /**
  * Extend Piwik.UI.View
  */
-OpenFaqCommand.prototype = Piwik.require('UI/View');
-    
+RefreshCommand.prototype = Piwik.require('UI/View');
+
 /**
  * Returns a unique id for this command.
  * 
  * @returns  {string}  The id of the command.
  */
-OpenFaqCommand.prototype.getId = function () {
-    return 'openFaqCommand';
+RefreshCommand.prototype.getId = function () {
+    return 'refreshCommand';
 };
 
 /**
@@ -37,11 +37,11 @@ OpenFaqCommand.prototype.getId = function () {
  * 
  * @returns  {string}  The label of the command.
  */
-OpenFaqCommand.prototype.getLabel = function () {
-    
+RefreshCommand.prototype.getLabel = function () {
+
     var _ = require('library/underscore');
 
-    return _('General_Faq');
+    return _('Mobile_Refresh');
 };
 
 /**
@@ -49,19 +49,15 @@ OpenFaqCommand.prototype.getLabel = function () {
  * 
  * @returns  {Object}  The button label of the command.
  */
-OpenFaqCommand.prototype.getButtonLabel = function () {
-    return {image: 'images/ic_action_help.png',
-            command: this,
-            width: 37};
-};
+RefreshCommand.prototype.getButtonLabel = function () {};
 
 /**
  * Get the menu icon definitions for this command.
  * 
  * @type  Object
  */
-OpenFaqCommand.prototype.getMenuIcon = function () {
-    return {id: 'menuHelpIcon'};
+RefreshCommand.prototype.getMenuIcon = function () {
+    return {id: 'menuRefreshIcon'};
 };
 
 /**
@@ -69,23 +65,23 @@ OpenFaqCommand.prototype.getMenuIcon = function () {
  * 
  * @type  Object
  */
-OpenFaqCommand.prototype.getMenuTrackingEvent = function () {
-    return {title: 'Menu Click - Open Faq',
-            url: '/menu-click/open-faq'};
+RefreshCommand.prototype.getMenuTrackingEvent = function () {
+    return {title: 'Menu Click - Refresh',
+            url: '/menu-click/refresh'};
 };
 
 /**
- * Execute the command. Opens the Piwik Mobile FAQ screen.
+ * Execute the command. Opens the 'add a new account' window.
  */
-OpenFaqCommand.prototype.execute = function () {
-    this.create('Window', {url: 'help/faq', target: 'modal'});
+RefreshCommand.prototype.execute = function () {
+    this.getParam('window').fireEvent('fireRefresh', {type: 'fireRefresh'});
 };
 
 /**
  * Undo the executed command.
  */
-OpenFaqCommand.prototype.undo = function () {
-
+RefreshCommand.prototype.undo = function () {
+    
 };
 
-module.exports = OpenFaqCommand;
+module.exports = RefreshCommand;

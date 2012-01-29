@@ -149,10 +149,6 @@ function UiWindow () {
             // hide view so we make sure the view will no longer be visible, even if the later removeWindow does
             // not work
             this.hide();
-    
-            // free some memory
-            var optionMenu = Piwik.require('UI/OptionMenu');
-            optionMenu.cleanupMenu(this);
             this.cleanup(this, 0);
     
         } catch (e) {
