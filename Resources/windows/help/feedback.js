@@ -84,9 +84,29 @@ function window () {
     scrollView.add(locale);
     scrollView.add(network);
     scrollView.add(work);
+    
+    title       = null;
+    contact     = null;
+    platform    = null;
+    version     = null;
+    memory      = null;
+    resolution  = null;
+    locale      = null;
+    network     = null;
+    work        = null;
 
     this.open = function () {
 
+    };
+    
+    this.cleanup = function () {
+        
+        this.remove(scrollView);
+        scrollView        = null;
+
+        caps              = null;
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

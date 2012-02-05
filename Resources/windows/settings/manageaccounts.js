@@ -36,6 +36,8 @@ function window () {
 
     var that          = this;
     
+    var tableData     = [];
+
     var onUpdateAccount = function () {
         // will be executed in row context, therefore this == Piwik.UI.TableViewRow
         that.create('Window', {url: 'settings/editaccount',
@@ -154,6 +156,8 @@ function window () {
             // row will be automatically removed from tableview on iOS, not on android. therefore make a simple reload
             that.open();
         }
+        
+        accountManager     = null;
     });
 
     this.add(tableview);
@@ -163,8 +167,8 @@ function window () {
         if (!event || !event.accounts || !event.accounts.length) {
             return;
         }
-
-        var tableData  = [];
+        
+        tableData  = [];
         
         if (Piwik.getPlatform().isIos) {
             tableData.push(that.create('TableViewSection', {title: _('Mobile_Accounts'), 
@@ -200,7 +204,8 @@ function window () {
         // previously added account is directly visible.
         if (tableview.data && tableview.data.length) {
 
-            tableview.setData([]);
+            that.cleanupTableData();
+            
             that.open();
         }
     });
@@ -218,6 +223,35 @@ function window () {
         eventResult.accounts = accountManager.getAccounts();
 
         this.fireEvent('onopen', eventResult);
+        
+        accountManager       = null;
+    };
+    
+    this.cleanupTableData = function () {
+        for (var index = 0; index < tableData.length; index++) {
+            tableData[index].titleLabel = null;
+            tableData[index].valueLabel = null;
+            tableData[index] = null;
+        }
+        
+        tableData = null;
+        tableData = [];
+        
+        tableview.setData([]);
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableview);
+
+        tableData = null;
+        tableview = null;
+        that      = null;
+        onUpdateAccount      = null;
+        onShowOptionMenu     = null;
+        this.menuOptions     = null;
+        this.titleOptions    = null;
     };
 }
 

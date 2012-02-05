@@ -87,7 +87,10 @@ StatisticList.prototype.init = function () {
  */
 StatisticList.prototype.getRows = function () {
 
-    return this.rows;
+    var rows  = this.rows;
+    this.rows = null;
+
+    return rows;
 };
 
 /**
@@ -105,6 +108,8 @@ StatisticList.prototype.renderList = function () {
                                             title: _('CoreHome_TableNoData')});
 
         this.rows.push(row);
+        row     = null;
+        _       = null;
      
         return;
     }
@@ -136,6 +141,7 @@ StatisticList.prototype.renderList = function () {
         });
         
         statRow.add(titleLabel);
+        titleLabel = null;
 
         var valueLabel = Ti.UI.createLabel({
             text: String(value),
@@ -143,6 +149,7 @@ StatisticList.prototype.renderList = function () {
         });
         
         statRow.add(valueLabel);
+        valueLabel = null;
 
         if (logo) {
             var imageView = Ti.UI.createImageView({
@@ -153,10 +160,14 @@ StatisticList.prototype.renderList = function () {
             });
             
             statRow.add(imageView);
+            imageView = null;
         }
         
         this.rows.push(statRow);
+        statRow = null;
     }
+    
+    values = null;
 };
 
 /**
@@ -173,10 +184,12 @@ StatisticList.prototype.renderPaginator = function () {
     if (config.piwik.filterLimit > this.rows.length) {
         // a show all or show less button only makes sense if there are more or equal results than the used
         // filter limit value...
+        config       = null;
     
         return;
     }
     
+    config           = null;
     var _            = require('library/underscore');
     var showAll      = this.getParam('showAll', false);
     
@@ -191,6 +204,7 @@ StatisticList.prototype.renderPaginator = function () {
     });
     
     this.rows.push(paginatorRow);
+    paginatorRow = null;
 };
 
 module.exports = StatisticList;

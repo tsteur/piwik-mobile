@@ -231,7 +231,7 @@ StatisticsRequest.prototype.send = function (params) {
     this.report          = params.report;
     this.sortOrderColumn = params.metric ? params.metric : this._getSortOrder(this.report);
 
-    this.site = params.site;
+    this.site            = params.site;
 
     if (!this.site) {
         Piwik.getLog().warn('Site is not defined, can not send request', 'Piwik.Network.StatisticsRequest::send');
@@ -242,6 +242,7 @@ StatisticsRequest.prototype.send = function (params) {
 
     var accountManager   = Piwik.require('App/Accounts');
     var account          = accountManager.getAccountById(this.site.accountId);
+    accountManager       = null;
 
     if (!account) {
         Piwik.getLog().warn('Account is not defined, can not send request', 'Piwik.Network.StatisticsRequest::send');
@@ -288,6 +289,9 @@ StatisticsRequest.prototype.send = function (params) {
         // I think we can optimize this... we want to convert 'yesterday' to a date in the format 'YYYY-MM-DD'
         parameter.date  = stringUtils.toPiwikDate(parameter.date);
         parameter.date  = dateUtils.toPiwikQueryString(parameter.date);
+        
+        dateUtils       = null;
+        stringUtils     = null;
     }
 
     var statsRequest    = Piwik.require('Network/PiwikApiRequest');
@@ -311,6 +315,10 @@ StatisticsRequest.prototype.send = function (params) {
     });
     
     statsRequest.send();
+    
+    session   = null;
+    parameter = null;
+    params    = null;
 };
 
 /**
@@ -338,6 +346,7 @@ StatisticsRequest.prototype.loaded = function () {
                        sortOrderColumn: this.sortOrderColumn};
 
     this.fireEvent('onload', eventResult);
+    eventResult = null;
 };
 
 /**
@@ -370,6 +379,8 @@ StatisticsRequest.prototype._getSortOrder = function (report) {
             sortOrder = metricName;
         }
     }
+    
+    report = null;
     
     return sortOrder;
 };
@@ -451,6 +462,9 @@ StatisticsRequest.prototype._formatReportData = function (response, account) {
             reportRow.push(row);
         }
     }
+    
+    response = null;
+    account  = null;
     
     return reportRow;
 };

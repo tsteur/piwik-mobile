@@ -88,6 +88,7 @@ function window (params) {
                                         id: 'editAccountControlRow'});
     row.add(piwikUrl);
     tableData.push(row);
+    row     = null;
     
     tableData.push(this.create('TableViewSection', {title: _('Mobile_AnonymousAccess'), 
                                                     style: 'native'}));
@@ -96,11 +97,13 @@ function window (params) {
                                         id: 'editAccountControlRow'});
     row.add(piwikAnonymous);
     tableData.push(row);
+    row     = null;
     
     var credentialsSection = this.create('TableViewSection', {title: _('Mobile_LoginCredentials'), 
                                                               style: 'native'});
 
     tableData.push(credentialsSection);
+    credentialsSection     = null;
 
     var piwikUserRow       = Ti.UI.createTableViewRow({className: 'editAccountControlRow3',
                                                        id: 'editAccountControlRow'});
@@ -117,6 +120,7 @@ function window (params) {
                                                className: 'editAccountSaveButton'});
     footerView.add(save);
     tableView.footerView = footerView;
+    footerView           = null;
 
     piwikAnonymous.addEventListener('change', function (event) {
 
@@ -400,6 +404,7 @@ function window (params) {
         
         var accountManager = Piwik.require('App/Accounts');
         var account        = accountManager.getAccountById(accountId);
+        accountManager     = null;
 
         if (!account) {
             // @todo error alert message: the selected account is currently not editable or already deleted
@@ -420,6 +425,41 @@ function window (params) {
         if (account.username) {
             piwikUser.value = account.username;
         }
+    };
+    
+    this.cleanupTableData = function () {
+        for (var index = 0; index < tableData.length; index++) {
+            tableData[index].titleLabel = null;
+            tableData[index].valueLabel = null;
+            tableData[index] = null;
+        }
+        
+        tableData = null;
+        tableData = [];
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableView);
+
+        tableData   = null;
+        tableView   = null;
+        that        = null;
+        request     = null;
+        saveAccount = null;
+        piwikUrl    = null;
+        piwikUser   = null;
+        save        = null;
+        
+        piwikPassword     = null;
+        piwikAnonymous    = null;
+        piwikPasswordRow  = null;
+        piwikUserRow      = null;
+        activityIndicator = null;
+        
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

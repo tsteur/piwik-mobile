@@ -136,6 +136,7 @@ LiveRequest.prototype.send = function (params) {
 
     var accountManager = Piwik.require('App/Accounts');
     var account        = accountManager.getAccountById(this.site.accountId);
+    accountManager     = null;
 
     var requestPool    = Piwik.require('Network/RequestPool');
     requestPool.setContext(this);
@@ -182,6 +183,10 @@ LiveRequest.prototype.send = function (params) {
 
     requestPool.attach(piwikLiveDetails);
     requestPool.send(this.loaded);
+    
+    account    = null;
+    params     = null;
+    parameters = null;
 };
 
 /**
@@ -205,6 +210,7 @@ LiveRequest.prototype.onReceiveLiveMinutes = function (response) {
     }
 
     this.lastMinutes = response[0];
+    response         = null;
 };
 
 /**
@@ -228,6 +234,7 @@ LiveRequest.prototype.onReceiveLiveHours = function (response) {
     }
 
     this.lastHours = response[0];
+    response       = null;
 };
 
 /**
@@ -245,6 +252,7 @@ LiveRequest.prototype.onReceiveLiveDetails = function (response) {
     }
 
     this.details = response;
+    response     = null;
 };
 
 /**
@@ -261,6 +269,8 @@ LiveRequest.prototype.loaded = function () {
                        lastHours: this.lastHours};
 
     this.fireEvent('onload', eventResult);
+    
+    eventResult = null;
 };
 
 module.exports = LiveRequest;

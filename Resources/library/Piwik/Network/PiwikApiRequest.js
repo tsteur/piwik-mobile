@@ -119,6 +119,7 @@ PiwikApiRequest.prototype.setUserAuthToken = function (token) {
  */
 PiwikApiRequest.prototype.setMethod = function (method) {
     this.method = method;
+    method      = null;
 };
 
 /**
@@ -130,6 +131,7 @@ PiwikApiRequest.prototype.setMethod = function (method) {
  */
 PiwikApiRequest.prototype.setAccount = function (account) {
     this.account = account;
+    account      = null;
 };
 
 /**
@@ -200,6 +202,7 @@ PiwikApiRequest.prototype.isValidResponse = function (response) {
         
         if (!this.displayErrorAllowed()) {
             // verify whether we are authorized to display an error message
+            response = null;
             
             return false;
         }
@@ -220,9 +223,12 @@ PiwikApiRequest.prototype.isValidResponse = function (response) {
         });
 
         alertDialog.show();
+        response = null;
         
         return false;
     }
+    
+    response = null;
     
     return true;
 };

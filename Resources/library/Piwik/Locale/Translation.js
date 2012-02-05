@@ -20,22 +20,7 @@ var Piwik = require('library/Piwik');
  * @static
  */
 function Translation () {
-
-    /**
-     * This event will be fired as soon as the user changes the language and the translations of the changed selected
-     * language are loaded.
-     *
-     * @name     Piwik.Locale.Translation#event:onTranslationsLoaded
-     * @event
-     * @context  {Ti.App}
-     *
-     * @param    {Object}  event
-     * @param    {string}  event.type  The name of the event.
-     *
-     * @todo     add an eventListener to this event and refresh each window as soon as one changes the 
-     *           langauge/translations are loaded?
-     */
-
+    
     /**
      * The translations depending on the current active/selected locale.
      * 
@@ -149,8 +134,6 @@ function Translation () {
 
     /**
      * Fetches all needed translations depending on the current locale.
-     *
-     * @fires  Piwik.Locale.Translation#event:onTranslationsLoaded
      */
     this.load = function () {
 
@@ -170,8 +153,6 @@ function Translation () {
             var uiError = Piwik.getUI().createError({exception: e, errorCode: 'PiTrLo35'});
             uiError.showErrorMessageToUser();
         }
-
-        Ti.App.fireEvent('onTranslationsLoaded', {type: 'onTranslationsLoaded'});
     };
 
     /**

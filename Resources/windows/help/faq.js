@@ -41,6 +41,15 @@ function window () {
     this.add(webview);
 
     this.open = function () {};
+
+    this.cleanup = function () {
+        
+        this.remove(webview);
+        webview           = null;
+
+        this.menuOptions  = null;
+        this.titleOptions = null;
+    };
 }
 
 module.exports = window;

@@ -79,6 +79,10 @@ function window () {
     this.open = function () {
         websitesList.request();
     };
+    
+    this.cleanup = function () {
+        // don't need to cleanup. if this window is closed, the app is closed...
+    };
 }
 
 module.exports = window;

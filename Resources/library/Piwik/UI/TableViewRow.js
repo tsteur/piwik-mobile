@@ -72,70 +72,33 @@ TableViewRow.prototype.init = function (params) {
     delete params.rightImage;
 
     var row = Ti.UI.createTableViewRow(params);
-    
+
+    if (title) {
+        row.titleLabel = Ti.UI.createLabel({
+            text: title,
+            id: 'tableViewRowTitleLabel' + (description ? 'WithDescription' : '')
+        });
+        
+        row.add(row.titleLabel);
+    }   
+     
     if (command) {
         row.addEventListener('click', function () {
-            command.execute({source: row.titleLabel});
+            command.execute({source: row.titleLabel ? row.titleLabel : null});
         });
     }
     
-    /** 
-     * @memberOf  Piwik.UI.TableViewRow
-     * @function 
-     */
-    var changeTitle = function (title) {
-
-        if (!this.titleLabel && (title || '' === title)) {
-            // no title label already exists
-
-            this.titleLabel = Ti.UI.createLabel({
-                text: title,
-                id: 'tableViewRowTitleLabel' + (description ? 'WithDescription' : '')
-            });
-
-            this.add(this.titleLabel);
-        }
-
-        if (this.titleLabel && (title || '' === title)) {
-            // title label already exists, we can simply overwrite the title
-
-            this.titleLabel.text = title;
-
-        } else if (this.titleLabel && !title) {
-            // we have to remove the title label cause title is empty
-
-            this.remove(this.titleLabel);
-            this.titleLabel = null;
-        }
-    };
-
-    /** 
-     * @memberOf  Piwik.UI.TableViewRow
-     * @function 
-     */
-    var changeDescription = function (description) {
-
-        if (!this.descriptionLabel && (description || '' === description)) {
-
-            this.descriptionLabel = Ti.UI.createLabel({
-                text: description,
-                id: 'tableViewRowDescriptionLabel' + (params.layout ? params.layout : '')
-            });
-
-            this.add(this.descriptionLabel);
-        }
-
-        if (this.descriptionLabel && (description || '' === description)) {
-
-            this.descriptionLabel.text = description;
-
-        } else if (this.descriptionLabel && !description) {
-
-            this.remove(this.descriptionLabel);
-            this.descriptionLabel = null;
-        }
-    };
     
+    if (description) {
+        var descriptionLabel = Ti.UI.createLabel({
+            text: description,
+            id: 'tableViewRowDescriptionLabel' + (params.layout ? params.layout : '')
+        });
+        
+        row.add(descriptionLabel);
+        descriptionLabel = null;
+    }
+
     /** 
      * @memberOf  Piwik.UI.TableViewRow
      * @function 
@@ -162,13 +125,9 @@ TableViewRow.prototype.init = function (params) {
         }
     };
 
-    row.changeTitle       = changeTitle;
-    row.changeDescription = changeDescription;
-    row.changeValue       = changeValue;
+    row.changeValue = changeValue;
 
-    row.changeTitle(title);
     row.changeValue(value);
-    row.changeDescription(description);
 
     if (params.onShowOptionMenu && Piwik.getPlatform().isAndroid) {
         row.addEventListener('longclick', function (event) {
@@ -183,6 +142,7 @@ TableViewRow.prototype.init = function (params) {
                                                    image:  rightImage.url,
                                                    id:     'tableViewRowRightImage'});
         row.add(rowRightImage);
+        rowRightImage     = null;
     }
 
     return row;

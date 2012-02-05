@@ -111,6 +111,7 @@ function window (params) {
             }
             
             that.remove(imageView);
+            imageView        = null;
 
             graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
             graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
@@ -156,6 +157,16 @@ function window (params) {
     });
     
     this.open = function () {
+    };
+    
+    this.cleanup = function () {
+        this.remove(imageView);
+        imageView         = null;
+
+        graph             = null;
+        that              = null;
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

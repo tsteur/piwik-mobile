@@ -87,6 +87,8 @@ UI.createWindow = function (params) {
         params = {};
     }
     
+    params.window     = null;
+    params.rootWindow = null;
     delete params.window;
     delete params.rootWindow;
 

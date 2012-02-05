@@ -114,6 +114,7 @@ VisitorOverview.prototype.init = function () {
     }
 
     this._row.add(dateAndIconsView);
+    dateAndIconsView = null;
 
     var referrerText = this.getReferrerDescription(visitor);
     if (referrerText) {
@@ -143,8 +144,9 @@ VisitorOverview.prototype.init = function () {
  * @type  Titanium.UI.TableViewRow
  */
 VisitorOverview.prototype.getRow = function () {
-
-    return this._row;
+    var row   = this._row;
+    this._row = null;
+    return row;
 };
 
 /**

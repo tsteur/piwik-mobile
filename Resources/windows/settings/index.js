@@ -33,6 +33,7 @@ function window () {
     this.menuOptions  = {};
 
     var that          = this;
+    var tableData     = [];
     var tableview     = Ti.UI.createTableView({id: 'settingsTableView'});
 
     tableview.addEventListener('click', function (event) {
@@ -331,57 +332,57 @@ function window () {
             that.create('Window', {url: 'help/feedback', target: 'modal'});
         };
 
-        var tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
-                                                      title: _('UsersManager_ManageAccess'),
-                                                      onClick: onManageAccess,
-                                                      hasDetail: true}),
-                         that.create('TableViewSection', {title: _('General_GeneralSettings'), 
-                                                          style: 'native'}),
-                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
-                                                      title: _('General_Language'),
-                                                      onClick: onChangeLanguage,
-                                                      value: currentLanguage,
-                                                      hasChild: Piwik.getPlatform().isIos}),
-                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
-                                                      title: _('Mobile_DefaultReportDate'),
-                                                      onClick: onChangeDefaultReportDate,
-                                                      value: defaultReportDateLabel,
-                                                      hasChild: Piwik.getPlatform().isIos}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
-                                                      title: _('Mobile_AnonymousTracking'),
-                                                      onClick: onChangeAnonymousTracking,
-                                                      hasCheck: Boolean(indexEvent.trackingEnabled)}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
-                                                      title: _('Mobile_MultiChartLabel'),
-                                                      description: _('Mobile_MultiChartInfo'),
-                                                      onClick: onChangeSparkline,
-                                                      hasCheck: Boolean(indexEvent.piwikMultiCharts)}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
-                                                      title: _('Mobile_EnableGraphsLabel'),
-                                                      onClick: onChangeGraphs,
-                                                      hasCheck: Boolean(indexEvent.graphsEnabled)}),
-                         that.create('TableViewSection', {title: _('Mobile_Advanced'), 
-                                                          style: 'native'}),
-                         that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
-                                                      title: _('Mobile_HttpTimeout'),
-                                                      description: _('Mobile_HttpTimeoutInfo'),
-                                                      hasChild: Piwik.getPlatform().isIos,
-                                                      onClick: onChangeHttpTimeout,
-                                                      value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
-                         that.create('TableViewSection', {title: _('General_Help'), 
-                                                          style: 'native'}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
-                                                      title: String.format(_('General_AboutPiwikX'), 'Mobile'),
-                                                      onClick: onShowHelpAbout,
-                                                      hasDetail: true}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
-                                                      title: _('General_GiveUsYourFeedback'),
-                                                      onClick: onShowHelpFeedback,
-                                                      hasDetail: true}),
-                         that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
-                                                      title: _('General_Faq'),
-                                                      command: this.createCommand('OpenFaqCommand'),
-                                                      hasDetail: true})];
+        tableData = [that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
+                                                  title: _('UsersManager_ManageAccess'),
+                                                  onClick: onManageAccess,
+                                                  hasDetail: true}),
+                     that.create('TableViewSection', {title: _('General_GeneralSettings'), 
+                                                      style: 'native'}),
+                     that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                                                  title: _('General_Language'),
+                                                  onClick: onChangeLanguage,
+                                                  value: currentLanguage,
+                                                  hasChild: Piwik.getPlatform().isIos}),
+                     that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                                                  title: _('Mobile_DefaultReportDate'),
+                                                  onClick: onChangeDefaultReportDate,
+                                                  value: defaultReportDateLabel,
+                                                  hasChild: Piwik.getPlatform().isIos}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
+                                                  title: _('Mobile_AnonymousTracking'),
+                                                  onClick: onChangeAnonymousTracking,
+                                                  hasCheck: Boolean(indexEvent.trackingEnabled)}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
+                                                  title: _('Mobile_MultiChartLabel'),
+                                                  description: _('Mobile_MultiChartInfo'),
+                                                  onClick: onChangeSparkline,
+                                                  hasCheck: Boolean(indexEvent.piwikMultiCharts)}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasCheck',
+                                                  title: _('Mobile_EnableGraphsLabel'),
+                                                  onClick: onChangeGraphs,
+                                                  hasCheck: Boolean(indexEvent.graphsEnabled)}),
+                     that.create('TableViewSection', {title: _('Mobile_Advanced'), 
+                                                      style: 'native'}),
+                     that.create('TableViewRow', {className: Piwik.getPlatform().isIos ? 'settingsTableViewRowHasChild' : 'settingsTableViewRow',
+                                                  title: _('Mobile_HttpTimeout'),
+                                                  description: _('Mobile_HttpTimeoutInfo'),
+                                                  hasChild: Piwik.getPlatform().isIos,
+                                                  onClick: onChangeHttpTimeout,
+                                                  value: Math.round(settings.getHttpTimeout() / 1000) + 's'}),
+                     that.create('TableViewSection', {title: _('General_Help'), 
+                                                      style: 'native'}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
+                                                  title: String.format(_('General_AboutPiwikX'), 'Mobile'),
+                                                  onClick: onShowHelpAbout,
+                                                  hasDetail: true}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
+                                                  title: _('General_GiveUsYourFeedback'),
+                                                  onClick: onShowHelpFeedback,
+                                                  hasDetail: true}),
+                     that.create('TableViewRow', {className: 'settingsTableViewRowHasDetail',
+                                                  title: _('General_Faq'),
+                                                  command: this.createCommand('OpenFaqCommand'),
+                                                  hasDetail: true})];
 
         tableview.setData(tableData);
         
@@ -411,6 +412,29 @@ function window () {
         eventResult.availableLanguages = translation.getAvailableLanguages();
 
         this.fireEvent('onopen', eventResult);
+    };
+    
+    this.cleanupTableData = function () {
+        for (var index = 0; index < tableData.length; index++) {
+            tableData[index].titleLabel = null;
+            tableData[index].valueLabel = null;
+            tableData[index]            = null;
+        }
+        
+        tableData = null;
+        tableData = [];
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableview);
+
+        tableData = null;
+        tableview = null;
+        that      = null;
+        this.menuOptions     = null;
+        this.titleOptions    = null;
     };
 }
 

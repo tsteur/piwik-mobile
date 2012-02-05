@@ -117,6 +117,9 @@ Refresh.prototype.addEventListener = function (name, callback) {
     }
     
     tableView.addEventListener(name, callback);
+    
+    tableView = null;
+    callback  = null;
 };
 
 /**
@@ -134,6 +137,9 @@ Refresh.prototype.fireEvent = function (name, event) {
     }
 
     tableView.fireEvent(name, event);
+    
+    tableView = null;
+    event     = null;
 };
 
 /**
@@ -150,8 +156,8 @@ Refresh.prototype.refresh = function () {
 
         if (!this._activityIndicator) {
             // create the activity indicator if not already created
-            this._activityIndicator = Piwik.require('UI/ActivityIndicator');
-            this._activityIndicator.setParams({window: this.getParam('window')});
+            this._activityIndicator = null;
+            this._activityIndicator = this.create('ActivityIndicator', {});
         }
 
         this._activityIndicator.style = 'loading';
@@ -179,6 +185,9 @@ Refresh.prototype.refresh = function () {
     this.actInd.show();
 
     this.fireEvent('onRefresh', {type: 'onRefresh'});
+    
+    tableView = null;
+    dateUtils = null;
 };
 
 /**
@@ -205,6 +214,8 @@ Refresh.prototype.refreshDone = function () {
     this.statusLabel.text = _('Mobile_PullDownToRefresh');
     this.pullViewArrow.show();
     this.actInd.hide();
+    
+    tableView = null;
 };
 
 /**
@@ -258,6 +269,7 @@ Refresh.prototype.attachHeaderView = function () {
     pullViewHeader.add(this.actInd);
 
     tableView.headerPullView = pullViewHeader;
+    pullViewHeader           = null;
 
     tableView.addEventListener('scroll', function(event) {
         // fired each time the user scrolls within the tableview
@@ -293,6 +305,8 @@ Refresh.prototype.attachHeaderView = function () {
             that.refresh();
         }
     });
+    
+    tableView = null;
 
     // do the initial refresh
     this.refresh();

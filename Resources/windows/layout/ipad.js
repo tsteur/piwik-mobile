@@ -128,6 +128,8 @@ function layout () {
         this._masterWin.add(newWin);
         
         newWin.fireEvent('focusWindow', {});
+        
+        newWin = null;
     };
         
     /**
@@ -239,6 +241,7 @@ function layout () {
             try {
                 currentWindow.fireEvent('blurWindow', {});
                 currentWindow.close();
+                currentWindow = null;
             } catch (e) {
                 Piwik.getLog().warn('Failed to close current window: ' + e, 'iPadLayout::addWindowToDetailView');
             }
@@ -253,6 +256,8 @@ function layout () {
         newWin.rootWindow = Ti.UI.currentWindow;
         
         Ti.UI.currentWindow.add(newWin);
+        
+        newWin = null;
     };
     
     /**
@@ -268,18 +273,21 @@ function layout () {
         if (newWin && newWin.target && 'masterView' == newWin.target) {
 
             this._addWindowToMasterView(newWin);
+            newWin = null;
             
             return;
             
         } else if (newWin && newWin.target && 'modal' == newWin.target) {
             
             this._addWindowToModal(newWin);
+            newWin = null;
             
             return;
         }
 
         // target == 'detailView'
         this._addWindowToDetailView(newWin);
+        newWin = null;
     };
 
     /**
@@ -342,6 +350,7 @@ function layout () {
         });
         
         this._masterWin.leftNavButton = settingsButton;
+        settingsButton                = null;
 
         var navDetail   = Ti.UI.iPhone.createNavigationGroup({
             window: Ti.UI.currentWindow

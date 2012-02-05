@@ -46,6 +46,7 @@ function window (params) {
     var latestRequestedTimestamp = null;
     var oldestVisitId            = null;
     var usedMaxVisitIds          = [];
+    var visitorRows              = [];
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
@@ -107,11 +108,18 @@ function window (params) {
     var siteCommand = this.createCommand('ChooseSiteCommand');
     request.addEventListener('onload', function (event) {
 
-        refresh.refreshDone();
+        if (refresh) {
+            refresh.refreshDone();
+        }
 
-        tableView.setData([]);
+        if (!that) {
+            
+            return;
+        }
+        
+        that.cleanupTableData();
 
-        var visitorRows     = [];
+        visitorRows         = [];
 
         // insert new rows
         var visitorOverview = null;
@@ -123,6 +131,7 @@ function window (params) {
                                                            className: 'tableViewRowSelectable',
                                                            command: siteCommand});
         visitorRows.push(websiteRow);
+        websiteRow          = null;
 
         var nextPagerRow    = Ti.UI.createTableViewRow({title: _('General_Next'),
                                                         className: 'visitorlogPagerTableViewRow'});
@@ -154,6 +163,7 @@ function window (params) {
         });
 
         visitorRows.push(nextPagerRow);
+        nextPagerRow = null;
 
         if (event.details && event.details.length) {
             for (var index = 0; index < event.details.length; index++) {
@@ -177,9 +187,12 @@ function window (params) {
                 // add visitor information to the row. This makes it possibly to access this value when
                 // the user clicks on a row within the tableview (click event).
                 // we do not do this in VisitorOverview UI widget cause it's a window specific thing.
-                visitorRow.visitor   = visitor;
+                visitorRow.visitor = visitor;
 
                 visitorRows.push(visitorRow);
+                visitorRow         = null;
+                visitorOverview    = null;
+                visitor            = null;
             }
             
             if (visitor && visitor.idVisit) {
@@ -203,8 +216,11 @@ function window (params) {
         });
 
         visitorRows.push(previousPagerRow);
+        previousPagerRow = null;
         
         tableView.setData(visitorRows);
+        
+        event = null;
     });
 
     /**
@@ -217,6 +233,36 @@ function window (params) {
         params.fetchLiveOverview = false;
 
         request.send(params);
+        params = null;
+    };
+    
+    this.cleanupTableData = function () {
+        for (var index = 0; index < visitorRows.length; index++) {
+            visitorRows[index] = null;
+        }
+        
+        visitorRows = null;
+        visitorRows = [];
+        
+        tableView.setData([]);
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableView);
+
+        visitorRows    = null;
+        tableView      = null;
+        request        = null;
+        refresh        = null;
+        params         = null;
+        that           = null;
+        accountManager = null;
+        account        = null;
+        site           = null;
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

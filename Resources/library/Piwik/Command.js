@@ -40,6 +40,7 @@ Command.create = function (commandName, params) {
         }
         
         commandInstance.setParams(params);
+        params = null;
         
     } catch (e) {
         Piwik.getLog().warn('Failed to create command: ' + e, 'Piwik.UI.Window::createCommand');

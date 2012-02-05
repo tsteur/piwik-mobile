@@ -57,6 +57,7 @@ Graph.prototype.init = function () {
     this.addGraph(view);
 
     this.row = view;
+    view     = null;
     
     return this;
 };
@@ -67,8 +68,10 @@ Graph.prototype.init = function () {
  * @type  Titanium.UI.TableViewRow
  */
 Graph.prototype.getRow = function () {
+    var row  = this.row;
+    this.row = null;
     
-    return this.row;
+    return row;
 };
 
 /**
@@ -101,6 +104,7 @@ Graph.prototype.addGraph = function (view) {
                                             image: fullGraphUrl});
 
     view.add(graphImage);
+    graphImage = null;
     
     if (!Piwik.getPlatform().isIpad) {
         
@@ -115,6 +119,7 @@ Graph.prototype.addGraph = function (view) {
         });
         
         view.add(showDetailImage);
+        showDetailImage = null;
     }
     
 };

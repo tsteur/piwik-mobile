@@ -100,6 +100,7 @@ DatePicker.prototype.init = function (params) {
     }
 
     this.createAndroid();
+    params = null;
 
     return this;
 };
@@ -168,6 +169,7 @@ DatePicker.prototype.createIos = function (params) {
     });
 
     win.add(tableView);
+    tableView = null;
 
     var doneButton = Ti.UI.createButton({title: _('General_Done'),
                                          style: Ti.UI.iPhone.SystemButtonStyle.DONE});
@@ -179,6 +181,8 @@ DatePicker.prototype.createIos = function (params) {
             that.fireEvent('onSet', myEvent);
             
             win.close();
+            win     = null;
+            myEvent = null;
         } catch (e) {
             Piwik.getLog().warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
         }
@@ -186,6 +190,10 @@ DatePicker.prototype.createIos = function (params) {
 
     win.setRightNavButton(doneButton);
     win.open();
+    
+    doneButton = null;
+    params     = null;
+    datePicker = null;
 
     return this;
 };
@@ -210,6 +218,8 @@ DatePicker.prototype.createAndroid = function () {
     this.setValue(this.value);
 
     this._dateDialog.show();
+    
+    view = null;
 
     return this;
 };
@@ -247,6 +257,9 @@ DatePicker.prototype._updateDisplayedValues = function () {
     var dateUtils          = Piwik.require('Utils/Date');
 
     this._dateDialog.title = period + ', ' + dateUtils.toPiwikDateRangeString(this.value, this.period);
+    
+    dateUtils = null;
+    period    = null;
 };
 
 /**
@@ -257,6 +270,7 @@ DatePicker.prototype._updateDisplayedValues = function () {
 DatePicker.prototype.setValue = function (value) {
 
     this.value = value;
+    value      = null;
 
     this._updateDisplayedValues();
 };
@@ -280,6 +294,10 @@ DatePicker.prototype.addDateSelector = function (view) {
     });
 
     view.add(picker);
+    
+    view   = null;
+    picker = null;
+    params = null;
 };
 
 /**
@@ -296,7 +314,9 @@ DatePicker.prototype.addPeriodSelector = function (view) {
     periods[1]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodWeek')});
     periods[2]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodMonth')});
     periods[3]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodYear')});
+    
     periodPicker.add(periods);
+    periods          = null;
 
     if ('day' == this.period) {
         periodPicker.setSelectedRow(0, 0, false);
@@ -333,6 +353,9 @@ DatePicker.prototype.addPeriodSelector = function (view) {
     });
 
     view.add(periodPicker);
+    
+    view         = null;
+    periodPicker = null;
 };
 
 /**
@@ -370,6 +393,8 @@ DatePicker.prototype.addButtons = function (dateDialog) {
             that.fireEvent('onSet', myEvent);
         }
     });
+    
+    dateDialog = null;
 };
 
 module.exports = DatePicker;

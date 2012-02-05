@@ -26,6 +26,8 @@ function Request () {
      * @private
      */
     this.eventPrefix = null;
+    
+    this.events      = [];
 }
 
 /**
@@ -40,17 +42,20 @@ Request.prototype.addEventListener = function (name, callback) {
     if (!this.eventPrefix) {
         this.eventPrefix = String(Math.random()).slice(2,8);
     }
-
+    
+    var eventName = this.eventPrefix + name;
+    
     if (Piwik.getPlatform().isAndroid) {
-        // android seems to execute Ti.App in another "subcontext". This does currently cause an error 
-        // "Piwik is undefined" when trying to access "Piwik" within an event listener.
-        // @todo  check whether this "bug" still exists and whether we can remove this condition
-        Piwik.getUI().currentWindow.addEventListener(this.eventPrefix + name, callback);
+        Piwik.getUI().currentWindow.addEventListener(eventName, callback);
         
-    } else {
+        callback = null;
         
-        Ti.App.addEventListener(this.eventPrefix + name, callback);
+        return;
     }
+    
+    this.events.push({event: eventName, callback: callback});
+    
+    callback = null;
 };
 
 /**
@@ -61,19 +66,28 @@ Request.prototype.addEventListener = function (name, callback) {
  *                            via addEventListener.
  */
 Request.prototype.fireEvent = function (name, event) {
-
+    
     if (!this.eventPrefix) {
         this.eventPrefix = String(Math.random()).slice(2,8);
     }
-
+    
+    var eventName = this.eventPrefix + name;
+    
     if (Piwik.getPlatform().isAndroid) {
-        
-        Piwik.getUI().currentWindow.fireEvent(this.eventPrefix + name, event);
-        
-    } else {
-        
-        Ti.App.fireEvent(this.eventPrefix + name, event);
+        Piwik.getUI().currentWindow.fireEvent(eventName, event);
+
+        event = null;
+
+        return;
     }
+    
+    for (var index = 0; index < this.events.length; index++) {
+        if (eventName == this.events[index].event) {
+            this.events[index].callback.apply(this, [event]);
+        }
+    }
+
+    event = null;
 };
 
 module.exports = Request;

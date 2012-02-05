@@ -26,7 +26,9 @@ function UiView () {
  * @type   null
  */
 UiView.prototype.setParams = function (params) {
+    this.params = null;
     this.params = params;
+    params      = null;
 };
 
 /**
@@ -81,6 +83,9 @@ UiView.prototype.fireEvent = function (name, event) {
     if (window) {
         window.fireEvent(name, event);
     }
+    
+    window = null;
+    event  = null;
 };
 
 UiView.prototype.create = function (widget, params) {
@@ -106,6 +111,9 @@ UiView.prototype.addEventListener = function (name, callback) {
     if (window) {
         window.addEventListener(name, callback);
     }
+    
+    callback   = null;
+    window     = null;
 };
 
 /**
@@ -120,6 +128,9 @@ UiView.prototype.removeEventListener = function (name, callback) {
     if (window) {
         window.removeEventListener(name, callback);
     }
+    
+    callback   = null;
+    window     = null;
 };
 
 /**

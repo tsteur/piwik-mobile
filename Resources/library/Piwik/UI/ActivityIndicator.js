@@ -156,6 +156,8 @@ ActivityIndicator.prototype.show = function (message) {
                 if (win && win.waitIndicatorImage && message) {
                     win.waitIndicatorImage.message = message;
                 }
+                
+                win = null;
 
                 return;
             }
@@ -171,6 +173,8 @@ ActivityIndicator.prototype.show = function (message) {
             }
 
             win.waitIndicatorImage.show();
+            
+            win = null;
 
             break;
     }
@@ -184,6 +188,7 @@ ActivityIndicator.prototype.show = function (message) {
 
     // this ensures the activity indicator will be removed even if the hide method was not called due to any error.
     this.waitIndicatorTimeout = setTimeout(waitIndicatorTimeout, (settings.getHttpTimeout() * 1.6));
+    settings                  = null;
 };
 
 /**
@@ -248,6 +253,8 @@ ActivityIndicator.prototype.hide = function (force) {
         this.view.loadingMessage = null;
         this.view                = null;
     }
+    
+    win = null;
 };
 
 module.exports = ActivityIndicator;

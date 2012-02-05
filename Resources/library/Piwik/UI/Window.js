@@ -62,6 +62,34 @@ function UiWindow () {
     
     var that          = this;
     
+    var mymempool = {
+        cleanups: null,
+        
+        add: function (obj) {
+            if (!this.cleanups) {
+                this.cleanups = [];
+            }
+            
+            this.cleanups.push(obj);
+            obj = null;
+        },
+        
+        release: function () {
+            var len = this.cleanups.length;
+            for (var index = 0; index < len; index++) {
+            
+                var rel    = this.cleanups.pop();
+
+                rel.window = null;
+                rel.params = null;
+                rel        = null;
+            }
+            
+            this.cleanups  = null;
+        }
+    };
+
+    
     this.addEventListener('focusWindow', function (event) {
     
         var urlParams  = ('' + that.url).split('/');
@@ -84,8 +112,11 @@ function UiWindow () {
         // refresh the headline as well as the menu each time a window gets the focus.
         Piwik.getUI().layout.header.refresh(titleOptions);
         Piwik.getUI().layout.menu.refresh(menuOptions);
+        
+        titleOptions = null;
+        menuOptions  = null;
     });
-
+    
     this.create = function (widget, params) {
         
         if (!params) {
@@ -96,7 +127,11 @@ function UiWindow () {
             params.window = that;
         }
         
-        return Piwik.getUI()['create' + widget](params);
+        var uiWidget = Piwik.getUI()['create' + widget](params);
+        mymempool.add(uiWidget);
+        params       = null;
+        
+        return uiWidget;
     };
     
     this.createCommand = function (commandName, params) {
@@ -111,7 +146,12 @@ function UiWindow () {
         
         var commandFactory = Piwik.require('Command');
         
-        return commandFactory.create(commandName, params);
+        var command = commandFactory.create(commandName, params);
+        params      = null;
+        
+        mymempool.add(command);
+        
+        return command;
     };
 
     /**
@@ -149,7 +189,13 @@ function UiWindow () {
             // hide view so we make sure the view will no longer be visible, even if the later removeWindow does
             // not work
             this.hide();
-            this.cleanup(this, 0);
+            
+            if (this.cleanup) {
+                this.cleanup();
+            }
+            
+            mymempool.release();
+            that = null;
     
         } catch (e) {
             Piwik.getLog().warn('failed to remove view from window: ' + e.message, 'Piwik.UI.Window::close');
@@ -158,50 +204,6 @@ function UiWindow () {
         Piwik.getUI().layout.removeWindow(this, newWindowWillFollow);
     };
     
-    /**
-     * We want to clean up the window at least. This shall free some memory. 
-     */
-    this.cleanup = function (view, depth) {
-        depth++;
-    
-        if (depth > this.maxDepth) {
-            return;
-        }
-    
-        if (!view || !view.children  || !view.children.length) {
-            return;
-        } 
-       
-        try { 
-            for (var index = 0; index < view.children.length; index++) {
-    
-                var childView = view.children[index];
-    
-                if ('object' === (typeof childView).toLowerCase() && 
-                    -1 !== ('' + childView).search('View')) {
-    
-                    this.cleanup(childView, depth);
-    
-                    if (view && view.remove && childView) { 
-                    
-                        this.removedItems++;
-                        view.remove(childView);
-                    }
-                }
-        
-                childView            = null;
-                view.children[index] = null;
-            
-                delete view.children[index];
-            }
-    
-            if (1 === depth && Piwik.Log) {
-            
-                Piwik.getLog().debug('numRemovedItems: ' + this.removedItems, 'Piwik.UI.Window::cleanup');
-            }
-    
-        } catch (e) {}
-    };
 }
 
 module.exports = UiWindow;

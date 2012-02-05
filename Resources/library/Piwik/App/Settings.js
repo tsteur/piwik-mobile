@@ -30,6 +30,8 @@ function Settings () {
      */
     this.setLanguage = function (value) {
         this._set('piwikLanguage', 'String', value);
+        
+        value = null;
     };
 
     /**
@@ -55,6 +57,8 @@ function Settings () {
         value = Boolean(value);
 
         this._set('piwikMultiChart', 'Bool', value);
+        
+        value = null;
     };
 
     /**
@@ -78,6 +82,8 @@ function Settings () {
         value = Boolean(value);
 
         this._set('trackingEnabled', 'Bool', value);
+        
+        value = null;
     };
 
     /**
@@ -101,6 +107,8 @@ function Settings () {
         value = Boolean(value);
 
         this._set('graphsEnabled', 'Bool', value);
+        
+        value = null;
     };
 
     /**
@@ -173,6 +181,7 @@ function Settings () {
         }
 
         var values     = reportDate.split('##');
+        reportDate     = null;
 
         return values[1] ? values[1] : null;
     };
@@ -193,6 +202,7 @@ function Settings () {
         }
 
         var values       = reportPeriod.split('##');
+        reportPeriod     = null;
 
         return values[0] ? values[0] : null;
     };
@@ -297,7 +307,10 @@ function Settings () {
             return Ti.App.Properties.setInt(key, parseInt(value, 10));
         }
 
-        return Ti.App.Properties.setString(key, value);
+        var result = Ti.App.Properties.setString(key, value);
+        value      = null;
+        
+        return result;
     };
 
     /**

@@ -92,18 +92,20 @@ function window (params) {
         
         accessUrl      = Piwik.getNetwork().getBasePath('' + account.accessUrl);
 
-        refresh.refresh();
+        if (refresh) {
+            refresh.refresh();
+        }
     });
 
     this.addEventListener('closeWindow', function () {
-        if (that.refreshTimer) {
+        if (that && that.refreshTimer) {
             // do no longer execute autoRefresh if user closed the window
             clearTimeout(that.refreshTimer);
         }
     });
 
     this.addEventListener('blurWindow', function () {
-        if (that.refreshTimer) {
+        if (that && that.refreshTimer) {
             // do no longer execute autoRefresh if user opened a new window and this window is no longer visible
             clearTimeout(that.refreshTimer);
         }
@@ -113,7 +115,9 @@ function window (params) {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
             // start auto refresh again if user returns to this window from a previous displayed window
             that.refreshTimer = setTimeout(function () {
-                refresh.refresh();
+                if (refresh) {
+                    refresh.refresh();
+                }
             }, 20000);
         }
     });
@@ -122,7 +126,9 @@ function window (params) {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
             // start auto refresh again if user returns to this window from a previous displayed window
             that.refreshTimer = setTimeout(function () {
-                refresh.refresh();
+                if (refresh) {
+                    refresh.refresh();
+                }
             }, 3000);
         }
     });
@@ -140,13 +146,11 @@ function window (params) {
                 // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
                 clearTimeout(that.refreshTimer);
             }
-
-            // @todo start auto refresh again on resume event?
         });
     }
 
     refresh.addEventListener('onRefresh', function () {
-        if (that.refreshTimer) {
+        if (that && that.refreshTimer) {
             // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
             // request in a few seconds again
             clearTimeout(that.refreshTimer);
@@ -194,7 +198,9 @@ function window (params) {
 
     request.addEventListener('onload', function (event) {
 
-        refresh.refreshDone();
+        if (refresh) {
+            refresh.refreshDone();
+        }
         
         if (!tableView || !tableView.setData || !that) {
             
@@ -204,6 +210,11 @@ function window (params) {
         if (!event.details || !event.details.length) {
 
             if (!that.lastMinutes || !that.lastHours) {
+                // @todo test me 
+               
+                // clear previous displayed data
+                that.cleanupTableData();
+        
                 // make sure at least live overview will be rendered
                 that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
                 that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
@@ -225,7 +236,7 @@ function window (params) {
         }
 
         // clear previous displayed data
-        tableView.setData([]);
+        that.cleanupTableData();
 
         that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
         that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
@@ -241,10 +252,11 @@ function window (params) {
          * @type  Array
          * @private
          */
-        var visitorRows  = [websiteRow,
-                            that.lastMinutes.getRow(),
-                            that.lastHours.getRow(),
-                            that.create('TableViewSection', {title: _('General_Visitors')})];
+         visitorRows  = [websiteRow,
+                         that.lastMinutes.getRow(),
+                         that.lastHours.getRow(),
+                         that.create('TableViewSection', {title: _('General_Visitors')})];
+         websiteRow   = null;
 
         if (event.lastMinutes) {
             that.lastMinutes.refresh({actions: event.lastMinutes.actions,
@@ -299,15 +311,21 @@ function window (params) {
             visitorRow.visitor = visitor;
 
             visitorRows.push(visitorRow);
+            
+            visitorRow      = null;
         }
 
         tableView.setData(visitorRows);
 
         if (params.autoRefresh) {
             that.refreshTimer = setTimeout(function () {
-                refresh.refresh();
+                if (refresh) {
+                    refresh.refresh();
+                }
             }, refreshIntervalInMs);
         }
+        
+        event = null;
     });
 
     /**
@@ -318,6 +336,45 @@ function window (params) {
     this.open = function (params) {
         params.fetchLiveOverview = true;
         request.send(params);
+        params = null;
+    };
+    
+    this.cleanupTableData = function () {
+        
+        for (var index = 0; index < visitorRows.length; index++) {
+            visitorRows[index] = null;
+        }
+        
+        visitorRows = null;
+        visitorRows = [];
+        
+        tableView.setData([]);
+    };
+    
+    this.cleanup = function () {
+        if (this.refreshTimer) {
+            clearTimeout(this.refreshTimer);
+        }
+        
+        this.cleanupTableData();
+        
+        this.remove(tableView);
+
+        visitorRows    = null;
+        tableView      = null;
+        request        = null;
+        refresh        = null;
+        that           = null;
+        visitors       = null;
+        accountManager = null;
+        account        = null;
+        site           = null;
+        params         = null;
+        this.lastMinutes  = null;
+        this.lastHours    = null;
+        this.refreshTimer = null;
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

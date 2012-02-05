@@ -92,6 +92,9 @@ ReportsRequest.prototype.send = function (params) {
     this.sessionKey      = 'piwik_report_metadata_' + this.site.accountId + '_' + this.site.idsite + '_' + language;
     var cachedReportData = session.get(this.sessionKey);
     
+    settings = null;
+    session  = null;
+    
     if (!params.reload
         && cachedReportData
         && Piwik.isArray(cachedReportData)
@@ -99,9 +102,12 @@ ReportsRequest.prototype.send = function (params) {
         // we already have a cached result
 
         this.availableReports = cachedReportData;
+        cachedReportData      = null;
 
         // fire the result without sending a network request
         this.fire();
+        
+        params = null;
         
         return;
     }
@@ -115,6 +121,10 @@ ReportsRequest.prototype.send = function (params) {
     piwikRequest.setParameter({idSites: this.site.idsite});
     piwikRequest.setCallback(this, this.loaded);
     piwikRequest.send();
+    
+    accountManager = null;
+    account        = null;
+    params         = null;
 };
 
 /**
@@ -134,7 +144,10 @@ ReportsRequest.prototype.loaded = function (reportMetaData) {
     if (reportMetaData && Piwik.isArray(reportMetaData) && 0 < reportMetaData.length) {
         var session = Piwik.require('App/Session');
         session.set(this.sessionKey, reportMetaData);
+        session     = null;
     }
+    
+    reportMetaData = null;
 
     this.fire();
 };
@@ -151,6 +164,7 @@ ReportsRequest.prototype.fire = function () {
                        site: this.site};
 
     this.fireEvent('onload', eventResult);
+    eventResult     = null;
 };
 
 module.exports = ReportsRequest;

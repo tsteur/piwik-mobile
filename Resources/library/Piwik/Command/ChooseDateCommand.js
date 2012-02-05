@@ -123,6 +123,7 @@ ChooseDateCommand.prototype.execute = function (params) {
     if ('string' === (typeof optionDate).toLowerCase()) {
         var stringUtils = Piwik.require('Utils/String');
         this.date       = stringUtils.toPiwikDate(optionDate);
+        stringUtils     = null;
     } else {
         this.date       = optionDate;
     }
@@ -140,6 +141,8 @@ ChooseDateCommand.prototype.execute = function (params) {
     picker.addEventListener('onSet', function (event) {
         that.changeDate(event.date, event.period);
     });
+    
+    params = null;
 };
 
 /**
@@ -165,6 +168,7 @@ ChooseDateCommand.prototype.changePeriod = function (period) {
 
     var session = Piwik.require('App/Session');
     session.set('piwik_parameter_period', period);
+    session     = null;
 };
 
 /**
@@ -184,9 +188,11 @@ ChooseDateCommand.prototype.changeDate   = function (changedDate, period) {
 
     var dateUtils = Piwik.require('Utils/Date');
     var dateQuery = dateUtils.toPiwikQueryString(this.date);
+    dateUtils     = null;
 
     var session   = Piwik.require('App/Session');
     session.set('piwik_parameter_date', dateQuery);
+    session       = null;
 
     this.fireEvent('onDateChanged', {date: dateQuery, period: this.period, type: 'onDateChanged'});
 };

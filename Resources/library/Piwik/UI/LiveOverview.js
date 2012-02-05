@@ -63,6 +63,7 @@ LiveOverview.prototype.init = function () {
                                          id: 'liveOverviewTitleLabel'});
 
     this.row.add(titleLabel);
+    titleLabel = null;
 
     this.valueLabel = Ti.UI.createLabel({text: '-', id: 'liveOverviewValueLabel'});
 
@@ -103,8 +104,10 @@ LiveOverview.prototype.refresh = function (params) {
  * @type  Titanium.UI.TableViewRow
  */
 LiveOverview.prototype.getRow = function () {
-
-    return this.row;
+    var row  = this.row;
+    this.row = null;
+    
+    return row;
 };
 
 module.exports = LiveOverview;

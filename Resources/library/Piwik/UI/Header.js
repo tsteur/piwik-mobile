@@ -89,6 +89,7 @@ Header.prototype.setHeadline = function () {
     
     if (Piwik.getPlatform().isIos && win && win.rootWindow) {
         win.rootWindow.title = this.getParam('title', '');
+        win                  = null;
 
         return;
     }
@@ -107,6 +108,7 @@ Header.prototype.refresh = function (params) {
 
     if (params) {
         this.setParams(params);
+        params = null;
     }
 
     this.setHeadline();

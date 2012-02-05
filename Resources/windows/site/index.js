@@ -105,6 +105,10 @@ function window (params) {
     // menu button 'reload', but not if window gets focus again.
     var forceRequestReload = true;
     refresh.addEventListener('onRefresh', function () {
+        
+        var session = Piwik.require('App/Session');
+        site        = session.get('current_site', site);
+        session     = null;
 
         // site has changed if the accountId is different or if idsite is different.
         var siteHasChanged = (site &&
@@ -114,12 +118,17 @@ function window (params) {
 
         // update only if site has changed or if we force request reload
         if (site && (siteHasChanged || forceRequestReload)) {
-
+            
             currentRequestedSite = site;
+            
+            that.titleOptions    = {title: '' + (site ? site.name : ''),
+                                    window: that};
+            Piwik.getUI().layout.header.refresh(that.titleOptions);
 
+            
             // remove all tableview rows. This should ensure there are no rendering issues when setting
             // new rows afterwards.
-            tableview.setData([]);
+            that.cleanupTableData();
             
             request.send({site: site, reload: forceRequestReload});
             
@@ -132,32 +141,33 @@ function window (params) {
     });
 
     // this event is fired from another window, therefore we use Ti.App
-    Ti.App.addEventListener('onSiteChanged', function (event) {
-
-        if (!event || !event.site || !tableData) {
-            
-            return;
-        }
-
-        site              = event.site;
-        that.titleOptions = {title: '' + event.site.name};
-        
-        if (Piwik.getPlatform().isIpad) {
-            
-            that.titleOptions = {title: '' + (site ? site.name : ''),
-                                 window: that};
-
-            Piwik.getUI().layout.header.refresh(that.titleOptions);
+    // be cureful using Ti.App events. They will never be released cause they run in a global app context.
+    // cause on iPad this window will be always displayed as long as the app is opened, it doesn't matter.
+    if (Piwik.getPlatform().isIpad) {
+        Ti.App.addEventListener('onSiteChanged', function (event) {
+    
+            if (!event || !event.site) {
+                
+                return;
+            }
             
             forceRequestReload = false;
-            refresh.refresh();
-        }
-    });
+            
+            if (refresh) {
+                refresh.refresh();
+            }
+            
+            event = null;
+        });
+    }
 
     this.addEventListener('focusWindow', function () {
 
         forceRequestReload = false;
-        refresh.refresh();
+        
+        if (refresh) {
+            refresh.refresh();
+        }
     });
 
     request.addEventListener('onload', function (event) {
@@ -174,6 +184,7 @@ function window (params) {
 
             // there are no reports, so we simply again set an empty array / remove all rows.
             tableview.setData(tableData);
+            event = null;
             
             return;
         }
@@ -202,6 +213,7 @@ function window (params) {
                 section    = that.create('TableViewSection', {title: String(report.category)});
 
                 tableData.push(section);
+                section    = null;
             }
 
             latestSection  = currentSection;
@@ -220,6 +232,8 @@ function window (params) {
         if (Piwik.getPlatform().isIos && tableview.scrollToTop) {
             tableview.scrollToTop(1);
         }
+        
+        event = null;
     });
 
     /**
@@ -232,6 +246,38 @@ function window (params) {
         }
 
         request.send({site: site});
+    };
+    
+    this.cleanupTableData = function () {
+        
+        for (var index = 0; index < tableData.length; index++) {
+            tableData[index].titleLabel = null;
+            tableData[index].valueLabel = null;
+            tableData[index]            = null;
+        }
+        
+        tableData = null;
+        tableData = [];
+        tableview.setData([]);
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableview);
+        
+        tableData = null;
+        tableview = null;
+        request   = null;
+        refresh   = null;
+        site      = null;
+        that      = null;
+        params    = null;
+
+        this.menuOptions     = null;
+        this.titleOptions    = null;
+        menuOptions          = null;
+        currentRequestedSite = null;
     };
 }
 

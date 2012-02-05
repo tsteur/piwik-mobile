@@ -87,11 +87,13 @@ Piwik.isObject = function (obj) {
     if ((obj instanceof Object)) {
         // unfortunately this simple check does currently not work on Android under some circumstances (when a variable
         // is passed between a different require context). See http://jira.appcelerator.org/browse/TIMOB-7258
+        obj = null;
 
         return true;
     }
 
     if (Piwik.isIos) {
+        obj = null;
         
         return false;
     }
@@ -100,9 +102,12 @@ Piwik.isObject = function (obj) {
 
     var objToString = Object.prototype.toString.call(obj);
     if ('object' == (typeof obj) && objToString && -1 !== objToString.toLowerCase().indexOf('object object')) {
+        obj = null;
 
         return true;
     }
+    
+    obj = null;
     
     return false; 
 };
@@ -119,11 +124,13 @@ Piwik.isError = function (err) {
     if ((err instanceof Error)) {
         // unfortunately this simple check does currently not work on Android under some circumstances (when a variable
         // is passed between a different require context). See http://jira.appcelerator.org/browse/TIMOB-7258
+        err = null;
 
         return true;
     }
 
     if (Piwik.isIos) {
+        err = null;
         
         return false;
     }
@@ -132,9 +139,12 @@ Piwik.isError = function (err) {
 
     var errToString = Object.prototype.toString.call(err);
     if (errToString && -1 !== errToString.toLowerCase().indexOf('error')) {
+        err = null;
 
         return true;
     }
+    
+    err = null;
     
     return false; 
 };
@@ -151,11 +161,13 @@ Piwik.isArray = function (arr) {
     if ((arr instanceof Array || 'array' == (typeof arr))) {
         // unfortunately this simple check does currently not work on Android under some circumstances (when a variable
         // is passed between a different require context). See http://jira.appcelerator.org/browse/TIMOB-7258
+        arr = null;
         
         return true;
     }
     
     if (Piwik.isIos) {
+        arr = null;
         
         return false;
     }
@@ -164,9 +176,12 @@ Piwik.isArray = function (arr) {
 
     var arrToString = Object.prototype.toString.call(arr);
     if (arrToString && -1 !== arrToString.toLowerCase().indexOf('array')) {
+        arr = null;
 
         return true;
     }
+    
+    arr = null;
     
     return false;
 };

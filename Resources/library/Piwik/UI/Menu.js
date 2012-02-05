@@ -68,12 +68,12 @@ Menu.prototype.refresh = function (params) {
 
     if (params) {
         this.setParams(params);
+        params = null;
     }
 
     var win        = this.getParam('window', {});
     var commands   = this.getParam('commands', []);
     var rootWindow = win.rootWindow;
-    var that       = this;
 
     if (Piwik.getPlatform().isIos) {
         var labels = [];
@@ -87,6 +87,7 @@ Menu.prototype.refresh = function (params) {
             }
             
             labels.push(buttonLabel);
+            buttonLabel     = null;
         }
         
         if (this.toolBar) {
@@ -104,6 +105,8 @@ Menu.prototype.refresh = function (params) {
 
         if (labels.length && rootWindow) {
             
+            var that     = this;
+            this.toolBar = null;
             this.toolBar = Ti.UI.createButtonBar({labels: labels, id: 'menuButtonBar'});
 
             rootWindow.rightNavButton = this.toolBar;
@@ -121,6 +124,9 @@ Menu.prototype.refresh = function (params) {
 
                     button.command.execute({source: that.toolBar});
                 }
+                
+                buttons = null;
+                button  = null;
             });
         } 
 
@@ -138,6 +144,10 @@ Menu.prototype.refresh = function (params) {
             try {
                 availableCommand.hide();
                 this.menuView.remove(availableCommand);
+                
+                availableCommand                  = null;
+                this.availableCommands[commandId] = null;
+                
             } catch (e){ 
                 Piwik.getLog().warn('Failed to remove a command from menuView: ' + e, 'Piwik.UI.Menu::refresh');
             }
@@ -174,6 +184,8 @@ Menu.prototype.refresh = function (params) {
             
             this.availableCommands[command.getId()] = icon;
             this.menuView.add(icon);
+            icon     = null;
+            menuIcon = null;
         }
 
         // hack. prevent header title from overlapping menu icons.
@@ -182,7 +194,14 @@ Menu.prototype.refresh = function (params) {
         if (layout && layout.header && layout.header.titleLabel) {
             layout.header.titleLabel.right = stringUtils.toSizeUnit('' + right);
         }
+        
+        layout      = null;
+        stringUtils = null;
     }
+    
+    commands   = null;
+    rootWindow = null;
+    win        = null;
 };
 
 module.exports = Menu;

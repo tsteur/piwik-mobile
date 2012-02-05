@@ -67,6 +67,7 @@ WebsitesList.prototype.init = function () {
     var forceRequestReload = true;
     
     var refresh   = null;
+    var rows      = [];
 
     var searchBar = Ti.UI.createSearchBar({id: 'websiteSearchBar',
                                            hintText: _('Mobile_SearchWebsite')});
@@ -110,8 +111,13 @@ WebsitesList.prototype.init = function () {
 
             return;
         }
+        
+        var session = Piwik.require('App/Session');
+        session.set('current_site', event.row.site);
 
         that.fireEvent('onChooseSite', {site: event.row.site, name: 'onChooseSite'});
+        
+        event = null;
     });
 
     win.add(tableview);
@@ -119,6 +125,14 @@ WebsitesList.prototype.init = function () {
     refresh = this.create('Refresh', {tableView: tableview});
 
     refresh.addEventListener('onRefresh', function () {
+        
+        for (var index = 0; index < rows.length; index++) {
+            rows[index].titleLabel = null;
+            rows[index].valueLabel = null;
+            rows[index]            = null;
+        }
+        
+        rows = null;
 
         // remove all tableview rows. This makes sure there are no rendering issues when setting
         // new rows afterwards.
@@ -152,11 +166,14 @@ WebsitesList.prototype.init = function () {
             // do not fire this event if user has used the filter/searchBar. Maybe that is not the site
             // he was looking for.
 
+            var session = Piwik.require('App/Session');
+            session.set('current_site', event.sites[0]);
+
             that.fireEvent('onOnlyOneSiteAvailable', {site: event.sites[0], type: 'onOnlyOneSiteAvailable'});
             return;
         }
 
-        var rows = [];
+        rows = [];
 
         for (var siteIndex = 0; siteIndex < event.sites.length; siteIndex++) {
             var site = event.sites[siteIndex];
@@ -175,6 +192,7 @@ WebsitesList.prototype.init = function () {
                                                    site: site,
                                                    rightImage: {url: site.sparklineUrl, width: 100, height: 25},
                                                    className: 'websiteTableViewRow'}));
+            site = null;
         }
         
         if (event && event.achievedSitesLimit) {
@@ -187,10 +205,14 @@ WebsitesList.prototype.init = function () {
             searchHintRow.add(Ti.UI.createLabel({text: searchBarHintText,
                                                  className: 'searchHintLabel'}));
             rows.push(searchHintRow);
+            searchHintRow = null;
+            config        = null;
         }
         
         tableview.setData(rows);
     });
+    
+    win = null;
 };
 
 /**

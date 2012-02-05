@@ -28,6 +28,7 @@ function Locale () {
         var locale   = settings.getLanguage();
 
         if (locale) {
+            settings = null;
 
             return locale;
         }

@@ -73,6 +73,9 @@ function PiwikGraph () {
         graphUrl        = graphUrl + '&' + Piwik.getNetwork().encodeUrlParams(requestUrl);
         graphUrl        = Piwik.getNetwork().getBasePath('' + account.accessUrl) + graphUrl;
         
+        account = null;
+        site    = null;
+        
         return graphUrl;
     };
     
@@ -104,6 +107,7 @@ function PiwikGraph () {
         }
         
         graphUrl      = graphUrl + separator + Piwik.getNetwork().encodeUrlParams(urlGetParams);
+        params        = null;
         
         return graphUrl;
     };
@@ -137,7 +141,8 @@ function PiwikGraph () {
             parameter.fontSize = Math.round(parameter.fontSize * 1.5);
         } 
         
-        graphUrl = this.setParams(graphUrl, parameter);
+        graphUrl  = this.setParams(graphUrl, parameter);
+        parameter = null;
         
         return graphUrl;
     };

@@ -56,7 +56,7 @@ TableViewSection.prototype.init = function (params) {
 
     params.className = 'tableViewSection';
 
-    var section;
+    
     if (Piwik.getPlatform().isIos) {
         // @todo define this in jss
         params.selectionStyle  = Ti.UI.iPhone.TableViewCellSelectionStyle.NONE;
@@ -68,23 +68,25 @@ TableViewSection.prototype.init = function (params) {
         } else {
 
             var headerView           = Ti.UI.createView({className: 'tableViewSection'});
-            headerView.add(headerLabel);
-
+            
             // it is currently not possible to set shadowOffset via jss
             headerLabel.shadowColor  = '#333333';
             headerLabel.shadowOffset = {x: 1, y: 1};
+            
+            headerView.add(headerLabel);
+            
+            headerLabel              = null;
             params.headerView        = headerView;
         }
 
-        section = Ti.UI.createTableViewSection(params);
-
-        return section;
+        return Ti.UI.createTableViewSection(params);
     }
 
     // use a row instead of a section cause the row is better to style on Android.
-    section = Ti.UI.createTableViewRow(params);
+    var section = Ti.UI.createTableViewRow(params);
 
     section.add(headerLabel);
+    headerLabel = null;
 
     return section;
 };

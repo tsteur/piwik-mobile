@@ -98,13 +98,15 @@ function layout () {
             this.fireEvent('focusWindow', {});
         });
         
-        newWin.rootWindow = rootWindow;
-
+        newWin.rootWindow           = rootWindow;
         Piwik.getUI().currentWindow = newWin;
 
         this.windows.push(newWin);
 
         rootWindow.add(newWin);
+        
+        newWin        = null;
+        currentWindow = null;
     };
 
     /**
@@ -123,8 +125,7 @@ function layout () {
         // remove the current opened window from stack
         this.windows.pop();
 
-        if (Piwik.getPlatform().isAndroid
-            && (!this.windows || !this.windows.length)
+        if ((!this.windows || !this.windows.length)
             && !newWindowWillFollow
             && rootWindow) {
             // close window only on Android to exit the app. Closing the app is not allowed on iOS and we would end in a
@@ -133,9 +134,17 @@ function layout () {
 
             return;
         }
-
-        // remove window from main window so that it will be no longer visible
-        rootWindow.remove(window);
+        
+        try {
+            // remove window from main window so that it will be no longer visible
+            rootWindow.remove(window);
+          
+        } catch (e) {
+            Piwik.getLog().warn('Failed to remove window from root' + e, 'Android Layout');
+        }
+        
+        window.rootWindow = null;
+        window            = null;
 
         var newActiveWindow = this._getCurrentWindow();
 
@@ -144,6 +153,7 @@ function layout () {
             return;
         }
         
+        Piwik.getUI().currentWindow = null;
         Piwik.getUI().currentWindow = newActiveWindow;
         newActiveWindow.fireEvent('focusWindow', {});
 
@@ -161,6 +171,8 @@ function layout () {
                 Piwik.getUI().currentWindow.focus();
             }
         }
+        
+        newActiveWindow = null;
     };
 
     /**
@@ -172,11 +184,6 @@ function layout () {
 
         this.header = Piwik.getUI().createHeader({title: 'Piwik Mobile'});
         this.menu   = Piwik.getUI().createMenu({menuView: this.header.getHeaderView()});
-
-        Ti.Gesture.addEventListener('orientationchange', function (event) {
-
-            return;
-        });
     };
 }
 

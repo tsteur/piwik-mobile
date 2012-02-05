@@ -97,12 +97,15 @@ WebsitesRequest.prototype = Piwik.require('Network/Request');
 WebsitesRequest.prototype.init = function () {
     this.sites          = [];
     this.filterUsed     = false;
+    this.accounts       = null;
 
     var settings        = Piwik.require('App/Settings');
     this.showMultiChart = settings.getPiwikMultiChart();
+    settings            = null;
 
     var accountManager  = Piwik.require('App/Accounts');
     this.accounts       = accountManager.getAccounts();
+    accountManager      = null;
 };
 
 /**
@@ -141,10 +144,12 @@ WebsitesRequest.prototype.send = function (params) {
         // no filter used, use cached result if it exist
         var session     = Piwik.require('App/Session');
         var cachedSites = session.get('piwik_sites_allowed');
+        session         = null;
         
         if (cachedSites) {
             this.filterUsed = false;
             this.sites      = cachedSites;
+            cachedSites     = null;
 
             this.loaded();
 
@@ -184,6 +189,9 @@ WebsitesRequest.prototype.send = function (params) {
     }
 
     requestPool.send(this.loaded);
+    
+    params    = null;
+    parameter = null;
 };
 
 /**
@@ -237,17 +245,23 @@ WebsitesRequest.prototype.onReceiveSitesWithAtLeastViewAccess = function (respon
             var graph         = Piwik.require('PiwikGraph');
             
             site.sparklineUrl = graph.getSparklineUrl(site.idsite, account.accessUrl, account.tokenAuth);
+            graph             = null;
         }
 
         site.accountId        = parameter.accountId;
         numFoundSitesPerAccount++;
 
         this.sites.push(site);
+        site = null;
     }
 
     if (numFoundSitesPerAccount && config.piwik.numDisplayedWebsites <= numFoundSitesPerAccount) {
         this.achievedSitesLimit = true;
     }
+    
+    allowedSites = null;
+    response     = null;
+    account      = null;
     
     return;
 };
@@ -264,6 +278,7 @@ WebsitesRequest.prototype.loaded = function () {
         // cache only if no filter was used
         var session = Piwik.require('App/Session');
         session.set('piwik_sites_allowed', this.sites);
+        session     = null;
     }
 
     var eventResult = {type: 'onload',
@@ -273,6 +288,8 @@ WebsitesRequest.prototype.loaded = function () {
                        showMultiChart: this.showMultiChart};
 
     this.fireEvent('onload', eventResult);
+    
+    eventResult     = null;
 };
 
 module.exports = WebsitesRequest;

@@ -47,11 +47,14 @@ function Log () {
             if (this.ENABLED) {
                 Ti.API.warn('No valid profiler set', 'Piwik.Log::setProfiler');
             }
+            
+            profiler  = null;
 
             return;
         }
 
         this.profiler = profiler;
+        profiler      = null;
     };
 
     /**
@@ -70,6 +73,8 @@ function Log () {
      */
     this.debug = function (message, title) {
         if (!this.ENABLED) {
+            message = null;
+            title   = null;
             
             return;
         }
@@ -90,7 +95,9 @@ function Log () {
 
         Ti.API.debug(logMessage);
 
-        logMessage      = null;
+        logMessage = null;
+        message    = null;
+        title      = null;
     };
 
     /**
@@ -101,6 +108,7 @@ function Log () {
     this.stringify = function (log) {
 
         if ('undefined' === (typeof log)) {
+            log = null;
 
             return 'undefined';
         }
@@ -116,8 +124,11 @@ function Log () {
         }
 
         try {
+            
+            var message = JSON.stringify(log);
+            log         = null;
 
-            return JSON.stringify(log);
+            return message;
 
         } catch (e) {
 
@@ -139,6 +150,9 @@ function Log () {
      */
     this.error = function (message, title) {
         if (!this.ENABLED) {
+            message = null;
+            title   = null;
+            
             return;
         }
 
@@ -156,7 +170,9 @@ function Log () {
 
         Ti.API.error(logMessage);
 
-        logMessage      = null;
+        logMessage = null;
+        message    = null;
+        title      = null;
     };
 
     /**
@@ -171,6 +187,9 @@ function Log () {
      */
     this.warn = function (message, title) {
         if (!this.ENABLED) {
+            message = null;
+            title   = null;
+            
             return;
         }
 
@@ -188,13 +207,17 @@ function Log () {
 
         Ti.API.warn(logMessage);
 
-        logMessage      = null;
+        logMessage = null;
+        message    = null;
+        title      = null;
     };
     
     var profiler = Piwik.getProfiler();
     if (profiler.ENABLED) {
         this.setProfiler(profiler);
     }
+    
+    profiler     = null;
 }
 
 module.exports = new Log();

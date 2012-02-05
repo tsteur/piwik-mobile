@@ -84,6 +84,9 @@ Visitor.prototype.init = function () {
 
     Piwik.getTracker().trackEvent({title: 'View Visitor', url: '/visitor/open'});
     
+    win       = null;
+    tableView = null;
+    
     return this;
 };
 
@@ -93,8 +96,12 @@ Visitor.prototype.init = function () {
  * @type  Array
  */
 Visitor.prototype.getRows = function () {
+    
+    var rows   = this._rows;
+    
+    this._rows = null;
 
-    return this._rows;
+    return rows;
 };
 
 /**
@@ -202,6 +209,7 @@ Visitor.prototype.createOverview = function () {
         });
 
         this._rows.push(referrerRow);
+        referrerRow = null;
     }
 
     if (visitor.country) {
@@ -312,6 +320,7 @@ Visitor.prototype.createSystem = function () {
         }
 
         this._rows.push(row);
+        row = null;
     }
 };
 
@@ -383,6 +392,7 @@ Visitor.prototype.createActionAction = function (actionDetail) {
     }
 
     this._rows.push(row);
+    row = null;
 };
 
 /**
@@ -430,6 +440,7 @@ Visitor.prototype.createDefaultAction = function (actionDetail) {
     }
 
     row.add(view);
+    view = null;
 
     if (actionDetail.url) {
         row.add(Ti.UI.createLabel({text: '' + actionDetail.url,
@@ -437,6 +448,7 @@ Visitor.prototype.createDefaultAction = function (actionDetail) {
     }
 
     this._rows.push(row);
+    row = null;
 };
 
 /**
@@ -513,6 +525,7 @@ Visitor.prototype.createEcommerceAction = function (actionDetail) {
             itemView.add(Ti.UI.createLabel({text: itemText,
                                             id: 'visitorActionEcommerceDetailsItemNameLabel'}));
             itemDetailsView.add(itemView);
+            itemView = null;
 
             var priceText = '';
 
@@ -547,13 +560,16 @@ Visitor.prototype.createEcommerceAction = function (actionDetail) {
                                            '' + parseInt(actionDetail.items, 10));
 
     row.add(ecommerceView);
+    ecommerceView = null;
     row.add(Ti.UI.createLabel({text: revenueText,
                                id: 'visitorActionEcommerceRevenueLabel'}));
     row.add(Ti.UI.createLabel({text: listOfProductsText,
                                id: 'visitorActionEcommerceDetailsListLabel'}));
     row.add(itemDetailsView);
+    itemDetailsView = null;
 
     this._rows.push(row);
+    row = null;
 };
 
 module.exports = Visitor;

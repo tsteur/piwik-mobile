@@ -95,6 +95,7 @@ ModalWindow.prototype.init = function () {
         });
 
         win.leftNavButton = cancelButton;
+        cancelButton      = null;
         
         win.addEventListener('close', function () {
             that.modalWindowIsNowClosed();
@@ -112,6 +113,7 @@ ModalWindow.prototype.init = function () {
         this.viewToAddOtherViews = view;
 
         win.add(view);
+        view = null;
 
         win.addEventListener('close', function () {
         
@@ -124,6 +126,7 @@ ModalWindow.prototype.init = function () {
     }
     
     this.win = win;
+    win      = null;
 };
 
 /**
@@ -133,6 +136,7 @@ ModalWindow.prototype.init = function () {
  */
 ModalWindow.prototype.add = function (view) {
     this.getView().add(view);
+    view = null;
 };
 
 /**
@@ -148,6 +152,7 @@ ModalWindow.prototype.setRightNavButton = function (view) {
     }
     
     this.win.setRightNavButton(view);
+    view = null;
 };
 
 /**
@@ -250,9 +255,13 @@ ModalWindow.prototype.close = function () {
         if (this.win && (Piwik.getPlatform().isAndroid || Piwik.getPlatform().isIphone)) {
             // window
             this.win.close();
+            this.viewToAddOtherViews = null;
+            this.win                 = null;
         } else if (this.win && Piwik.getPlatform().isIpad) {
             // popover
             this.win.hide();
+            this.viewToAddOtherViews = null;
+            this.win                 = null;
         }
         
     } catch (e) {

@@ -122,6 +122,8 @@ ChooseMetricCommand.prototype.execute = function () {
     });
     
     dialog.show();
+    
+    metrics = null;
 };
 
 /**

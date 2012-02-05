@@ -101,6 +101,7 @@ function layout () {
         win.add(newWin);
         win.addEventListener('close', function () {
             newWin.close();
+            newWin = null;
         });
 
         if (!this.navigation) {
@@ -112,13 +113,14 @@ function layout () {
             this.navigation.open(win);
         }
 
-        newWin.rootWindow      = win;
-
+        newWin.rootWindow           = win;
         Piwik.getUI().currentWindow = newWin;
         
         newWin.fireEvent('focusWindow', {});
 
         this.windows.push(newWin);
+        
+        win = null;
     };
 
     /**
@@ -137,6 +139,7 @@ function layout () {
         if (!window || window.alreadyClosed) {
             return;
         }
+        
         window.alreadyClosed = true;
         
         // window should be equal to current displayed window
@@ -145,6 +148,9 @@ function layout () {
         try {
 
             this.navigation.close(window.rootWindow);
+
+            window.rootWindow = null;
+            window            = null;
 
         } catch (e) {
             Piwik.getLog().warn('Failed to remove window from navigation ' + e, 'iPhoneLayout::removeWindow');

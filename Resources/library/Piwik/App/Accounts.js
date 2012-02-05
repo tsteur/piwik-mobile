@@ -105,7 +105,10 @@ Accounts.prototype.getAccounts = function () {
         }
     
         accounts.push(account);
+        account = null;
     }
+    
+    accountIds  = null;
 
     return accounts;
 };

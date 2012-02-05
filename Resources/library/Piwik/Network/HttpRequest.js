@@ -121,6 +121,8 @@ HttpRequest.prototype.setBaseUrl = function (baseUrl) {
     if (baseUrl && 'string' === (typeof baseUrl).toLowerCase() && 4 < baseUrl.length) {
         this.baseUrl = baseUrl;
     }
+    
+    baseUrl = null;
 };
 
 /**
@@ -132,6 +134,7 @@ HttpRequest.prototype.setBaseUrl = function (baseUrl) {
  */
 HttpRequest.prototype.setParameter = function (parameter) {
     this.parameter = parameter;
+    parameter      = null;
 };
 
 /**
@@ -152,6 +155,9 @@ HttpRequest.prototype.setParameter = function (parameter) {
 HttpRequest.prototype.setCallback = function (context, callback) {
     this.context  = context;
     this.callback = callback;
+    
+    callback      = null;
+    context       = null;
 };
 
 /**
@@ -219,6 +225,9 @@ HttpRequest.prototype.handle = function () {
     }
 
     this.xhr.send({});
+    
+    parameter = null;
+    settings  = null;
 };
 
 /**
@@ -285,15 +294,16 @@ HttpRequest.prototype.load = function (xhr) {
     var isValidResponse = this.isValidResponse(response);
 
     if (!isValidResponse) {
+        response        = null;
 
         this.error({error: 'Invalid response'});
 
         return;
     }
 
-    var callback = this.callback;
+    var callback  = this.callback;
     if (!callback) {
-        callback = new Function();
+        callback  = new Function();
     }
 
     var parameter = this.parameter;
@@ -301,6 +311,7 @@ HttpRequest.prototype.load = function (xhr) {
     try {
         // execute callback in defined context
         callback.apply(this.context, [response, parameter]);
+ 
     } catch (e) {
         Piwik.getLog().warn('Failed to call callback method: ' + e.message, 
                             'Piwik.Network.HttpRequest::load#callback');
@@ -314,9 +325,17 @@ HttpRequest.prototype.load = function (xhr) {
         this.onload();
     }
 
-    this.xhr = null;
-    callback = null;
-    response = null;
+
+    parameter = null;
+    this.xhr  = null;
+    callback  = null;
+    response  = null;
+    xhr       = null;
+    
+    this.parameter = null;
+    this.context   = null;
+    this.callback  = null;
+    this.onload    = null;
 };
 
 /**
@@ -428,13 +447,16 @@ HttpRequest.prototype.error = function (e) {
 
     callback.apply(this.context, []);
 
-    this.xhr      = null;
-    callback      = null;
-
     // onload hook
     if (this.onload) {
         this.onload();
     }
+
+    this.xhr       = null;
+    callback       = null;
+    this.callback  = null;
+    this.context   = null;
+    this.parameter = null;
 };
 
 /**

@@ -62,9 +62,21 @@ function window () {
     view.add(piwikOrgLink);
     view.add(piwikDevLink);
     view.add(gplContent);
+    gplContent    = null;
+    piwikDevLink  = null;
+    piwikOrgLink  = null;
 
     this.open = function () {
 
+    };
+    
+    this.cleanup = function () {
+        
+        this.remove(view);
+        view              = null;
+        
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

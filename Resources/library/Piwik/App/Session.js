@@ -18,7 +18,8 @@ var Piwik = require('library/Piwik');
  *           piwik_parameter_period                              The current selected period
  *           piwik_parameter_date                                The current selected date
  *           piwik_report_metadata_{accountId}_{idSite}_{lang}   Report metadata for a specific account
- *           modal_window_opened                                 Whether currently a modal window is opened or not.
+ *           modal_window_opened                                 Whether currently a modal window is opened or not
+ *           current_site                                        The current active/selected site
  *
  * @example
  * var session = require('Session');
@@ -100,6 +101,9 @@ function Session () {
         }
 
         this.values[key] = value;
+        
+        value = null;
+        key   = null;
     };
 
     /**

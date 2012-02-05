@@ -55,6 +55,7 @@ function window (params) {
     }
     
     var that          = this;
+    var tableViewRows = [];
 
     if (params.report) {
         Piwik.getTracker().setCustomVariable(1, 'reportModule', params.report.module, 'page');
@@ -126,8 +127,7 @@ function window (params) {
 
     refresh.addEventListener('onRefresh', function () {
         // simple refresh using the same params
-
-        tableView.setData([]);
+        that.cleanupTableData();
 
         request.send(params);
     });
@@ -155,7 +155,7 @@ function window (params) {
         // update menu after each request cause of a possibly period and/or date change.
         Piwik.getUI().layout.menu.refresh(that.menuOptions);
 
-        var tableViewRows = [];
+        tableViewRows = [];
 
         tableViewRows.push(that.create('TableViewRow', {title: site ? site.name : '', 
                                                         hasChild: true, 
@@ -163,6 +163,7 @@ function window (params) {
                                                         command: siteCommand}));
 
         var graph    = null;
+        var graphUi  = null;
         var graphUrl = null;
 
         if (event.graphsEnabled && event.metadata && event.metadata.imageGraphUrl) {
@@ -170,6 +171,7 @@ function window (params) {
             graph               = Piwik.require('PiwikGraph');
             var accountManager  = Piwik.require('App/Accounts');
             var account         = accountManager.getAccountById(event.site.accountId);
+            accountManager      = null;
             graphUrl            = event.metadata.imageGraphUrl;
             
             if (event.sortOrderColumn) {
@@ -178,9 +180,12 @@ function window (params) {
             }
             
             graphUrl            = graph.generateUrl(graphUrl, account, event.site, event.report);
-            graph               = that.create('Graph', {graphUrl: graphUrl, graph: graph});
+            graphUi             = that.create('Graph', {graphUrl: graphUrl, graph: graph});
+            account             = null;
             
-            tableViewRows.push(graph.getRow());
+            tableViewRows.push(graphUi.getRow());
+            graph               = null;
+            graphUi             = null;
         }
         
         var hasDimension = false;
@@ -197,7 +202,7 @@ function window (params) {
             statsticValueLabel = event.columns.value;
         }
 
-        if ((graph || hasDimension) && statsticValueLabel) {
+        if ((graphUi || hasDimension) && statsticValueLabel) {
             // Display metric only where it makes sence. It generally makes sence for all reports having a dimension.
             // For example 'VisitsSummary.get' is a report having no dimension.
             // It makes also sence to display metric if a graph is displayed. The changed metric will not effect the
@@ -208,6 +213,7 @@ function window (params) {
                                                            className: 'tableViewRowSelectable',
                                                            hasChild: true});
             tableViewRows.push(headlineRow);
+            headlineRow     = null;
         }
 
         tableViewRows.push(that.create('TableViewRow', {title:  event.reportDate, 
@@ -219,9 +225,16 @@ function window (params) {
                                                           showAll:  event.showAll});
 
         tableViewRows     = tableViewRows.concat(visitorStats.getRows());
+        visitorStats      = null;
 
         refresh.refreshDone();
         tableView.setData(tableViewRows);
+        
+        dateCommand   = null;
+        siteCommand   = null;
+        metricCommand = null;
+        event         = null;
+        metrics       = null;
     });
 
     /**
@@ -231,6 +244,36 @@ function window (params) {
      */
     this.open = function (params) {
         request.send(params);
+    };
+    
+    this.cleanupTableData = function () {
+        
+        for (var index = 0; index < tableViewRows.length; index++) {
+            
+            tableViewRows[index].titleLabel = null;
+            tableViewRows[index].valueLabel = null;
+            tableViewRows[index] = null;
+        }
+        
+        tableViewRows = null;
+        tableViewRows = [];
+        
+        tableView.setData([]);
+    };
+    
+    this.cleanup = function () {
+        this.cleanupTableData();
+        
+        this.remove(tableView);
+
+        tableViewRows = null;
+        tableView     = null;
+        request       = null;
+        refresh       = null;
+        that          = null;
+        params        = null;
+        this.menuOptions  = null;
+        this.titleOptions = null;
     };
 }
 

@@ -52,6 +52,8 @@ Network.encodeUrlParams = function (url) {
     }
     
     encodedURI = encodedURI + paramArray.join("&");
+    paramArray = null;
+    url        = null;
     
     return encodedURI;
 };
