@@ -122,6 +122,8 @@ ReportsRequest.prototype.send = function (params) {
     piwikRequest.setCallback(this, this.loaded);
     piwikRequest.send();
     
+    piwikRequest   = null;
+    piwikRequest   = null;
     accountManager = null;
     account        = null;
     params         = null;

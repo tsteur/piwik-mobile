@@ -124,6 +124,7 @@ ChooseSiteCommand.prototype.execute = function (params) {
         win          = null;
         that         = null;
         websitesList = null;
+        event        = null;
     };
 
     websitesList.addEventListener('onChooseSite', onChooseSite);

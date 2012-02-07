@@ -83,15 +83,16 @@ LiveOverview.prototype.refresh = function (params) {
 
     if (params) {
         this.setParams(params);
+        params = null;
     }
 
-    var _     = require('library/underscore');
+    var _      = require('library/underscore');
 
-    var value = String.format('%s %s, %s %s',
-                              '' + this.getParam('visits', '-'),
-                              _('General_ColumnNbVisits'),
-                              '' + this.getParam('actions', '-'),
-                              _('General_ColumnPageviews'));
+    var value  = String.format('%s %s, %s %s',
+                               '' + this.getParam('visits', '-'),
+                               _('General_ColumnNbVisits'),
+                               '' + this.getParam('actions', '-'),
+                               _('General_ColumnPageviews'));
 
     if (this.valueLabel) {
         this.valueLabel.text = value;

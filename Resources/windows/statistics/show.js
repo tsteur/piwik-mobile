@@ -244,6 +244,7 @@ function window (params) {
      */
     this.open = function (params) {
         request.send(params);
+        params = null;
     };
     
     this.cleanupTableData = function () {

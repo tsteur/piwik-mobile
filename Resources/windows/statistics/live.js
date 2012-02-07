@@ -95,6 +95,8 @@ function window (params) {
         if (refresh) {
             refresh.refresh();
         }
+        
+        event = null;
     });
 
     this.addEventListener('closeWindow', function () {
@@ -178,6 +180,8 @@ function window (params) {
         that.create('Visitor', {accessUrl: accessUrl,
                                 visitor: event.row.visitor,
                                 openView: event.row.popoverView});
+
+        event = null;
     });
 
     /**

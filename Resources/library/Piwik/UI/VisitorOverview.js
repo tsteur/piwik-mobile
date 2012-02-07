@@ -84,7 +84,10 @@ VisitorOverview.prototype.init = function () {
         timeLabel = visitor.serverDatePretty + ' - ' + visitor.serverTimePretty;
     }
     
-    this._row.popoverView = dateAndIconsView;
+    this._row.popoverView     = null;
+    if (Piwik.getPlatform().isIpad) {
+        this._row.popoverView = dateAndIconsView;
+    }
 
     dateAndIconsView.add(Ti.UI.createLabel({text: timeLabel,
                                             id: 'visitorOverviewDateTimeLabel'}));
@@ -134,6 +137,8 @@ VisitorOverview.prototype.init = function () {
         this._row.add(Ti.UI.createLabel({text: goalsText,
                                          id: 'visitorOverviewConvertedGoalsLabel'}));
     }
+    
+    visitor = null;
 
     return this;
 };
@@ -174,6 +179,8 @@ VisitorOverview.prototype.getPageviewsDescription = function (visitor) {
     } else if (visitor.actions) {
         description = String.format('%s %s', '' + visitor.actions, _('General_ColumnPageviews'));
     }
+    
+    visitor = null;
 
     return description;
 
@@ -211,6 +218,8 @@ VisitorOverview.prototype.getReferrerDescription = function (visitor) {
     } else if (visitor.referrerTypeName) {
         description      = _('General_FromReferrer') + ' ' + visitor.referrerTypeName;
     }
+    
+    visitor = null;
 
     return description;
 };

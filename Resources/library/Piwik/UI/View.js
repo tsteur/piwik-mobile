@@ -46,11 +46,15 @@ UiView.prototype.getParam = function (name, defaultValue) {
     var params = this.getParams();
 
     if (name && 'undefined' !== (typeof params[name])) {
+        var value    = params[name];
+        params       = null;
+        defaultValue = null;
 
-        return params[name];
+        return value;
     }
 
     if ('undefined' !== (typeof defaultValue)) {
+        params = null;
 
         return defaultValue;
     }

@@ -176,6 +176,7 @@ PiwikApiRequest.prototype._mixinParameter = function (parameter) {
 
     var settings = Piwik.require('App/Settings');
     var language = settings.getLanguage();
+    settings     = null;
     
     if (language) {
         parameter.language   = language;

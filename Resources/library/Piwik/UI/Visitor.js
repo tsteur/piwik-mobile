@@ -86,6 +86,7 @@ Visitor.prototype.init = function () {
     
     win       = null;
     tableView = null;
+    visitor   = null;
     
     return this;
 };
@@ -98,7 +99,6 @@ Visitor.prototype.init = function () {
 Visitor.prototype.getRows = function () {
     
     var rows   = this._rows;
-    
     this._rows = null;
 
     return rows;
@@ -250,6 +250,8 @@ Visitor.prototype.createCustomVariables = function () {
                                                      className: 'visitorTableViewRow',
                                                      value: customVariableValue}));
     }
+    
+    visitor = null;
 };
 
 /**
@@ -322,6 +324,8 @@ Visitor.prototype.createSystem = function () {
         this._rows.push(row);
         row = null;
     }
+    
+    visitor = null;
 };
 
 /**
@@ -331,6 +335,7 @@ Visitor.prototype.createActionDetails = function () {
 
     var visitor = this.getParam('visitor', {});
     if (!visitor.actionDetails || !visitor.actionDetails.length) {
+        visitor = null;
 
         return;
     }
@@ -362,6 +367,8 @@ Visitor.prototype.createActionDetails = function () {
                 break;
         }
     }
+    
+    visitor = null;
 };
 
 /**
@@ -448,7 +455,8 @@ Visitor.prototype.createDefaultAction = function (actionDetail) {
     }
 
     this._rows.push(row);
-    row = null;
+    row          = null;
+    actionDetail = null;
 };
 
 /**
@@ -569,7 +577,9 @@ Visitor.prototype.createEcommerceAction = function (actionDetail) {
     itemDetailsView = null;
 
     this._rows.push(row);
-    row = null;
+    row          = null;
+    actionDetail = null;
+    visitor      = null;
 };
 
 module.exports = Visitor;

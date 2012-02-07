@@ -50,6 +50,9 @@ UI.bootstrap = function (options) {
 
         this.layout.init();
     }
+    
+    options = null;
+    layout  = null;
 };
 
 /**
@@ -116,6 +119,7 @@ UI.createWindow = function (params) {
 
         if (params.closeWindow) {
             params.closeWindow.close(true);
+            params.closeWindow = null;
         }
 
         // add window to layout so that it will be visible afterwards
@@ -133,6 +137,10 @@ UI.createWindow = function (params) {
         if (newWin.focus) {
             newWin.focus();
         }
+        
+        window      = null;
+        params      = null;
+        winTemplate = null;
 
     } catch (exception) {
 
@@ -160,6 +168,8 @@ UI.createModalWindow = function (params) {
         var instance = Piwik.require('UI/ModalWindow');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
         
         return instance;
 
@@ -189,13 +199,17 @@ UI.createDatePicker = function (params) {
 
     try {
 
-        params.type = Ti.UI.PICKER_TYPE_DATE;
-
-        var picker  = Piwik.require('UI/DatePicker');
+        params.type  = Ti.UI.PICKER_TYPE_DATE;
+        var picker   = Piwik.require('UI/DatePicker');
 
         picker.setParams(params);
 
-        return picker.init(params);
+        var instance = picker.init(params);
+        
+        params       = null;
+        picker       = null;
+        
+        return instance;
         
     } catch (exception) {
 
@@ -219,8 +233,12 @@ UI.createTableViewRow = function (params) {
 
     try {
         var instance = Piwik.require('UI/TableViewRow');
-
-        return instance.init(params);
+        var row      = instance.init(params);
+        
+        instance     = null;
+        params       = null;
+        
+        return row;
 
     } catch (exception) {
 
@@ -244,8 +262,12 @@ UI.createTableViewSection = function (params) {
 
     try {
         var instance = Piwik.require('UI/TableViewSection');
-
-        return instance.init(params);
+        var section  = instance.init(params);
+        
+        instance     = null;
+        params       = null;
+        
+        return section;
 
     } catch (exception) {
 
@@ -271,6 +293,8 @@ UI.createActivityIndicator = function (params) {
         var instance = Piwik.require('UI/ActivityIndicator');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
         
         return instance;
         
@@ -300,6 +324,8 @@ UI.createError = function (params) {
         var instance = Piwik.require('UI/Error');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
         
@@ -327,6 +353,8 @@ UI.createGraph = function (params) {
         var instance = Piwik.require('UI/Graph');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -354,6 +382,8 @@ UI.createStatisticList = function (params) {
         var instance = Piwik.require('UI/StatisticList');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -378,9 +408,11 @@ UI.createStatisticList = function (params) {
 UI.createHeader = function (params) {
 
     try {
-        var header  = Piwik.require('UI/Header');
+        var header = Piwik.require('UI/Header');
         header.setParams(params);
         header.init();
+        
+        params = null;
 
         return header;
         
@@ -408,6 +440,8 @@ UI.createMenu = function (params) {
         var menu = Piwik.require('UI/Menu');
         menu.setParams(params);
         menu.init();
+        
+        params   = null;
 
         return menu;
 
@@ -435,6 +469,8 @@ UI.createRefresh = function (params) {
         var instance = Piwik.require('UI/Refresh');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -462,6 +498,8 @@ UI.createVisitorOverview = function (params) {
         var instance = Piwik.require('UI/VisitorOverview');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -489,6 +527,8 @@ UI.createVisitorOverview = function (params) {
         var instance = Piwik.require('UI/Visitor');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -516,12 +556,14 @@ UI.createLiveOverview = function (params) {
         var instance = Piwik.require('UI/LiveOverview');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
     } catch (exception) {
 
-        var uiError =  UI.createError({exception: exception, errorCode: 'PiUiLo46'});
+        var uiError = UI.createError({exception: exception, errorCode: 'PiUiLo46'});
         uiError.showErrorMessageToUser();
     }
 };
@@ -543,6 +585,8 @@ UI.createWebsitesList = function (params) {
         var instance = Piwik.require('UI/WebsitesList');
         instance.setParams(params);
         instance.init();
+        
+        params = null;
 
         return instance;
 
@@ -565,9 +609,11 @@ UI.createWebsitesList = function (params) {
 UI.createPopover = function (params) {
     if (this.popover && this.popover.hide) {
         this.popover.hide();
+        this.popover = null;
     }
     
     this.popover = Ti.UI.iPad.createPopover(params);
+    params       = null;
     
     return this.popover;
 };

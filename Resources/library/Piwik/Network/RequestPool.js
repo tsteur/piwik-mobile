@@ -78,6 +78,7 @@ function RequestPool () {
  */
 RequestPool.prototype.setContext = function (context) {
     this.context = context;
+    context      = null;
 };
 
 /**
@@ -87,6 +88,7 @@ RequestPool.prototype.setContext = function (context) {
  */
 RequestPool.prototype.attach = function (request) {
     this.attachedRequests.push(request);
+    request = null;
 };
 
 /**
@@ -107,6 +109,7 @@ RequestPool.prototype.send = function (onAllResultsReceivedCallback) {
 
     this.numReceivedCalls             = 0;
     this.onAllResultsReceivedCallback = onAllResultsReceivedCallback;
+    onAllResultsReceivedCallback      = null;
     
     var call = null;
     var that = this;
@@ -137,6 +140,8 @@ RequestPool.prototype.send = function (onAllResultsReceivedCallback) {
         } else if (call.handle) {
             call.handle();
         }
+        
+        call = null;
     }
 };
 
@@ -161,6 +166,8 @@ RequestPool.prototype.abort = function () {
         if (call.abort) {
             call.abort();
         }
+        
+        call = null;
     }
 
     // reset Request Pool

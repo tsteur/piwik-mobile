@@ -92,7 +92,7 @@ Piwik.isObject = function (obj) {
         return true;
     }
 
-    if (Piwik.isIos) {
+    if (this.getPlatform().isIos) {
         obj = null;
         
         return false;
@@ -129,7 +129,7 @@ Piwik.isError = function (err) {
         return true;
     }
 
-    if (Piwik.isIos) {
+    if (this.getPlatform().isIos) {
         err = null;
         
         return false;
@@ -166,7 +166,7 @@ Piwik.isArray = function (arr) {
         return true;
     }
     
-    if (Piwik.isIos) {
+    if (this.getPlatform().isIos) {
         arr = null;
         
         return false;
@@ -186,22 +186,18 @@ Piwik.isArray = function (arr) {
     return false;
 };
 
-var profiler = null;
-
 /**
  * Returns a profiler instance.
  *
  * @type  Piwik.Profiler
  */
 Piwik.getProfiler = function () {
-    if (!profiler) {
-        profiler  = Piwik.require('Profiler');
+    if (!this.profiler) {
+        this.profiler  = this.require('Profiler');
     }
 
-    return profiler;
+    return this.profiler;
 };
-
-var tracker = null;
 
 /**
  * Returns a tracker instance.
@@ -209,14 +205,12 @@ var tracker = null;
  * @type  Piwik.Tracker
  */
 Piwik.getTracker = function () {
-    if (!tracker) {
-        tracker  = Piwik.require('Tracker');
+    if (!this.tracker) {
+        this.tracker  = this.require('Tracker');
     }
 
-    return tracker;
+    return this.tracker;
 };
-
-var logger = null;
 
 /**
  * Returns a logger instance.
@@ -224,14 +218,12 @@ var logger = null;
  * @type  Piwik.Log
  */
 Piwik.getLog = function () {
-    if (!logger) {
-        logger = Piwik.require('Log');
+    if (!this.logger) {
+        this.logger = this.require('Log');
     }
 
-    return logger;
+    return this.logger;
 };
-
-var ui = null;
 
 /**
  * Returns a UI instance.
@@ -239,14 +231,12 @@ var ui = null;
  * @type  Piwik.UI
  */
 Piwik.getUI = function () {
-    if (!ui) {
-        ui  = Piwik.require('UI');
+    if (!this.ui) {
+        this.ui = this.require('UI');
     }
 
-    return ui;
+    return this.ui;
 };
-
-var platform = null;
 
 /**
  * Returns a platform instance.
@@ -254,14 +244,12 @@ var platform = null;
  * @type  Piwik.Platform
  */
 Piwik.getPlatform = function () {
-    if (!platform) {
-        platform  = Piwik.require('Platform');
+    if (!this.platform) {
+        this.platform  = this.require('Platform');
     }
 
-    return platform;
+    return this.platform;
 };
-
-var network = null;
 
 /**
  * Returns a network instance.
@@ -269,11 +257,11 @@ var network = null;
  * @type  Piwik.Network
  */
 Piwik.getNetwork = function () {
-    if (!network) {
-        network  = Piwik.require('Network');
+    if (!this.network) {
+        this.network  = this.require('Network');
     }
 
-    return network;
+    return this.network;
 };
 
 module.exports = Piwik;

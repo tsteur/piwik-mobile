@@ -143,6 +143,7 @@ ChooseDateCommand.prototype.execute = function (params) {
     });
     
     params = null;
+    picker = null;
 };
 
 /**

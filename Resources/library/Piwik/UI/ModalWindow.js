@@ -89,6 +89,7 @@ ModalWindow.prototype.init = function () {
         var _             = require('library/underscore');
         var cancelButton  = Ti.UI.createButton({title: _('SitesManager_Cancel_js'),
                                                 style: Ti.UI.iPhone.SystemButtonStyle.CANCEL});
+        _ = null;
 
         cancelButton.addEventListener('click', function () {
             that.close();
@@ -101,6 +102,7 @@ ModalWindow.prototype.init = function () {
             that.modalWindowIsNowClosed();
             
             that.fireEvent('focusWindow', {type: 'focusWindow', modal: true});
+            that = null;
         });
 
     } else if (Piwik.getPlatform().isAndroid) {
@@ -122,6 +124,8 @@ ModalWindow.prototype.init = function () {
             Ti.UI.currentWindow = crt;
             
             that.fireEvent('focusWindow', {type: 'focusWindow', modal: true});
+            that = null;
+            crt  = null;
         });
     }
     

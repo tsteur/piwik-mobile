@@ -34,8 +34,6 @@ var stringUtils = Piwik.require('Utils/String');
  *                                             hasCheck: true,
  *                                             value: 'English'}); // creates an instance of the row
  * row.changeValue('German');                                      // changes the value of the row afterwards
- * row.changeTitle('Foobar');                                      // changes the title of the row afterwards
- * row.changeDescription('Foobar');                                // changes the description of the row afterwards
  *
  * @exports  TableViewRow as Piwik.UI.TableViewRow
  */
@@ -83,11 +81,13 @@ TableViewRow.prototype.init = function (params) {
     }   
      
     if (command) {
+        row.command = command;
         row.addEventListener('click', function () {
-            command.execute({source: row.titleLabel ? row.titleLabel : null});
+            if (this.command) {
+                this.command.execute({source: this.titleLabel ? this.titleLabel : null});
+            }
         });
     }
-    
     
     if (description) {
         var descriptionLabel = Ti.UI.createLabel({
@@ -107,10 +107,7 @@ TableViewRow.prototype.init = function (params) {
 
         if (!this.valueLabel && (value || '' === value || 0 === value)) {
 
-            this.valueLabel = Ti.UI.createLabel({
-                text: value,
-                id: 'tableViewRowValueLabel'
-            });
+            this.valueLabel = Ti.UI.createLabel({text: value, id: 'tableViewRowValueLabel'});
 
             this.add(this.valueLabel);
 
@@ -126,12 +123,15 @@ TableViewRow.prototype.init = function (params) {
     };
 
     row.changeValue = changeValue;
-
     row.changeValue(value);
 
     if (params.onShowOptionMenu && Piwik.getPlatform().isAndroid) {
+        row.onShowOptionMenu = params.onShowOptionMenu;
         row.addEventListener('longclick', function (event) {
-            params.onShowOptionMenu.apply(row, [event]);
+            
+            if (this.onShowOptionMenu) {
+                this.onShowOptionMenu.apply(this, [event]);
+            }
         });
     } 
 
@@ -144,6 +144,9 @@ TableViewRow.prototype.init = function (params) {
         row.add(rowRightImage);
         rowRightImage     = null;
     }
+    
+    params  = null;
+    command = null;
 
     return row;
 };

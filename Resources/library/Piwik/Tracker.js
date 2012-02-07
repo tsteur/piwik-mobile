@@ -287,6 +287,7 @@ function Tracker () {
         
         parameter.action_name = '' + event.title;
         parameter.url         = baseUrl + '/event' + event.url;
+        event                 = null;
 
         this.track();
     };

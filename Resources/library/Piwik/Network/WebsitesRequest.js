@@ -186,12 +186,14 @@ WebsitesRequest.prototype.send = function (params) {
 
         // attach the request to the request pool. So all attached requests will be send in parallel
         requestPool.attach(piwikRequest);
+        piwikRequest = null;
     }
 
     requestPool.send(this.loaded);
     
-    params    = null;
-    parameter = null;
+    requestPool = null;
+    params      = null;
+    parameter   = null;
 };
 
 /**

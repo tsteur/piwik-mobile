@@ -207,6 +207,8 @@ StatisticsRequest.prototype.init = function () {
     this.site            = null;
     this.showAll         = false;
     this.sortOrderColumn = null;
+    
+    settings             = null;
 };
 
 /**
@@ -316,9 +318,10 @@ StatisticsRequest.prototype.send = function (params) {
     
     statsRequest.send();
     
-    session   = null;
-    parameter = null;
-    params    = null;
+    statsRequest = null;
+    session      = null;
+    parameter    = null;
+    params       = null;
 };
 
 /**

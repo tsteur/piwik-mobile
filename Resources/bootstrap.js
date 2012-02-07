@@ -28,6 +28,8 @@ Ti.UI.currentWindow.addEventListener('android:back', function () {
     var settings = Piwik.require('App/Settings');
     session.set('piwik_parameter_period', settings.getPiwikDefaultPeriod());
     session.set('piwik_parameter_date', settings.getPiwikDefaultDate());
+    session      = null;
+    settings     = null;
 })();
 
 // bootstrap layout
@@ -39,10 +41,7 @@ if (Piwik.getPlatform().isIpad) {
     Piwik.getUI().bootstrap({layoutUrl: 'layout/android'});
 }
 
-var bootstrapAccounts   = Piwik.require('App/Accounts');
-var hasActivatedAccount = bootstrapAccounts.hasActivedAccount();
-// reset bootstrapAccounts instance, otherwise it will be available in global context
-bootstrapAccounts       = undefined;
+var hasActivatedAccount = Piwik.require('App/Accounts').hasActivedAccount();
 
 if (hasActivatedAccount) {
     // open our welcome window

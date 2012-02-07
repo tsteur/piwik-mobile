@@ -159,6 +159,8 @@ LiveRequest.prototype.send = function (params) {
 
         requestPool.attach(piwikLiveHours);
         requestPool.attach(piwikLiveMinutes);
+        piwikLiveHours   = null;
+        piwikLiveMinutes = null;
     }
 
     var parameters = {idSite: this.site.idsite};
@@ -184,9 +186,11 @@ LiveRequest.prototype.send = function (params) {
     requestPool.attach(piwikLiveDetails);
     requestPool.send(this.loaded);
     
-    account    = null;
-    params     = null;
-    parameters = null;
+    piwikLiveDetails = null;
+    requestPool      = null;
+    account          = null;
+    params           = null;
+    parameters       = null;
 };
 
 /**

@@ -47,7 +47,7 @@ SendFeedbackCommand.prototype.getLabel = function () {
  * @returns  {Object}  The button label of the command.
  */
 SendFeedbackCommand.prototype.getButtonLabel = function () {
-    return {title: this.getLabel(), command: this,};
+    return {title: this.getLabel(), command: this};
 };
 
 /**

@@ -17,5 +17,7 @@ var options = {url: 'bootstrap.js',
                className: 'mainwindow'};
 
 var win     = Ti.UI.createWindow(options);
+options     = null;
 
 win.open();
+win = null;

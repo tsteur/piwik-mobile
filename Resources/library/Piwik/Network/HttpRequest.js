@@ -207,8 +207,8 @@ HttpRequest.prototype.handle = function () {
     this.xhr         = Ti.Network.createHTTPClient({validatesSecureCertificate: false, enableKeepAlive: false});
     var that         = this;
     
-    this.xhr.onload  = function () { that.load(this); };
-    this.xhr.onerror = function () { that.error({error: 'Timeout'}); };
+    this.xhr.onload  = function () { that.load(this); that = null; };
+    this.xhr.onerror = function () { that.error({error: 'Timeout'}); that = null; };
 
     var settings     = Piwik.require('App/Settings');
     
@@ -324,7 +324,6 @@ HttpRequest.prototype.load = function (xhr) {
     if (this.onload) {
         this.onload();
     }
-
 
     parameter = null;
     this.xhr  = null;
