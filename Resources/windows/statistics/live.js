@@ -114,7 +114,7 @@ function window (params) {
     });
 
     this.addEventListener('focusWindow', function () {
-        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
+        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length && that) {
             // start auto refresh again if user returns to this window from a previous displayed window
             that.refreshTimer = setTimeout(function () {
                 if (refresh) {
@@ -125,7 +125,7 @@ function window (params) {
     });
     
     Ti.App.addEventListener('resume', function () {
-        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length) {
+        if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length && that) {
             // start auto refresh again if user returns to this window from a previous displayed window
             that.refreshTimer = setTimeout(function () {
                 if (refresh) {
@@ -171,7 +171,7 @@ function window (params) {
 
     tableView.addEventListener('click', function (event) {
 
-        if (!event || !event.row || !event.row.visitor) {
+        if (!event || !event.row || !event.row.visitor || !that) {
 
             return;
         }
@@ -235,6 +235,14 @@ function window (params) {
                 that.lastHours.refresh({actions: event.lastHours.actions,
                                         visits: event.lastHours.visits});
             }
+            
+            if (params && params.autoRefresh && that) {
+                that.refreshTimer = setTimeout(function () {
+                    if (refresh) {
+                        refresh.refresh();
+                    }
+                }, refreshIntervalInMs);
+            }
 
             return;
         }
@@ -262,12 +270,12 @@ function window (params) {
                          that.create('TableViewSection', {title: _('General_Visitors')})];
          websiteRow   = null;
 
-        if (event.lastMinutes) {
+        if (event.lastMinutes && that) {
             that.lastMinutes.refresh({actions: event.lastMinutes.actions,
                                       visits: event.lastMinutes.visits});
         }
 
-        if (event.lastHours) {
+        if (event.lastHours && that) {
             that.lastHours.refresh({actions: event.lastHours.actions,
                                     visits: event.lastHours.visits});
         }
@@ -294,6 +302,11 @@ function window (params) {
         // remove all old visitors / render only the latest 30 visitors. otherwise there are possibly
         // memory/scrolling issues
         visitors = visitors.slice(0, 30);
+        
+        if (!that) {
+
+            return;
+        }
 
         // now render all rows. We have to re-render even already rendered visitors. There seems to be a bug in
         // Titanium. If I set an already rendered Row via setData() again, the row will be rendered twice (only on iOS).
@@ -321,7 +334,7 @@ function window (params) {
 
         tableView.setData(visitorRows);
 
-        if (params.autoRefresh) {
+        if (params && params.autoRefresh && that) {
             that.refreshTimer = setTimeout(function () {
                 if (refresh) {
                     refresh.refresh();
@@ -344,7 +357,7 @@ function window (params) {
     };
     
     this.cleanupTableData = function () {
-        
+
         for (var index = 0; index < visitorRows.length; index++) {
             visitorRows[index] = null;
         }

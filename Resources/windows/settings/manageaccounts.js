@@ -152,7 +152,7 @@ function window () {
         var accountManager = Piwik.require('App/Accounts');
         accountManager.deleteAccount(event.row.accountId);
 
-        if (Piwik.getPlatform().isAndroid) {
+        if (Piwik.getPlatform().isAndroid && that) {
             // row will be automatically removed from tableview on iOS, not on android. therefore make a simple reload
             that.open();
         }
@@ -164,7 +164,8 @@ function window () {
 
     this.addEventListener('onopen', function (event) {
 
-        if (!event || !event.accounts || !event.accounts.length) {
+        if (!event || !event.accounts || !event.accounts.length || !that) {
+            
             return;
         }
         
@@ -202,7 +203,7 @@ function window () {
     this.addEventListener('focusWindow', function () {
         // update account list whenever window gets the focus (for example after saving an account). Makes sure an
         // previously added account is directly visible.
-        if (tableview.data && tableview.data.length) {
+        if (tableview.data && tableview.data.length && that) {
 
             that.cleanupTableData();
             

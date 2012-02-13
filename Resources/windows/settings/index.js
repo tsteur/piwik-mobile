@@ -49,6 +49,11 @@ function window () {
 
     this.addEventListener('onopen', function (indexEvent) {
         
+        if (!that) {
+            
+            return;
+        }
+        
         if (!indexEvent) {
             
             indexEvent = {};

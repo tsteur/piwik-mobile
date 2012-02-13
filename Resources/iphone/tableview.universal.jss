@@ -52,6 +52,7 @@ tableviewrow {
     font-size: 18;
     top: 11;
     font-weight: 'bold';
+    touchEnabled: false;
 }
 
 #tableViewRowTitleLabel {
@@ -66,6 +67,7 @@ tableviewrow {
     top: 11;
     bottom: 11;
     font-weight: 'bold';
+    touchEnabled: false;
 }
 
 #tableViewRowDescriptionLabel {
@@ -79,6 +81,7 @@ tableviewrow {
     color: '#808080';
     ellipsize: true;
     wordWrap: false;
+    touchEnabled: false;
 }
 
 #tableViewRowDescriptionLabelvertical {
@@ -92,6 +95,7 @@ tableviewrow {
     color: '#808080';
     ellipsize: true;
     wordWrap: false;
+    touchEnabled: false;
 }
 
 #tableViewRowValueLabel {
@@ -101,6 +105,7 @@ tableviewrow {
     width: 'auto';
     height: 'auto';
     color: '#385487';
+    touchEnabled: false;
 }
 
 #tableViewRowRightImage {

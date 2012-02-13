@@ -116,6 +116,11 @@ function window (params) {
                               (currentRequestedSite.idsite != site.idsite ||
                                currentRequestedSite.accountId != site.accountId));
 
+        if (!that) {
+            
+            return;
+        }
+        
         // update only if site has changed or if we force request reload
         if (site && (siteHasChanged || forceRequestReload)) {
             
@@ -125,7 +130,6 @@ function window (params) {
                                     window: that};
             Piwik.getUI().layout.header.refresh(that.titleOptions);
 
-            
             // remove all tableview rows. This should ensure there are no rendering issues when setting
             // new rows afterwards.
             that.cleanupTableData();
@@ -188,6 +192,11 @@ function window (params) {
             
             return;
         }
+        
+        if (!that) {
+            
+            return;
+        }
 
         tableData.push(that.create('TableViewRow', {title:       _('Live_VisitorsInRealTime'),
                                                     action:      'live',
@@ -200,7 +209,7 @@ function window (params) {
         for (var index = 0; index < event.availableReports.length; index++) {
             report = event.availableReports[index];
 
-            if (!report) {
+            if (!report || !that) {
                 continue;
             }
 
@@ -208,7 +217,7 @@ function window (params) {
 
             // detect whether the current section is different to the previous section and if so,
             // display the new/changed section
-            if (currentSection && currentSection !== latestSection) {
+            if (that && currentSection && currentSection !== latestSection) {
 
                 section    = that.create('TableViewSection', {title: String(report.category)});
 
@@ -226,6 +235,11 @@ function window (params) {
         // we don't fire an async event here cause otherwise we run into race conditions.
         // ScrollToTop would not work correct.
         refresh.refreshDone();
+        
+        if (!tableview) {
+            
+            return;
+        }
 
         tableview.setData(tableData);
 

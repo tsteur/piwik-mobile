@@ -127,15 +127,19 @@ function window (params) {
 
     refresh.addEventListener('onRefresh', function () {
         // simple refresh using the same params
-        that.cleanupTableData();
+        if (that) {
+            that.cleanupTableData();
+        }
 
-        request.send(params);
+        if (request) {
+            request.send(params);
+        }
     });
 
     var refreshCommand = this.createCommand('RefreshCommand');
     request.addEventListener('onload', function (event) {
 
-        if (!event) {
+        if (!event || !that || !tableView) {
             return;
         }
         
@@ -166,7 +170,7 @@ function window (params) {
         var graphUi  = null;
         var graphUrl = null;
 
-        if (event.graphsEnabled && event.metadata && event.metadata.imageGraphUrl) {
+        if (event.graphsEnabled && event.metadata && event.metadata.imageGraphUrl && that) {
 
             graph               = Piwik.require('PiwikGraph');
             var accountManager  = Piwik.require('App/Accounts');
