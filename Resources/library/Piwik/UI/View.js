@@ -14,7 +14,17 @@
  * @exports  UiView as Piwik.UI.View
  */
 function UiView () {
-    this.params = null;
+    this.params      = null;
+
+    /**
+     * A prefix for event handlers. Fixes an issue that the same event names fires multiple times. Otherwise all Piwik
+     * UI objects do fire events on the same object/context (Piwik.UI.currentWindow).
+     *
+     * @type  string
+     * 
+     * @private
+     */
+    this.eventPrefix = null;
 }
 
 /**
@@ -75,7 +85,7 @@ UiView.prototype.getParams = function () {
 };
 
 /**
- * Fires an event to all listeners. The event will be fired in {@link Piwik.UI.Window} context.
+ * Fires an event to all listeners. The event will be fired in {@link Piwik.UI.View} context.
  *
  * @param  {string}    name   Name of the event you want to fire.
  * @param  {Function}  event  An event object that will be passed to the callback function which was added
@@ -83,10 +93,43 @@ UiView.prototype.getParams = function () {
  */
 UiView.prototype.fireEvent = function (name, event) {
 
+    if (!this.eventPrefix) {
+        this.eventPrefix = String(Math.random()).slice(2,8);
+    }
+    
+    name = this.eventPrefix + name;
+    
     var window = this.getParam('window');
     if (window) {
+        // @todo fire event not in window. fire event in an own view specfic context
         window.fireEvent(name, event);
     }
+    
+    window = null;
+    event  = null;
+};
+
+/**
+ * Fires an event to all listeners. The event will be fired in {@link Piwik.UI.Window} context. 
+ *
+ * @param  {string}    name   Name of the event you want to fire.
+ * @param  {Function}  event  An event object that will be passed to the callback function which was added
+ *                            via addEventListener.
+ */
+UiView.prototype.fireEventInWindow = function (name, event) {
+
+    var window = this.getParam('window');
+    
+    if (!window) {
+        var Piwik = require('library/Piwik');
+        Piwik.getLog().warn('Failed to fireEventInWindowContext: + ' + name + ' . Window does not exist', 
+                            'Piwik.UI.View::fireEventInWindowContext');
+        window = null;
+        event  = null;
+        return;
+    }
+
+    window.fireEvent(name, event);
     
     window = null;
     event  = null;
@@ -104,13 +147,19 @@ UiView.prototype.create = function (widget, params) {
 
 /**
  * Add an event listener to receive triggered events. The callback will be executed in the
- * {@link Piwik.UI.Window} context.
+ * {@link Piwik.UI.View} context.
  *
  * @param  {string}    name      Name of the event you want to listen to.
  * @param  {Function}  callback  Callback function to invoke when the event is fired
  */
 UiView.prototype.addEventListener = function (name, callback) {
 
+    if (!this.eventPrefix) {
+        this.eventPrefix = String(Math.random()).slice(2,8);
+    }
+    
+    name = this.eventPrefix + name;
+    
     var window = this.getParam('window');
     if (window) {
         window.addEventListener(name, callback);
@@ -128,6 +177,12 @@ UiView.prototype.addEventListener = function (name, callback) {
  */
 UiView.prototype.removeEventListener = function (name, callback) {
 
+    if (!this.eventPrefix) {
+        this.eventPrefix = String(Math.random()).slice(2,8);
+    }
+    
+    name = this.eventPrefix + name;
+    
     var window = this.getParam('window');
     if (window) {
         window.removeEventListener(name, callback);

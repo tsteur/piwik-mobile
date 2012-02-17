@@ -200,7 +200,7 @@ StatisticList.prototype.renderPaginator = function () {
 
     var that = this;
     paginatorRow.addEventListener('click', function (event) {
-        that.fireEvent('onPaginatorChanged', {showAll: !showAll, type: 'onPaginatorChanged'});
+        that.fireEventInWindow('onPaginatorChanged', {showAll: !showAll, type: 'onPaginatorChanged'});
     });
     
     this.rows.push(paginatorRow);

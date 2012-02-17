@@ -195,7 +195,7 @@ ChooseDateCommand.prototype.changeDate   = function (changedDate, period) {
     session.set('piwik_parameter_date', dateQuery);
     session       = null;
 
-    this.fireEvent('onDateChanged', {date: dateQuery, period: this.period, type: 'onDateChanged'});
+    this.fireEventInWindow('onDateChanged', {date: dateQuery, period: this.period, type: 'onDateChanged'});
 };
 
 module.exports = ChooseDateCommand;

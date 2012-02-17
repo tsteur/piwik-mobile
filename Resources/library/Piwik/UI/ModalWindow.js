@@ -99,9 +99,14 @@ ModalWindow.prototype.init = function () {
         cancelButton      = null;
         
         win.addEventListener('close', function () {
+            if (!that) {
+                
+                return;
+            }
+            
             that.modalWindowIsNowClosed();
             
-            that.fireEvent('focusWindow', {type: 'focusWindow', modal: true});
+            that.fireEventInWindow('focusWindow', {type: 'focusWindow', modal: true});
             that = null;
         });
 
@@ -123,7 +128,7 @@ ModalWindow.prototype.init = function () {
             // @todo check whether we still have to do this.
             Ti.UI.currentWindow = crt;
             
-            that.fireEvent('focusWindow', {type: 'focusWindow', modal: true});
+            that.fireEventInWindow('focusWindow', {type: 'focusWindow', modal: true});
             that = null;
             crt  = null;
         });
@@ -207,7 +212,7 @@ ModalWindow.prototype.open = function () {
         this.win.show({view: this.getParam('openView')});
     } else {
     
-        this.fireEvent('blurWindow', {type: 'blurWindow', modal: true});
+        this.fireEventInWindow('blurWindow', {type: 'blurWindow', modal: true});
         
         this.win.open({modal: true});
     }

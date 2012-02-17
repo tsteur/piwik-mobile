@@ -142,7 +142,7 @@ ChooseMetricCommand.prototype.undo = function () {
  * @fires  Piwik.Command.ChooseMetricCommand#event:onMetricChanged
  */
 ChooseMetricCommand.prototype.changeMetric = function (metric) {
-    this.fireEvent('onMetricChanged', {metric: metric, type: 'onMetricChanged'});
+    this.fireEventInWindow('onMetricChanged', {metric: metric, type: 'onMetricChanged'});
 };
 
 module.exports = ChooseMetricCommand;

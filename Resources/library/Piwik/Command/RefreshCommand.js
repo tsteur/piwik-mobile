@@ -74,7 +74,7 @@ RefreshCommand.prototype.getMenuTrackingEvent = function () {
  * Execute the command. Opens the 'add a new account' window.
  */
 RefreshCommand.prototype.execute = function () {
-    this.getParam('window').fireEvent('fireRefresh', {type: 'fireRefresh'});
+    this.fireEventInWindow('fireRefresh', {type: 'fireRefresh'});
 };
 
 /**

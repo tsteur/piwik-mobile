@@ -93,22 +93,20 @@ ChooseSiteCommand.prototype.execute = function (params) {
         params = {};
     }
 
-    var that = this;
     var _    = require('library/underscore');
-    
     var win  = this.create('ModalWindow', {openView: params.source ? params.source : null, 
                                            title: _('General_ChooseWebsite')});
 
     var websitesList = this.create('WebsitesList', {view: win.getView(),
                                                     displaySparklines: false});
 
-    var onChooseSite = function (event) {
+    websitesList.addEventListener('onChooseSite', function (event) {
         if (!event || !event.site) {
 
             return;
         }
 
-        that.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
+        this.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
 
         // fire further event so other windows are able to listen to this event, too
         Ti.App.fireEvent('onSiteChanged', {site: event.site, type: 'onSiteChanged'});
@@ -122,18 +120,14 @@ ChooseSiteCommand.prototype.execute = function (params) {
         }
         
         win          = null;
-        that         = null;
         websitesList = null;
         event        = null;
-    };
-
-    websitesList.addEventListener('onChooseSite', onChooseSite);
+    });
     
     websitesList.request();
 
     win.open();
     
-    onChooseSite = null;
     params       = null;
     _            = null;
 };
