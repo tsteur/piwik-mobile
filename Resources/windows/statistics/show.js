@@ -206,7 +206,7 @@ function window (params) {
             statsticValueLabel = event.columns.value;
         }
 
-        if ((graphUi || hasDimension) && statsticValueLabel) {
+        if ((graphUrl || hasDimension) && statsticValueLabel) {
             // Display metric only where it makes sence. It generally makes sence for all reports having a dimension.
             // For example 'VisitsSummary.get' is a report having no dimension.
             // It makes also sence to display metric if a graph is displayed. The changed metric will not effect the
