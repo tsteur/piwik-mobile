@@ -124,6 +124,7 @@ function window (params) {
         }
     });
     
+    // ios
     Ti.App.addEventListener('resume', function () {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length && that) {
             // start auto refresh again if user returns to this window from a previous displayed window
@@ -135,22 +136,38 @@ function window (params) {
         }
     });
 
+    // ios
     Ti.App.addEventListener('pause', function () {
         if (that && that.refreshTimer) {
             // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
             clearTimeout(that.refreshTimer);
         }
     });
+    
+    var stopRefreshTimer = function () {
+        if (that && that.refreshTimer) {
+            // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
+            clearTimeout(that.refreshTimer);
+        }
+    };
 
-    if (Ti.UI.currentWindow && Ti.UI.currentWindow.activity) {
-        Ti.UI.currentWindow && Ti.UI.currentWindow.activity.addEventListener('pause', function () {
-            if (that && that.refreshTimer) {
-                // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
-                clearTimeout(that.refreshTimer);
-            }
-        });
+    var activity = null;
+    
+    // get activity on android
+    if (Ti.Android && Ti.Android.currentActivity) {
+        activity = Ti.Android.currentActivity;
+    } else if (!activity && Ti.UI.currentWindow && Ti.UI.currentWindow.activity) {
+        activity = Ti.UI.currentWindow.activity;
+    } else if (!activity && this.rootWindow && this.rootWindow.activity) {
+        activity = this.rootWindow.activity;
     }
-
+    
+    // android
+    if (activity) {
+        activity.addEventListener('pause', stopRefreshTimer);
+        activity.addEventListener('stop', stopRefreshTimer);
+    }
+    
     refresh.addEventListener('onRefresh', function () {
         if (that && that.refreshTimer) {
             // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
@@ -376,6 +393,15 @@ function window (params) {
         this.cleanupTableData();
         
         this.remove(tableView);
+        
+        try {
+            if (activity && stopRefreshTimer) {
+                activity.removeEventListener('pause', stopRefreshTimer);
+                activity.removeEventListener('stop', stopRefreshTimer);
+            }
+        } catch (e) {
+            Piwik.getLog().warn('Failed to remove event listener from activity' + e, 'statistics/live::window');
+        }
 
         visitorRows    = null;
         tableView      = null;
@@ -387,6 +413,8 @@ function window (params) {
         account        = null;
         site           = null;
         params         = null;
+        activity       = null;
+        stopRefreshTimer  = null;
         this.lastMinutes  = null;
         this.lastHours    = null;
         this.refreshTimer = null;
