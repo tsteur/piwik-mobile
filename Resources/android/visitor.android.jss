@@ -12,7 +12,7 @@
 }
 
 #visitorTableView {
-
+   separatorColor: '#eeedeb';
 }
 
 .visitorTableViewRow {
