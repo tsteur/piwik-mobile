@@ -562,7 +562,7 @@ function Tracker () {
         var alertDialog = Ti.UI.createAlertDialog({
             title: _('Mobile_HelpUsToImprovePiwikMobile'),
             message: _('Mobile_AskForAnonymousTrackingPermission'),
-            buttonNames: [_('General_No'), _('General_Yes')]
+            buttonNames: [_('General_Yes'), _('General_No')]
         });
 
         alertDialog.addEventListener('click', function (event) {
@@ -575,14 +575,14 @@ function Tracker () {
             var settings = Piwik.require('App/Settings');
 
             switch (event.index) {
-                case 1:
+                case 0:
 
                     settings.setTrackingEnabled(true);
 
                     alert(_('Feedback_ThankYou'));
                     break;
 
-                case 0:
+                case 1:
                 default:
 
                     settings.setTrackingEnabled(false);

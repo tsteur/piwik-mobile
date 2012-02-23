@@ -198,8 +198,8 @@ function window (params) {
         if (piwikUrl.value && 'http://' === piwikUrl.value.substr(0, 7)) {
 
             var alertDialog = Ti.UI.createAlertDialog({
-                message: _("Mobile_HttpIsNotSecureWarning"),
-                buttonNames: [_('SitesManager_Cancel_js'), _('General_Ok')],
+                message: _('Mobile_HttpIsNotSecureWarning'),
+                buttonNames: [_('General_Ok'), _('SitesManager_Cancel_js')],
                 cancel: 0
             });
 
@@ -207,15 +207,14 @@ function window (params) {
 
             alertDialog.addEventListener('click', function (event) {
 
-                // has the user clicked the OK button?
                 if (event && event.index) {
-                    
-                    saveAccount();
+                    // do not save account if user clicked the cancel button
 
                     return;
                 }
-
-                // do not save account if user clicked the cancel button
+                    
+                // has the user clicked the OK button?
+                saveAccount();
             });
 
             return;

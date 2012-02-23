@@ -374,20 +374,20 @@ DatePicker.prototype.addButtons = function (dateDialog) {
         return;
     }
     
-    dateDialog.buttonNames = [_('SitesManager_Cancel_js'), _('CoreUpdater_UpdateTitle')];
+    dateDialog.buttonNames = [_('CoreUpdater_UpdateTitle'), _('SitesManager_Cancel_js')];
     dateDialog.cancel      = 0;
 
     var that = this;
 
     dateDialog.addEventListener('click', function (event) {
 
-        if (!event || !event.index) {
+        if (event && event.index) {
             // user pressed cancel button
             
             return;
         }
 
-        if (1 == event.index) {
+        if (0 == event.index) {
             // fire event only if user pressed Update button
             var myEvent = {date: that.value, period: that.period, type: 'onSet'};
             that.fireEvent('onSet', myEvent);
