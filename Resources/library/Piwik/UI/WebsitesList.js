@@ -65,6 +65,9 @@ WebsitesList.prototype.init = function () {
     // we always want to force the reload (do not use a cached result) of the available websites if user presses
     // menu button 'reload', but not if for example the user searches for a site.
     var forceRequestReload = true;
+    // true as soon as at least once the onload event was fired, false otherwise. we need this for a workaround with
+    // the hide/show searchbar logic.
+    var onLoadEventFired   = false;
     
     var refresh   = null;
     var rows      = [];
@@ -100,6 +103,22 @@ WebsitesList.prototype.init = function () {
         // this should prevent that keyboard is displayed after app is started on android. 
         // @todo verify whether we still need this workaround
         searchBar.hide();
+        
+        // this workaround is for motorola xoom and possibly some other devices. once this window is not displayed
+        // we have to hide the searchbar. otherwise the keyboard will be opened each time the user closes another window
+        // have no idea why.
+        win.addEventListener('blurWindow', function () {
+            searchBar.hide();
+            searchBar.blur();
+            // makes sure the next time the window is focused, it'll show the searchbar
+            onLoadEventFired = true;
+        });
+
+        win.addEventListener('focusWindow', function () {
+            if (onLoadEventFired) {
+                searchBar.show();
+            }
+        });
     }
     
     win.add(searchBar);
@@ -126,13 +145,16 @@ WebsitesList.prototype.init = function () {
 
     refresh.addEventListener('onRefresh', function () {
         
-        for (var index = 0; index < rows.length; index++) {
-            rows[index].titleLabel = null;
-            rows[index].valueLabel = null;
-            rows[index]            = null;
+        if (rows) {
+            for (var index = 0; index < rows.length; index++) {
+                rows[index].titleLabel = null;
+                rows[index].valueLabel = null;
+                rows[index]            = null;
+            }
         }
-        
+
         rows = null;
+        rows = [];
 
         // remove all tableview rows. This makes sure there are no rendering issues when setting
         // new rows afterwards.
@@ -149,6 +171,7 @@ WebsitesList.prototype.init = function () {
     });
 
     this.websitesRequest.addEventListener('onload', function (event) {
+        onLoadEventFired = true;
         if (Piwik.getPlatform().isAndroid) {
             searchBar.show();
         } 
