@@ -252,12 +252,14 @@ function window (params) {
     };
     
     this.cleanupTableData = function () {
-        
-        for (var index = 0; index < tableViewRows.length; index++) {
-            
-            tableViewRows[index].titleLabel = null;
-            tableViewRows[index].valueLabel = null;
-            tableViewRows[index] = null;
+
+        if (tableViewRows) {
+            for (var index = 0; index < tableViewRows.length; index++) {
+                
+                tableViewRows[index].titleLabel = null;
+                tableViewRows[index].valueLabel = null;
+                tableViewRows[index] = null;
+            }
         }
         
         tableViewRows = null;

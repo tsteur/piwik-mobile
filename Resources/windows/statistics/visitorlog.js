@@ -237,8 +237,11 @@ function window (params) {
     };
     
     this.cleanupTableData = function () {
-        for (var index = 0; index < visitorRows.length; index++) {
-            visitorRows[index] = null;
+        
+        if (visitorRows) {
+            for (var index = 0; index < visitorRows.length; index++) {
+                visitorRows[index] = null;
+            }
         }
         
         visitorRows = null;

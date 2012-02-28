@@ -420,10 +420,13 @@ function window () {
     };
     
     this.cleanupTableData = function () {
-        for (var index = 0; index < tableData.length; index++) {
-            tableData[index].titleLabel = null;
-            tableData[index].valueLabel = null;
-            tableData[index]            = null;
+
+        if (tableData) {
+            for (var index = 0; index < tableData.length; index++) {
+                tableData[index].titleLabel = null;
+                tableData[index].valueLabel = null;
+                tableData[index]            = null;
+            }
         }
         
         tableData = null;
