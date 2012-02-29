@@ -77,6 +77,7 @@ function Translation () {
         ja:         '日本語',
         ko:         '한국어',
         lt:         'Lietuvių',
+        lv:         'Latvie\u0161u',
         nb:         'Norsk (bokmål)',
         nl:         'Nederlands',
         nn:         'Nynorsk',
