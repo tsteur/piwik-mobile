@@ -129,6 +129,7 @@ module.exports = {
     Mobile_MultiChartInfo:                                              'Next to each website on the welcome screen',
     Mobile_NavigationBack:                                              'Back',
     Mobile_NetworkNotReachable:                                         'Network not reachable',
+    Mobile_NoWebsiteFound:                                              'No website found',
     Mobile_PullDownToRefresh:                                           'Pull down to refresh...',
     Mobile_Refresh:                                                     'Refresh',
     Mobile_Reloading:                                                   'Reloading...',

@@ -179,6 +179,10 @@ WebsitesList.prototype.init = function () {
         refresh.refreshDone();
 
         if (!event || !event.sites || !event.sites.length) {
+            
+            rows = [that.create('TableViewRow', {title: _('Mobile_NoWebsiteFound'),
+                                                 className: 'websitesNotFoundTableViewRow'})];
+            tableview.setData(rows);
 
             return;
         }
