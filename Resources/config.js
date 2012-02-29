@@ -54,6 +54,7 @@ config.piwik = {
     defaultReportDate: 'day##yesterday',
     filterLimit: 30,
     multiChartEnabled: false,
+    defaultLocale: 'en',
     latestServerVersion: '1.7.0',
     graphsEnabled: true,
     trackingEnabled: false,

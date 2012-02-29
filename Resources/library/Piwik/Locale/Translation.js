@@ -143,7 +143,9 @@ function Translation () {
 
         if (!this.AVAILABLE_LANGUAGES || !this.AVAILABLE_LANGUAGES[locale]) {
             // no valid locale
-            return;
+            var config = require('config');
+            locale     = config.piwik.defaultLocale;
+            config     = null;
         }
 
         try {
