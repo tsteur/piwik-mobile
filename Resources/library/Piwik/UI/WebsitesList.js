@@ -197,6 +197,35 @@ WebsitesList.prototype.init = function () {
         }
 
         rows = [];
+        
+        event.sites.sort(function (site1, site2) {
+            
+            if (!site1 && !site2) {
+                
+                return 0;
+            }
+                
+            
+            if (!site1) {
+                
+                return -1;
+            }
+            
+            if (!site2) {
+                
+                return 1;
+            }
+            
+            var siteName1 = ('' + site1.name).toLowerCase();
+            var siteName2 = ('' + site2.name).toLowerCase();
+            
+            if (siteName1 == siteName2) {
+        
+                return 0;
+            }
+        
+            return (siteName1 < siteName2) ? -1 : 1;
+        });
 
         for (var siteIndex = 0; siteIndex < event.sites.length; siteIndex++) {
             var site = event.sites[siteIndex];
@@ -235,7 +264,8 @@ WebsitesList.prototype.init = function () {
         tableview.setData(rows);
     });
     
-    win = null;
+    win   = null;
+    event = null;
 };
 
 /**
