@@ -562,7 +562,8 @@ function Tracker () {
         var alertDialog = Ti.UI.createAlertDialog({
             title: _('Mobile_HelpUsToImprovePiwikMobile'),
             message: _('Mobile_AskForAnonymousTrackingPermission'),
-            buttonNames: [_('General_Yes'), _('General_No')]
+            buttonNames: [_('General_Yes'), _('General_No')],
+            cancel: 1
         });
 
         alertDialog.addEventListener('click', function (event) {

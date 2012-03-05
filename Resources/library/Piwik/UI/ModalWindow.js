@@ -121,6 +121,10 @@ ModalWindow.prototype.init = function () {
 
         win.add(view);
         view = null;
+        
+        win.addEventListener('android:back', function () {
+           that.close();
+        });
 
         win.addEventListener('close', function () {
         

@@ -200,21 +200,25 @@ function window (params) {
             var alertDialog = Ti.UI.createAlertDialog({
                 message: _('Mobile_HttpIsNotSecureWarning'),
                 buttonNames: [_('General_Ok'), _('SitesManager_Cancel_js')],
-                cancel: 0
+                cancel: 1
             });
 
             alertDialog.show();
 
             alertDialog.addEventListener('click', function (event) {
 
-                if (event && event.index) {
-                    // do not save account if user clicked the cancel button
-
+                if (!event || (event.cancel === event.index) || (true === event.cancel)) {
+                    // user pressed hardware back button or cancel button
+                    
                     return;
                 }
-                    
-                // has the user clicked the OK button?
-                saveAccount();
+
+                if (event &&  0 == event.index) {
+
+                    // has the user clicked the OK button?
+                    saveAccount();
+                    return;
+                }
             });
 
             return;
