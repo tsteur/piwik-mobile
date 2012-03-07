@@ -425,7 +425,8 @@ HttpRequest.prototype.error = function (e) {
                 }
 
                 Piwik.getUI().createError({exception: e, type: e.error,
-                                      file: 'Piwik/Network/HttpRequest.js', errorCode: 'PiHrLe39'});
+                                           file: 'Piwik/Network/HttpRequest.js', 
+                                           errorCode: 'PiHrLe39'});
                     
                 this.errorMessageSent = true;
 
