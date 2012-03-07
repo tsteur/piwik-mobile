@@ -172,7 +172,9 @@ function window (params) {
      * We have to make sure the activityIndicator hide method will be triggered later.
      */
     var saveAccount = function () {
-        activityIndicator.show(_('Mobile_VerifyAccount'));
+        if (activityIndicator) {
+            activityIndicator.show(_('Mobile_VerifyAccount'));
+        }
 
         var account = {accessUrl: piwikUrl.value,
                        username:  piwikUser.value,
@@ -261,7 +263,9 @@ function window (params) {
     });
 
     request.addEventListener('onInvalidUrl', function (event) {
-        activityIndicator.hide();
+        if (activityIndicator) {
+            activityIndicator.hide();
+        }
 
         Piwik.getTracker().trackEvent({title: 'Account Invalid Url', url: '/account/edit/invalid-url'});
 
@@ -296,7 +300,9 @@ function window (params) {
     });
 
     request.addEventListener('onMissingPassword', function () {
-        activityIndicator.hide();
+        if (activityIndicator) {
+            activityIndicator.hide();
+        }
 
         Piwik.getTracker().trackEvent({title: 'Account Missing Password', url: '/account/edit/missing-password'});
 
@@ -312,7 +318,9 @@ function window (params) {
     });
 
     request.addEventListener('onReceiveAuthTokenError', function (event) {
-        activityIndicator.hide();
+        if (activityIndicator) {
+            activityIndicator.hide();
+        }
 
         Piwik.getTracker().trackEvent({title: 'Account Receive Token Error', url: '/account/edit/receive-token-error'});
 
@@ -329,7 +337,9 @@ function window (params) {
     });
 
     request.addEventListener('onNoViewAccess', function (event) {
-        activityIndicator.hide();
+        if (activityIndicator) {
+            activityIndicator.hide();
+        }
 
         Piwik.getTracker().trackEvent({title: 'Account No View Access', url: '/account/edit/no-view-access'});
 
@@ -345,7 +355,9 @@ function window (params) {
     });
 
     request.addEventListener('onload', function (event) {
-        activityIndicator.hide();
+        if (activityIndicator) {
+            activityIndicator.hide();
+        }
 
         if (event) {
             var trackingUrl = '/account/' + event.action + '/' + (event.success ? 'success' : 'error');
