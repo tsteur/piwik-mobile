@@ -192,13 +192,14 @@ function window (params) {
                 visitorRows.push(visitorRow);
                 visitorRow         = null;
                 visitorOverview    = null;
-                visitor            = null;
             }
             
             if (visitor && visitor.idVisit) {
                 // store the id of the last visitor
                 oldestVisitId = visitor.idVisit;
             }
+            
+            visitor           = null;
         }
 
         var previousPagerRow  = Ti.UI.createTableViewRow({title: _('General_Previous'),
