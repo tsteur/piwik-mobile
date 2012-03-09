@@ -176,6 +176,10 @@ LiveRequest.prototype.send = function (params) {
         // if timestamp is not given, request only 10
         parameters.filter_limit = 10;
     }
+    
+    if (params.date) {
+        parameters.date = params.date;
+    }
 
     var piwikLiveDetails = Piwik.require('Network/PiwikApiRequest');
     piwikLiveDetails.setMethod('Live.getLastVisitsDetails');

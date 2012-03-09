@@ -47,6 +47,34 @@ function window (params) {
     var oldestVisitId            = null;
     var usedMaxVisitIds          = [];
     var visitorRows              = [];
+    
+    // variable to detect whether user has pressed "previous". We want to display the "next" row only if the user 
+    // has pressed "previous" before.
+    var userPressedPrevious      = false;
+    
+    this.addEventListener('onDateChanged', function (event) {
+        // user has changed the date and/or period -> reload statistics using the updated date/period
+        
+        if (!event || !event.date) {
+            
+            return;
+        }
+
+        Piwik.getTracker().trackEvent({title: 'Date/Period changed', 
+                                       url: '/statistic-change/visitorlog'});
+
+        params.date              = event.date;
+        params.minTimestamp      = null;
+        params.maxIdVisit        = null;
+        oldestVisitId            = null;
+        latestRequestedTimestamp = null;
+        usedMaxVisitIds          = [];
+        userPressedPrevious      = false;
+        
+        event = null;
+
+        refresh.refresh();
+    });
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
@@ -72,6 +100,7 @@ function window (params) {
         latestRequestedTimestamp = null;
         oldestVisitId            = null;
         usedMaxVisitIds          = [];
+        userPressedPrevious      = false;
 
         refresh.refresh();
     });
@@ -112,7 +141,7 @@ function window (params) {
             refresh.refreshDone();
         }
 
-        if (!that) {
+        if (!that || !event) {
             
             return;
         }
@@ -132,38 +161,54 @@ function window (params) {
                                                            command: siteCommand});
         visitorRows.push(websiteRow);
         websiteRow          = null;
+        
+        var chooseDateTitle = _('General_ChooseDate');
+        if (event.details && event.details.length && event.details[0] && event.details[0].serverDatePretty) {
+            chooseDateTitle = event.details[0].serverDatePretty;
+        }
 
-        var nextPagerRow    = Ti.UI.createTableViewRow({title: _('General_Next'),
-                                                        className: 'visitorlogPagerTableViewRow'});
-        nextPagerRow.addEventListener('click', function () {
+        var dateCommand     = that.createCommand('ChooseDateCommand', {date: params.date ? params.date : new Date()});
+        visitorRows.push(that.create('TableViewRow', {title: chooseDateTitle, 
+                                                      hasChild: true,
+                                                      className: 'tableViewRowSelectable',
+                                                      command: dateCommand}));
+        dateCommand = null;
 
-            var previousUsedMaxIdVisit = null;
-            if (usedMaxVisitIds && usedMaxVisitIds.length) {
-                // remove the current displayed maxVisitId from stack
-                usedMaxVisitIds.pop();
-                // now we are able to get the previous displayed maxVisitId
-                if (usedMaxVisitIds[usedMaxVisitIds.length - 1]) {
-                    previousUsedMaxIdVisit = usedMaxVisitIds[usedMaxVisitIds.length - 1];
+        if (userPressedPrevious) {
+            // dispaly NEXT only if user pressed the previous row before
+
+            var nextPagerRow = Ti.UI.createTableViewRow({title: _('General_Next'),
+                                                            className: 'visitorlogPagerTableViewRow'});
+            nextPagerRow.addEventListener('click', function () {
+    
+                var previousUsedMaxIdVisit = null;
+                if (usedMaxVisitIds && usedMaxVisitIds.length) {
+                    // remove the current displayed maxVisitId from stack
+                    usedMaxVisitIds.pop();
+                    // now we are able to get the previous displayed maxVisitId
+                    if (usedMaxVisitIds[usedMaxVisitIds.length - 1]) {
+                        previousUsedMaxIdVisit = usedMaxVisitIds[usedMaxVisitIds.length - 1];
+                    }
                 }
-            }
-
-            params.maxIdVisit          = previousUsedMaxIdVisit;
-
-            // if there is no previousUsedMaxIdVisit given, request by minTimestamp. We always prefer maxIdVisit here
-            // cause when maxIdVisit is used, we get the users sorted by VisitId/firstVisitTime
-            if (!previousUsedMaxIdVisit) {
-                params.minTimestamp    = latestRequestedTimestamp;
-            } else {
-                params.minTimestamp    = null;
-            }
-
-            params.fetchLiveOverview = false;
-
-            refresh.refresh();
-        });
-
-        visitorRows.push(nextPagerRow);
-        nextPagerRow = null;
+    
+                params.maxIdVisit          = previousUsedMaxIdVisit;
+    
+                // if there is no previousUsedMaxIdVisit given, request by minTimestamp. We always prefer maxIdVisit here
+                // cause when maxIdVisit is used, we get the users sorted by VisitId/firstVisitTime
+                if (!previousUsedMaxIdVisit) {
+                    params.minTimestamp    = latestRequestedTimestamp;
+                } else {
+                    params.minTimestamp    = null;
+                }
+    
+                params.fetchLiveOverview = false;
+    
+                refresh.refresh();
+            });
+    
+            visitorRows.push(nextPagerRow);
+            nextPagerRow = null;
+        }
 
         if (event.details && event.details.length) {
             for (var index = 0; index < event.details.length; index++) {
@@ -200,6 +245,10 @@ function window (params) {
             }
             
             visitor           = null;
+        } else {
+            // no visitor found
+            visitorRows.push(that.create('TableViewRow', {title: _('Mobile_NoVisitorFound'),
+                                                          className: 'visitorlogNoVisitorTableViewRow'}));
         }
 
         var previousPagerRow  = Ti.UI.createTableViewRow({title: _('General_Previous'),
@@ -208,6 +257,8 @@ function window (params) {
             params.minTimestamp      = null;
             params.maxIdVisit        = oldestVisitId;
             params.fetchLiveOverview = false;
+            userPressedPrevious      = true;
+            
             refresh.refresh();
 
             if (oldestVisitId) {
