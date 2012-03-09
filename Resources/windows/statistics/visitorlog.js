@@ -178,7 +178,7 @@ function window (params) {
             // dispaly NEXT only if user pressed the previous row before
 
             var nextPagerRow = Ti.UI.createTableViewRow({title: _('General_Next'),
-                                                            className: 'visitorlogPagerTableViewRow'});
+                                                         className: 'visitorlogPagerTableViewRow'});
             nextPagerRow.addEventListener('click', function () {
     
                 var previousUsedMaxIdVisit = null;

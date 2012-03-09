@@ -118,6 +118,7 @@ LiveRequest.prototype.init = function () {
  * @param  {number}  [params.maxIdVisit]         If a visitorId is given, it fetches only visitors which visited
  *                                               the site before this visitor.
  * @param  {number}  [params.fetchLiveOverview]  If true, an overview about the visitors will be fetched.
+ * @param  {string}  [params.date]               The current selected date.
  *
  * @todo   add a link to the methods
  */
