@@ -69,6 +69,15 @@ config.piwik = {
 config.faqUrl = 'http://piwik.org/mobile/faq';
 
 /**
+ * Apple app store related.
+ *
+ * @type Object
+ */
+config.appleAppStore = {
+    appId: '385536442'
+};
+
+/**
  * Tracking related settings.
  *
  * @type Object

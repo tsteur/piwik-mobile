@@ -60,4 +60,6 @@ if (!Ti.App.Properties.hasProperty('app_last_initialized') ||
     Piwik.getTracker().askForPermission();
 
     Ti.App.Properties.setInt('app_last_initialized', parseInt(Ti.App.version.replace(/\./g, ''), 10));
-}
+} 
+
+Piwik.require('App/Rating').countLaunch();
