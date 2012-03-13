@@ -103,7 +103,7 @@ Rating.prototype.askUserToRate = function () {
     }
 
     var _       = require('library/underscore');
-    var message = String.format(_('Mobile_RatingPleaseRateUs'), this.getStoreName());
+    var message = String.format(_('Mobile_RatingPleaseRateUs'), this.getStoreName(), 'mobile@piwik.org');
     var buttons = [_('Mobile_RatingNow'), _('Mobile_RatingNotNow'), _('Mobile_RatingDontRemindMe')];
     _           = null;
     
