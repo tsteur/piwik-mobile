@@ -50,8 +50,8 @@ function window (params) {
         return;
     }
     
-    var originalWidth  = this.width;
-    var originalHeight = this.height;
+    var originalWidth  = this.width ? this.width : this.size.width;
+    var originalHeight = this.height ? this.height : this.size.height;
     
     var isLandscape    = (originalWidth > originalHeight);
     var navBarHeight   = Ti.Platform.displayCaps.platformHeight - originalHeight;
@@ -67,8 +67,8 @@ function window (params) {
     var imageView      = null;
 
     // fixme display graph in portrait mode and then rotating screen causes graph is not fully displayed
-    graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
-    graphUrlWithSize   = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
+    var graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+    graphUrlWithSize     = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
 
     Piwik.getLog().debug('piwik graphUrl is ' + graphUrlWithSize, 'graph/fulldetail::window');
 

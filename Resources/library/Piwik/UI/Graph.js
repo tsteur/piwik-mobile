@@ -81,12 +81,14 @@ Graph.prototype.getRow = function () {
  *                                   the graph image should be rendered into.
  */
 Graph.prototype.addGraph = function (view) {
-
     // @todo can we calculate the width depending on the outer view? width is only correct under circumstances.
-    var width        = parseInt(Piwik.getUI().currentWindow.width, 10) - 2 - 40;
+    var width = Piwik.getUI().currentWindow.width;
+    if (!width && Piwik.getUI().currentWindow.size) {
+        width = Piwik.getUI().currentWindow.size.width;
+    }
+
+    var width        = parseInt(width, 10) - 2 - 40;
     var height       = 150;
-    // @todo height of the graph is currently always 150. maybe we could calculate the height depending on the
-    // available height? for example 20% of the available height and min-height: 150
 
     var graphUrl     = this.getParam('graphUrl', '');
     var graph        = this.getParam('graph');
