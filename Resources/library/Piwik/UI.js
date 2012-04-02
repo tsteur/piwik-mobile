@@ -41,11 +41,12 @@ UI.layout        = null;
  *                                        initializes the layout.
  */
 UI.bootstrap = function (options) {
+    
+    var layout;
 
     if (options && options.layoutUrl) {
         
-        var layout  = Piwik.requireWindow(options.layoutUrl);
-
+        layout      = Piwik.requireWindow(options.layoutUrl);
         this.layout = new layout();
 
         this.layout.init();
@@ -142,13 +143,13 @@ UI.createWindow = function (params) {
         params      = null;
         winTemplate = null;
 
+        return newWin;
+
     } catch (exception) {
 
         var uiError = UI.createError({exception: exception, errorCode: 'PiUiCw12'});
         uiError.showErrorMessageToUser();
     }
-
-    return newWin;
 };
 
 /**
@@ -198,9 +199,14 @@ UI.createDatePicker = function (params) {
     }
 
     try {
+        
+        var module   = 'UI/DatePicker';
+        if (Piwik.getPlatform().isIos) {
+            module   = 'UI/DatePickerIos';
+        }
 
         params.type  = Ti.UI.PICKER_TYPE_DATE;
-        var picker   = Piwik.require('UI/DatePicker');
+        var picker   = Piwik.require(module);
 
         picker.setParams(params);
 
@@ -595,27 +601,6 @@ UI.createWebsitesList = function (params) {
         var uiError  = UI.createError({exception: exception, errorCode: 'PiUiWl48'});
         uiError.showErrorMessageToUser();
     }
-};
-
-/**
- * Creates a new iPad Popover widget.
- *
- * @param    {Object}  params  A dictionary object properties defined in Titanium.UI.iPad.Popover.
- *
- * @type     Titanium.UI.iPad.Popover
- *
- * @returns  The created popover instance.
- */
-UI.createPopover = function (params) {
-    if (this.popover && this.popover.hide) {
-        this.popover.hide();
-        this.popover = null;
-    }
-    
-    this.popover = Ti.UI.iPad.createPopover(params);
-    params       = null;
-    
-    return this.popover;
 };
 
 module.exports = UI;

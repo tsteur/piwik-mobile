@@ -113,7 +113,9 @@ ChooseSiteCommand.prototype.execute = function (params) {
 
         try {
             // window
-            win.close();
+            if (win) {
+                win.close();
+            }
             
         } catch (e) {
             Piwik.getLog().warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
@@ -122,6 +124,11 @@ ChooseSiteCommand.prototype.execute = function (params) {
         win          = null;
         websitesList = null;
         event        = null;
+    });
+    
+    win.addEventListener('close', function () {
+        win          = null;
+        websitesList = null;
     });
     
     websitesList.request();

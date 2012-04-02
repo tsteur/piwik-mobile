@@ -9,4 +9,5 @@
 .modalWindow {
     barColor: '#B2AEA5';
     modal: true;
+    backgroundColor: 'white';
 }

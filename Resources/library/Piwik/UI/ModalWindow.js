@@ -71,11 +71,16 @@ ModalWindow.prototype.init = function () {
     var title = this.getParam('title', '');
     var win   = null;
 
-    if (Piwik.getPlatform().isIpad) {
-        win   = this.create('Popover', {width: 320, 
-                                        height: 460, 
-                                        title: title});
+    if (Piwik.getPlatform().isIpad && Ti.UI.iPad) {
+        win   = Ti.UI.iPad.createPopover({width: 320, height: 460, title: title});
+        
         this.viewToAddOtherViews = win;
+        
+        win.addEventListener('hide', function () {
+            that.viewToAddOtherViews = null;
+            that.win                 = null;
+            that                     = null;
+        });
                                         
     } else if (Piwik.getPlatform().isIos) {
 
@@ -140,6 +145,29 @@ ModalWindow.prototype.init = function () {
     
     this.win = win;
     win      = null;
+};
+
+/**
+ * Add an event listener to receive triggered events.
+ *
+ * @param  {string}    name      Name of the event you want to listen to.
+ * @param  {Function}  callback  Callback function to invoke when the event is fired.
+ */
+ModalWindow.prototype.addEventListener = function (name, callback) {
+    if (!this.win || !name || !callback) {
+        
+        return;
+    }
+    
+    if ('close' == name && Piwik.getPlatform().isIpad) {
+        // the event name for popover on iPad is not 'close', it's 'hide'
+        name = 'hide';
+    }
+    
+    this.win.addEventListener(name, callback);
+    
+    name     = null;
+    callback = null;
 };
 
 /**

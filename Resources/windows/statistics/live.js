@@ -384,6 +384,11 @@ function window (params) {
         visitorRows = null;
         visitorRows = [];
         
+        if (!tableView) {
+            
+            return;
+        }
+        
         tableView.setData([]);
     };
     

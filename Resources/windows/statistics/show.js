@@ -256,8 +256,10 @@ function window (params) {
         if (tableViewRows) {
             for (var index = 0; index < tableViewRows.length; index++) {
                 
-                tableViewRows[index].titleLabel = null;
-                tableViewRows[index].valueLabel = null;
+                if (tableViewRows[index] && tableViewRows[index].cleanup) {
+                    tableViewRows[index].cleanup();
+                }
+                
                 tableViewRows[index] = null;
             }
         }
@@ -265,6 +267,11 @@ function window (params) {
         tableViewRows = null;
         tableViewRows = [];
         
+        if (!tableView) {
+            
+            return;
+        }
+
         tableView.setData([]);
     };
     

@@ -37,24 +37,6 @@ function ChooseDateCommand () {
      * @param  {string}  event.period  The current active, possibly changed, period value. For example
      *                                 'day' or 'week'.
      */
-
-    /**
-     * Holds the current date which the chooser internally works with.
-     * 
-     * @defaults  null
-     * 
-     * @type     Date
-     */
-    this.date   = null;
-    
-    /**
-     * Holds the current period which the chooser internally works with.
-     * 
-     * @defaults  "day"
-     *
-     * @type      string
-     */
-    this.period = 'day';
 }
 
 /**
@@ -117,33 +99,37 @@ ChooseDateCommand.prototype.execute = function (params) {
         params = {};
     }
     
-    this.period    = this.getParam('period', this.period);
-    var optionDate = this.getParam('date', new Date());
+    var period    = this.getParam('period', 'day');
+    var date      = this.getParam('date', '');
  
-    if ('string' === (typeof optionDate).toLowerCase()) {
-        var stringUtils = Piwik.require('Utils/String');
-        this.date       = stringUtils.toPiwikDate(optionDate);
-        stringUtils     = null;
-    } else {
-        this.date       = optionDate;
-    }
+    var piwikDate = Piwik.require('PiwikDate');
+    piwikDate.setDate(date);
+    piwikDate.setPeriod(period);
+ 
+    var rangeDate = piwikDate.getRangeDate();
+    var from      = rangeDate[0];
+    var to        = rangeDate[1];
     
-    var max     = new Date();
-    var min     = new Date(2008, 0, 1);
-    var picker  = this.create('DatePicker', {value: this.date,
-                                             maxDate: max,
-                                             period: this.period,
-                                             selectionIndicator: true,
-                                             source: params.source ? params.source : null,
-                                             minDate: min});
+    var max       = new Date();
+    var min       = new Date(2008, 0, 1);
+    var picker    = this.create('DatePicker', {from: from,
+                                               to: to,
+                                               maxDate: max,
+                                               period: period,
+                                               selectionIndicator: true,
+                                               source: params.source ? params.source : null,
+                                               minDate: min});
 
-    var that    = this;
+    var that = this;
     picker.addEventListener('onSet', function (event) {
-        that.changeDate(event.date, event.period);
+        that.changePeriod(event.period);
+        that.changeDate(event.from, event.to, event.period);
     });
     
-    params = null;
-    picker = null;
+    params    = null;
+    picker    = null;
+    rangeDate = null;
+    piwikDate = null;
 };
 
 /**
@@ -160,16 +146,44 @@ ChooseDateCommand.prototype.undo = function () {
  */
 ChooseDateCommand.prototype.changePeriod = function (period) {
 
-    if (!period || this.period == period) {
+    if (!period) {
     
         return;
     }
 
-    this.period = period;
-
     var session = Piwik.require('App/Session');
     session.set('piwik_parameter_period', period);
     session     = null;
+};
+
+/**
+ * Verifies which date is earlier.
+ *
+ * @param    {Date}     from  The selected/changed date.
+ * @param    {Date}     to  The selected/changed date.
+ *
+ * @returns  {boolean}  true if the from 'date' is earlier than the 'to' date. False otherwise.
+ */
+ChooseDateCommand.prototype.isEarlier = function (from, to) {
+    if (!from) {
+        
+        return false;
+    }
+    
+    if (!to) {
+        
+        return true;
+    }
+    
+    var fromTimestamp = (from.getTime() / 1000);
+    var toTimestamp   = (to.getTime() / 1000);
+
+    if (fromTimestamp < toTimestamp) {
+        
+        return true;
+    } 
+    
+    return false;
 };
 
 /**
@@ -182,20 +196,25 @@ ChooseDateCommand.prototype.changePeriod = function (period) {
  *
  * @fires  Piwik.Command.ChooseDateCommand#event:onDateChanged
  */
-ChooseDateCommand.prototype.changeDate   = function (changedDate, period) {
-    this.changePeriod(period);
-        
-    this.date     = changedDate;
+ChooseDateCommand.prototype.changeDate = function (from, to, period) {
+    
 
-    var dateUtils = Piwik.require('Utils/Date');
-    var dateQuery = dateUtils.toPiwikQueryString(this.date);
-    dateUtils     = null;
+    // make sure from is always earlier than to if period is range
+    if ('range' == period && !this.isEarlier(from, to)) {
+        var temp = from;
+        from     = to;
+        to       = temp;
+    } 
+
+    var piwikDate = Piwik.require('PiwikDate');
+    var dateQuery = piwikDate.toPiwikQueryString(period, from, to);
 
     var session   = Piwik.require('App/Session');
     session.set('piwik_parameter_date', dateQuery);
     session       = null;
+    piwikDate     = null;
 
-    this.fireEventInWindow('onDateChanged', {date: dateQuery, period: this.period, type: 'onDateChanged'});
+    this.fireEventInWindow('onDateChanged', {date: dateQuery, period: period, type: 'onDateChanged'});
 };
 
 module.exports = ChooseDateCommand;

@@ -47,6 +47,7 @@ function window (params) {
     var oldestVisitId            = null;
     var usedMaxVisitIds          = [];
     var visitorRows              = [];
+    var refresh                  = null;
     
     // variable to detect whether user has pressed "previous". We want to display the "next" row only if the user 
     // has pressed "previous" before.
@@ -73,13 +74,15 @@ function window (params) {
         
         event = null;
 
-        refresh.refresh();
+        if (refresh) {
+            refresh.refresh();
+        }
     });
 
     var request   = Piwik.require('Network/LiveRequest');
     var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
-    var refresh   = this.create('Refresh', {tableView: tableView});
     var site      = params.site;
+    refresh       = this.create('Refresh', {tableView: tableView});
 
     this.add(tableView);
 
@@ -167,7 +170,7 @@ function window (params) {
             chooseDateTitle = event.details[0].serverDatePretty;
         }
 
-        var dateCommand     = that.createCommand('ChooseDateCommand', {date: params.date ? params.date : new Date()});
+        var dateCommand     = that.createCommand('ChooseDateCommand', {date: params.date ? params.date : null});
         visitorRows.push(that.create('TableViewRow', {title: chooseDateTitle, 
                                                       hasChild: true,
                                                       className: 'tableViewRowSelectable',
@@ -298,7 +301,12 @@ function window (params) {
         
         visitorRows = null;
         visitorRows = [];
-        
+
+        if (!tableView) {
+            
+            return;
+        }
+
         tableView.setData([]);
     };
     

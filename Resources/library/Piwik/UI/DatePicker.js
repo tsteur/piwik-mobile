@@ -7,20 +7,21 @@
  */
 
 /** @private */
-var Piwik       = require('library/Piwik');
+var Piwik = require('library/Piwik');
 /** @private */
-var _           = require('library/underscore');
+var _     = require('library/underscore');
  
 /**
  * @class     A date picker is created by the method Piwik.UI.createDatePicker. A date picker can be used to select a
- *            date within a given range. The date picker does also allow to select a period like 'day' or 'week'.
+ *            date within a given range. The date picker does also allow to select a period like 'day' or 'range'.
+ *            The picker will be opened within an OptionDialog. The user has the possiblity to select a date range or
+ *            to cancel the whole process. If the selected period is range, the user has the possibility to set two
+ *            dates. From and to. Otherwise the user is just able to set the 'from' date.
  * 
  * @see       <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Picker-object">Titanium.UI.Picker</a>
  *
  * @exports   DatePicker as Piwik.UI.DatePicker
  * @augments  Piwik.UI.View 
- *
- * @todo      rename to Piwik.UI.DateRangePicker
  */
 function DatePicker () {
 
@@ -33,34 +34,49 @@ function DatePicker () {
      *
      * @param  {Object}  event
      * @param  {string}  event.type    The name of the event.
-     * @param  {Date}    event.date    The current selected date.
+     * @param  {Date}    event.from    The current selected 'from' date. 
+     * @param  {Date}    event.to      The current selected 'to' date. You only need this if period==range.
      * @param  {string}  event.period  The current selected period, for example 'day'.
      */
 
     /**
-     * The current select value. Value is null if no value was previously set or selected.
+     * The currently selected 'from' date. 
      *
-     * @type  null|Date
+     * @type  Date
      */
-    this.value       = null;
+    this.from       = new Date();
+    
+    /**
+     * The currently selected 'to' date. 
+     *
+     * @type  Date
+     */
+    this.to         = new Date();
 
     /**
-     * The current selected period.
+     * The currently selected period.
      *
      * @defaults  "day"
      *
      * @type      string
      */
-    this.period      = 'day';
+    this.period     = 'day';
 
     /**
-     * An instance of an OptionDialog used on Android to display the date and period chooser.
+     * A view which contains the 'to date picker'. Needed to show/hide the 'to date picker' depending on the current
+     * selected period.
      *
-     * @type  Titanium.UI.OptionDialog|null
-     * 
-     * @private
+     * @type  null|Ti.UI.View
      */
-    this._dateDialog = null;
+    this.toDateView = null;
+
+    /**
+     * A label which displays the title of the 'from date picker'. Needed to change the text of the label depending on 
+     * the current selected period.
+     *
+     * @type  null|Ti.UI.Label
+     */
+    this.fromLabel  = null;
 }
 
 /**
@@ -69,328 +85,268 @@ function DatePicker () {
 DatePicker.prototype = Piwik.require('UI/View');
 
 /**
- * Initializes and renders the date picker.
+ * Renders the date picker.
  *
- * @param    {Object}  params          See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Picker-object.html">Titanium API</a> for a list of all available parameters.
- * @param    {Date}    params.value    The currently active date, preselected value
- * @param    {Date}    params.minDate  The minimum date for value
- * @param    {Date}    params.maxDate  The maximum date for value
- * @param    {string}  params.period   The currently active period
+ * @param  {Object}  params          See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.Picker-object.html">Titanium API</a> for a list of all available picker parameters.
+ * @param  {Date}    [params.from]   The currently selected 'from' date
+ * @param  {Date}    [params.to]     The currently selected 'to' date
+ * @param  {Date}    params.minDate  The minimum date for both 'from' and 'to' date picker
+ * @param  {Date}    params.maxDate  The maximum date for both 'from' and 'to' date picker
+ * @param  {string}  params.period   The currently active period. Eg. 'day', 'week', 'range'
  *
- * @type     Piwik.UI.DatePicker|null
- *
- * @returns  A date picker instance on android, a Ti.UI.Picker instance on iOS. Returns null if creation was not
- *           successful
- *
- * @todo     Open iPad DatePicker in a PopOver as recommended by apple
+ * @type   Piwik.UI.DatePicker
  */
 DatePicker.prototype.init = function (params) {
 
-    if (this.getParam('period')) {
-        this.period = this.getParam('period');
-    }
-
-    if (this.getParam('value')) {
-        this.value  = this.getParam('value');
-    }
-
-    if (Piwik.getPlatform().isIos) {
-
-        return this.createIos(params);
-    }
-
-    this.createAndroid();
-    params = null;
-
-    return this;
-};
-
-/**
- * Renders the iOS date picker by adding a toolbar (to select a period) and a date picker to the current opened
- * window, like an overlay.
- *
- * @param  {Object}  params  Parameters as defined in {@link Piwik.UI.DatePicker#init}
- *
- * @type   Piwik.UI.DatePicker
- *
- * @fires  Piwik.UI.DatePicker#event:onSet
- */
-DatePicker.prototype.createIos = function (params) {
+    this.period    = this.getParam('period', this.period);
+    this.from      = this.getParam('from', this.from);
+    this.to        = this.getParam('to', this.to);
     
-    if (!params) {
-        params = {};
-    }
+    var scrollView = Ti.UI.createScrollView({id: 'datePickerScrollView'});
     
-    var win    = this.create('ModalWindow', {title: _('General_ChooseDate'), 
-                                             openView: params.source ? params.source : null});
+    this.addPeriodPicker(scrollView);
+    this.addFromDatePicker(scrollView);
+    this.addToDatePicker(scrollView);
     
-    var that   = this;
+    var dateDialog = Ti.UI.createOptionDialog({title: _('General_ChooseDate'),
+                                               options: null,
+                                               androidView: scrollView});
+    this.addButtons(dateDialog);
+    dateDialog.show();
 
-    params.id  = 'datePicker';
-
-    try {
-        var datePicker = Ti.UI.createPicker(params);
-        datePicker.addEventListener('change', function (event) {
-            that.value = event.value;
-        });
-
-        win.add(datePicker);
-
-    } catch (e) {
-        Piwik.getLog().error('Failed to create picker' + e.message, 'Piwik.UI.DatePicker::createIos');
-
-        return;
-    }
-
-    var periods   = [this.create('TableViewRow', {title: _('CoreHome_PeriodDay'),
-                                                  period: 'day',
-                                                  hasCheck: ('day' == this.period)}),
-                     this.create('TableViewRow', {title: _('CoreHome_PeriodWeek'),
-                                                  period: 'week',
-                                                  hasCheck: ('week' == this.period)}),
-                     this.create('TableViewRow', {title: _('CoreHome_PeriodMonth'),
-                                                  period: 'month',
-                                                  hasCheck: ('month' == this.period)}),
-                     this.create('TableViewRow', {title: _('CoreHome_PeriodYear'),
-                                                  period: 'year',
-                                                  hasCheck: ('year' == this.period)})];
-
-    var tableView = Ti.UI.createTableView({id: 'datePickerPeriodTableView',
-                                           bottom: datePicker.height,
-                                           data: periods});
-
-    tableView.addEventListener('click', function (event) {
-        for (var index = 0; index < 4; index++) {
-            periods[index].hasCheck = false;
-        }
-
-        that.period        = event.row.period;
-        event.row.hasCheck = true;
-    });
-
-    win.add(tableView);
-    tableView = null;
-
-    var doneButton = Ti.UI.createButton({title: _('General_Done'),
-                                         style: Ti.UI.iPhone.SystemButtonStyle.DONE});
-    doneButton.addEventListener('click', function () {
-
-        try {
-            var myEvent = {date: that.value, period: that.period, type: 'onSet'};
-
-            that.fireEvent('onSet', myEvent);
-            
-            win.close();
-            win     = null;
-            myEvent = null;
-        } catch (e) {
-            Piwik.getLog().warn('Failed to close site chooser window', 'Piwik.UI.Menu::onChooseSite');
-        }
-    });
-
-    win.setRightNavButton(doneButton);
-    win.open();
-    
-    doneButton = null;
     params     = null;
-    datePicker = null;
-
-    return this;
-};
-
-/**
- * Renders the Android date picker by using an OptionDialog.
- */
-DatePicker.prototype.createAndroid = function () {
-
-    var view         = Ti.UI.createView({id: 'datePickerView'});
-
-    this._dateDialog = Ti.UI.createOptionDialog({
-        title: '',
-        options: null,
-        androidView: view
-    });
-
-    this.addDateSelector(view);
-    this.addPeriodSelector(view);
-    this.addButtons(this._dateDialog);
-
-    this.setValue(this.value);
-
-    this._dateDialog.show();
+    dateDialog = null;
+    scrollView = null;
     
-    view = null;
+    this.setPeriod(this.period);
 
     return this;
 };
 
 /**
- * Updates the title of the android option dialog depending on the current selected date and period value. Only for
- * Android.
- *
- * @private
+ * Sets (overwrites) the period and updates the date picker depending on the given period. For example if 
+ * period==range it'll display the 'to date picker' whereas it'll hide the 'to date picker' if period!=range.
+ * 
+ * @param  {string}  period
  */
-DatePicker.prototype._updateDisplayedValues = function () {
-
-    if (!this._dateDialog) {
-        Piwik.getLog().warn('dateDialog does not exist: ' + Piwik.getPlatform().osName, 'Piwik.UI.DatePicker::updateDisplayedValues');
-
+DatePicker.prototype.setPeriod = function (period) {
+    
+    if (!period) {
+        
+        return;
+    }
+    
+    this.period = period;
+    
+    if (!this.toDateView || !this.fromLabel) {
+        
         return;
     }
 
-    var period     = '';
-    switch (this.period) {
-        case 'day':
-            period = _('CoreHome_PeriodDay');
-            break;
-        case 'week':
-            period = _('CoreHome_PeriodWeek');
-            break;
-        case 'month':
-            period = _('CoreHome_PeriodMonth');
-            break;
-        case 'year':
-            period = _('CoreHome_PeriodYear');
-            break;
+    if ('range' == this.period) {
+        this.toDateView.show();
+        this.fromLabel.text = _('General_DateRangeFrom_js');
+    } else {
+        this.toDateView.hide();
+        this.fromLabel.text = _('General_Date');
     }
-
-    var dateUtils          = Piwik.require('Utils/Date');
-
-    this._dateDialog.title = period + ', ' + dateUtils.toPiwikDateRangeString(this.value, this.period);
-    
-    dateUtils = null;
-    period    = null;
 };
 
 /**
- * Sets a new value and refreshes the displayed date value.
+ * Adds the period selector to the given container. It'll automatically perselect the current period.
  *
- * @param  {Date}  value  The current selected date value.
+ * @param  {Titanium.UI.View}  container  A view where the date selector shall be rendered into.
  */
-DatePicker.prototype.setValue = function (value) {
-
-    this.value = value;
-    value      = null;
-
-    this._updateDisplayedValues();
-};
-
-/**
- * Adds the date selector to the given view.
- * 
- * @param  {Titanium.UI.View}  view  A view where the date selector will be rendered into.
- */
-DatePicker.prototype.addDateSelector = function (view) {
-
-    var params = this.getParams();
-    params.id  = 'datePickerDatePicker';
-
-    var picker = Ti.UI.createPicker(params);
-
-    var that   = this;
-    // the change event is triggered on each date change
-    picker.addEventListener('change', function (event) {
-        that.setValue(event.value);
-    });
-
-    view.add(picker);
+DatePicker.prototype.addPeriodPicker = function (container) {
+    if (!container) {
+        
+        return;
+    }
     
-    view   = null;
-    picker = null;
-    params = null;
-};
-
-/**
- * Adds the period selector to the given view. Automatically updates the displayed title on each period change.
- *
- * @param  {Titanium.UI.View}  view  A view where the date selector will be rendered into.
- */
-DatePicker.prototype.addPeriodSelector = function (view) {
+    var periodView   = Ti.UI.createView({className: 'datePickerView'});
+    
+    periodView.add(Ti.UI.createLabel({text: _('General_Period'), className: 'datePickerLabel'}));
 
     var periodPicker = Ti.UI.createPicker({id: 'datePickerPeriodPicker'});
-
-    var periods      = [];
-    periods[0]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodDay')});
-    periods[1]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodWeek')});
-    periods[2]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodMonth')});
-    periods[3]       = Ti.UI.createPickerRow({title: _('CoreHome_PeriodYear')});
     
-    periodPicker.add(periods);
-    periods          = null;
+    var piwikDate    = Piwik.require('PiwikDate');
+    var periods      = piwikDate.getAvailablePeriods();
+    var period       = null;
+    
+    var pickerRows   = [];
+    for (period in periods) {
+        pickerRows.push(Ti.UI.createPickerRow({title: periods[period], period: period}));
+    }
+    
+    periodPicker.add(pickerRows);
 
-    if ('day' == this.period) {
-        periodPicker.setSelectedRow(0, 0, false);
-    } else if ('week' == this.period) {
-        periodPicker.setSelectedRow(0, 1, false);
-    } else if ('month' == this.period) {
-        periodPicker.setSelectedRow(0, 2, false);
-    } else if ('year' == this.period) {
-        periodPicker.setSelectedRow(0, 3, false);
+    var index = 0;
+    for (period in periods) {
+        if (this.period == period) {
+            periodPicker.setSelectedRow(0, index, false);
+            break;
+        }
+        
+        index++;
     }
 
     var that = this;
-
     periodPicker.addEventListener('change', function (event) {
 
-        switch (event.rowIndex) {
-            case 1:
-                that.period = 'week';
-                break;
-
-            case 2:
-                that.period = 'month';
-                break;
-
-            case 3:
-                that.period = 'year';
-                break;
-
-            default:
-                that.period = 'day';
+        if (!event || !event.row || !event.row.period || !that) {
+            
+            return;
         }
-
-        that._updateDisplayedValues();
+        
+        that.setPeriod(event.row.period);
+        event = null;
     });
 
-    view.add(periodPicker);
+    periodView.add(periodPicker);
+    container.add(periodView);
     
-    view         = null;
     periodPicker = null;
+    pickerRows   = null;
+    piwikDate    = null;
+    periodView   = null;
+    container    = null;
+};
+
+/**
+ * Adds the 'from' date selector to the given container. It'll automatically preselect the current 'from' date.
+ * 
+ * @param  {Titanium.UI.View}  container  A view where the 'from' date selector shall be rendered into.
+ */
+DatePicker.prototype.addFromDatePicker = function (container) {
+    if (!container) {
+        
+        return;
+    }
+    
+    var fromView   = Ti.UI.createView({className: 'datePickerView'});
+    
+    this.fromLabel = Ti.UI.createLabel({text: _('General_Date'), className: 'datePickerLabel'});
+    fromView.add(this.fromLabel);
+
+    var params     = this.getParams();
+    params.id      = 'datePickerFromPicker';
+    params.value   = this.from;
+
+    var picker     = Ti.UI.createPicker(params);
+
+    var that       = this;
+    // the change event is triggered on each date change
+    picker.addEventListener('change', function (event) {
+        if (!event || !event.value || !that) {
+            
+            return;
+        }
+        
+        that.from = event.value;
+        event     = null;
+    });
+
+    fromView.add(picker);
+    container.add(fromView);
+    
+    picker    = null;
+    params    = null;
+    fromView  = null;
+    container = null;
+};
+
+/**
+ * Adds the 'to' date selector to the given container. It'll automatically preselect the current 'to' date.
+ * 
+ * @param  {Titanium.UI.View}  container  A view where the 'to' date selector shall be rendered into.
+ */
+DatePicker.prototype.addToDatePicker = function (container) {
+    if (!container) {
+        
+        return;
+    }
+    
+    this.toDateView = Ti.UI.createView({className: 'datePickerView'});
+    
+    this.toDateView.add(Ti.UI.createLabel({text: _('General_DateRangeTo_js'), className: 'datePickerLabel'}));
+    
+    var params   = this.getParams();
+    params.id    = 'datePickerToPicker';
+    params.value = this.to;
+    
+    var picker   = Ti.UI.createPicker(params);
+
+    var that     = this;
+    picker.addEventListener('change', function (event) {
+        if (!event || !event.value || !that) {
+            
+            return;
+        }
+        
+        that.to = event.value;
+        event   = null;
+    });
+
+    this.toDateView.add(picker);
+    container.add(this.toDateView);
+    
+    picker    = null;
+    params    = null;
+    container = null;
 };
 
 /**
  * Adds an 'Update' and a 'Cancel' button to the Android Date Dialog.
  *
- * @param  {Titanium.UI.OptionDialog}  dateDialog  An option dialog view.
+ * @param  {Titanium.UI.OptionDialog}  dateDialog  An OptionDialog view.
  *
  * @fires  Piwik.UI.DatePicker#event:onSet
  */
 DatePicker.prototype.addButtons = function (dateDialog) {
-
     if (!dateDialog) {
         Piwik.getLog().warn('dateDialog does not exist: ' + Piwik.getPlatform().osName, 
                             'Piwik.UI.DatePicker::addButtons');
 
         return;
     }
-    
+
     dateDialog.buttonNames = [_('CoreUpdater_UpdateTitle'), _('SitesManager_Cancel_js')];
     dateDialog.cancel      = 1;
-
-    var that = this;
-
-    dateDialog.addEventListener('click', function (event) {
-
-        if (event && 0 == event.index) {
-            // fire event only if user pressed Update button
-            var myEvent = {date: that.value, period: that.period, type: 'onSet'};
-            that.fireEvent('onSet', myEvent);
-        }
-        
-        // else: user pressed cancel button or hardware back button
-    });
     
-    dateDialog = null;
+    var that = this;
+    dateDialog.addEventListener('click', function (event) {
+ 
+        if (event && 0 === event.index) {
+            // fire event only if user pressed Update button
+            var myEvent = {from: that.from, to: that.to, period: that.period, type: 'onSet'};
+            that.fireEvent('onSet', myEvent);
+            
+            that.cleanup();
+            that = null;
+            
+        } else {
+            // user pressed cancel button or hardware back button
+            
+            that.cleanup();
+            that = null;
+        }
+
+     });
+     
+     dateDialog = null;
+};
+
+/**
+ * Cleanup all references to prevent memory leaks.
+ */
+DatePicker.prototype.cleanup = function () {
+
+    this.toDateView = null;
+    this.fromLabel  = null;
+    
+    this.from       = null;
+    this.to         = null;
+    this.period     = null;
 };
 
 module.exports = DatePicker;

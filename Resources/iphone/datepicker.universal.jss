@@ -5,12 +5,22 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html Gpl v3 or later
  * @version $Id$
  */
-#datePicker {
+#datePickerPeriod {
+    bottom: 0;
+    zIndex: 101;
+}
+
+#datePickerFrom {
+    bottom: 0;
+    zIndex: 103;
+}
+
+#datePickerTo {
     bottom: 0;
     zIndex: 102;
 }
 
-#datePickerPeriodTableView {
+#datePickerChooserTableView {
     top: 0;
     style: 1;
 }

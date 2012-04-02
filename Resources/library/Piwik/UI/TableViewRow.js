@@ -121,8 +121,33 @@ TableViewRow.prototype.init = function (params) {
             this.valueLabel = null;
         }
     };
+    
+    /** 
+     * @memberOf  Piwik.UI.TableViewRow
+     * @function 
+     */
+    var changeTitle = function (title) {
+        
+        if (!title || !this.titleLabel) {
+            
+            return;
+        }
+        
+        this.titleLabel.text = title;
+    };
 
     row.changeValue = changeValue;
+    row.changeTitle = changeTitle;
+    
+    row.cleanup = function () {
+        this.titleLabel       = null;
+        this.valueLabel       = null;
+        this.onShowOptionMenu = null;
+        row.changeValue       = null;
+        row.changeTitle       = null;
+        row                   = null;
+    };
+    
     row.changeValue(value);
 
     if (params.onShowOptionMenu && Piwik.getPlatform().isAndroid) {

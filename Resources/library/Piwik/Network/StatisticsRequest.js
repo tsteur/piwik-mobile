@@ -226,6 +226,7 @@ StatisticsRequest.prototype.send = function (params) {
     var session          = Piwik.require('App/Session');
     var periodSession    = session.get('piwik_parameter_period');
     var dateSession      = session.get('piwik_parameter_date');
+    session              = null;
 
     this.period          = params.period || periodSession;
     this.date            = params.date || dateSession;
@@ -256,7 +257,7 @@ StatisticsRequest.prototype.send = function (params) {
     this.accessUrl = account.accessUrl;
 
     var parameter  = {idSite: this.site.idsite,
-                      date: 'today', 
+                      date: this.date, 
                       filter_sort_column: this.sortOrderColumn,
                       apiModule: this.report.module,
                       apiAction: this.report.action,
@@ -266,37 +267,21 @@ StatisticsRequest.prototype.send = function (params) {
         for (var index in this.report.parameters) {
             parameter[index]   = this.report.parameters[index];
         }
-        // Small hack for graphs to be disabled correctly
-        this.report.uniqueId   = this.report.uniqueId.replace(/--[^_]/, '--X');
+        
+        if (this.report.uniqueId) {
+            // Small hack for graphs to be disabled correctly
+            this.report.uniqueId = this.report.uniqueId.replace(/--[^_]/, '--X');
+        }
     }
-                      
+
     if (!this.showAll) {
         parameter.filter_limit = config.piwik.filterLimit;
     } else {
         // -1 means request really all results
         parameter.filter_limit = -1;
     }
-    
-    if (this.date) {
-        parameter.date = this.date;
-    } else {
-        this.date      = null;
-    }
-    
-    if ('string' === (typeof parameter.date).toLowerCase()) {
 
-        var dateUtils   = Piwik.require('Utils/Date');
-        var stringUtils = Piwik.require('Utils/String');
-        
-        // I think we can optimize this... we want to convert 'yesterday' to a date in the format 'YYYY-MM-DD'
-        parameter.date  = stringUtils.toPiwikDate(parameter.date);
-        parameter.date  = dateUtils.toPiwikQueryString(parameter.date);
-        
-        dateUtils       = null;
-        stringUtils     = null;
-    }
-
-    var statsRequest    = Piwik.require('Network/PiwikApiRequest');
+    var statsRequest = Piwik.require('Network/PiwikApiRequest');
     statsRequest.setMethod('API.getProcessedReport');
     statsRequest.setParameter(parameter);
     statsRequest.setAccount(account);
@@ -319,7 +304,6 @@ StatisticsRequest.prototype.send = function (params) {
     statsRequest.send();
     
     statsRequest = null;
-    session      = null;
     parameter    = null;
     params       = null;
 };
@@ -372,6 +356,8 @@ StatisticsRequest.prototype._getSortOrder = function (report) {
             preferredRow = preferredRows[index];
             
             if (report.metrics[preferredRow]) {
+                report        = null;
+                preferredRows = null;
                 
                 return preferredRow;
             }
@@ -383,7 +369,8 @@ StatisticsRequest.prototype._getSortOrder = function (report) {
         }
     }
     
-    report = null;
+    report        = null;
+    preferredRows = null;
     
     return sortOrder;
 };
@@ -407,67 +394,88 @@ StatisticsRequest.prototype._getSortOrder = function (report) {
  *                     )
  */
 StatisticsRequest.prototype._formatReportData = function (response, account) {
+    
+    if (!response || !response.reportData) {
+        
+        return [];
+    }
         
     var reportRow = [];
     var label;
     var value;
     var row;
+    var metadata;
+    var report;
+    
+    var reportData     = response.reportData;
+    var reportMetadata = response.reportMetadata;
 
-    if (response && response.reportData && Piwik.isArray(response.reportData) && 0 < response.reportData.length) {
+    if (Piwik.isArray(reportData) && 0 < reportData.length) {
 
-        for (var index = 0; index < response.reportData.length; index++) {
-            
-            if (!response.reportData[index]) {
-                continue;    
+        for (var index = 0; index < reportData.length; index++) {
+            if (!reportData[index]) {
+                continue;
             }
             
-            label = response.reportData[index].label;
-            if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].shortLabel) {
+            report       = reportData[index];
+            metadata     = null;
+            if (reportMetadata && reportMetadata[index]) {
+                metadata = reportMetadata[index];
+            }
+
+            label  = report.label;
+            value  = report.value;
+            
+            if (report[this.sortOrderColumn]) {
+                value = report[this.sortOrderColumn];
+            }
+
+            if (metadata && metadata.shortLabel) {
                 // always prefer the sortLabel
-                label = response.reportMetadata[index].shortLabel;
+                label = metadata.shortLabel;
             }
-            
-            value     = response.reportData[index].value;
-            if (response.reportData[index][this.sortOrderColumn]) {
-                value = response.reportData[index][this.sortOrderColumn];
-            }
-            
+
             row = {title: label, value: value};
             
-            if (response.reportMetadata && response.reportMetadata[index] && response.reportMetadata[index].logo) {
+            if (metadata && metadata.logo) {
                 
-                row.logo = Piwik.getNetwork().getBasePath('' + account.accessUrl) + response.reportMetadata[index].logo;
+                row.logo = Piwik.getNetwork().getBasePath('' + account.accessUrl) + metadata.logo;
                 
-                if (response.reportMetadata[index].logoWidth) {
-                    row.logoWidth  = response.reportMetadata[index].logoWidth;
+                if (metadata.logoWidth) {
+                    row.logoWidth  = metadata.logoWidth;
                 }
-                if (response.reportMetadata[index].logoHeight) {
-                    row.logoHeight = response.reportMetadata[index].logoHeight;
+                if (metadata.logoHeight) {
+                    row.logoHeight = metadata.logoHeight;
                 }
             }
         
             reportRow.push(row);
         }
         
-    } else if (response && response.reportData && Piwik.isObject(response.reportData)) {
+    } else if (Piwik.isObject(reportData)) {
         // since Piwik Server 1.5.0: for reports with no dimensions, like VisitsSummary.get
 
-        for (var key in response.reportData) {
+        for (var key in reportData) {
 
             label     = key;
             if (response.columns && response.columns[key]) {
                 label = response.columns[key];
             }
             
-            value = response.reportData[key];
+            value = reportData[key];
 
             row   = {title: label, value: value};
             reportRow.push(row);
         }
     }
     
-    response = null;
-    account  = null;
+    response       = null;
+    account        = null;
+    metadata       = null;
+    row            = null;
+    report         = null;
+    reportData     = null;
+    reportMetadata = null;
     
     return reportRow;
 };

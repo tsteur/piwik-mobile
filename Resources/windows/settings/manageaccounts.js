@@ -232,14 +232,21 @@ function window () {
 
         if (tableData) {
             for (var index = 0; index < tableData.length; index++) {
-                tableData[index].titleLabel = null;
-                tableData[index].valueLabel = null;
+                if (tableData[index] && tableData[index].cleanup) {
+                    tableData[index].cleanup();
+                }
+                
                 tableData[index] = null;
             }
         }
         
         tableData = null;
         tableData = [];
+        
+        if (!tableview) {
+            
+            return;
+        }
         
         tableview.setData([]);
     };

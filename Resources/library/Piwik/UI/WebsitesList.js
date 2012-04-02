@@ -147,8 +147,10 @@ WebsitesList.prototype.init = function () {
         
         if (rows) {
             for (var index = 0; index < rows.length; index++) {
-                rows[index].titleLabel = null;
-                rows[index].valueLabel = null;
+                if (rows[index] && rows[index].cleanup) {
+                    rows[index].cleanup();
+                }
+                
                 rows[index]            = null;
             }
         }
