@@ -603,4 +603,35 @@ UI.createWebsitesList = function (params) {
     }
 };
 
+/**
+ * Creates a new ImageView.
+ *
+ * @see      Piwik.UI.ImageView
+ *
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.ImageView.
+ *
+ * @type     Titanium.UI.ImageView
+ *
+ * @returns  The created ImageView instance.
+ */
+UI.createImageView = function (params) {
+
+    try {
+        var instance = Piwik.require('UI/ImageView');
+        var view     = instance.init(params);
+        
+        instance     = null;
+        params       = null;
+        
+        return view;
+
+    } catch (exception) {
+
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiIv62'});
+        uiError.showErrorMessageToUser();
+    }
+    
+    return Ti.UI.createImageView(params);
+};
+
 module.exports = UI;

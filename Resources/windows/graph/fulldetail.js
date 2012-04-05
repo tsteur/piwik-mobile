@@ -72,13 +72,13 @@ function window (params) {
 
     Piwik.getLog().debug('piwik graphUrl is ' + graphUrlWithSize, 'graph/fulldetail::window');
 
-    imageView = Ti.UI.createImageView({width: pictureWidth,
-                                       height:  pictureHeight,
-                                       canScale: !Piwik.getPlatform().isAndroid,
-                                       hires: !Piwik.getPlatform().isAndroid,
-                                       enableZoomControls: false,
-                                       className: 'fullgraphImage',
-                                       image: graphUrlWithSize});
+    imageView = this.create('ImageView', {width: pictureWidth,
+                                          height:  pictureHeight,
+                                          canScale: !Piwik.getPlatform().isAndroid,
+                                          hires: !Piwik.getPlatform().isAndroid,
+                                          enableZoomControls: false,
+                                          className: 'fullgraphImage',
+                                          image: graphUrlWithSize});
 
     this.add(imageView);
     
@@ -115,13 +115,13 @@ function window (params) {
 
             graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
             graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
-            imageView        = Ti.UI.createImageView({width: pictureWidth,
-                                                      height:  pictureHeight,
-                                                      canScale: !Piwik.getPlatform().isAndroid,
-                                                      hires: !Piwik.getPlatform().isAndroid,
-                                                      defaultImage: '/images/graphDefault.png',
-                                                      enableZoomControls: false,
-                                                      image: graphUrlWithSize});
+            imageView        = that.create('ImageView', {width: pictureWidth,
+                                                         height: pictureHeight,
+                                                         canScale: !Piwik.getPlatform().isAndroid,
+                                                         hires: !Piwik.getPlatform().isAndroid,
+                                                         defaultImage: '/images/graphDefault.png',
+                                                         enableZoomControls: false,
+                                                         image: graphUrlWithSize});
             that.add(imageView);
         } catch (e) {
             Piwik.getLog().warn('Failed to update (remove and add) graph', 'graph/fulldetail::window');
@@ -135,15 +135,18 @@ function window (params) {
             return;
         }
         
-        pictureWidth     = that.width - 20;
-        pictureHeight    = that.height - 20;
-        
-        imageView.width  = pictureWidth;
-        imageView.height = pictureHeight;
-        graphUrlWithSize = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
-        graphUrlWithSize = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
+        var originalWidth  = that.width ? that.width : that.size.width;
+        var originalHeight = that.height ? that.height : that.size.height;
     
-        imageView.image  = graphUrlWithSize;
+        pictureWidth       = originalWidth - 20;
+        pictureHeight      = originalHeight - 20;
+        
+        imageView.width    = pictureWidth;
+        imageView.height   = pictureHeight;
+        graphUrlWithSize   = graph.appendSize(graphUrl, pictureWidth, pictureHeight, true);
+        graphUrlWithSize   = graph.setParams(graphUrlWithSize, {showMetricTitle: 1});
+    
+        imageView.image    = graphUrlWithSize;
     }
     
     Ti.Gesture.addEventListener('orientationchange', Piwik.getPlatform().isAndroid ? rotateImageOnAndroid : rotateImage);

@@ -141,6 +141,9 @@ function PiwikGraph () {
             parameter.fontSize = Math.round(parameter.fontSize * 1.5);
         } 
         
+        // prevents graph from caching
+        parameter.cacherand    = Math.floor(Math.random() * 9999999);
+        
         graphUrl  = this.setParams(graphUrl, parameter);
         parameter = null;
         
@@ -159,7 +162,12 @@ function PiwikGraph () {
      */
     this.getSparklineUrl = function (siteId, accessUrl, tokenAuth) {
 
-        var url = '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline&token_auth=' + tokenAuth;
+        var url = '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits';
+        url    += '&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline';
+        url    += '&token_auth=' + tokenAuth;
+
+        // prevents graph from caching
+        url    += '&cacherand=' + Math.floor(Math.random() * 9999999);
 
         return accessUrl + Piwik.getNetwork().encodeUrlParams(url);
     };

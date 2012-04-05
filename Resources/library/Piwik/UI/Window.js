@@ -75,6 +75,12 @@ function UiWindow () {
         },
         
         release: function () {
+            
+            if (!this.cleanups || !this.cleanups.length) {
+                
+                return;
+            }
+            
             var len = this.cleanups.length;
             for (var index = 0; index < len; index++) {
             
@@ -177,7 +183,7 @@ function UiWindow () {
             newWindowWillFollow = false;
         }
     
-        if (!Piwik.getPlatform().isIpad && Piwik.getPlatform().isIos 
+        if (!Piwik.getPlatform().isIpad && Piwik.getPlatform().isIos && Piwik.getUI().layout.windows
             && 1 == Piwik.getUI().layout.windows.length && !newWindowWillFollow) {
             // If only 1 view is available do never close the first screen on iOS, otherwise a blank window will appear
     

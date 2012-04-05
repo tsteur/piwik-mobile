@@ -99,11 +99,11 @@ Graph.prototype.addGraph = function (view) {
     width  = ('' + width);
     height = ('' + height);
     
-    var graphImage = Ti.UI.createImageView({width: width,
-                                            height: height,
-                                            id: 'graphImage', 
-                                            hires: true,
-                                            image: fullGraphUrl});
+    var graphImage = this.create('ImageView', {width: width,
+                                               height: height,
+                                               id: 'graphImage', 
+                                               hires: true,
+                                               image: fullGraphUrl});
 
     view.add(graphImage);
     graphImage = null;

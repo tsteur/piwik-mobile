@@ -162,10 +162,10 @@ TableViewRow.prototype.init = function (params) {
 
     if (rightImage && rightImage.url) {
 
-        var rowRightImage = Ti.UI.createImageView({width:  stringUtils.toSizeUnit('' + rightImage.width),
-                                                   height: stringUtils.toSizeUnit('' + rightImage.height),
-                                                   image:  rightImage.url,
-                                                   id:     'tableViewRowRightImage'});
+        var rowRightImage = Piwik.getUI().createImageView({width:  stringUtils.toSizeUnit('' + rightImage.width),
+                                                           height: stringUtils.toSizeUnit('' + rightImage.height),
+                                                           image:  rightImage.url,
+                                                           id:     'tableViewRowRightImage'});
         row.add(rowRightImage);
         rowRightImage     = null;
     }
