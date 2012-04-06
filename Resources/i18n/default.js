@@ -126,6 +126,7 @@ module.exports = {
     Mobile_HttpIsNotSecureWarning:                                      "Your Piwik authorization token (token_auth) is sent in clear text if you use 'HTTP'. For this reason we recommend HTTPS for secure transport of data over the internet. Do you want to proceed?",
     Mobile_LastUpdated:                                                 'Last Updated: %s',
     Mobile_LoginCredentials:                                            'Credentials',
+    Mobile_LoginUseHttps:                                               'Use https',
     Mobile_MultiChartLabel:                                             'Display sparklines',
     Mobile_MultiChartInfo:                                              'Next to each website on the welcome screen',
     Mobile_NavigationBack:                                              'Back',

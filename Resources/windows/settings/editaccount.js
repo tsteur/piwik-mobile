@@ -196,38 +196,50 @@ function window (params) {
         piwikUser.blur();
         piwikUrl.blur();
         piwikPassword.blur();
-
-        if (piwikUrl.value && 'http://' === piwikUrl.value.substr(0, 7)) {
-
-            var alertDialog = Ti.UI.createAlertDialog({
-                message: _('Mobile_HttpIsNotSecureWarning'),
-                buttonNames: [_('General_Ok'), _('SitesManager_Cancel_js')],
-                cancel: 1
-            });
-
-            alertDialog.show();
-
-            alertDialog.addEventListener('click', function (event) {
-
-                if (!event || (event.cancel === event.index) || (true === event.cancel)) {
-                    // user pressed hardware back button or cancel button
-                    
-                    return;
-                }
-
-                if (event &&  0 == event.index) {
-
-                    // has the user clicked the OK button?
-                    saveAccount();
-                    return;
-                }
-            });
-
-            return;
+        
+        var accessUrl = '';
+        if (piwikUrl.value) {
+            accessUrl = ('' + piwikUrl.value).toLowerCase();
         }
 
-        // save directly without confirmation if user entered a https address
-        saveAccount();
+        if (accessUrl && -1 === accessUrl.indexOf('http')) {
+            // user has not specified any http protocol. automatically prepend 'http'.
+            piwikUrl.value = 'http://' + piwikUrl.value;
+            accessUrl      = piwikUrl.value;
+        }
+
+        if (!accessUrl || 0 !== accessUrl.indexOf('http://')) {
+            // save directly without confirmation if user has entered any other protocol than http, eg https.
+            saveAccount();
+            
+            return;
+        }
+        
+        // accessUrl starts with http://
+        var alertDialog = Ti.UI.createAlertDialog({
+            message: _('Mobile_HttpIsNotSecureWarning'),
+            buttonNames: [_('General_Yes'), _('Mobile_LoginUseHttps')]
+        });
+
+        alertDialog.show();
+
+        alertDialog.addEventListener('click', function (event) {
+            if (!event || (event.cancel === event.index) || (true === event.cancel)) {
+                // user pressed hardware back button or cancel button
+                return;
+            }
+
+            if (1 === event.index) {
+                // user pressed 'use secure https' button. replace http:// by https://
+                piwikUrl.value = 'https://' + piwikUrl.value.substr(7);
+                saveAccount();
+            } else if (0 === event.index) {
+                saveAccount();
+            }
+            
+        });
+
+        return;
     });
 
     piwikUrl.addEventListener('return', function(event) {

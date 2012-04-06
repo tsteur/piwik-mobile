@@ -136,6 +136,7 @@ valid_translations =  {
         'Mobile_HowtoDeleteAnAccountOniOS':                                   'Swipe to right to delete an account',
         'Mobile_LastUpdated':                                                 'Last Updated: %s',
         'Mobile_LoginCredentials':                                            'Credentials',
+        'Mobile_LoginUseHttps':                                               'Use https',
         'Mobile_MultiChartLabel':                                             'Display sparklines',
         'Mobile_MultiChartInfo':                                              'Next to each website on the welcome screen',
         'Mobile_NavigationBack':                                              'Back',
