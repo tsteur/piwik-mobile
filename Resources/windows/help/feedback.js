@@ -72,8 +72,18 @@ function window () {
     var network  = Ti.UI.createLabel({text: String.format("Network: %s", '' + Ti.Network.networkTypeName),
                                       className: 'giveFeedbackDeviceInfoLabel'});
 
-    var work     = Ti.UI.createLabel({text: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik. Please contact us.',
+    var work     = Ti.UI.createLabel({text: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik.',
                                       id: 'giveFeedbackMadeByCommunityLabel'});
+                                      
+    var participate = Ti.UI.createLabel({text: 'Learn about all the ways you can participate.',
+                                         id: 'giveFeedbackLinkParticipateLabel'});
+    participate.addEventListener('click', function () {
+        
+        var link = 'http://piwik.org/contribute/';
+
+        Piwik.getTracker().trackLink(link, 'link');
+        Ti.Platform.openURL(link);
+    });
 
     scrollView.add(title);
     scrollView.add(contact);
@@ -84,6 +94,7 @@ function window () {
     scrollView.add(locale);
     scrollView.add(network);
     scrollView.add(work);
+    scrollView.add(participate);
     
     title       = null;
     contact     = null;

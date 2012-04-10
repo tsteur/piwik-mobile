@@ -171,6 +171,16 @@
     font-weight: 'bold';
 }
 
+#giveFeedbackLinkParticipateLabel {
+    color: '#336699';
+    top: 5;
+    left: 5;
+    right: 5;
+    text-align: 'left';
+    height: 'auto';
+    font-weight: 'bold';
+}
+
 /**
  * window settings/index.js
  */

@@ -181,6 +181,17 @@
     font-size: '14sp';
 }
 
+#giveFeedbackLinkParticipateLabel {
+    color: '#336699';
+    top: '5dp';
+    left: '16dp';
+    right: '16dp';
+    text-align: 'left';
+    height: 'auto';
+    font-weight: 'bold';
+    font-size: '14sp';
+}
+
 /**
  * window settings/index.js
  */
