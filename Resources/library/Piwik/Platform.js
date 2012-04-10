@@ -20,7 +20,7 @@ var platform       = {};
  *
  * @type  string
  */
-platform.osName    = Ti.Platform.osname.toLowerCase();
+platform.osName    = ('' + Ti.Platform.osname).toLowerCase();
 
 /**
  * True if the current platform is android, false otherwise.
@@ -28,6 +28,13 @@ platform.osName    = Ti.Platform.osname.toLowerCase();
  * @type  boolean
  */
 platform.isAndroid = ('android' === platform.osName);
+
+/**
+ * True if the current platform is mobile web / browser, false otherwise.
+ *
+ * @type  boolean
+ */
+platform.isWeb     = ('mobileweb' === platform.osName);
 
 /**
  * True if the current platform is iOS (iPod or iPad or iPhone), false otherwise.
