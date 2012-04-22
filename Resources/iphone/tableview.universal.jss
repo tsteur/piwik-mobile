@@ -14,12 +14,12 @@ tableviewrow {
     color: '#333333';
     font-size: 18;
     font-weight: 'bold';
-    height: 'auto';
+    height: 'SIZE';
     selectionStyle: 2;
 }
 
 .tableViewSection {
-    height: 'auto';
+    height: 'SIZE';
     backgroundColor: '#B2AEA5';
     selectedBackgroundColor: '#B2AEA5';
     opacity: 0.95;
@@ -30,10 +30,10 @@ tableviewrow {
 }
 
 #tableViewSectionHeaderLabel {
-    height: 'auto';
+    height: 'SIZE';
     top: 3;
     bottom: 4;
-    width: 'auto';
+    width: 'SIZE';
     textAlign: 'left';
     color: '#ffffff';
     left: 10;
@@ -43,8 +43,8 @@ tableviewrow {
 
 #tableViewRowTitleLabelWithDescription {
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     left: 10;
     color: '#333333';
     ellipsize: true;
@@ -57,8 +57,8 @@ tableviewrow {
 
 #tableViewRowTitleLabel {
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     left: 10;
     color: '#333333';
     ellipsize: true;
@@ -73,8 +73,8 @@ tableviewrow {
 #tableViewRowDescriptionLabel {
     font-size: 13;
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     left: 10;
     top: 34;
     bottom: 11;
@@ -87,8 +87,8 @@ tableviewrow {
 #tableViewRowDescriptionLabelvertical {
     font-size: 13;
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     left: 10;
     top: 4;
     bottom: 11;
@@ -102,8 +102,8 @@ tableviewrow {
     right: 10;
     font-size: 18;
     textAlign: 'right';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     color: '#385487';
     touchEnabled: false;
 }

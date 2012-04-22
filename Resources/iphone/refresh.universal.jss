@@ -22,7 +22,7 @@
 #pullToRefreshStatusLabel {
     width: 200;
     bottom: 30;
-    height: "auto";
+    height: "SIZE";
     color: "#576C89";
     textAlign: "center";
     font-size: 13;
@@ -33,7 +33,7 @@
 #pullToRefreshUpdateLabel {
     width: 200;
     bottom: 15;
-    height: "auto";
+    height: "SIZE";
     color: "#576C89";
     text-align: "center";
     font-size: 12;

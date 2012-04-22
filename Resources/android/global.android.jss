@@ -48,12 +48,11 @@
 .searchHintLabel {
     font-size: 13;
     color: '#888888';
-    width: 'auto';
+    width: 'size';
     left: '16dp';
     right: '16dp';
 }
 .searchHintTableViewRow {
-    height: 'auto';
 }
 
 #websiteSearchBar {
@@ -104,7 +103,7 @@
      left: '16dp';
      right: '5dp';
      text-align: 'left';
-     height: 'auto';
+     height: 'size';
      color: '#336699';
 }
 
@@ -114,7 +113,7 @@
     left: '16dp';
     right: '5dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     color: '#336699';
 }
 
@@ -143,7 +142,7 @@
     left: '16dp';
     right: '16dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     font-weight: 'bold';
     font-size: '14sp';
 }
@@ -154,7 +153,7 @@
     left: '16dp';
     right: '16dp';
     bottom: '12dp';
-    height: 'auto';
+    height: 'size';
     text-align: 'left';
     font-weight: 'normal';
     font-size: '14sp';
@@ -165,7 +164,7 @@
     top: '3dp';
     left: '16dp';
     right: '16dp';
-    height: 'auto';
+    height: 'size';
     text-align: 'left';
     font-size: '14sp';
 }
@@ -176,7 +175,7 @@
     left: '16dp';
     right: '16dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     font-weight: 'bold';
     font-size: '14sp';
 }
@@ -187,7 +186,7 @@
     left: '16dp';
     right: '16dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     font-weight: 'bold';
     font-size: '14sp';
 }
@@ -235,8 +234,8 @@
 }
 
 .editAccountTableFooterView {
-    height: 'auto';
-    width: 'auto';
+    height: 'size';
+    width: 'fill';
     left: 0;
 }
 
@@ -257,7 +256,7 @@
 .editAccountTextField {
     focusable: true;
     color: '#333333';
-    height: 'auto';
+    height: 'size';
     top: '8dp';
     bottom: '5dp';
     left: '16dp';
@@ -267,7 +266,7 @@
 .editAccountSwitch {
     top: '8dp';
     bottom: '5dp';
-    height: 'auto';
+    height: 'size';
     left: '16dp';
     focusable: true;
 }

@@ -9,94 +9,94 @@
 .visitorOverviewTableViewRow {
     layout: 'vertical';
     hasChild: true;
-    height: 'auto';
+    height: 'SIZE';
 }
 
 .visitorOverviewAchievedGoalTableViewRow {
     layout: 'vertical';
     hasChild: true;
-    height: 'auto';
+    height: 'SIZE';
     backgroundColor: '#FFFFC4';
 }
 
 #visitorOverviewDateView {
     top: 8;
     layout: 'horizontal';
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
     left: 0;
 }
 
 #visitorOverviewReferrerLabel {
+    top: 0;
     font-size: 13;
-    top: 3;
-    width: 'auto';
+    width: 'SIZE';
     left: 10;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
 }
 
 #visitorOverviewPageviewsLabel {
     font-size: 13;
     top: 4;
-    width: 'auto';
+    width: 'SIZE';
     left: 10;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
     bottom: 8;
 }
 
 #visitorOverviewConvertedGoalsLabel {
     font-size: 13;
-    top: -4;
-    width:'auto';
+    top: 4;
+    width:'SIZE';
     left: 10;
     textAlign: 'left';
-    height: 'auto';
-    bottom: 8;
+    height: 'SIZE';
 }
 
 #visitorOverviewDateTimeLabel {
+    top: 0;
     font-size: 14;
     font-weight: 'bold';
     left: 10;
     textAlign: 'left';
     color: '#333';
-    width:'auto';
-    height: 'auto';
+    width:'SIZE';
+    height: 'SIZE';
 }
 
 .visitorOverviewFirstIcon {
     left: 12;
-    canScale: true;
+    canScale: false;
     enableZoomControls: false;
     borderWidth: 0;
 }
 
 .visitorOverviewFollowingIcon {
     left: 6;
-    canScale: true;
+    canScale: false;
     enableZoomControls: false;
     borderWidth: 0;
 }
 
 #visitorOverviewCountryFlagImageView {
     top: 4;
-    bottom: 3;
     width: 18;
     height: 12;
+    bottom: 0;
 }
 
 #visitorOverviewBrowserIconImageView {
     top: 3;
-    bottom: 3;
     width: 14;
     height: 14;
+    bottom: 0;
 }
 
 #visitorOverviewOperatingSystemIconImageView {
     top: 3;
-    bottom: 3;
     width: 14;
     height: 14;
+    bottom: 0;
 }

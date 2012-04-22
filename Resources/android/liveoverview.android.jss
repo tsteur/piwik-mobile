@@ -7,24 +7,28 @@
  */
 
 .liveOverviewTableViewRow {
-    layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    width: 'fill';
     selectionStyle: 0;
     focusable: false;
+}
+
+.liveOverviewContainerView {
+    layout: 'vertical';
+    height: 'size';
+    width: 'fill';
 }
 
 #liveOverviewTitleLabel {
     left: '16dp';
     top: '8dp';
     color: '#000000';
-    height: 'auto';
-    width:'auto';
+    height: 'size';
+    width:'size';
     font-size: '14sp';
 }
 
 #liveOverviewValueLabel {
-    height: 'auto';
+    height: 'size';
     left: '16dp';
     top: '3dp';
     bottom: '8dp';

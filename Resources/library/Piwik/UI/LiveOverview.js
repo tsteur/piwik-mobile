@@ -58,18 +58,23 @@ LiveOverview.prototype = Piwik.require('UI/View');
 LiveOverview.prototype.init = function () {
 
     this.row        = Ti.UI.createTableViewRow({className: 'liveOverviewTableViewRow'});
+    var container   = Ti.UI.createView({className: 'liveOverviewContainerView'});
 
     var titleLabel  = Ti.UI.createLabel({text: this.getParam('title', ''),
                                          id: 'liveOverviewTitleLabel'});
 
-    this.row.add(titleLabel);
+    container.add(titleLabel);
     titleLabel = null;
 
     this.valueLabel = Ti.UI.createLabel({text: '-', id: 'liveOverviewValueLabel'});
 
     this.refresh();
 
-    this.row.add(this.valueLabel);
+    container.add(this.valueLabel);
+    
+    this.row.add(container);
+    
+    container = null;
 
     return this;
 };

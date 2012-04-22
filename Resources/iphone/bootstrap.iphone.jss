@@ -48,11 +48,11 @@
 .searchHintLabel {
     font-size: 13;
     color: '#888888';
-    width: 'auto';
+    width: 'SIZE';
     left: 10;
 }
 .searchHintTableViewRow {
-    height: 'auto';
+    height: 'SIZE';
 }
 
 #websiteSearchBar {
@@ -94,7 +94,7 @@
      left: 5;
      right: 5;
      text-align: 'left';
-     height: 'auto';
+     height: 'SIZE';
      color: '#336699';
 }
 
@@ -104,7 +104,7 @@
     left: 5;
     right: 5;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
     color: '#336699';
 }
 
@@ -137,7 +137,7 @@
     left: 5;
     right: 5;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
@@ -147,7 +147,7 @@
     left: 5;
     right: 5;
     bottom: 12;
-    height: 'auto';
+    height: 'SIZE';
     text-align: 'left';
     font-weight: 'normal';
 }
@@ -157,7 +157,7 @@
     top: 3;
     left: 5;
     right: 5;
-    height: 'auto';
+    height: 'SIZE';
     text-align: 'left';
 }
 
@@ -167,7 +167,7 @@
     left: 5;
     right: 5;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
@@ -177,7 +177,7 @@
     left: 5;
     right: 5;
     text-align: 'left';
-    height: 'auto';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
@@ -225,8 +225,7 @@
 }
 
 .editAccountTableFooterView {
-    height: 'auto';
-    width: 'auto';
+    width: 'FILL';
     left: 0;
 }
 

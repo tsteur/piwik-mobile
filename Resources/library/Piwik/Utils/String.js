@@ -54,6 +54,7 @@ StringUtils.prototype.toSizeUnit = function (str) {
     }
 
     if (-1 === str.indexOf('dp')) {
+        // return Ti.UI.convertUnits(str, Ti.UI.UNIT_DIP);
 
         return str + 'dp';
     }

@@ -9,6 +9,6 @@
    bottom: 0;
    style: 4;
    barColor: '#999';
-   width: 'auto';
-   height: 'auto';
+   width: 'SIZE';
+   height: 'SIZE';
 }

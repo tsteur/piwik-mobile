@@ -125,17 +125,17 @@ VisitorOverview.prototype.init = function () {
                                          id: 'visitorOverviewReferrerLabel'}));
     }
 
-    var pageViewsText = this.getPageviewsDescription(visitor);
-    if (pageViewsText) {
-        this._row.add(Ti.UI.createLabel({text: pageViewsText,
-                                         id: 'visitorOverviewPageviewsLabel'}));
-    }
-
     if (visitor.goalConversions) {
         var goalsText = String.format(_('General_VisitConvertedNGoals'), '' + visitor.goalConversions);
         
         this._row.add(Ti.UI.createLabel({text: goalsText,
                                          id: 'visitorOverviewConvertedGoalsLabel'}));
+    }
+
+    var pageViewsText = this.getPageviewsDescription(visitor);
+    if (pageViewsText) {
+        this._row.add(Ti.UI.createLabel({text: pageViewsText,
+                                         id: 'visitorOverviewPageviewsLabel'}));
     }
     
     visitor = null;

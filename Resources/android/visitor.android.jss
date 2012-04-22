@@ -22,8 +22,7 @@
 
 .visitorActionActionTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    width: 'fill';
     selectionStyle: 0;
 }
 
@@ -31,8 +30,8 @@
     left: '16dp';
     font-size: '13sp';
     top: '5dp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     color: '#000000';
     font-weight: 'bold';
 }
@@ -42,8 +41,8 @@
     color: '#808080';
     font-size: '13sp';
     top: '3dp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
 }
 
 #visitorActionActionServerTimeLabel {
@@ -51,15 +50,14 @@
     top: '3dp';
     left: '16dp';
     font-size: '13sp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     color: '#000000';
 }
 
 .visitorActionDefaultTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    width: 'fill';
     selectionStyle: 0;
 }
 
@@ -67,8 +65,8 @@
     layout: 'horizontal';
     left: '16dp';
     top: '5dp';
-    height: 'auto';
-    width: 'auto';
+    height: 'size';
+    width: 'size';
 }
 
 #visitorActionDefaultIconImageView {
@@ -83,8 +81,8 @@
 #visitorActionDefaultTypeLabel {
     left: '16dp';
     font-size: '13sp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     font-weight: 'bold';
     color: '#000000';
 }
@@ -95,14 +93,13 @@
     left: '16dp';
     top: '4dp';
     font-size: '13sp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
 }
 
 .visitorActionEcommerceTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    width: 'fill';
     selectionStyle: 0;
 }
 
@@ -110,8 +107,8 @@
     layout: 'horizontal';
     left: '16dp';
     top: '5dp';
-    height: 'auto';
-    width:'auto';
+    height: 'size';
+    width:'size';
 }
 
 #visitorActionEcommerceIconImageView {
@@ -126,8 +123,8 @@
 #visitorActionEcommerceTypeLabel {
     left: '10dp';
     font-size: '13sp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     font-weight: 'bold';
     color: '#000000';
     textAlign: 'left';
@@ -135,16 +132,16 @@
 
 #visitorActionEcommerceDetailsView {
     layout: 'vertical';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     left: '0dp';
     bottom: '5dp';
 }
 
 #visitorActionEcommerceDetailsItemView {
     layout: 'horizontal';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     left: '16dp';
 }
 
@@ -154,7 +151,7 @@
     font-size: '13sp';
     top: '3dp';
     width: '15dp';
-    height: 'auto';
+    height: 'size';
     textAlign: 'left';
     ellipsize: true;
     wordWrap: false;
@@ -165,8 +162,9 @@
     color: '#808080';
     font-size: '13sp';
     top: '3dp';
-    width: 'auto';
-    height: 'auto';
+    right: '16dp';
+    width: 'size';
+    height: 'size';
     ellipsize: false;
     wordWrap: true;
     textAlign: 'left';
@@ -176,8 +174,8 @@
     left: '16dp';
     font-size: '13sp';
     top: '4dp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     color: '#000000';
     ellipsize: false;
     wordWrap: true;
@@ -188,8 +186,8 @@
     left: '16dp';
     font-size: '13sp';
     top: '4dp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     color: '#000000';
     ellipsize: false;
     wordWrap: true;
@@ -197,12 +195,12 @@
 }
 
 #visitorActionEcommerceDetailsPriceLabel {
-    left: '25dp';
+    left: '47dp';
     color: '#808080';
     font-size: '13sp';
     top: '4dp';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     ellipsize: false;
     wordWrap: true;
     textAlign: 'left';

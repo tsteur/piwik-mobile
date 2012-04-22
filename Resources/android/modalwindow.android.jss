@@ -9,5 +9,5 @@
     left: 0;
     right: 0;
     backgroundColor: '#E4E2D7';
-    height: 'auto';
+    height: 'fill';
 }

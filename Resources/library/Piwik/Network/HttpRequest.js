@@ -295,6 +295,7 @@ HttpRequest.prototype.load = function (xhr) {
 
     if (!isValidResponse) {
         response        = null;
+        xhr             = null;
 
         this.error({error: 'Invalid response'});
 
@@ -457,6 +458,7 @@ HttpRequest.prototype.error = function (e) {
     this.callback  = null;
     this.context   = null;
     this.parameter = null;
+    e              = null;
 };
 
 /**

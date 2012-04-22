@@ -16,13 +16,12 @@
 
 .statisticListTableViewRow {
     backgroundColor: '#ffffff';
-    height: 'auto';
     left: 0;
     right: 0;
 }
 
 .statisticListTitleLabel {
-    height: 'auto';
+    height: 'size';
     left: '16dp';
     right: '95dp';
     color: '#333333';
@@ -32,7 +31,7 @@
 }
 
 .statisticListTitleLabelWithLogo {
-    height: 'auto';
+    height: 'size';
     left: '30dp';
     right: '87dp';
     color: '#333333';
@@ -42,7 +41,7 @@
 }
 
 .statisticListValueLabel {
-    height: 'auto';
+    height: 'size';
     right: '16dp';
     width: '70dp';
     color: '#0099CC';
@@ -57,7 +56,6 @@
 }
 
 .statisticListPaginatorTableViewRow {
-    height: 'auto';
     left: '16dp';
     right: 0;
     color: '#336699';

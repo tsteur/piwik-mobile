@@ -9,14 +9,12 @@
 .visitorOverviewTableViewRow {
     layout: 'vertical';
     hasChild: true;
-    height: 'auto';
     focusable: true;
 }
 
 .visitorOverviewAchievedGoalTableViewRow {
     layout: 'vertical';
     hasChild: true;
-    height: 'auto';
     focusable: true;
     backgroundColor: '#FFFFC4';
 }
@@ -24,38 +22,39 @@
 #visitorOverviewDateView {
     top: '8dp';
     layout: 'horizontal';
-    height: 'auto';
-    width: 'auto';
+    height: 'size';
+    width: 'fill';
     left: '0dp';
 }
 
 #visitorOverviewReferrerLabel {
     font-size: '13sp';
     top: '3dp';
-    width: 'auto';
+    width: 'size';
     left: '16dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     color: '#333333';
 }
 
 #visitorOverviewPageviewsLabel {
     font-size: '13sp';
     top: '4dp';
-    width: 'auto';
+    width: 'size';
     left: '16dp';
     text-align: 'left';
-    height: 'auto';
+    height: 'size';
     color: '#333333';
+    bottom: '4dp';
 }
 
 #visitorOverviewConvertedGoalsLabel {
     font-size: '13sp';
     top: '4dp';
-    width:'auto';
+    width:'size';
     left: '16dp';
     textAlign: 'left';
-    height: 'auto';
+    height: 'size';
     color: '#333333';
 }
 
@@ -65,8 +64,8 @@
     left: '16dp';
     textAlign: 'left';
     color: '#333';
-    width:'auto';
-    height: 'auto';
+    width:'size';
+    height: 'size';
     color: '#333333';
 }
 

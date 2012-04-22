@@ -17,7 +17,7 @@ tableviewrow {
     font-size: '18sp';
     font-weight: 'normal';
     left: 0;
-    width: '100%';
+    width: 'fill';
 }
 
 .tableViewSection {
@@ -46,7 +46,7 @@ tableviewrow {
 
 #tableViewRowTitleLabelWithDescription {
     textAlign: 'left';
-    height: 'auto';
+    height: 'size';
     left: '16dp';
     right: '16dp';
     top: '10dp';
@@ -59,7 +59,7 @@ tableviewrow {
 
 #tableViewRowTitleLabel {
     textAlign: 'left';
-    height: 'auto';
+    height: 'size';
     left: '16dp';
     right: '16dp';
     top: '10dp';
@@ -74,8 +74,8 @@ tableviewrow {
 #tableViewRowDescriptionLabel {
     font-size: '12sp';
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     left: '16dp';
     right: '16dp';
     top: '34dp';
@@ -88,8 +88,8 @@ tableviewrow {
 #tableViewRowDescriptionLabelvertical {
     font-size: '12sp';
     textAlign: 'left';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     left: '16dp';
     right: '16dp';
     top: '4dp';
@@ -104,8 +104,8 @@ tableviewrow {
     font-size: '16sp';
     font-weight: 'normal';
     textAlign: 'right';
-    width: 'auto';
-    height: 'auto';
+    width: 'size';
+    height: 'size';
     color: '#0099CC';
 }
 

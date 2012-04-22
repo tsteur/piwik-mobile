@@ -187,7 +187,9 @@ function window (params) {
             graphUi             = that.create('Graph', {graphUrl: graphUrl, graph: graph});
             account             = null;
             
-            tableViewRows.push(graphUi.getRow());
+            if (graphUi) {
+                tableViewRows.push(graphUi.getRow());
+            }
             graph               = null;
             graphUi             = null;
         }

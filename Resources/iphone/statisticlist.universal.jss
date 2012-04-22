@@ -18,7 +18,7 @@
 
 .statisticListTableViewRow {
     backgroundColor: '#ffffff';
-    height: 'auto';
+    height: 'SIZE';
     left: 0;
     right: 0;
     /** Ti.UI.iPhone.TableViewCellSelectionStyle.NONE **/
@@ -26,7 +26,7 @@
 }
 
 .statisticListTitleLabel {
-    height: 'auto';
+    height: 'SIZE';
     left: 10;
     right: 95;
     color: '#333333';
@@ -36,7 +36,7 @@
 }
 
 .statisticListTitleLabelWithLogo {
-    height: 'auto';
+    height: 'SIZE';
     left: 35;
     right: 87;
     color: '#333333';
@@ -46,7 +46,7 @@
 }
 
 .statisticListValueLabel {
-    height: 'auto';
+    height: 'SIZE';
     right: 3;
     width: 87;
     top: 13;
@@ -61,7 +61,7 @@
 }
 
 .statisticListPaginatorTableViewRow {
-    height: 'auto';
+    height: 'SIZE';
     color: '#336699';
     left: 0;
     right: 0;

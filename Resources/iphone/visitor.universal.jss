@@ -7,7 +7,7 @@
  */
 .pluginIcon {
     top: 14;
-    canScale: true;
+    canScale: false;
     enableZoomControls: false;
 }
 
@@ -21,8 +21,8 @@
 
 .visitorActionActionTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
     selectionStyle: 0;
 }
 
@@ -30,8 +30,8 @@
     left: 10;
     font-size: 13;
     top: 5;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
@@ -40,8 +40,8 @@
     color: '#555555';
     font-size: 13;
     top: 3;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 #visitorActionActionServerTimeLabel {
@@ -49,14 +49,14 @@
     top: 3;
     left: 10;
     font-size: 13;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 .visitorActionDefaultTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
     selectionStyle: 0;
 }
 
@@ -64,8 +64,8 @@
     layout: 'horizontal';
     left: 10;
     top: 5;
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
 }
 
 #visitorActionDefaultIconImageView {
@@ -73,15 +73,16 @@
     top: 4;
     width: 10;
     height: 9;
-    canScale: true;
+    canScale: false;
     enableZoomControls: false;
 }
 
 #visitorActionDefaultTypeLabel {
+    top: 3;
     left: 10;
     font-size: 13;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
@@ -89,16 +90,16 @@
     color: '#808080';
     bottom: 5;
     left: 10;
-    top: 4;
+    top: 0;
     font-size: 13;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 .visitorActionEcommerceTableViewRow {
     layout: 'vertical';
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
     selectionStyle: 0;
 }
 
@@ -106,39 +107,40 @@
     layout: 'horizontal';
     left: 10;
     top: 5;
-    height: 'auto';
-    width: 'auto';
+    height: 'SIZE';
+    width: 'FILL';
 }
 
 #visitorActionEcommerceIconImageView {
-    top: 2;
+    top: 4;
     left: 0;
     width: 10;
     height: 10;
-    canScale: true;
+    canScale: false;
     enableZoomControls: false;
 }
 
 #visitorActionEcommerceTypeLabel {
+    top: 3;
     left: 10;
     font-size: 13;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     font-weight: 'bold';
 }
 
 #visitorActionEcommerceDetailsView {
     layout: 'vertical';
-    width: 'auto';
-    height: 'auto';
+    width: 'FILL';
+    height: 'SIZE';
     left: 0;
     bottom: 5;
 }
 
 #visitorActionEcommerceDetailsItemView {
     layout: 'horizontal';
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
     left: 10;
 }
 
@@ -148,7 +150,7 @@
     font-size: 13;
     top: 3;
     width: 15;
-    height: 'auto';
+    height: 'SIZE';
 }
 
 #visitorActionEcommerceDetailsItemNameLabel {
@@ -156,24 +158,24 @@
     color: '#808080';
     font-size: 13;
     top: 3;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 #visitorActionEcommerceRevenueLabel {
     left: 10;
     font-size: 13;
     top: 4;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 #visitorActionEcommerceDetailsListLabel {
     left: 10;
     font-size: 13;
     top: 4;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }
 
 #visitorActionEcommerceDetailsPriceLabel {
@@ -181,6 +183,6 @@
     color: '#808080';
     font-size: 13;
     top: 4;
-    width: 'auto';
-    height: 'auto';
+    width: 'SIZE';
+    height: 'SIZE';
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
+    <modules/>
     <property name="ti.android.runtime">v8</property>
-    <sdk-version>1.8.2</sdk-version>
+    <sdk-version>2.0.1.GA2</sdk-version>
     <deployment-targets>
         <target device="mobileweb">true</target>
         <target device="iphone">true</target>
@@ -15,7 +16,7 @@
     <publisher>Piwik.org</publisher>
     <url>http://piwik.org</url>
     <description>Piwik is a downloadable, open source (GPL licensed) real time web analytics software program. It provides you with detailed reports on your website visitors: the search engines and keywords they used, the language they speak, your popular pages... and so much more. Piwik aims to be an open source alternative to Google Analytics. You can access these reports by using this mobile client.</description>
-    <copyright>2011 by Piwik.org</copyright>
+    <copyright>2012 by Piwik.org</copyright>
     <icon>default_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>true</prerendered-icon>
@@ -45,7 +46,8 @@
         <manifest android:installLocation="preferExternal"
             android:versionCode="13" android:versionName="1.7.2">
             <supports-screens android:anyDensity="true"
-                android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
+                android:largeScreens="true" android:normalScreens="true"
+                android:smallScreens="true" xlargeScreens="true"/>
             <uses-sdk android:installLocation="preferExternal" android:minSdkVersion="8"/>
         </manifest>
     </android>

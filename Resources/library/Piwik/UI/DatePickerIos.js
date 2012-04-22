@@ -170,8 +170,8 @@ DatePicker.prototype.init = function (params) {
     
     this.createDoneButton();
     this.createFromDatePicker(params);
-    
-    this.tableView.bottom = this.fromPicker.height;
+
+    this.tableView.updateLayout({bottom: this.fromPicker.size.height});
 
     this.createPeriodPicker();
     this.createToDatePicker(params);
@@ -283,9 +283,9 @@ DatePicker.prototype.createPickerChooser = function () {
             that.toPicker.hide();
             that.fromPicker.hide();
             that.periodPicker.show();
-            
+
             // workaround for iPhone landscape orientation. Otherwise the tableview is not fully visible/scrollable
-            that.tableView.bottom = that.periodPicker.height;
+            that.tableView.updateLayout({bottom: that.periodPicker.size.height});
 
         } else if (1 == event.index) {
             
@@ -293,7 +293,7 @@ DatePicker.prototype.createPickerChooser = function () {
             that.periodPicker.hide();
             that.fromPicker.show();
             
-            that.tableView.bottom = that.fromPicker.height;
+            that.tableView.updateLayout({bottom: that.fromPicker.size.height});
             
         } else if (2 == event.index) {
             
@@ -301,7 +301,7 @@ DatePicker.prototype.createPickerChooser = function () {
             that.fromPicker.hide();
             that.toPicker.show();
             
-            that.tableView.bottom = that.toPicker.height;
+            that.tableView.updateLayout({bottom: that.toPicker.size.height});
         }
         
     });
