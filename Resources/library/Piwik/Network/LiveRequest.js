@@ -179,7 +179,13 @@ LiveRequest.prototype.send = function (params) {
     }
     
     if (params.date) {
-        parameters.date = params.date;
+        parameters.date     = '' + params.date;
+        var positionComma   = parameters.date.indexOf(',');
+        
+        // API does not support date range format 'YYYY-MM-DD,YYYY-MM-DD'.
+        if (-1 !== parameters.date.indexOf(',')) {
+            parameters.date = parameters.date.substr(0, positionComma);
+        }
     }
 
     var piwikLiveDetails = Piwik.require('Network/PiwikApiRequest');
