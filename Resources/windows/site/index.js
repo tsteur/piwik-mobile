@@ -40,7 +40,7 @@ function window (params) {
 
     var site          = params.site ? params.site : null;
     
-    var currentRequestedSite = {idsite: null, accountId: null};
+    var currentRequestedSite = site;
     
     /**
      * @see  Piwik.UI.Window#titleOptions
@@ -105,74 +105,52 @@ function window (params) {
     // menu button 'reload', but not if window gets focus again.
     var forceRequestReload = true;
     refresh.addEventListener('onRefresh', function () {
+
+        that.titleOptions  = {title: '' + (site ? site.name : ''), window: that};
+        Piwik.getUI().layout.header.refresh(that.titleOptions);
+
+        // remove all tableview rows. This should ensure there are no rendering issues when setting
+        // new rows afterwards.
+        that.cleanupTableData();
         
+        request.send({site: site, reload: forceRequestReload});
+
+        forceRequestReload = true;
+    });
+    
+    var doRefreshIfNeeded = function () {
+        forceRequestReload = false;
+
         var session = Piwik.require('App/Session');
         site        = session.get('current_site', site);
         session     = null;
 
         // site has changed if the accountId is different or if idsite is different.
-        var siteHasChanged = (site &&
-                              currentRequestedSite &&
+        var siteHasChanged = (site && currentRequestedSite &&
                               (currentRequestedSite.idsite != site.idsite ||
                                currentRequestedSite.accountId != site.accountId));
 
-        if (!that) {
+        if (!that || !refresh) {
             
             return;
         }
         
         // update only if site has changed or if we force request reload
         if (site && (siteHasChanged || forceRequestReload)) {
-            
             currentRequestedSite = site;
             
-            that.titleOptions    = {title: '' + (site ? site.name : ''),
-                                    window: that};
-            Piwik.getUI().layout.header.refresh(that.titleOptions);
-
-            // remove all tableview rows. This should ensure there are no rendering issues when setting
-            // new rows afterwards.
-            that.cleanupTableData();
-            
-            request.send({site: site, reload: forceRequestReload});
-            
-        } else {
-
-            refresh.refreshDone();
+            refresh.refresh();
         }
-
-        forceRequestReload = true;
-    });
+    }
 
     // this event is fired from another window, therefore we use Ti.App
     // be cureful using Ti.App events. They will never be released cause they run in a global app context.
     // cause on iPad this window will be always displayed as long as the app is opened, it doesn't matter.
     if (Piwik.getPlatform().isIpad) {
-        Ti.App.addEventListener('onSiteChanged', function (event) {
-    
-            if (!event || !event.site) {
-                
-                return;
-            }
-            
-            forceRequestReload = false;
-            
-            if (refresh) {
-                refresh.refresh();
-            }
-            
-            event = null;
-        });
+        Ti.App.addEventListener('onSiteChanged', doRefreshIfNeeded);
     }
 
-    this.addEventListener('focusWindow', function () {
-
-        forceRequestReload = false;
-        
-        if (refresh) {
-            refresh.refresh();
-        }
-    });
+    this.addEventListener('focusWindow', doRefreshIfNeeded);
 
     request.addEventListener('onload', function (event) {
 
@@ -184,7 +162,13 @@ function window (params) {
         var currentSection = '';
         var report         = null;
 
-        if (!event.availableReports) {
+        // we don't fire an async event here cause otherwise we run into race conditions.
+        // ScrollToTop would not work correct.
+        if (refresh) {
+            refresh.refreshDone();
+        }
+
+        if (!event || !event.availableReports) {
 
             // there are no reports, so we simply again set an empty array / remove all rows.
             tableview.setData(tableData);
@@ -231,10 +215,6 @@ function window (params) {
                                                         report:    report,
                                                         className: 'reportTableViewRow'}));
         }
-
-        // we don't fire an async event here cause otherwise we run into race conditions.
-        // ScrollToTop would not work correct.
-        refresh.refreshDone();
         
         if (!tableview) {
             
@@ -303,6 +283,7 @@ function window (params) {
         this.titleOptions    = null;
         menuOptions          = null;
         currentRequestedSite = null;
+        doRefreshIfNeeded    = null;
     };
 }
 
