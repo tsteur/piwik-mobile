@@ -43,6 +43,8 @@ function window () {
         }
         
         event.row.onClick.apply(event.row, [event]);
+        
+        event = null;
     });
     
     this.add(tableview);
@@ -59,6 +61,8 @@ function window () {
             indexEvent = {};
         }
         
+        that.cleanupTableData();
+        
         var onChangeAnonymousTracking = function (event) {
 
             this.hasCheck = !this.hasCheck;
@@ -69,6 +73,7 @@ function window () {
 
             var settings  = Piwik.require('App/Settings');
             settings.setTrackingEnabled(this.hasCheck);
+            settings      = null;
             
             var alertDialog = Ti.UI.createAlertDialog({
                 message: _('Mobile_AskForAnonymousTrackingPermission'),
@@ -76,6 +81,7 @@ function window () {
             });
             
             alertDialog.show();
+            alertDialog = null;
         };
 
         var onChangeSparkline = function (event) {
@@ -88,6 +94,7 @@ function window () {
 
             var settings  = Piwik.require('App/Settings');
             settings.setPiwikMultiChart(this.hasCheck);
+            settings      = null;
         };
 
         var onChangeGraphs = function (event) {
@@ -100,6 +107,7 @@ function window () {
 
             var settings  = Piwik.require('App/Settings');
             settings.setGraphsEnabled(this.hasCheck);
+            settings      = null;
         };
 
         // an array like ['English', 'German', ...]
@@ -157,6 +165,11 @@ function window () {
 
                     return;
                 }
+                
+                if (!row) {
+                    
+                    return;
+                }
 
                 row.changeValue(availableLanguageOptions[event.index]);
                 currentLangIndex = event.index;
@@ -168,12 +181,14 @@ function window () {
                         // and then break the loop
                         var settings = Piwik.require('App/Settings');
                         settings.setLanguage(langCode);
+                        settings     = null;
 
                         Piwik.getTracker().trackEvent({title: 'Language Change',
                                                        url: '/settings/change-language/' + langCode});
 
                         var translation = Piwik.require('Locale/Translation');
                         translation.load();
+                        translation     = null;
 
                         // reopen window so new selected translation is directly visible. At least in this window
                         // @todo fire a Ti.App event. Welcome screen should refresh its list of available websites too
@@ -181,9 +196,12 @@ function window () {
                         break;
                     }
                 }
+                
+                row = null;
             });
 
             langDialog.show();
+            langDialog = null;
         };
 
         var defaultReportDateLabel = '';
@@ -244,12 +262,19 @@ function window () {
 
                 // android reports cancel = true whereas iOS returns the previous defined cancel index
                 if (!event || event.cancel === event.index || true === event.cancel) {
+                    row = null;
 
                     return;
                 }
 
                 // user selected same value as already selected
                 if (event.index == currentReportDateIndex) {
+                    row = null;
+                    
+                    return;
+                }
+                
+                if (!row) {
                     
                     return;
                 }
@@ -284,9 +309,14 @@ function window () {
 
                 session.set('piwik_parameter_period', settings.getPiwikDefaultPeriod());
                 session.set('piwik_parameter_date', settings.getPiwikDefaultDate());
+                
+                row      = null;
+                session  = null;
+                settings = null;
             });
 
             periodDialog.show();
+            periodDialog = null;
         };
 
         var onManageAccess = function () {
@@ -310,6 +340,13 @@ function window () {
 
                 // android reports cancel = true whereas iOS returns the previous defined cancel index
                 if (!event || event.cancel === event.index || true === event.cancel) {
+                    row = null;
+                    
+                    return;
+                }
+                
+                if (!row) {
+                    
                     return;
                 }
 
@@ -324,9 +361,13 @@ function window () {
 
                 var settings     = Piwik.require('App/Settings');
                 settings.setHttpTimeout(timeoutValue);
+                
+                settings         = null;
+                row              = null;
             });
 
             timeoutDialog.show();
+            timeoutDialog = null;
         };
 
         var onShowHelpAbout = function () {
@@ -389,11 +430,8 @@ function window () {
                                                   command: this.createCommand('OpenFaqCommand'),
                                                   hasDetail: true})];
 
-        tableview.setData(tableData);
-        
-        if (Piwik.getPlatform().isIos && tableview.scrollToTop) {
-            // make sure the first row will be visible on ipad
-            tableview.scrollToTop(1);
+        if (tableview) {
+            tableview.setData(tableData);
         }
     });
 
@@ -417,6 +455,10 @@ function window () {
         eventResult.availableLanguages = translation.getAvailableLanguages();
 
         this.fireEvent('onopen', eventResult);
+        
+        settings    = null;
+        translation = null;
+        eventResult = null;
     };
     
     this.cleanupTableData = function () {
@@ -426,12 +468,16 @@ function window () {
                 if (tableData[index] && tableData[index].cleanup) {
                     tableData[index].cleanup();
                 }
-                tableData[index]            = null;
+                tableData[index] = null;
             }
         }
         
         tableData = null;
         tableData = [];
+        
+        if (tableview) {
+            tableview.setData([]);
+        }
     };
     
     this.cleanup = function () {
