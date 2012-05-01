@@ -83,20 +83,26 @@ Refresh.prototype = Piwik.require('UI/View');
  */
 Refresh.prototype.init = function () {
 
-    this.attachHeaderView();
-
-    if (!Piwik.getPlatform().isIos) {
-        var that = this;
-        this.getParam('window').addEventListener('fireRefresh', function () {
-
-            if (that && !that.reloading) {
-                that.refresh();
-            }
-            
-        });
+    if (Piwik.getPlatform().isIos) {
         
-        this.refresh();
-    }
+        this.attachHeaderView();
+
+        // do the initial refresh
+        this.displayRefreshingMessage();
+        
+        return this;
+    } 
+
+    var that = this;
+    this.getParam('window').addEventListener('fireRefresh', function () {
+
+        if (that) {
+            that.refresh();
+        }
+        
+    });
+    
+    this.displayRefreshingMessage();
 
     return this;
 };
@@ -143,32 +149,23 @@ Refresh.prototype.fireEvent = function (name, event) {
 };
 
 /**
- * Triggers the refresh state. Displays an activity indicator and a message that the window is currently reloading
- * the data.
- *
- * @fires  Piwik.UI.Refresh#event:onRefresh
+ * Displays an activity indicator and a message that the window is currently reloading the data.
  */
-Refresh.prototype.refresh = function () {
-
+Refresh.prototype.displayRefreshingMessage = function () {
+    
     if (!Piwik.getPlatform().isIos) {
-
-        this.reloading = true;
-
+    
         if (!this._activityIndicator) {
             // create the activity indicator if not already created
             this._activityIndicator = null;
             this._activityIndicator = this.create('ActivityIndicator', {});
         }
-
+    
         this._activityIndicator.style = 'loading';
         this._activityIndicator.show();
         
-        this.fireEvent('onRefresh', {type: 'onRefresh'});
-
         return;
     }
-
-    this.reloading = true;
 
     var tableView  = this.getParam('tableView');
     tableView.setContentInsets({top: 60});
@@ -183,11 +180,30 @@ Refresh.prototype.refresh = function () {
     this.pullViewArrow.transform = Ti.UI.create2DMatrix();
     
     this.actInd.show();
-
-    this.fireEvent('onRefresh', {type: 'onRefresh'});
     
     tableView = null;
     dateUtils = null;
+}
+
+/**
+ * Triggers the refresh state if no "refresh/reload" is already running.
+ *
+ * @fires  Piwik.UI.Refresh#event:onRefresh
+ */
+Refresh.prototype.refresh = function () {
+    
+    if (this.reloading) {
+        // refresh is already in progress
+        
+        return;
+    }
+    
+    this.reloading = true;
+    this.pulling   = false;
+
+    this.displayRefreshingMessage();
+    
+    this.fireEvent('onRefresh', {type: 'onRefresh'});
 };
 
 /**
@@ -277,39 +293,36 @@ Refresh.prototype.attachHeaderView = function () {
         var offset = (event && event.contentOffset) ? event.contentOffset.y : 0;
 
         var transform;
-        if (offset <= -65.0 && !that.pulling) {
-            transform = Ti.UI.create2DMatrix();
+        if (offset <= -65.0 && !that.pulling && !that.reloading) {
+            transform     = Ti.UI.create2DMatrix();
             transform     = transform.rotate(-180);
             that.pulling  = true;
 
             that.pullViewArrow.animate({transform: transform, duration: 180});
             that.statusLabel.text = _('Mobile_ReleaseToRefresh');
 
-        } else if (that.pulling && offset > -65.0 && offset < 0) {
-            that.pulling     = false;
-            transform    = Ti.UI.create2DMatrix();
+        } else if (that.pulling && !that.reloading && offset > -65.0 && offset < 0) {
+            that.pulling  = false;
+            transform     = Ti.UI.create2DMatrix();
 
             that.pullViewArrow.animate({transform: transform, duration: 180});
             that.statusLabel.text = _('Mobile_PullDownToRefresh');
         }
     });
 
-    tableView.addEventListener('scrollEnd', function(event) {
-        if (that.pulling && !that.reloading && event && event.contentOffset && event.contentOffset.y <= -65.0) {
+    tableView.addEventListener('dragEnd', function(event) {
 
+        if (that.pulling && !that.reloading) {
             var refreshEvent = {title: 'Refresh Page',
                                 url: '/refresh/ios-pull-to-refresh'};
             Piwik.getTracker().trackEvent(refreshEvent);
-            
+
             // the user was pulling, no reloading is currently running, the user scrolled to the correct section
             that.refresh();
         }
     });
     
     tableView = null;
-
-    // do the initial refresh
-    this.refresh();
 };
 
 module.exports = Refresh;

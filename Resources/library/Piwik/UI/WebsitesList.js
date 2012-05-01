@@ -85,7 +85,10 @@ WebsitesList.prototype.init = function () {
         that.websitesRequest.abort();
 
         forceRequestReload = false;
-        refresh.refresh();
+        
+        if (refresh) {
+            refresh.refresh();
+        }
 
         searchBar.blur();
     });
@@ -96,7 +99,10 @@ WebsitesList.prototype.init = function () {
         searchBar.blur();
 
         forceRequestReload = false;
-        refresh.refresh();
+        
+        if (refresh) {
+            refresh.refresh();
+        }
     });
     
     if (Piwik.getPlatform().isAndroid) {
@@ -151,7 +157,7 @@ WebsitesList.prototype.init = function () {
                     rows[index].cleanup();
                 }
                 
-                rows[index]            = null;
+                rows[index] = null;
             }
         }
 
@@ -177,8 +183,9 @@ WebsitesList.prototype.init = function () {
         if (Piwik.getPlatform().isAndroid) {
             searchBar.show();
         } 
-    
-        refresh.refreshDone();
+        if (refresh) {
+            refresh.refreshDone();
+        }
 
         if (!event || !event.sites || !event.sites.length) {
             

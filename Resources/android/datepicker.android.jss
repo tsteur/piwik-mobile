@@ -29,6 +29,7 @@
     width: '100%';
     top: '16dp';
     layout: 'vertical';
+    height: 'size';
 }
 
 #datePickerPeriodPicker {
