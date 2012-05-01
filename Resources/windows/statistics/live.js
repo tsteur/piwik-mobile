@@ -54,6 +54,14 @@ function window (params) {
 
     this.add(tableView);
 
+    var stopRefreshTimer = function () {
+
+        if (that && that.refreshTimer) {
+            // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
+            clearTimeout(that.refreshTimer);
+        }
+    };
+
     var site      = params.site;
 
     if (!site || !site.accountId) {
@@ -100,16 +108,14 @@ function window (params) {
     });
 
     this.addEventListener('closeWindow', function () {
-        if (that && that.refreshTimer) {
-            // do no longer execute autoRefresh if user closed the window
-            clearTimeout(that.refreshTimer);
+        if (stopRefreshTimer) {
+            stopRefreshTimer();
         }
     });
 
     this.addEventListener('blurWindow', function () {
-        if (that && that.refreshTimer) {
-            // do no longer execute autoRefresh if user opened a new window and this window is no longer visible
-            clearTimeout(that.refreshTimer);
+        if (stopRefreshTimer) {
+            stopRefreshTimer();
         }
     });
 
@@ -127,6 +133,11 @@ function window (params) {
     // ios
     Ti.App.addEventListener('resume', function () {
         if (params && params.autoRefresh && tableView && tableView.data && tableView.data.length && that) {
+            
+            if (stopRefreshTimer) {
+                stopRefreshTimer();
+            }
+            
             // start auto refresh again if user returns to this window from a previous displayed window
             that.refreshTimer = setTimeout(function () {
                 if (refresh) {
@@ -138,18 +149,8 @@ function window (params) {
 
     // ios
     Ti.App.addEventListener('pause', function () {
-        if (that && that.refreshTimer) {
-            // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
-            clearTimeout(that.refreshTimer);
-        }
+        stopRefreshTimer();
     });
-    
-    var stopRefreshTimer = function () {
-        if (that && that.refreshTimer) {
-            // do no longer execute autoRefresh if user opens another app or returns the home screen (only for iOS)
-            clearTimeout(that.refreshTimer);
-        }
-    };
 
     var activity = null;
     
@@ -161,7 +162,6 @@ function window (params) {
     } else if (!activity && this.rootWindow && this.rootWindow.activity) {
         activity = this.rootWindow.activity;
     }
-    
     // android
     if (activity) {
         activity.addEventListener('pause', stopRefreshTimer);
@@ -169,12 +169,12 @@ function window (params) {
     }
     
     refresh.addEventListener('onRefresh', function () {
-        if (that && that.refreshTimer) {
-            // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
-            // request in a few seconds again
-            clearTimeout(that.refreshTimer);
+        // user possibly requested refresh manually. Stop a previous timer. Makes sure we won't send the same
+        // request in a few seconds again
+        if (stopRefreshTimer) {
+            stopRefreshTimer();
         }
-        
+                
         // set the latest requested timestamp to make sure we don't fetch the same users again which are already
         // displayed
         if (latestRequestedTimestamp) {
@@ -254,6 +254,10 @@ function window (params) {
             }
             
             if (params && params.autoRefresh && that) {
+                if (stopRefreshTimer) {
+                    stopRefreshTimer();
+                }
+        
                 that.refreshTimer = setTimeout(function () {
                     if (refresh) {
                         refresh.refresh();
@@ -346,12 +350,16 @@ function window (params) {
 
             visitorRows.push(visitorRow);
             
-            visitorRow      = null;
+            visitorRow         = null;
         }
 
         tableView.setData(visitorRows);
 
         if (params && params.autoRefresh && that) {
+            if (stopRefreshTimer) {
+                stopRefreshTimer();
+            }
+            
             that.refreshTimer = setTimeout(function () {
                 if (refresh) {
                     refresh.refresh();
