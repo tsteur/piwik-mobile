@@ -95,9 +95,10 @@ WebsitesRequest.prototype = Piwik.require('Network/Request');
  * 'send' method multiple times.
  */
 WebsitesRequest.prototype.init = function () {
-    this.sites          = [];
-    this.filterUsed     = false;
-    this.accounts       = null;
+    this.sites              = [];
+    this.filterUsed         = false;
+    this.accounts           = null;
+    this.achievedSitesLimit = false;
 
     var settings        = Piwik.require('App/Settings');
     this.showMultiChart = settings.getPiwikMultiChart();
