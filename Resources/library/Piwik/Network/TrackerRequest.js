@@ -39,8 +39,20 @@ TrackerRequest.prototype.send = function () {
     }
 
     this.handle();
-    
-    return;
+};
+
+/**
+ * @see Piwik.Network.HttpRequest#error
+ */
+TrackerRequest.prototype.error = function () {
+    this.cleanup();
+};
+
+/**
+ * @see Piwik.Network.HttpRequest#load
+ */
+TrackerRequest.prototype.load = function () {
+    this.cleanup();
 };
 
 module.exports = TrackerRequest;

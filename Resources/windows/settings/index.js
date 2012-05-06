@@ -67,14 +67,14 @@ function window () {
 
             this.hasCheck = !this.hasCheck;
 
+            var settings  = Piwik.require('App/Settings');
+            settings.setTrackingEnabled(this.hasCheck);
+            settings      = null;
+  
             var action    = this.hasCheck ? 'enable' : 'disable';
             Piwik.getTracker().trackEvent({title: 'Anonymous Tracking ' + action,
                                            url: '/settings/anonymous-tracking/' + action});
 
-            var settings  = Piwik.require('App/Settings');
-            settings.setTrackingEnabled(this.hasCheck);
-            settings      = null;
-            
             var alertDialog = Ti.UI.createAlertDialog({
                 message: _('Mobile_AskForAnonymousTrackingPermission'),
                 buttonNames: [_('General_Ok')]

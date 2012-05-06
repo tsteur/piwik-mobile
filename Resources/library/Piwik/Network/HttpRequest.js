@@ -327,15 +327,11 @@ HttpRequest.prototype.load = function (xhr) {
     }
 
     parameter = null;
-    this.xhr  = null;
     callback  = null;
     response  = null;
     xhr       = null;
     
-    this.parameter = null;
-    this.context   = null;
-    this.callback  = null;
-    this.onload    = null;
+    this.cleanup();
 };
 
 /**
@@ -372,6 +368,7 @@ HttpRequest.prototype.error = function (e) {
                 });
 
                 alertDialog.show();
+                alertDialog = null;
 
                 break;
 
@@ -388,6 +385,7 @@ HttpRequest.prototype.error = function (e) {
                 });
 
                 alertDialog.show();
+                alertDialog = null;
 
                 break;
 
@@ -405,6 +403,7 @@ HttpRequest.prototype.error = function (e) {
                 // @todo go directly to settings after user has confirmed the ok button?
 
                 alertDialog.show();
+                alertDialog = null;
 
                 break;
 
@@ -438,6 +437,7 @@ HttpRequest.prototype.error = function (e) {
                 });
 
                 alertDialog.show();
+                alertDialog = null;
         }
     }
 
@@ -453,12 +453,10 @@ HttpRequest.prototype.error = function (e) {
         this.onload();
     }
 
-    this.xhr       = null;
-    callback       = null;
-    this.callback  = null;
-    this.context   = null;
-    this.parameter = null;
-    e              = null;
+    callback = null;
+    e        = null;
+    
+    this.cleanup();
 };
 
 /**
@@ -488,6 +486,18 @@ HttpRequest.prototype.displayErrorAllowed = function () {
 };
 
 /**
+ * Cleanup all references to avoid memory leaks.
+ */
+HttpRequest.prototype.cleanup = function () {
+
+    this.xhr       = null;
+    this.parameter = null;
+    this.context   = null;
+    this.callback  = null;
+    this.onload    = null;
+};
+
+/**
  * The onload method will be called as soon as the load or error event was executed. 
  */
 HttpRequest.prototype.onload = function () {
@@ -503,6 +513,7 @@ HttpRequest.prototype.onload = function () {
  * @returns  {boolean}      true if the response is valid, false otherwise.
  */
 HttpRequest.prototype.isValidResponse = function (response) {
+    response = null;
     
     return true;
 };

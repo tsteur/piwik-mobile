@@ -10,6 +10,8 @@
 var Piwik  = require('library/Piwik');
 /** @private */
 var config = require('config');
+/** @private */
+var queue  = Piwik.require('Tracker/Queue');
  
 /**
  * @class    Piwik Tracker tracks page views, events and so on to a configured Piwik Server installation. Tracking
@@ -63,31 +65,6 @@ function Tracker () {
      * @private
      */
     var currentUrl      = '';
-
-    /**
-     * How many trackings have been done today. We reset this as soon as a new day starts. 
-     *
-     * @defaults  0
-     *
-     * @type      number
-     * 
-     * @private
-     */
-    var numTracksToday  = 0;
-
-    /**
-     * Holds the date string in the format "Sun Jul 17 2011". This allows us to detect whether a new day has started
-     * by comparing this value with the current date string.
-     *
-     * @see       Piwik.Tracker#isNewDay
-     *
-     * @defaults  ""
-     *
-     * @type      string
-     * 
-     * @private
-     */
-    var dateStringToday = '';
 
     /**
      * Holds the number of how often the user has already started the app (visits). We store this value in application
@@ -148,32 +125,6 @@ function Tracker () {
     };
 
     /**
-     * Detects whether a new day has started or not.
-     *
-     * @returns  {boolean}  true if it is a new day, false otherwise.
-     */
-    this.isNewDay = function () {
-        var now     = new Date();
-        var dateNow = now.toDateString();
-        // dateNow is like 'Sun Jul 17 2011'
-
-        if (!dateStringToday) {
-            // initialize dateStringToday
-            dateStringToday = dateNow;
-        }
-
-
-        if (dateNow != dateStringToday) {
-            // it is a new day
-            dateStringToday = dateNow;
-            
-            return true;
-        }
-
-        return false;
-    };
-
-    /**
      * Get the unique visitor id. If no visitor id exists, it'll arrange the generation of an uuid.
      *
      * @type  string
@@ -222,6 +173,7 @@ function Tracker () {
 
         var storage = Piwik.require('App/Storage');
         storage.set('tracking_visitor_uuid', uuid);
+        storage     = null;
 
         return uuid;
     };
@@ -259,6 +211,8 @@ function Tracker () {
         }
 
         storage.set('tracking_visit_count', visitCount);
+        
+        storage = null;
 
         return visitCount;
     };
@@ -273,7 +227,7 @@ function Tracker () {
         parameter.action_name = '' + documentTitle;
         parameter.url         = currentUrl;
 
-        this.track();
+        this._dispatch();
     };
 
     /**
@@ -289,7 +243,7 @@ function Tracker () {
         parameter.url         = baseUrl + '/event' + event.url;
         event                 = null;
 
-        this.track();
+        this._dispatch();
     };
 
     /**
@@ -302,7 +256,7 @@ function Tracker () {
         parameter.idgoal = '' + goalId;
         parameter.url    = currentUrl;
 
-        this.track();
+        this._dispatch();
     };
 
     /**
@@ -345,8 +299,10 @@ function Tracker () {
 
         parameter.action_name = '' + title;
         parameter.url         = baseUrl + url;
+        
+        exception = null;
 
-        this.track();
+        this._dispatch();
     };
 
     /**
@@ -360,7 +316,7 @@ function Tracker () {
         parameter           = {url: currentUrl};
         parameter[linkType] = sourceUrl;
 
-        this.track(parameter);
+        this._dispatch();
     };
 
     /**
@@ -444,6 +400,10 @@ function Tracker () {
         if (numWebsites) {
             this.setCustomVariable(5, 'Num Sites', numWebsites, 'visit');
         }
+        
+        session  = null;
+        locale   = null;
+        websites = null;
     };
 
     /**
@@ -459,44 +419,35 @@ function Tracker () {
             return false;
         }
 
-        var settings = Piwik.require('App/Settings');
+        var settings  = Piwik.require('App/Settings');
+        var isEnabled = settings.isTrackingEnabled();
+        settings      = null;
 
-        return settings.isTrackingEnabled();
+        return isEnabled;
     };
 
     /**
-     * Execute a track. Track will only be executed if tracking is enabled and if maxTracksPerDay is not achieved.
-     * All required parameters will automatically be set.
+     * Executes/Dispatches a track. Track will only be dispatched if tracking is enabled. All required parameters will 
+     * be set automatically. It does not send the request immediately. It just adds the request to the 
+     * tracking queue.
+     * 
+     * @private
      */
-    this.track = function () {
+    this._dispatch = function () {
 
         if (!this.isEnabled()) {
-
-            return;
-        }
-
-        if (this.isNewDay()) {
-            // reset num tracks today and allow again maxTracksPerDay
-            numTracksToday = 0;
-        }
-
-        if (config.tracking.maxTracksPerDay && config.tracking.maxTracksPerDay <= numTracksToday) {
-            // set maxTracksPerDay to 0 for unlimited tracks per day
-            // otherwise do not track more than configured
+            
+            // make sure nothing will be tracked from now on. Cancel even previous offered requests.
+            queue.clear();
 
             return;
         }
         
         this._mixinDefaultParameter();
 
-        var tracker = Piwik.require('Network/TrackerRequest');
-        
-        tracker.setParameter(parameter);
-        tracker.send();
+        queue.offer(parameter);
 
-        numTracksToday++;
-
-        parameter   = {};
+        parameter = {};
     };
 
     /**
