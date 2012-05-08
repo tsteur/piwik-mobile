@@ -83,7 +83,9 @@ SendFeedbackCommand.prototype.execute = function () {
     }
 
     if (!emailDialog.isSupported()) {
-        alert('Please install an email app');
+        var _ = require('library/underscore');
+        Ti.UI.createAlertDialog({message: 'Please install an email app', ok: _('General_Ok')}).show();
+        _ = null;
 
         return;
     }
@@ -119,7 +121,7 @@ SendFeedbackCommand.prototype.execute = function () {
             
             var _ = require('library/underscore');
     
-            alert(_('Feedback_ThankYou'));
+            Ti.UI.createAlertDialog({message: _('Feedback_ThankYou'), ok: _('General_Ok')}).show();
         }
     });
 

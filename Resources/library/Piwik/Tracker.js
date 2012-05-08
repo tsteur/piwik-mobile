@@ -531,7 +531,7 @@ function Tracker () {
 
                     settings.setTrackingEnabled(true);
 
-                    alert(_('Feedback_ThankYou'));
+                    Ti.UI.createAlertDialog({message: _('Feedback_ThankYou'), ok: _('General_Ok') }).show();
                     break;
 
                 case 1:
