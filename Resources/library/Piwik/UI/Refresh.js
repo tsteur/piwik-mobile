@@ -168,7 +168,9 @@ Refresh.prototype.displayRefreshingMessage = function () {
     }
 
     var tableView  = this.getParam('tableView');
-    tableView.setContentInsets({top: 60});
+    if (tableView) {
+        tableView.setContentInsets({top: 60});
+    }
 
     var now                      = new Date();
     var dateUtils                = Piwik.require('Utils/Date');
@@ -225,7 +227,9 @@ Refresh.prototype.refreshDone = function () {
     }
 
     var tableView = this.getParam('tableView');
-    tableView.setContentInsets({top: 0});
+    if (tableView) {
+        tableView.setContentInsets({top: 0});
+    }
     
     this.statusLabel.text = _('Mobile_PullDownToRefresh');
     this.pullViewArrow.show();
