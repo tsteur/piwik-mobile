@@ -128,7 +128,6 @@ module.exports = {
     Mobile_LoginCredentials:                                            'Credentials',
     Mobile_LoginUseHttps:                                               'Use https',
     Mobile_MultiChartLabel:                                             'Display sparklines',
-    Mobile_MultiChartInfo:                                              'Next to each website on the welcome screen',
     Mobile_NavigationBack:                                              'Back',
     Mobile_NetworkNotReachable:                                         'Network not reachable',
     Mobile_NoVisitorFound:                                              'No visitor found',
@@ -147,7 +146,6 @@ module.exports = {
     Mobile_ShowLess:                                                    'Show less',
     Mobile_UseSearchBarHint:                                            'Only the first %s websites are displayed here. Please use the search bar to access your other websites.',
     Mobile_HttpTimeout:                                                 'HTTP Timeout',
-    Mobile_HttpTimeoutInfo:                                             'Increase if you receive timeout errors',
     Mobile_VerifyAccount:                                               'Verifying Account',
     Mobile_YouAreOffline:                                               'Sorry, you are currently offline'
 };
