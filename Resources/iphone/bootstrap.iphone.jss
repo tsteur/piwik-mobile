@@ -88,104 +88,35 @@
     layout: 'vertical';
 }
 
-#aboutPiwikLinkToPiwiwkLabel {
-     focusable: true;
-     top: 5;
-     left: 5;
-     right: 5;
-     text-align: 'left';
-     height: 'SIZE';
-     color: '#336699';
-}
-
-#aboutPiwikLinkToSvnLabel {
-    focusable: true;
-    top: 5;
-    left: 5;
-    right: 5;
-    text-align: 'left';
+.aboutPiwikLinkButton {
+    top: 8;
+    left: 16;
+    right: 16;
     height: 'SIZE';
     color: '#336699';
 }
 
-#aboutPiwikLicenseWebView {
-    touchEnabled: true;
-    height: 300;
-    top: 8;
-    left: 0;
-    right: 0;
+#aboutPiwikLogo {
+    image: 'images/logo_piwik_mobile.png';
+    width: 288;
+    height: 102;
+    top: 16;
+    bottom: 8;
 }
 
 /**
  * window help/feedback.js
  */
-#giveFeedbackScrollView {
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    contentWidth: 'auto';
-    contentHeight: 'auto';
-    layout: 'vertical';
-    showVerticalScrollIndicator: true;
-    showHorizontalScrollIndicator: false;
-}
-
-#giveFeedbackBugOrFeatureLabel {
-    color: '#333333';
-    top: 5;
-    left: 5;
-    right: 5;
-    text-align: 'left';
-    height: 'SIZE';
-    font-weight: 'bold';
-}
-
-#giveFeedbackReportBugInfoLabel {
-    color: '#333333';
-    top: 5;
-    left: 5;
-    right: 5;
-    bottom: 12;
-    height: 'SIZE';
-    text-align: 'left';
-    font-weight: 'normal';
-}
-
-.giveFeedbackDeviceInfoLabel {
-    color: '#333333';
-    top: 3;
-    left: 5;
-    right: 5;
-    height: 'SIZE';
-    text-align: 'left';
-}
-
-#giveFeedbackMadeByCommunityLabel {
-    color: '#333333';
-    top: 15;
-    left: 5;
-    right: 5;
-    text-align: 'left';
-    height: 'SIZE';
-    font-weight: 'bold';
-}
-
-#giveFeedbackLinkParticipateLabel {
-    color: '#336699';
-    top: 5;
-    left: 5;
-    right: 5;
-    text-align: 'left';
-    height: 'SIZE';
-    font-weight: 'bold';
+#giveFeedbackTableView {
+    /** style 1 == Titanium.UI.iPhone.TableViewStyle.GROUPED; **/
+    style: 1
 }
 
 /**
  * window settings/index.js
  */
 #settingsTableView {
-  /** style 1 == Titanium.UI.iPhone.TableViewStyle.GROUPED; **/
+    /** style 1 == Titanium.UI.iPhone.TableViewStyle.GROUPED; **/
     style: 1;
 }
 

@@ -30,92 +30,70 @@ function window () {
     /**
      * @see  Piwik.UI.Window#menuOptions
      */
-    this.menuOptions  = {commands: [this.createCommand('SendFeedbackCommand')]};
+    this.menuOptions  = {};
+    
+    var rows     = [];
+    var platform = String.format('%s %s %s (%s)', '' + Ti.Platform.name, '' + Ti.Platform.version, '' + Ti.Platform.model, '' + Ti.Platform.locale);
+    var version  = String.format("%s - %s %s", '' + Ti.App.version, '' + Ti.version, '' + Ti.buildHash);
 
-    var scrollView    = Ti.UI.createScrollView({id: 'giveFeedbackScrollView'});
-    
-    this.add(scrollView);
-    
-    var title    = Ti.UI.createLabel({text: _('Feedback_DoYouHaveBugReportOrFeatureRequest'),
-                                      id: 'giveFeedbackBugOrFeatureLabel'});
-    
-    var contact  = Ti.UI.createLabel({text: 'Please, visit http://piwik.org/mobile or contact mobile@piwik.org . If you report a bug, please, add the following information:',
-                                      autoLink: Ti.UI.Android ? Ti.UI.Android.LINKIFY_ALL : null,
-                                      id: 'giveFeedbackReportBugInfoLabel'});
+    rows.push(this.create('TableViewRow', {title: 'Email us', 
+                                           description: 'Send us fedback, report a bug or a feature wish.', 
+                                           command: this.createCommand('SendFeedbackCommand')}));
 
-    var platform = Ti.UI.createLabel({text: String.format('Platform: %s %s %s', 
-                                                          '' + Ti.Platform.name, 
-                                                          '' + Ti.Platform.version, 
-                                                          '' + Ti.Platform.model), 
-                                      className: 'giveFeedbackDeviceInfoLabel'});
-    
-    var version  = Ti.UI.createLabel({text: String.format("Version: %s - %s %s",
-                                                          '' + Ti.App.version,
-                                                          '' + Ti.version,
-                                                          '' + Ti.buildHash),
-                                      className: 'giveFeedbackDeviceInfoLabel'});
-    
-    var memory   = Ti.UI.createLabel({text: "Available memory: " + Ti.Platform.availableMemory,
-                                      className: 'giveFeedbackDeviceInfoLabel'});
-    
-    var caps        = Ti.Platform.displayCaps;
-    var resolution  = Ti.UI.createLabel({text: String.format("Resolution: %sx%s %s (%s)",
-                                                             '' + caps.platformWidth, 
-                                                             '' + caps.platformHeight, 
-                                                             '' + caps.density, 
-                                                             '' + caps.dpi),
-                                         className: 'giveFeedbackDeviceInfoLabel'});
-    
-    var locale   = Ti.UI.createLabel({text: String.format("Locale: %s", '' + Ti.Platform.locale),
-                                      className: 'giveFeedbackDeviceInfoLabel'});
-    
-    var network  = Ti.UI.createLabel({text: String.format("Network: %s", '' + Ti.Network.networkTypeName),
-                                      className: 'giveFeedbackDeviceInfoLabel'});
+    if (Piwik.require('App/Rating').canRate()) {
+        rows.push(this.create('TableViewRow', {title: 'Rate us on the App Store', 
+                                               description: 'Piwik Mobile App is a Free Software, we would really appreciate if you took 1 minute to rate us.', 
+                                               command: this.createCommand('RateAppCommand')}));
+    }
 
-    var work     = Ti.UI.createLabel({text: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik.',
-                                      id: 'giveFeedbackMadeByCommunityLabel'});
-                                      
-    var participate = Ti.UI.createLabel({text: 'Learn about all the ways you can participate.',
-                                         id: 'giveFeedbackLinkParticipateLabel'});
-    participate.addEventListener('click', function () {
-        
-        var link = 'http://piwik.org/contribute/';
+    rows.push(this.create('TableViewRow', {title: 'Learn how you can participate', 
+                                           description: 'Piwik is a project made by the community, you can participate in the Piwik Mobile App or Piwik.',
+                                           command: this.createCommand('OpenLinkCommand', {link: 'http://piwik.org/contribute/'})}));
+                                                     
+    rows.push(this.create('TableViewSection', {title: 'About', style: 'native'}));
+    rows.push(this.create('TableViewRow', {title: 'Version', description: version}));
+    rows.push(this.create('TableViewRow', {title: 'Platform', description: platform}));
 
-        Piwik.getTracker().trackLink(link, 'link');
-        Ti.Platform.openURL(link);
-    });
+    var tableView = Ti.UI.createTableView({id: 'giveFeedbackTableView', data: rows});
 
-    scrollView.add(title);
-    scrollView.add(contact);
-    scrollView.add(platform);
-    scrollView.add(version);
-    scrollView.add(memory);
-    scrollView.add(resolution);
-    scrollView.add(locale);
-    scrollView.add(network);
-    scrollView.add(work);
-    scrollView.add(participate);
-    
-    title       = null;
-    contact     = null;
-    platform    = null;
-    version     = null;
-    memory      = null;
-    resolution  = null;
-    locale      = null;
-    network     = null;
-    work        = null;
+    this.add(tableView);
 
     this.open = function () {
 
     };
     
+    this.cleanupTableData = function () {
+
+        if (rows) {
+            for (var index = 0; index < rows.length; index++) {
+                
+                if (rows[index] && rows[index].cleanup) {
+                    rows[index].cleanup();
+                }
+                
+                rows[index] = null;
+            }
+        }
+        
+        rows = null;
+        rows = [];
+        
+        if (!tableView) {
+            
+            return;
+        }
+
+        tableView.setData([]);
+    };
+    
     this.cleanup = function () {
         
-        this.remove(scrollView);
-        scrollView        = null;
+        this.cleanupTableData();
+        
+        this.remove(tableView);
+        
+        tableView        = null;
 
-        caps              = null;
         this.menuOptions  = null;
         this.titleOptions = null;
     };

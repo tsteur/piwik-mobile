@@ -14,8 +14,8 @@ var Piwik = require('library/Piwik');
 var _     = require('library/underscore');
 
 /**
- * @class     Displays an 'About Piwik' window containing links to source and Piwik project website.
- *            Also displays Piwik Mobile license information.
+ * @class     Displays an 'About Piwik' window containing links to source coe, Piwik project website, license
+ *            and more.
  *
  * @exports   window as WindowHelpAbout
  * @this      Piwik.UI.Window
@@ -32,48 +32,60 @@ function window () {
      * @see  Piwik.UI.Window#menuOptions
      */
     this.menuOptions  = {};
+    
+    var that = this;
 
-    var view = Ti.UI.createView({id: 'aboutPiwikView'});
+    var view = Ti.UI.createScrollView({id: 'aboutPiwikView'});
 
     this.add(view);
     
-    var piwikOrgLink  = Ti.UI.createLabel({text: 'Website: http://piwik.org',
-                                           id: 'aboutPiwikLinkToPiwiwkLabel'});
+    view.add(Ti.UI.createImageView({id: 'aboutPiwikLogo'}));
+
+    var piwikOrgLink  = Ti.UI.createButton({title: 'Visit our Website', className: 'aboutPiwikLinkButton'});
     piwikOrgLink.addEventListener('click', function () {
-
-        var link = 'http://piwik.org';
-
-        Piwik.getTracker().trackLink(link, 'link');
-        Ti.Platform.openURL(link);
+        that.createCommand('OpenLinkCommand', {link: 'http://piwik.org'}).execute();
     });
     
-    var piwikDevLink  = Ti.UI.createLabel({text: 'Source Code: http://dev.piwik.org/svn/mobile',
-                                           id: 'aboutPiwikLinkToSvnLabel'});
-    piwikDevLink.addEventListener('click', function () {
-        var link = 'http://dev.piwik.org/svn/mobile';
-
-        Piwik.getTracker().trackLink(link, 'link');
-        Ti.Platform.openURL('http://dev.piwik.org/svn/mobile');
+    var emailUsButton = Ti.UI.createButton({title: 'Email us', className: 'aboutPiwikLinkButton'});
+    emailUsButton.addEventListener('click', function () {
+        that.createCommand('SendFeedbackCommand').execute();
     });
 
-    var gplContent    = Ti.UI.createWebView({url: '/license.html',
-                                             id: 'aboutPiwikLicenseWebView'});
+    var piwikDevLink  = Ti.UI.createButton({title: 'Browse Source Code', className: 'aboutPiwikLinkButton'});
+    piwikDevLink.addEventListener('click', function () {
+        that.createCommand('OpenLinkCommand', {link: 'http://dev.piwik.org/svn/mobile'}).execute();
+    });
+    
+    var piwikTwitterLink = Ti.UI.createButton({title: 'Follow @piwik', className: 'aboutPiwikLinkButton'});
+    piwikTwitterLink.addEventListener('click', function () {
+        that.createCommand('OpenLinkCommand', {link: 'https://www.twitter.com/piwik'}).execute();
+    });    
+    
+    var piwikLicenseLink = Ti.UI.createButton({title: 'View License', className: 'aboutPiwikLinkButton'});
+    piwikLicenseLink.addEventListener('click', function () {
+        that.create('Window', {url: 'help/license', target: 'modal'});
+    });
 
     view.add(piwikOrgLink);
+    view.add(emailUsButton);
+    view.add(piwikTwitterLink);
     view.add(piwikDevLink);
-    view.add(gplContent);
-    gplContent    = null;
-    piwikDevLink  = null;
-    piwikOrgLink  = null;
+    view.add(piwikLicenseLink);
+    
+    piwikOrgLink     = null;
+    emailUsButton    = null;
+    piwikTwitterLink = null;
+    piwikDevLink     = null;
+    piwikLicenseLink = null;
+    view             = null;
 
     this.open = function () {
 
     };
     
     this.cleanup = function () {
-        
-        this.remove(view);
-        view              = null;
+
+        that              = null;
         
         this.menuOptions  = null;
         this.titleOptions = null;

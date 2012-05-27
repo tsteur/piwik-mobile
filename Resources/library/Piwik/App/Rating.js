@@ -225,6 +225,9 @@ Rating.prototype.rate = function () {
 
         return;
     }
+    
+    remindMe = false;
+    this.store();
 
     try {
         Ti.Platform.openURL(storeUrl);

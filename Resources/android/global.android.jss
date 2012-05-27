@@ -52,6 +52,7 @@
     left: '16dp';
     right: '16dp';
 }
+
 .searchHintTableViewRow {
 }
 
@@ -97,98 +98,26 @@
     layout: 'vertical';
 }
 
-#aboutPiwikLinkToPiwiwkLabel {
-     focusable: true;
-     top: '5dp';
-     left: '16dp';
-     right: '5dp';
-     text-align: 'left';
-     height: 'size';
-     color: '#336699';
-}
-
-#aboutPiwikLinkToSvnLabel {
+.aboutPiwikLinkButton {
     focusable: true;
-    top: '5dp';
+    top: '8dp';
     left: '16dp';
-    right: '5dp';
-    text-align: 'left';
-    height: 'size';
-    color: '#336699';
+    right: '16dp';
 }
 
-#aboutPiwikLicenseWebView {
-    scalesPageToFit: false;
-    touchEnabled: true;
-    top: '8dp';
-    left: '10dp';
-    right: '16dp';
+#aboutPiwikLogo {
+    image: '/images/logo_piwik_mobile.png';
+    width: '288dp';
+    height: '102dp';
+    top: '16dp';
+    bottom: '8dp';
 }
 
 /**
  * window help/feedback.js
  */
-#giveFeedbackScrollView {
-    contentWidth: 'auto';
-    contentHeight: 'auto';
-    layout: 'vertical';
-    showVerticalScrollIndicator: true;
-    showHorizontalScrollIndicator: false;
-}
-
-#giveFeedbackBugOrFeatureLabel {
-    color: '#333333';
-    top: '5dp';
-    left: '16dp';
-    right: '16dp';
-    text-align: 'left';
-    height: 'size';
-    font-weight: 'bold';
-    font-size: '14sp';
-}
-
-#giveFeedbackReportBugInfoLabel {
-    color: '#333333';
-    top: '5dp';
-    left: '16dp';
-    right: '16dp';
-    bottom: '12dp';
-    height: 'size';
-    text-align: 'left';
-    font-weight: 'normal';
-    font-size: '14sp';
-}
-
-.giveFeedbackDeviceInfoLabel {
-    color: '#333333';
-    top: '3dp';
-    left: '16dp';
-    right: '16dp';
-    height: 'size';
-    text-align: 'left';
-    font-size: '14sp';
-}
-
-#giveFeedbackMadeByCommunityLabel {
-    color: '#333333';
-    top: '15dp';
-    left: '16dp';
-    right: '16dp';
-    text-align: 'left';
-    height: 'size';
-    font-weight: 'bold';
-    font-size: '14sp';
-}
-
-#giveFeedbackLinkParticipateLabel {
-    color: '#336699';
-    top: '5dp';
-    left: '16dp';
-    right: '16dp';
-    text-align: 'left';
-    height: 'size';
-    font-weight: 'bold';
-    font-size: '14sp';
+#giveFeedbackTableView {
+    separatorColor: '#eeedeb';
 }
 
 /**
