@@ -283,10 +283,16 @@ WebsitesList.prototype.init = function () {
 
 /**
  * Request the list of all available websites. Sends an async request to the piwik api.
+ * 
+ * @param  {Object}  [params]  See {@link Piwik.Network.WebsitesRequest#send}
  */
-WebsitesList.prototype.request = function () {
+WebsitesList.prototype.request = function (params) {
     
-    this.websitesRequest.send();
+    if (!params) {
+        params = {};
+    }
+    
+    this.websitesRequest.send(params);
 };
 
 module.exports = WebsitesList;

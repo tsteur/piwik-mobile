@@ -73,6 +73,21 @@ function window () {
                                site: event.site});
     });
 
+    var sparklines  = Piwik.require('App/Settings').getPiwikMultiChart();
+    var numAccounts = Piwik.require('App/Accounts').getNumAccounts();
+    
+    this.addEventListener('focusWindow', function () {
+        var sparklinesNow  = Piwik.require('App/Settings').getPiwikMultiChart();
+        var numAccountsNow = Piwik.require('App/Accounts').getNumAccounts();
+        
+        if (sparklines !== sparklinesNow || numAccounts !== numAccountsNow) {
+            numAccounts = numAccountsNow; 
+            sparklines  = sparklinesNow;
+            
+            websitesList.request({reload: true});
+        }
+    });
+
     /**
      * Send the request async to fetch a list of all available websites.
      */
