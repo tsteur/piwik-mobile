@@ -307,7 +307,7 @@ AccountRequest.prototype.requestVersion = function () {
     var account        = accountManager.getAccountById(this.accountId);
 
     var piwikRequest   = Piwik.require('Network/PiwikApiRequest');
-    piwikRequest.setMethod('ExampleAPI.getPiwikVersion');
+    piwikRequest.setMethod('API.getPiwikVersion');
     piwikRequest.setAccount(account);
     piwikRequest.setCallback(this, function (response) {
 
