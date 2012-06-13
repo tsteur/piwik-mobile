@@ -71,7 +71,34 @@ PiwikDate.prototype.getRangeDate = function () {
     var fromDate = null;
     var toDate   = null;
     
-    if (-1 != this.date.indexOf(',')) {
+    if ('last7' == this.date) {
+        
+        fromDate = new Date();
+        fromDate.setDate(fromDate.getDate() - 6);
+        toDate   = new Date();
+        
+    } else if ('last30' == this.date) {
+        
+        fromDate = new Date();
+        fromDate.setDate(fromDate.getDate() - 29);
+        toDate   = new Date();
+        
+    } else if ('previous7' == this.date) {
+        
+        fromDate = new Date();
+        fromDate.setDate(fromDate.getDate() - 7);
+        toDate   = new Date();
+        toDate.setDate(toDate.getDate() - 1);
+        
+    } else if ('previous30' == this.date) {
+        
+        fromDate = new Date();
+        fromDate.setDate(fromDate.getDate() - 30);
+        toDate   = new Date();
+        toDate.setDate(toDate.getDate() - 1);
+        
+    } else if (-1 != this.date.indexOf(',')) {
+        
         var fromAndTo = this.date.split(',');
 
         fromDate      = this.toDate(fromAndTo[0]);
@@ -84,6 +111,37 @@ PiwikDate.prototype.getRangeDate = function () {
     }
 
     return [fromDate, toDate];
+};
+
+/**
+ * Get a list of all date ranges which are supported within the Mobile App.
+ *
+ * @returns  {Array}  An object containing the label, the period and the date.
+ *                    Array (
+ *                        [int] => Object (
+ *                            [label]  => [The name of the date range]
+ *                            [period] => [The Piwik period, for example 'range']  
+ *                            [date]   => [The piwik date, for example 'last7']  
+ *                        )
+ *                    )
+ */
+PiwikDate.prototype.getAvailableDateRanges = function () {
+
+    var _      = require('library/underscore');
+    
+    var ranges = [{label: _('General_Today'), period: 'day', date: 'today'},
+                  {label: _('General_Yesterday'), period: 'day', date: 'yesterday'},
+                  {label: String.format(_('General_PreviousDaysShort'), '7'), period: 'range', date: 'previous7'},
+                  {label: String.format(_('General_PreviousDaysShort'), '30'), period: 'range', date: 'previous30'},
+                  {label: String.format(_('General_LastDaysShort'), '7'), period: 'range', date: 'last7'},
+                  {label: String.format(_('General_LastDaysShort'), '30'), period: 'range', date: 'last30'},
+                  {label: _('General_CurrentWeek'), period: 'week', date: 'today'},
+                  {label: _('General_CurrentMonth'), period: 'month', date: 'today'},
+                  {label: _('General_CurrentYear'), period: 'year', date: 'today'}];
+
+    _ = null;
+
+    return ranges;
 };
 
 /**

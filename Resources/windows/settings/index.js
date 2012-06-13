@@ -210,43 +210,35 @@ function window () {
 
         // detect current selected default report date. So we are able to display the current value and to preselect
         // the current selected value.
-        switch (settings.getPiwikDefaultPeriod() + settings.getPiwikDefaultDate()) {
-            case 'daytoday':
-                defaultReportDateLabel = _('General_Today');
-                currentReportDateIndex = 0;
-                break;
-            case 'dayyesterday':
-                defaultReportDateLabel = _('General_Yesterday');
-                currentReportDateIndex = 1;
-                break;
-            case 'weektoday':
-                defaultReportDateLabel = _('General_CurrentWeek');
-                currentReportDateIndex = 2;
-                break;
-            case 'monthtoday':
-                defaultReportDateLabel = _('General_CurrentMonth');
-                currentReportDateIndex = 3;
-                break;
-            case 'yeartoday':
-                defaultReportDateLabel = _('General_CurrentYear');
-                currentReportDateIndex = 4;
-                break;
+        var availableOptions = Piwik.require('PiwikDate').getAvailableDateRanges();
+        for (var index in availableOptions) {
+            
+            if (availableOptions[index] &&
+                availableOptions[index].period == settings.getPiwikDefaultPeriod() &&
+                availableOptions[index].date == settings.getPiwikDefaultDate()) {
+
+                defaultReportDateLabel = availableOptions[index].label;
+                currentReportDateIndex = index;
+
+            }
         }
 
         var onChangeDefaultReportDate = function () {
-
+            
+            var periodOptions    = [];
+            
             // an array of all available default report date options
-            var periodOptions = [_('General_Today'),
-                                 _('General_Yesterday'),
-                                 _('General_CurrentWeek'),
-                                 _('General_CurrentMonth'),
-                                 _('General_CurrentYear'),
-                                 _('SitesManager_Cancel_js')];
+            var availableOptions = Piwik.require('PiwikDate').getAvailableDateRanges();
+            for (var index in availableOptions) {
+                periodOptions.push(availableOptions[index].label);
+            }
+            
+            periodOptions.push(_('SitesManager_Cancel_js'));
 
             var periodDialog  = Ti.UI.createOptionDialog({
-                title:  _('Mobile_DefaultReportDate'),
+                title: _('Mobile_DefaultReportDate'),
                 options: periodOptions,
-                cancel: 5
+                cancel: periodOptions.length - 1
             });
 
             if (null !== currentReportDateIndex) {
@@ -278,29 +270,19 @@ function window () {
                     
                     return;
                 }
+                
+                if (!availableOptions[event.index]) {
+                    
+                    return;
+                }
 
                 // display changed value in row and update the current report date index. This ensures the correct
                 // value will be preselected if user opens the periodDialog again.
                 row.changeValue(periodOptions[event.index]);
                 currentReportDateIndex = event.index;
-
-                switch (event.index) {
-                    case 0:
-                        settings.setPiwikDefaultReportDate('day', 'today');
-                        break;
-                    case 1:
-                        settings.setPiwikDefaultReportDate('day', 'yesterday');
-                        break;
-                    case 2:
-                        settings.setPiwikDefaultReportDate('week', 'today');
-                        break;
-                    case 3:
-                        settings.setPiwikDefaultReportDate('month', 'today');
-                        break;
-                    case 4:
-                        settings.setPiwikDefaultReportDate('year', 'today');
-                        break;
-                }
+            
+                settings.setPiwikDefaultReportDate(availableOptions[event.index].period, 
+                                                   availableOptions[event.index].date);
 
                 var chPeriod = settings.getPiwikDefaultPeriod();
                 var chDate   = settings.getPiwikDefaultDate();
@@ -310,9 +292,10 @@ function window () {
                 session.set('piwik_parameter_period', settings.getPiwikDefaultPeriod());
                 session.set('piwik_parameter_date', settings.getPiwikDefaultDate());
                 
-                row      = null;
-                session  = null;
-                settings = null;
+                row              = null;
+                session          = null;
+                settings         = null;
+                availableOptions = null;
             });
 
             periodDialog.show();
@@ -472,15 +455,15 @@ function window () {
         
         tableData = null;
         tableData = [];
-        
+
         if (tableview) {
             tableview.setData([]);
         }
     };
-    
+
     this.cleanup = function () {
         this.cleanupTableData();
-        
+
         this.remove(tableview);
 
         tableData = null;

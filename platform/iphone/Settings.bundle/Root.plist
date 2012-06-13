@@ -129,6 +129,10 @@
             <array>
                 <string>day##today</string>
                 <string>day##yesterday</string>
+                <string>range##previous7</string>
+                <string>range##previous30</string>
+                <string>range##last7</string>
+                <string>range##last30</string>
                 <string>week##today</string>
                 <string>month##today</string>
                 <string>year##today</string>
@@ -137,6 +141,10 @@
             <array>
                 <string>Today</string>
                 <string>Yesterday</string>
+                <string>Previous 7 days</string>
+                <string>Previous 30 days</string>
+                <string>Last 7 days</string>
+                <string>Last 30 days</string>
                 <string>Current Week</string>
                 <string>Curremt Month</string>
                 <string>Current Year</string>
