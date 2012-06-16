@@ -165,6 +165,7 @@ function PiwikGraph () {
         var url = '?module=MultiSites&action=getEvolutionGraph&period=day&date=last30&evolutionBy=visits';
         url    += '&columns[]=nb_visits&idSite=' + siteId + '&idsite=' + siteId + '&viewDataTable=sparkline';
         url    += '&token_auth=' + tokenAuth;
+        url    += "&width=200&height=50";
 
         // prevents graph from caching
         url    += '&cacherand=' + Math.floor(Math.random() * 9999999);

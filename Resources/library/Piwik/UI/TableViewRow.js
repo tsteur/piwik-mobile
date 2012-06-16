@@ -143,9 +143,12 @@ TableViewRow.prototype.init = function (params) {
         this.titleLabel       = null;
         this.valueLabel       = null;
         this.onShowOptionMenu = null;
-        row.changeValue       = null;
-        row.changeTitle       = null;
-        row                   = null;
+        
+        if (row) {
+            row.changeValue       = null;
+            row.changeTitle       = null;
+            row                   = null;
+        }
     };
     
     row.changeValue(value);
@@ -165,6 +168,9 @@ TableViewRow.prototype.init = function (params) {
         var rowRightImage = Piwik.getUI().createImageView({width:  stringUtils.toSizeUnit('' + rightImage.width),
                                                            height: stringUtils.toSizeUnit('' + rightImage.height),
                                                            image:  rightImage.url,
+                                                           canScale: !Piwik.getPlatform().isAndroid,
+                                                           hires:  !Piwik.getPlatform().isAndroid,
+                                                           enableZoomControls: false,
                                                            id:     'tableViewRowRightImage'});
         row.add(rowRightImage);
         rowRightImage     = null;
