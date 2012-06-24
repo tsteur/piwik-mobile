@@ -111,7 +111,6 @@ function window (params) {
 
         // remove all tableview rows. This should ensure there are no rendering issues when setting
         // new rows afterwards.
-        
         if (tableview) {
             tableview.reset();
         }
@@ -246,6 +245,11 @@ function window (params) {
     };
 
     this.cleanup = function () {
+        
+        if (Piwik.getPlatform().isIpad) {
+            
+            return;
+        }
 
         if (tableview && tableview.get()) {
             this.remove(tableview.get());
