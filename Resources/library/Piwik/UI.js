@@ -225,6 +225,36 @@ UI.createDatePicker = function (params) {
 };
 
 /**
+ * Creates a new TableView.
+ *
+ * @see      Piwik.UI.TableView
+ *
+ * @param    {Object}  params  A dictionary object properties defined in  Piwik.UI.TableView.
+ *
+ * @type     Titanium.UI.TableView
+ *
+ * @returns  The created tableview.
+ */
+UI.createTableView = function (params) {
+
+    try {
+        var instance = Piwik.require('UI/TableView');
+        
+        instance.setParams(params);
+        instance.init();
+        
+        params       = null;
+        
+        return instance;
+
+    } catch (exception) {
+
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiTv25'});
+        uiError.showErrorMessageToUser();
+    }
+};
+
+/**
  * Creates a new TableViewRow.
  *
  * @see      Piwik.UI.TableViewRow
@@ -396,6 +426,35 @@ UI.createStatisticList = function (params) {
     } catch (exception) {
 
         var uiError  = UI.createError({exception: exception, errorCode: 'PiUiSl30'});
+        uiError.showErrorMessageToUser();
+    }
+};
+
+/**
+ * Creates a new statistic list entry instance.
+ *
+ * @see      Piwik.UI.StatisticListEntry
+ *
+ * @param    {Object}  params  A dictionary object properties defined in Piwik.UI.StatisticListEntry.
+ *
+ * @type     Piwik.UI.StatisticListEntry
+ *
+ * @returns  The created statistic list entry instance.
+ */
+UI.createStatisticListEntry = function (params) {
+
+    try {
+        var instance = Piwik.require('UI/StatisticListEntry');
+        instance.setParams(params);
+        instance.init();
+        
+        params = null;
+
+        return instance;
+
+    } catch (exception) {
+
+        var uiError  = UI.createError({exception: exception, errorCode: 'PiUiSe41'});
         uiError.showErrorMessageToUser();
     }
 };

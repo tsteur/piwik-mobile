@@ -257,4 +257,11 @@ ActivityIndicator.prototype.hide = function (force) {
     win = null;
 };
 
+/**
+ * Cleanup.
+ */
+ActivityIndicator.prototype.cleanup = function () {
+    this.view = null;
+};
+
 module.exports = ActivityIndicator;

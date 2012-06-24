@@ -34,7 +34,7 @@ function window () {
 
     var that          = this;
     var tableData     = [];
-    var tableview     = Ti.UI.createTableView({id: 'settingsTableView'});
+    var tableview     = this.create('TableView', {id: 'settingsTableView'});
 
     tableview.addEventListener('click', function (event) {
 
@@ -47,7 +47,7 @@ function window () {
         event = null;
     });
     
-    this.add(tableview);
+    this.add(tableview.get());
 
     this.addEventListener('onopen', function (indexEvent) {
         
@@ -61,7 +61,9 @@ function window () {
             indexEvent = {};
         }
         
-        that.cleanupTableData();
+        if (tableview) {
+            tableview.reset();
+        }
         
         var onChangeAnonymousTracking = function (event) {
 
@@ -414,6 +416,8 @@ function window () {
         if (tableview) {
             tableview.setData(tableData);
         }
+        
+        tableData = null;
     });
 
     /**
@@ -442,31 +446,12 @@ function window () {
         eventResult = null;
     };
     
-    this.cleanupTableData = function () {
-
-        if (tableData) {
-            for (var index = 0; index < tableData.length; index++) {
-                if (tableData[index] && tableData[index].cleanup) {
-                    tableData[index].cleanup();
-                }
-                tableData[index] = null;
-            }
-        }
-        
-        tableData = null;
-        tableData = [];
-
-        if (tableview) {
-            tableview.setData([]);
-        }
-    };
-
     this.cleanup = function () {
-        this.cleanupTableData();
 
-        this.remove(tableview);
+        if (tableview && tableview.get()) {
+            this.remove(tableview.get());
+        }
 
-        tableData = null;
         tableview = null;
         that      = null;
         this.menuOptions     = null;

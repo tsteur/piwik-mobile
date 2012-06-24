@@ -129,7 +129,7 @@ WebsitesList.prototype.init = function () {
     
     win.add(searchBar);
 
-    var tableview = Ti.UI.createTableView({id: 'websitesTableView', top: searchBar.height});
+    var tableview = this.create('TableView', {id: 'websitesTableView', top: searchBar.height});
 
     tableview.addEventListener('click', function (event) {
         if (!event || !event.row || !event.row.site) {
@@ -145,44 +145,38 @@ WebsitesList.prototype.init = function () {
         event = null;
     });
 
-    win.add(tableview);
+    win.add(tableview.get());
 
     refresh = this.create('Refresh', {tableView: tableview});
 
     refresh.addEventListener('onRefresh', function () {
-        
-        if (rows) {
-            for (var index = 0; index < rows.length; index++) {
-                if (rows[index] && rows[index].cleanup) {
-                    rows[index].cleanup();
-                }
-                
-                rows[index] = null;
-            }
-        }
-
-        rows = null;
-        rows = [];
-
+ 
         // remove all tableview rows. This makes sure there are no rendering issues when setting
         // new rows afterwards.
-        tableview.setData([]);
+        if (tableview) {
+            tableview.reset();
+        }
 
         var params = {reload: forceRequestReload};
         if (searchBar && searchBar.value) {
             params.filterName = searchBar.value;
         }
-
-        that.websitesRequest.send(params);
+        
+        if (that && that.websitesRequest) {
+            that.websitesRequest.send(params);
+        }
 
         forceRequestReload = true;
     });
 
     this.websitesRequest.addEventListener('onload', function (event) {
+        
         onLoadEventFired = true;
+        
         if (Piwik.getPlatform().isAndroid) {
             searchBar.show();
         } 
+        
         if (refresh) {
             refresh.refreshDone();
         }
@@ -192,6 +186,7 @@ WebsitesList.prototype.init = function () {
             rows = [that.create('TableViewRow', {title: _('Mobile_NoWebsiteFound'),
                                                  className: 'websitesNotFoundTableViewRow'})];
             tableview.setData(rows);
+            rows = null;
 
             return;
         }
@@ -267,14 +262,15 @@ WebsitesList.prototype.init = function () {
             var searchBarHintText = String.format(_('Mobile_UseSearchBarHint'), 
                                                   '' + config.piwik.numDisplayedWebsites);
             
-            searchHintRow.add(Ti.UI.createLabel({text: searchBarHintText,
-                                                 className: 'searchHintLabel'}));
+            searchHintRow.add(Ti.UI.createLabel({text: searchBarHintText, className: 'searchHintLabel'}));
             rows.push(searchHintRow);
+            
             searchHintRow = null;
             config        = null;
         }
         
         tableview.setData(rows);
+        rows = null;
     });
     
     win   = null;

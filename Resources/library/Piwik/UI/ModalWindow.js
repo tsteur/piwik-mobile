@@ -310,4 +310,12 @@ ModalWindow.prototype.close = function () {
     }
 };
 
+/**
+ * Cleanup.
+ */
+ModalWindow.prototype.cleanup = function () {
+    this.viewToAddOtherViews = null;
+    this.win                 = null;
+};
+
 module.exports = ModalWindow;

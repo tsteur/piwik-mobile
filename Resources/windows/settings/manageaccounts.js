@@ -129,8 +129,8 @@ function window () {
         dialog.show();
     };
 
-    var tableview = Ti.UI.createTableView({id: 'manageAccountsTableView',
-                                           editable: true});
+    var tableview = this.create('TableView', {id: 'manageAccountsTableView',
+                                              editable: true});
 
     // user has selected an account
     tableview.addEventListener('click', function (event) {
@@ -160,7 +160,7 @@ function window () {
         accountManager     = null;
     });
 
-    this.add(tableview);
+    this.add(tableview.get());
 
     this.addEventListener('onopen', function (event) {
 
@@ -203,9 +203,9 @@ function window () {
     this.addEventListener('focusWindow', function () {
         // update account list whenever window gets the focus (for example after saving an account). Makes sure an
         // previously added account is directly visible.
-        if (tableview.data && tableview.data.length && that) {
+        if (tableview && tableview.data && tableview.data.length && that) {
 
-            that.cleanupTableData();
+            tableview.reset();
             
             that.open();
         }
@@ -228,33 +228,11 @@ function window () {
         accountManager       = null;
     };
     
-    this.cleanupTableData = function () {
-
-        if (tableData) {
-            for (var index = 0; index < tableData.length; index++) {
-                if (tableData[index] && tableData[index].cleanup) {
-                    tableData[index].cleanup();
-                }
-                
-                tableData[index] = null;
-            }
-        }
-        
-        tableData = null;
-        tableData = [];
-        
-        if (!tableview) {
-            
-            return;
-        }
-        
-        tableview.setData([]);
-    };
-    
     this.cleanup = function () {
-        this.cleanupTableData();
-        
-        this.remove(tableview);
+
+        if (tableview && tableview.get()) {
+            this.remove(tableview.get());
+        }
 
         tableData = null;
         tableview = null;

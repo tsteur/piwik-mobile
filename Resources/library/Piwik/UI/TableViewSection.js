@@ -15,7 +15,7 @@ var Piwik = require('library/Piwik');
  *           this function if you need a table view section. This ensures the same look and feel in each table view 
  *           without the need of handling os differences.
  *
- * @param    {Object}  [params]        See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewRow-object.html">Titanium API</a> for a list of all available parameters.
+ * @param    {Object}  [params]        See <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewSection-object.html">Titanium API</a> for a list of all available parameters.
  * @param    {string}  [params.title]  Optional. The title of the section.
  * @param    {string}  [params.style]  Optional. Only for iOS. If 'native', it uses the native headerTitle
  *                                     property to create a TableViewSection (see <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.UI.TableViewSection-object.html">Titanium API</a>)
@@ -77,6 +77,7 @@ TableViewSection.prototype.init = function (params) {
             
             headerLabel              = null;
             params.headerView        = headerView;
+            headerView               = null;
         }
 
         return Ti.UI.createTableViewSection(params);

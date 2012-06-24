@@ -40,7 +40,7 @@ function window (params) {
     var activityIndicator = this.create('ActivityIndicator');
     var request           = Piwik.require('Network/AccountRequest');
     
-    var tableView = Ti.UI.createTableView({id: 'editAccountTableView'});
+    var tableView = this.create('TableView', {id: 'editAccountTableView'});
     var tableData = [];
     
     var piwikUrl  = Ti.UI.createTextField({
@@ -119,7 +119,7 @@ function window (params) {
     var save             = Ti.UI.createButton({title:  _('General_Save'), 
                                                className: 'editAccountSaveButton'});
     footerView.add(save);
-    tableView.footerView = footerView;
+    tableView.setFooterView(footerView);
     footerView           = null;
 
     piwikAnonymous.addEventListener('change', function (event) {
@@ -411,7 +411,7 @@ function window (params) {
         alertDialog.show();
     });
 
-    this.add(tableView);
+    this.add(tableView.get());
     
     tableView.setData(tableData);
 
@@ -454,25 +454,11 @@ function window (params) {
         }
     };
     
-    this.cleanupTableData = function () {
-
-        if (tableData) {
-            for (var index = 0; index < tableData.length; index++) {
-                if (tableData[index] && tableData[index].cleanup) {
-                    tableData[index].cleanup();
-                }
-                tableData[index] = null;
-            }
-        }
-        
-        tableData = null;
-        tableData = [];
-    };
-    
     this.cleanup = function () {
-        this.cleanupTableData();
-        
-        this.remove(tableView);
+
+        if (tableView && tableView.get()) {
+            this.remove(tableView.get());
+        }
 
         tableData   = null;
         tableView   = null;

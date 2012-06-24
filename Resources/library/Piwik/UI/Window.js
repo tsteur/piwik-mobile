@@ -85,6 +85,10 @@ function UiWindow () {
             for (var index = 0; index < len; index++) {
             
                 var rel    = this.cleanups.pop();
+                
+                if (rel && rel.cleanup) {
+                    rel.cleanup();
+                }
 
                 rel.window = null;
                 rel.params = null;

@@ -49,10 +49,10 @@ function window (params) {
     var latestRequestedTimestamp = 0;
 
     var request   = Piwik.require('Network/LiveRequest');
-    var tableView = Ti.UI.createTableView({id: 'liveTableView'});
+    var tableView = this.create('TableView', {id: 'liveTableView'});
     var refresh   = this.create('Refresh', {tableView: tableView});
 
-    this.add(tableView);
+    this.add(tableView.get());
 
     var stopRefreshTimer = function () {
 
@@ -62,7 +62,7 @@ function window (params) {
         }
     };
 
-    var site      = params.site;
+    var site = params.site;
 
     if (!site || !site.accountId) {
         //@todo shall we close the window?
@@ -234,7 +234,7 @@ function window (params) {
                 // @todo test me 
                
                 // clear previous displayed data
-                that.cleanupTableData();
+                tableView.reset();
         
                 // make sure at least live overview will be rendered
                 that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
@@ -269,7 +269,9 @@ function window (params) {
         }
 
         // clear previous displayed data
-        that.cleanupTableData();
+        if (tableView) {
+            tableView.reset();
+        }
 
         that.lastMinutes = that.create('LiveOverview', {title: String.format(_('Live_LastMinutes'), '30')});
         that.lastHours   = that.create('LiveOverview', {title: String.format(_('Live_LastHours'), '24')});
@@ -343,7 +345,7 @@ function window (params) {
                                                                  accessUrl: accessUrl});
             visitorRow         = visitorOverview.getRow();
 
-            // add visitor information to the row. This makes it possibly to access this value when
+            // add visitor information to the row. This makes it possible to access this value when
             // the user clicks on a row within the tableview (click event).
             // we do not do this in VisitorOverview UI widget cause it's a window specific thing.
             visitorRow.visitor = visitor;
@@ -351,9 +353,11 @@ function window (params) {
             visitorRows.push(visitorRow);
             
             visitorRow         = null;
+            visitorOverview    = null;
         }
 
         tableView.setData(visitorRows);
+        visitorRows = null;
 
         if (params && params.autoRefresh && that) {
             if (stopRefreshTimer) {
@@ -381,34 +385,15 @@ function window (params) {
         params = null;
     };
     
-    this.cleanupTableData = function () {
-
-        if (visitorRows) {
-            for (var index = 0; index < visitorRows.length; index++) {
-                visitorRows[index] = null;
-            }
-        }
-        
-        visitorRows = null;
-        visitorRows = [];
-        
-        if (!tableView) {
-            
-            return;
-        }
-        
-        tableView.setData([]);
-    };
-    
     this.cleanup = function () {
         if (this.refreshTimer) {
             clearTimeout(this.refreshTimer);
         }
         
-        this.cleanupTableData();
-        
-        this.remove(tableView);
-        
+        if (tableView && tableView.get()) {
+            this.remove(tableView.get());
+        }
+
         try {
             if (activity && stopRefreshTimer) {
                 activity.removeEventListener('pause', stopRefreshTimer);

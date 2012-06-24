@@ -75,9 +75,9 @@ Visitor.prototype.init = function () {
     var win       = this.create('ModalWindow', {title: _('General_Visitor'),
                                                 openView: this.getParam('openView')});
    
-    var tableView = Ti.UI.createTableView({id: 'visitorTableView'});
+    var tableView = this.create('TableView', {id: 'visitorTableView'});
 
-    win.add(tableView);
+    win.add(tableView.get());
     
     tableView.setData(this.getRows());
     win.open();
@@ -580,6 +580,13 @@ Visitor.prototype.createEcommerceAction = function (actionDetail) {
     row          = null;
     actionDetail = null;
     visitor      = null;
+};
+
+/**
+ * Cleanup.
+ */
+Visitor.prototype.cleanup = function () {
+    this._rows = null;
 };
 
 module.exports = Visitor;

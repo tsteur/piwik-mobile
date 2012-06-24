@@ -8,14 +8,11 @@
 
 /** @private */
 var Piwik       = require('library/Piwik');
-/** @private */
-var stringUtils = Piwik.require('Utils/String');
 
 /**
  * @class     A statistic list is created by the method Piwik.UI.createStatisticList. It displays a list of all given
- *            statistics. The label value is placed on the left side whereas the value is displayed on the right site.
- *            Additionally it is possible to add a headline for each column. Each statistic will be rendered into a
- *            TableViewRow. You need a TableView therefore to display the rendered content.
+ *            statistics. Each statistic will be rendered into a TableViewRow. Therefore, you need a TableView in order
+ *            to display the rendered content.
  * 
  * @param     {Object}   params            See {@link Piwik.UI.View#setParams}
  * @param     {Array}    params.values     An array containing multiple values. Each value is represented by an
@@ -25,9 +22,11 @@ var stringUtils = Piwik.require('Utils/String');
  *                                         domain.
  *                                         Array (
  *                                             [int] => Object (
- *                                                         [title] => []
- *                                                         [value] => []
- *                                                         [logo]  => []
+ *                                                         [title]       => []
+ *                                                         [value]       => []
+ *                                                         [logo]        => []
+ *                                                         [logoWidth]   => []
+ *                                                         [logoHeight]  => []
  *                                                      )
  *                                         )
  * @param     {boolean}  [params.showAll]  Optional. Whether show all results is activated or not
@@ -115,56 +114,19 @@ StatisticList.prototype.renderList = function () {
     }
 
     for (var index = 0; index < values.length; index++) {
-        var statistic  = values[index];
+        var statistic = values[index];
         
         if (!statistic) {
             continue;
         }
-
-        var statRow    = Ti.UI.createTableViewRow({className: 'statisticListTableViewRow'});
-
-        var title      = stringUtils.trim(String(statistic.title));
-        var value      = statistic.value;
-        var logo       = null;
         
-        if ('undefined' == (typeof value) || null === value) {
-            value      = ' - ';
-        }
-        
-        if ('undefined' !== (typeof statistic.logo)) {
-            logo       = statistic.logo;
-        }
-            
-        var titleLabel = Ti.UI.createLabel({
-            text: String(title),
-            className: 'statisticListTitleLabel' + (logo ? 'WithLogo' : '')
-        });
-        
-        statRow.add(titleLabel);
-        titleLabel = null;
-
-        var valueLabel = Ti.UI.createLabel({
-            text: String(value),
-            className: 'statisticListValueLabel'
-        });
-        
-        statRow.add(valueLabel);
-        valueLabel = null;
-
-        if (logo) {
-            var imageView = Ti.UI.createImageView({
-                height: statistic.logoHeight ? statistic.logoHeight : 16,
-                image: String(logo),
-                className: 'statisticListLogoImage',
-                width: statistic.logoWidth ? statistic.logoWidth : 16
-            });
-            
-            statRow.add(imageView);
-            imageView = null;
-        }
+        var row     = this.create('StatisticListEntry', statistic);
+        var statRow = row.getRow();
         
         this.rows.push(statRow);
+        
         statRow = null;
+        row     = null;
     }
     
     values = null;
@@ -179,12 +141,12 @@ StatisticList.prototype.renderList = function () {
  */
 StatisticList.prototype.renderPaginator = function () {
 
-    var config       = require('config');
+    var config = require('config');
 
     if (config.piwik.filterLimit > this.rows.length) {
         // a show all or show less button only makes sense if there are more or equal results than the used
         // filter limit value...
-        config       = null;
+        config = null;
     
         return;
     }
@@ -205,6 +167,13 @@ StatisticList.prototype.renderPaginator = function () {
     
     this.rows.push(paginatorRow);
     paginatorRow = null;
+};
+
+/**
+ * Cleanup.
+ */
+StatisticList.prototype.cleanup = function () {
+    this.rows = null;
 };
 
 module.exports = StatisticList;

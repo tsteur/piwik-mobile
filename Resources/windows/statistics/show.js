@@ -63,11 +63,11 @@ function window (params) {
         Piwik.getTracker().setCustomVariable(3, 'reportUniqueId', params.report.uniqueId, 'page');
     }
 
-    var request      = Piwik.require('Network/StatisticsRequest');
-    var tableView    = Ti.UI.createTableView({id: 'statisticsTableView'});
-    var refresh      = this.create('Refresh', {tableView: tableView});
+    var request   = Piwik.require('Network/StatisticsRequest');
+    var tableView = this.create('TableView', {id: 'statisticsTableView'});
+    var refresh   = this.create('Refresh', {tableView: tableView});
 
-    this.add(tableView);
+    this.add(tableView.get());
 
     this.addEventListener('onDateChanged', function (event) {
         // user has changed the date and/or period -> reload statistics using the updated date/period
@@ -127,8 +127,8 @@ function window (params) {
 
     refresh.addEventListener('onRefresh', function () {
         // simple refresh using the same params
-        if (that) {
-            that.cleanupTableData();
+        if (tableView) {
+            tableView.reset();
         }
 
         if (request) {
@@ -253,34 +253,11 @@ function window (params) {
         params = null;
     };
     
-    this.cleanupTableData = function () {
-
-        if (tableViewRows) {
-            for (var index = 0; index < tableViewRows.length; index++) {
-                
-                if (tableViewRows[index] && tableViewRows[index].cleanup) {
-                    tableViewRows[index].cleanup();
-                }
-                
-                tableViewRows[index] = null;
-            }
-        }
-        
-        tableViewRows = null;
-        tableViewRows = [];
-        
-        if (!tableView) {
-            
-            return;
-        }
-
-        tableView.setData([]);
-    };
-    
     this.cleanup = function () {
-        this.cleanupTableData();
-        
-        this.remove(tableView);
+
+        if (tableView && tableView.get()) {
+            this.remove(tableView.get());
+        }
 
         tableViewRows = null;
         tableView     = null;

@@ -80,11 +80,11 @@ function window (params) {
     });
 
     var request   = Piwik.require('Network/LiveRequest');
-    var tableView = Ti.UI.createTableView({id: 'visitorLogTableView'});
+    var tableView = this.create('TableView', {id: 'visitorLogTableView'});
     var site      = params.site;
     refresh       = this.create('Refresh', {tableView: tableView});
 
-    this.add(tableView);
+    this.add(tableView.get());
 
     if (!site || !site.accountId) {
         //@todo shall we close the window?
@@ -144,12 +144,12 @@ function window (params) {
             refresh.refreshDone();
         }
 
-        if (!that || !event) {
+        if (!that || !event || !tableView) {
             
             return;
         }
         
-        that.cleanupTableData();
+        tableView.reset();
 
         visitorRows         = [];
 
@@ -291,29 +291,11 @@ function window (params) {
         params = null;
     };
     
-    this.cleanupTableData = function () {
-        
-        if (visitorRows) {
-            for (var index = 0; index < visitorRows.length; index++) {
-                visitorRows[index] = null;
-            }
-        }
-        
-        visitorRows = null;
-        visitorRows = [];
-
-        if (!tableView) {
-            
-            return;
-        }
-
-        tableView.setData([]);
-    };
-    
     this.cleanup = function () {
-        this.cleanupTableData();
-        
-        this.remove(tableView);
+
+        if (tableView && tableView.get()) {
+            this.remove(tableView.get());
+        }
 
         visitorRows    = null;
         tableView      = null;

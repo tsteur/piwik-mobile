@@ -143,6 +143,7 @@ TableViewRow.prototype.init = function (params) {
         this.titleLabel       = null;
         this.valueLabel       = null;
         this.onShowOptionMenu = null;
+        this.command          = null;
         
         if (row) {
             row.changeValue       = null;

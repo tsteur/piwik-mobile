@@ -149,8 +149,10 @@ VisitorOverview.prototype.init = function () {
  * @type  Titanium.UI.TableViewRow
  */
 VisitorOverview.prototype.getRow = function () {
+
     var row   = this._row;
     this._row = null;
+    
     return row;
 };
 
@@ -222,6 +224,13 @@ VisitorOverview.prototype.getReferrerDescription = function (visitor) {
     visitor = null;
 
     return description;
+};
+
+/**
+ * Cleanup.
+ */
+VisitorOverview.prototype.cleanup = function () {
+    this._row = null;
 };
 
 module.exports = VisitorOverview;

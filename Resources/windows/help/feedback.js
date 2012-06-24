@@ -54,44 +54,20 @@ function window () {
     rows.push(this.create('TableViewRow', {title: 'Version', description: version}));
     rows.push(this.create('TableViewRow', {title: 'Platform', description: platform}));
 
-    var tableView = Ti.UI.createTableView({id: 'giveFeedbackTableView', data: rows});
+    var tableView = this.create('TableView', {id: 'giveFeedbackTableView', data: rows});
 
-    this.add(tableView);
+    this.add(tableView.get());
 
     this.open = function () {
 
     };
     
-    this.cleanupTableData = function () {
-
-        if (rows) {
-            for (var index = 0; index < rows.length; index++) {
-                
-                if (rows[index] && rows[index].cleanup) {
-                    rows[index].cleanup();
-                }
-                
-                rows[index] = null;
-            }
-        }
-        
-        rows = null;
-        rows = [];
-        
-        if (!tableView) {
-            
-            return;
-        }
-
-        tableView.setData([]);
-    };
-    
     this.cleanup = function () {
-        
-        this.cleanupTableData();
-        
-        this.remove(tableView);
-        
+
+        if (tableView && tableView.get()) {
+            this.remove(tableView.get());
+        }
+
         tableView        = null;
 
         this.menuOptions  = null;

@@ -116,4 +116,11 @@ LiveOverview.prototype.getRow = function () {
     return row;
 };
 
+/**
+ * Cleanup.
+ */
+LiveOverview.prototype.cleanup = function () {
+    this.row = null;
+};
+
 module.exports = LiveOverview;

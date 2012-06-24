@@ -264,9 +264,9 @@ DatePicker.prototype.createPickerChooser = function () {
                                                     className: 'datePickerToTableViewRow',
                                                     value: this.getDisplayDate(this.to)});
 
-    this.tableView   = Ti.UI.createTableView({id: 'datePickerChooserTableView'});
+    this.tableView   = this.create('TableView', {id: 'datePickerChooserTableView'});
     
-    this.win.add(this.tableView);
+    this.win.add(this.tableView.get());
     
     var that = this;
     this.tableView.addEventListener('click', function (event) {
@@ -491,29 +491,23 @@ DatePicker.prototype.createDoneButton = function () {
 DatePicker.prototype.cleanup = function () {
     
     if (this.tableView) {
-        this.tableView.setData([]);
+        this.tableView.cleanup();
     }
     
-    if (this.fromDateRow && this.fromDateRow.cleanup) {
-        this.fromDateRow.cleanup();
-    }
-    
+    // fromDateRow and periodDateRow will be cleaned up by the cleanup method above. We have to make sure that the 
+    // toDataRow will be cleaned up also.
     if (this.toDateRow && this.toDateRow.cleanup) {
         this.toDateRow.cleanup();
-    }
-    
-    if (this.periodRow && this.periodRow.cleanup) {
-        this.periodRow.cleanup();
     }
     
     this.fromDateRow  = null;
     this.toDateRow    = null;
     this.periodRow    = null;
-    
+    /*
     if (this.win && this.win.remove && this.tableView) {
         this.win.remove(this.tableView);
     }
-    
+    */
     if (this.win && this.win.remove && this.periodPicker) {
         this.win.remove(this.periodPicker);
     }

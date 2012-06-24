@@ -288,7 +288,7 @@ Refresh.prototype.attachHeaderView = function () {
     pullViewHeader.add(this.lastUpdatedLabel);
     pullViewHeader.add(this.actInd);
 
-    tableView.headerPullView = pullViewHeader;
+    tableView.setHeaderPullView(pullViewHeader);
     pullViewHeader           = null;
 
     tableView.addEventListener('scroll', function(event) {
@@ -327,6 +327,17 @@ Refresh.prototype.attachHeaderView = function () {
     });
     
     tableView = null;
+};
+
+/**
+ * Cleanup.
+ */
+Refresh.prototype.cleanup = function () {
+    this.pullViewArrow      = null;
+    this.statusLabel        = null;
+    this.lastUpdatedLabel   = null;
+    this.actInd             = null;
+    this._activityIndicator = null;
 };
 
 module.exports = Refresh;

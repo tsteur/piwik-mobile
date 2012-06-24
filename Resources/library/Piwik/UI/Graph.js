@@ -126,4 +126,11 @@ Graph.prototype.addGraph = function (view) {
     
 };
 
+/**
+ * Cleanup.
+ */
+Graph.prototype.cleanup = function () {
+    this.row = null;
+};
+
 module.exports = Graph;

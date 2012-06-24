@@ -63,11 +63,11 @@ function window (params) {
     var request   = Piwik.require('Network/ReportsRequest');
     var that      = this;
 
-    var tableview = Ti.UI.createTableView({id: 'reportsTableView'});
+    var tableview = this.create('TableView', {id: 'reportsTableView'});
     var refresh   = this.create('Refresh', {tableView: tableview});
     var tableData = [];
     
-    this.add(tableview);
+    this.add(tableview.get());
 
     tableview.addEventListener('click', function (event) {
 
@@ -111,7 +111,10 @@ function window (params) {
 
         // remove all tableview rows. This should ensure there are no rendering issues when setting
         // new rows afterwards.
-        that.cleanupTableData();
+        
+        if (tableview) {
+            tableview.reset();
+        }
         
         request.send({site: site, reload: forceRequestReload});
 
@@ -241,36 +244,13 @@ function window (params) {
 
         request.send({site: site});
     };
-    
-    this.cleanupTableData = function () {
 
-        if (tableData) {
-            for (var index = 0; index < tableData.length; index++) {
-                
-                if (tableData[index] && tableData[index].cleanup) {
-                    tableData[index].cleanup();
-                }
-                
-                tableData[index]            = null;
-            }
-        }
-        
-        tableData = null;
-        tableData = [];
-
-        if (!tableview) {
-            
-            return;
-        }
-        
-        tableview.setData([]);
-    };
-    
     this.cleanup = function () {
-        this.cleanupTableData();
-        
-        this.remove(tableview);
-        
+
+        if (tableview && tableview.get()) {
+            this.remove(tableview.get());
+        }
+
         tableData = null;
         tableview = null;
         request   = null;
