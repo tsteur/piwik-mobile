@@ -198,6 +198,10 @@ function window (params) {
             if (!report || !that) {
                 continue;
             }
+            
+            if ('MultiSites' == report.module) {
+                continue;
+            }
 
             currentSection = report.category;
 
